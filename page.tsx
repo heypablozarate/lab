@@ -23,67 +23,84 @@ export default function LabLandingPage() {
       className="rams-page"
       style={{
         minHeight: "100dvh",
-        display: "grid",
-        alignItems: "center",
-        paddingBlock: "clamp(3rem, 12vw, 9rem)",
+        display: "flex",
+        flexDirection: "column",
+        paddingBlock: "clamp(1.75rem, 4vw, 3rem)",
         background: "var(--paper)",
         color: "var(--ink)",
       }}
     >
-      <section
-        className="rams-swiss-grid"
-        aria-labelledby="lab-title"
-        style={{ rowGap: "clamp(1.25rem, 4vw, 3rem)" }}
+      <p
+        style={{
+          margin: 0,
+          textAlign: "center",
+          color: "var(--muted)",
+          fontFamily: "var(--font-body)",
+          fontSize: "clamp(0.875rem, 1vw, 1rem)",
+          fontWeight: 500,
+          letterSpacing: "0.01em",
+          lineHeight: 1.4,
+        }}
       >
+        Personal experiments, prototypes, and working notes.
+      </p>
+
+      <section
+        aria-labelledby="lab-title"
+        style={{
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: "clamp(0.75rem, 2vw, 1.5rem)",
+        }}
+      >
+        <h1
+          id="lab-title"
+          style={{
+            margin: 0,
+            color: "var(--ink)",
+            fontFamily: "var(--font-display)",
+            fontSize: "clamp(5rem, 21vw, 17rem)",
+            fontWeight: 900,
+            letterSpacing: "-0.04em",
+            lineHeight: 0.8,
+          }}
+        >
+          Lab<span style={{ color: "var(--brand-accent)" }}>.</span>
+        </h1>
+
         <p
           style={{
-            gridColumn: "1 / -1",
             margin: 0,
-            color: "var(--muted)",
             fontFamily: "var(--font-body)",
-            fontSize: "clamp(0.875rem, 1vw, 1rem)",
+            fontSize: "clamp(1.25rem, 3vw, 2.5rem)",
             fontWeight: 500,
-            lineHeight: 1.4,
+            lineHeight: 1.05,
           }}
         >
-          Personal experiments, prototypes, and working notes.
+          <BrandSignature context="by " />
         </p>
-
-        <div
-          style={{
-            gridColumn: "1 / -1",
-            display: "grid",
-            gap: "clamp(0.5rem, 2vw, 1rem)",
-          }}
-        >
-          <h1
-            id="lab-title"
-            style={{
-              margin: 0,
-              color: "var(--brand-accent)",
-              fontFamily: "var(--font-display)",
-              fontSize: "clamp(5rem, 22vw, 18rem)",
-              fontWeight: 900,
-              letterSpacing: 0,
-              lineHeight: 0.8,
-            }}
-          >
-            Lab
-          </h1>
-
-          <p
-            style={{
-              margin: 0,
-              fontFamily: "var(--font-body)",
-              fontSize: "clamp(1.25rem, 3vw, 2.75rem)",
-              fontWeight: 500,
-              lineHeight: 1.05,
-            }}
-          >
-            <BrandSignature context="by " />
-          </p>
-        </div>
       </section>
+
+      <footer
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "baseline",
+          borderTop: "0.5px solid var(--line)",
+          paddingTop: "clamp(0.75rem, 1.5vw, 1rem)",
+          color: "var(--muted)",
+          fontFamily: "var(--font-body)",
+          fontSize: "clamp(0.75rem, 0.9vw, 0.8125rem)",
+          fontWeight: 500,
+          letterSpacing: "0.01em",
+        }}
+      >
+        <span>© 1999—2026</span>
+        <span>Buenos Aires</span>
+      </footer>
     </main>
   );
 }
