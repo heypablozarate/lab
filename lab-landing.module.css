@@ -1,0 +1,149 @@
+.page {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  background: #eee7de;
+  color: var(--ink);
+  position: relative;
+  overflow: hidden;
+}
+
+/* ── Decorative shapes ── */
+
+.circle {
+  position: absolute;
+  background: var(--brand-accent);
+  border-radius: 50%;
+  pointer-events: none;
+  left: clamp(-14rem, -18vmin, -6rem);
+  top: clamp(3.5rem, 7vh, 9rem);
+  width: clamp(20rem, 52vmin, 48rem);
+  height: clamp(20rem, 52vmin, 48rem);
+}
+
+.triangle {
+  position: absolute;
+  background: var(--brand-accent);
+  clip-path: polygon(0% 0%, 100% 50%, 0% 100%);
+  pointer-events: none;
+  right: clamp(-20rem, -22vmin, -8rem);
+  top: clamp(5rem, 10vh, 13rem);
+  width: clamp(22rem, 60vmin, 58rem);
+  height: clamp(22rem, 60vmin, 58rem);
+}
+
+/* ── Header ── */
+
+.header {
+  padding: clamp(3.5rem, 5.5vw, 5.5rem) clamp(3rem, 4.5vw, 4.25rem);
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: clamp(1.5rem, 3.5vw, 3rem);
+  align-items: start;
+  position: relative;
+  z-index: 1;
+}
+
+.title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(6rem, 16vw, 14.25rem);
+  letter-spacing: -0.03em;
+  line-height: 0.85;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--ink);
+}
+
+.accent {
+  color: var(--brand-accent);
+}
+
+.description {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(0.875rem, 1.3vw, 1.125rem);
+  line-height: 1.6;
+  text-align: justify;
+  padding-top: 0.3em;
+  color: var(--ink);
+}
+
+/* ── Footer ── */
+
+.spacer {
+  flex: 1;
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: clamp(0.75rem, 1.2vw, 1rem) clamp(3rem, 4.5vw, 4.25rem);
+  border-top: 0.5px solid rgba(31, 29, 26, 0.2);
+  position: relative;
+  z-index: 1;
+}
+
+.footerLocation,
+.footerSignature {
+  font-family: var(--font-body);
+  font-size: clamp(0.75rem, 0.95vw, 0.9375rem);
+  font-weight: 500;
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+.footerSignatureContext {
+  font-family: var(--font-signature);
+  font-weight: 700;
+}
+
+.footerSignatureName {
+  font-family: var(--font-display);
+  font-weight: 700;
+}
+
+/* ── Responsive ── */
+
+@media (max-width: 680px) {
+  .circle {
+    left: clamp(-6rem, -28vw, -2.5rem);
+    top: clamp(-6rem, -22vw, -2rem);
+    width: clamp(13rem, 78vw, 20rem);
+    height: clamp(13rem, 78vw, 20rem);
+  }
+
+  .triangle {
+    right: clamp(-7rem, -18vw, -2.5rem);
+    top: auto;
+    bottom: clamp(6rem, 20vw, 13rem);
+    width: clamp(11rem, 68vw, 18rem);
+    height: clamp(11rem, 68vw, 18rem);
+  }
+
+  .header {
+    grid-template-columns: 1fr;
+    padding: clamp(5rem, 18vw, 9rem) clamp(1.75rem, 7vw, 3rem) clamp(2rem, 5vw, 3rem);
+    gap: clamp(1.75rem, 6vw, 3rem);
+  }
+
+  .title {
+    font-size: clamp(5.5rem, 33vw, 10rem);
+    text-align: center;
+  }
+
+  .description {
+    font-size: clamp(0.9375rem, 4.5vw, 1.0625rem);
+    text-align: left;
+  }
+
+  .footer {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.2rem;
+    padding: clamp(0.75rem, 3.5vw, 1rem) clamp(1.75rem, 7vw, 3rem);
+    text-align: center;
+  }
+}
