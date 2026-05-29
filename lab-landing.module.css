@@ -1,8 +1,9 @@
 .page {
+  --paper: #eee7de;
   min-height: 100dvh;
   display: flex;
   flex-direction: column;
-  background: #eee7de;
+  background: var(--paper);
   color: var(--ink);
   position: relative;
   overflow: hidden;
@@ -81,7 +82,7 @@
   justify-content: space-between;
   align-items: baseline;
   padding: clamp(0.75rem, 1.2vw, 1rem) clamp(3rem, 4.5vw, 4.25rem);
-  border-top: 0.5px solid rgba(31, 29, 26, 0.2);
+  border-top: 0.5px solid var(--line);
   position: relative;
   z-index: 1;
 }
