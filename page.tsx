@@ -18,18 +18,18 @@ export const metadata: Metadata = {
 };
 
 const PHRASE = "This is an experimental space.";
-const WEIGHTS = [400, 400, 500, 700, 900, 700, 500, 400, 400, 500, 700, 900, 700, 500, 400];
+// Symmetric weight ramp (thin → black → thin) using the NHaas Display weights
+// available in the app (400/500/700/900), cycled to fill the column.
+const RAMP = [400, 500, 700, 900, 700, 500, 400];
+const WEIGHTS = Array.from({ length: 49 }, (_, i) => RAMP[i % RAMP.length]);
 
 export default function LabLandingPage() {
   return (
     <main className={styles.page}>
-      <div className={styles.circle} aria-hidden="true" />
       <div className={styles.triangle} aria-hidden="true" />
+      <div className={styles.circle} aria-hidden="true" />
 
-      <header className={styles.header}>
-        <h1 className={styles.title}>
-          LAB<span className={styles.accent}>.</span>
-        </h1>
+      <div className={styles.content}>
         <p className={styles.description}>
           {WEIGHTS.map((weight, i) => (
             <span key={i} style={{ fontWeight: weight }}>
@@ -37,20 +37,26 @@ export default function LabLandingPage() {
             </span>
           ))}
         </p>
-      </header>
 
-      <div className={styles.spacer} />
+        <h1 className={styles.title}>
+          L<span className={styles.letterA}>A</span>
+          <span className={styles.letterB}>B</span>
+          <span className={styles.accent}>.</span>
+        </h1>
+      </div>
 
       <footer className={styles.footer}>
-        <span className={styles.footerLocation}>
-          Made in Buenos Aires, Argentina 🇦🇷
-        </span>
-        <span className={styles.footerSignature}>
-          <span className={styles.footerSignatureContext}>Designed by </span>
-          <span className={styles.footerSignatureName}>
+        <span className={styles.madeIn}>Made in Buenos Aires, Argentina 🇦🇷</span>
+        <a
+          className={styles.designedBy}
+          href="https://pablozarate.com"
+          aria-label="Designed by PabloZarate — pablozarate.com"
+        >
+          <span className={styles.designedByContext}>Designed by </span>
+          <span className={styles.designedByName}>
             PabloZarate<span className={styles.accent}>™</span>
           </span>
-        </span>
+        </a>
       </footer>
     </main>
   );
