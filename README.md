@@ -9,4 +9,4 @@ Cada proyecto vive en una carpeta con slug estable. Ese slug define la ruta
 ## Projects
 
 - `shader-experiment-01`: interactive PabloZarate wordmark shader with
-  RAMS-aligned grid, typography, and controls.
+  RAMS-aligned grid, typography, Light/Dark mode, and controls.

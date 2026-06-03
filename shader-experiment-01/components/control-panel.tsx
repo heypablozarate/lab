@@ -1,6 +1,7 @@
 "use client"
 
 import styles from "../shader-experiment.module.css"
+import type { ThemeMode } from "./shader-experiment-shell"
 
 export const EFFECTS = [
   { id: 0, name: "Liquid" },
@@ -24,16 +25,40 @@ export const EFFECTS = [
 export function ControlPanel({
   effect,
   intensity,
+  theme,
   onEffectChange,
   onIntensityChange,
+  onThemeChange,
 }: {
   effect: number
   intensity: number
+  theme: ThemeMode
   onEffectChange: (id: number) => void
   onIntensityChange: (value: number) => void
+  onThemeChange: (theme: ThemeMode) => void
 }) {
   return (
     <div className={styles.controlPanel}>
+      <div className={styles.controlGroup}>
+        <p className={styles.controlLabel}>Mode</p>
+        <div className={styles.modeGrid}>
+          {(["light", "dark"] as const).map((mode) => {
+            const active = mode === theme
+            return (
+              <button
+                key={mode}
+                type="button"
+                onClick={() => onThemeChange(mode)}
+                aria-pressed={active}
+                className={styles.effectButton}
+              >
+                {mode === "light" ? "Light" : "Dark"}
+              </button>
+            )
+          })}
+        </div>
+      </div>
+
       <div className={styles.controlGroup}>
         <p className={styles.controlLabel}>Effect</p>
         <div className={styles.effectGrid}>

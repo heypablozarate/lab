@@ -1,10 +1,17 @@
 .page {
+  --paper: #ffffff;
+  --ink: #1f1d1a;
+  --muted: #6f675f;
+  --line: #d8d2ca;
+  --brand-accent: #ff460c;
   --shader-paper: var(--paper);
   --shader-ink: var(--ink);
   --shader-muted: var(--muted);
   --shader-line: var(--line);
   --wordmark: var(--brand-signature-name-color, var(--ink));
   --wordmark-tm: var(--brand-signature-mark-color, var(--brand-accent));
+  --brand-signature-name-color: var(--shader-ink);
+  --brand-signature-mark-color: var(--brand-accent);
 
   position: relative;
   display: flex;
@@ -16,6 +23,18 @@
   background: var(--shader-paper);
   color: var(--shader-ink);
   padding: clamp(2rem, 5vw, 5rem) var(--rams-page-padding);
+  color-scheme: light;
+}
+
+.page[data-theme="dark"] {
+  --paper: #141312;
+  --ink: #f3eadf;
+  --muted: #b5aa9d;
+  --line: #3a342e;
+  --brand-accent: #ff6a3d;
+  --brand-signature-name-color: var(--shader-ink);
+  --brand-signature-mark-color: var(--brand-accent);
+  color-scheme: dark;
 }
 
 .srOnly {
@@ -90,6 +109,13 @@
   gap: 0.5rem;
 }
 
+.modeGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  border-top: 1px solid color-mix(in srgb, var(--shader-line) 72%, transparent);
+  border-left: 1px solid color-mix(in srgb, var(--shader-line) 72%, transparent);
+}
+
 .effectButton {
   min-height: 2.25rem;
   border: 1px solid color-mix(in srgb, var(--shader-line) 72%, transparent);
@@ -110,6 +136,11 @@
 
 .effectButton:hover {
   border-color: var(--brand-accent);
+}
+
+.modeGrid .effectButton {
+  border-top: 0;
+  border-left: 0;
 }
 
 .effectButton[aria-pressed="true"] {
