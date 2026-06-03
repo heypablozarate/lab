@@ -1,0 +1,189 @@
+.page {
+  --shader-paper: var(--paper);
+  --shader-ink: var(--ink);
+  --shader-muted: var(--muted);
+  --shader-line: var(--line);
+  --wordmark: var(--brand-signature-name-color, var(--ink));
+  --wordmark-tm: var(--brand-signature-mark-color, var(--brand-accent));
+
+  position: relative;
+  display: flex;
+  min-height: 100svh;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: var(--shader-paper);
+  color: var(--shader-ink);
+  padding: clamp(2rem, 5vw, 5rem) var(--rams-page-padding);
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.stage {
+  display: flex;
+  width: min(100%, 64rem);
+  flex-direction: column;
+  align-items: center;
+}
+
+.shaderFrame {
+  width: 100%;
+}
+
+.shaderCanvas {
+  display: block;
+  width: 100%;
+  height: clamp(8rem, 28vw, 16rem);
+  font-family: var(--type-logo-family), var(--font-display), sans-serif;
+}
+
+.instruction {
+  max-width: 36rem;
+  margin: clamp(1.25rem, 2vw, 1.5rem) 0 0;
+  color: var(--shader-muted);
+  font-family: var(--type-body-compact-family), var(--font-body), sans-serif;
+  font-size: var(--type-card-copy-size);
+  font-weight: 500;
+  line-height: var(--type-card-copy-leading);
+  text-align: center;
+}
+
+.controlPanel {
+  display: grid;
+  width: min(100%, 32rem);
+  gap: 1.25rem;
+  margin-top: clamp(1.75rem, 3vw, 2rem);
+  border: 1px solid color-mix(in srgb, var(--shader-line) 72%, transparent);
+  background: color-mix(in srgb, var(--shader-paper) 88%, var(--shader-ink) 4%);
+  padding: clamp(1rem, 2vw, 1.25rem);
+}
+
+.controlGroup {
+  display: grid;
+  gap: 0.625rem;
+}
+
+.controlLabel {
+  margin: 0;
+  color: var(--brand-accent);
+  font-family: var(--type-nav-family), var(--font-display), sans-serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.effectGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.effectButton {
+  min-height: 2.25rem;
+  border: 1px solid color-mix(in srgb, var(--shader-line) 72%, transparent);
+  border-radius: 0;
+  background: transparent;
+  color: var(--shader-ink);
+  cursor: pointer;
+  padding: 0.375rem 0.75rem;
+  font-family: var(--type-nav-family), var(--font-display), sans-serif;
+  font-size: 0.875rem;
+  font-weight: 700;
+  line-height: 1;
+  transition:
+    background 160ms ease,
+    color 160ms ease,
+    border-color 160ms ease;
+}
+
+.effectButton:hover {
+  border-color: var(--brand-accent);
+}
+
+.effectButton[aria-pressed="true"] {
+  border-color: var(--shader-ink);
+  background: var(--shader-ink);
+  color: var(--shader-paper);
+}
+
+.rangeRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 4rem;
+  gap: 1rem;
+  align-items: center;
+}
+
+.range {
+  width: 100%;
+  height: 2.25rem;
+  margin: 0;
+  cursor: pointer;
+  accent-color: var(--brand-accent);
+}
+
+.rangeValue {
+  color: var(--shader-muted);
+  font-family: var(--type-card-meta-family), var(--font-body), sans-serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1;
+  text-align: right;
+}
+
+.footer {
+  position: absolute;
+  right: var(--rams-page-padding);
+  bottom: var(--rams-page-padding);
+  left: var(--rams-page-padding);
+  display: flex;
+  justify-content: center;
+  color: color-mix(in srgb, var(--shader-ink) 46%, transparent);
+  font-family: var(--type-footer-family), var(--font-body), sans-serif;
+  font-size: 0.75rem;
+  font-weight: var(--type-footer-weight);
+  line-height: 1.2;
+  text-align: center;
+}
+
+@media (max-width: 640px) {
+  .page {
+    justify-content: flex-start;
+    padding-top: clamp(5rem, 18vh, 7rem);
+    padding-bottom: 5rem;
+  }
+
+  .controlPanel {
+    width: 100%;
+  }
+
+  .effectGrid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0;
+    border-top: 1px solid color-mix(in srgb, var(--shader-line) 72%, transparent);
+    border-left: 1px solid color-mix(in srgb, var(--shader-line) 72%, transparent);
+  }
+
+  .effectButton {
+    border-top: 0;
+    border-left: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .effectButton {
+    transition: none;
+  }
+}
