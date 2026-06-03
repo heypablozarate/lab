@@ -26,13 +26,7 @@ export default function ShaderExperimentPage() {
       <WordmarkStage />
 
       <footer className={styles.footer}>
-        <span className={styles.footerWordmark}>
-          <span className={styles.footerName}>PabloZarate</span>
-          <span className={styles.footerMark} aria-hidden="true">
-            ™
-          </span>
-        </span>
-        <span className={styles.footerMeta}> — All rights reserved.</span>
+        Designed by PabloZarate™
       </footer>
     </main>
   );
