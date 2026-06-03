@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
-import { ShaderExperimentShell } from "./components/shader-experiment-shell";
+import { WordmarkStage } from "./components/wordmark-stage";
+import styles from "./shader-experiment.module.css";
 
 export const metadata: Metadata = {
   title: "Shader Experiment 01 — Lab by PabloZarate™",
@@ -18,5 +19,21 @@ export const metadata: Metadata = {
 };
 
 export default function ShaderExperimentPage() {
-  return <ShaderExperimentShell />;
+  return (
+    <main className={styles.page} data-theme="dark">
+      <h1 className={styles.srOnly}>PabloZarate™</h1>
+
+      <WordmarkStage />
+
+      <footer className={styles.footer}>
+        <span className={styles.footerWordmark}>
+          <span className={styles.footerName}>PabloZarate</span>
+          <span className={styles.footerMark} aria-hidden="true">
+            ™
+          </span>
+        </span>
+        <span className={styles.footerMeta}> — All rights reserved.</span>
+      </footer>
+    </main>
+  );
 }
