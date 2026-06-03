@@ -21,7 +21,7 @@ export function WordmarkStage() {
       </div>
 
       <p className={styles.instruction}>
-        Move your cursor across the wordmark, then tune the effect below.
+        Move your cursor across the wordmark.
       </p>
 
       <ControlPanel
