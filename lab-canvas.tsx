@@ -1,0 +1,356 @@
+"use client";
+
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type KeyboardEvent,
+  type MouseEvent,
+  type PointerEvent,
+} from "react";
+
+import styles from "./lab.module.css";
+import { Minimap } from "./minimap";
+import { IntroCard, ProjectCard } from "./panel";
+import { projects } from "./projects";
+import { Wordmark } from "./wordmark";
+
+// Fixed design canvas per card. Cards stack vertically on a CARD_H + GAP step;
+// the camera pans along Y (vertical scroll — natural on touch and responsive).
+const CARD_W = 1200;
+const CARD_H = 720;
+const GAP = 40;
+const STEP = CARD_H + GAP;
+
+export function LabCanvas() {
+  const viewportRef = useRef<HTMLDivElement>(null);
+  const stageRef = useRef<HTMLDivElement>(null);
+  const [active, setActive] = useState(0);
+
+  // Theme: null follows the system; "light"/"dark" is an explicit user choice
+  // (persisted). The page reads it via the data-theme attribute.
+  const [theme, setTheme] = useState<"light" | "dark" | null>(null);
+  const [systemDark, setSystemDark] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(prefers-color-scheme: dark)");
+    setSystemDark(mq.matches);
+    const onChange = (ev: MediaQueryListEvent) => setSystemDark(ev.matches);
+    mq.addEventListener("change", onChange);
+    const saved = localStorage.getItem("lab-theme");
+    if (saved === "light" || saved === "dark") setTheme(saved);
+    return () => mq.removeEventListener("change", onChange);
+  }, []);
+
+  const effectiveTheme = theme ?? (systemDark ? "dark" : "light");
+  const toggleTheme = () => {
+    const next = effectiveTheme === "dark" ? "light" : "dark";
+    setTheme(next);
+    try {
+      localStorage.setItem("lab-theme", next);
+    } catch {
+      // storage unavailable
+    }
+  };
+
+  const count = projects.length + 1; // intro + projects
+  const labels = ["Intro", ...projects.map((p) => p.title)];
+
+  const camMin = CARD_H / 2; // first card centred
+  const camMax = (count - 1) * STEP + CARD_H / 2; // last card centred
+
+  // Mutable engine state lives in a ref so the rAF loop reads/writes without
+  // re-rendering. Only the active index is React state (for the minimap).
+  const eng = useRef({
+    cam: camMin,
+    target: camMin,
+    vel: 0, // world px per frame (inertia, along Y)
+    scale: 1,
+    scaleBase: 1,
+    vw: 1,
+    vh: 1,
+    reduce: false,
+    down: false,
+    dragging: false,
+    justDragged: false,
+    pointerId: -1,
+    startPos: 0,
+    startTarget: 0,
+    moved: 0,
+    lastPos: 0,
+    lastT: 0,
+    pvel: 0, // pointer velocity (screen px/ms)
+  });
+
+  const measure = useCallback(() => {
+    const e = eng.current;
+    e.vw = window.innerWidth;
+    e.vh = window.innerHeight;
+    // fit the 1200×720 card (plus margin) to the viewport
+    const fit = Math.min(e.vw / 1340, e.vh / 880);
+    e.scaleBase = Math.max(0.18, Math.min(fit, 1));
+  }, []);
+
+  const clampTarget = useCallback(
+    (v: number) => Math.max(camMin, Math.min(camMax, v)),
+    [camMin, camMax],
+  );
+
+  // Move the camera to a card (keyboard / minimap / focus).
+  const goTo = useCallback(
+    (i: number) => {
+      const idx = Math.max(0, Math.min(count - 1, i));
+      const e = eng.current;
+      e.target = camMin + idx * STEP;
+      e.vel = 0;
+    },
+    [count, camMin],
+  );
+
+  // ── camera loop ──
+  useEffect(() => {
+    measure();
+    const e = eng.current;
+    e.reduce = window.matchMedia?.(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+    e.scale = e.scaleBase;
+    let raf = 0;
+
+    const tick = () => {
+      const stage = stageRef.current;
+
+      // inertia (only when not actively dragging)
+      if (!e.down) {
+        e.target = clampTarget(e.target + e.vel);
+        e.vel *= 0.92;
+        if (Math.abs(e.vel) < 0.02) e.vel = 0;
+      }
+      if (e.target <= camMin || e.target >= camMax) e.vel = 0;
+
+      // ease the camera toward its target
+      if (e.reduce) {
+        e.cam = e.target;
+      } else {
+        e.cam += (e.target - e.cam) * 0.18;
+        if (Math.abs(e.target - e.cam) < 0.05) e.cam = e.target;
+      }
+
+      // velocity-driven zoom out, springing back to the fit scale
+      const speed = Math.abs(e.target - e.cam) + Math.abs(e.vel);
+      const scaleTarget = e.reduce
+        ? e.scaleBase
+        : Math.max(e.scaleBase * 0.78, e.scaleBase - speed * 0.0006);
+      e.scale += (scaleTarget - e.scale) * 0.08;
+
+      if (stage) {
+        // horizontal stays centred; vertical follows the camera
+        const tx = e.vw / 2 - (CARD_W / 2) * e.scale;
+        const ty = e.vh / 2 - e.cam * e.scale;
+        stage.style.transform = `translate(${tx}px, ${ty}px) scale(${e.scale})`;
+      }
+
+      const idx = Math.max(
+        0,
+        Math.min(count - 1, Math.round((e.cam - camMin) / STEP)),
+      );
+      setActive((prev) => (prev === idx ? prev : idx));
+
+      raf = requestAnimationFrame(tick);
+    };
+
+    raf = requestAnimationFrame(tick);
+    const onResize = () => measure();
+    window.addEventListener("resize", onResize);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("resize", onResize);
+    };
+  }, [measure, clampTarget, camMin, camMax, count]);
+
+  // ── wheel → vertical pan (both axes accepted; deltaY is the natural one) ──
+  useEffect(() => {
+    const vp = viewportRef.current;
+    if (!vp) return;
+    const e = eng.current;
+    const onWheel = (ev: WheelEvent) => {
+      ev.preventDefault();
+      const delta =
+        Math.abs(ev.deltaY) >= Math.abs(ev.deltaX) ? ev.deltaY : ev.deltaX;
+      e.target = clampTarget(e.target + delta / e.scale);
+      e.vel = 0; // wheel overrides any residual inertia
+    };
+    vp.addEventListener("wheel", onWheel, { passive: false });
+    return () => vp.removeEventListener("wheel", onWheel);
+  }, [clampTarget]);
+
+  // ── drag to pan vertically (deferred capture so plain clicks open links) ──
+  const DRAG_THRESHOLD = 6;
+
+  const onPointerDown = (ev: PointerEvent<HTMLDivElement>) => {
+    if (ev.pointerType === "mouse" && ev.button !== 0) return;
+    const e = eng.current;
+    e.down = true;
+    e.dragging = false;
+    e.justDragged = false;
+    e.pointerId = ev.pointerId;
+    e.startPos = ev.clientY;
+    e.startTarget = e.target;
+    e.moved = 0;
+    e.lastPos = ev.clientY;
+    e.lastT = performance.now();
+    e.pvel = 0;
+  };
+
+  const onPointerMove = (ev: PointerEvent<HTMLDivElement>) => {
+    const e = eng.current;
+    if (!e.down) return;
+    const dy = ev.clientY - e.startPos;
+    e.moved = Math.max(e.moved, Math.abs(dy));
+
+    if (!e.dragging) {
+      if (e.moved <= DRAG_THRESHOLD) return;
+      e.dragging = true;
+      const vp = viewportRef.current;
+      vp?.setAttribute("data-dragging", "true");
+      try {
+        vp?.setPointerCapture(e.pointerId);
+      } catch {
+        // capture unavailable
+      }
+    }
+
+    e.target = clampTarget(e.startTarget - dy / e.scale);
+    const now = performance.now();
+    const dt = now - e.lastT;
+    if (dt > 0) {
+      const inst = -(ev.clientY - e.lastPos) / dt; // screen px/ms
+      e.pvel = e.pvel * 0.6 + inst * 0.4;
+      e.lastPos = ev.clientY;
+      e.lastT = now;
+    }
+  };
+
+  const endDrag = (ev: PointerEvent<HTMLDivElement>) => {
+    const e = eng.current;
+    if (!e.down) return;
+    const wasDragging = e.dragging;
+    e.down = false;
+    e.dragging = false;
+    if (!wasDragging) return; // a plain click — let the card link handle it
+
+    e.justDragged = true;
+    const vp = viewportRef.current;
+    vp?.removeAttribute("data-dragging");
+    try {
+      vp?.releasePointerCapture(ev.pointerId);
+    } catch {
+      // already released
+    }
+    // throw: pointer velocity (screen px/ms) → camera inertia (world px/frame)
+    e.vel = (e.pvel * 16) / e.scale;
+  };
+
+  // suppress the click that follows a real drag so cards don't navigate mid-pan
+  const onClickCapture = (ev: MouseEvent<HTMLDivElement>) => {
+    if (eng.current.justDragged) {
+      ev.preventDefault();
+      ev.stopPropagation();
+      eng.current.justDragged = false;
+    }
+  };
+
+  const onKeyDown = (ev: KeyboardEvent<HTMLDivElement>) => {
+    let target = active;
+    if (ev.key === "ArrowDown" || ev.key === "ArrowRight") target = active + 1;
+    else if (ev.key === "ArrowUp" || ev.key === "ArrowLeft") target = active - 1;
+    else if (ev.key === "Home") target = 0;
+    else if (ev.key === "End") target = count - 1;
+    else return;
+    ev.preventDefault();
+    goTo(target);
+  };
+
+  return (
+    <main className={styles.page} data-theme={theme ?? undefined}>
+      <Minimap total={count} active={active} labels={labels} onJump={goTo} />
+
+      <div
+        ref={viewportRef}
+        className={styles.viewport}
+        role="region"
+        aria-label="Lab projects — drag or scroll to browse"
+        tabIndex={0}
+        onPointerDown={onPointerDown}
+        onPointerMove={onPointerMove}
+        onPointerUp={endDrag}
+        onPointerCancel={endDrag}
+        onClickCapture={onClickCapture}
+        onKeyDown={onKeyDown}
+      >
+        <div ref={stageRef} className={styles.stage}>
+          <IntroCard top={0} onFocusCard={() => goTo(0)} />
+          {projects.map((project, i) => (
+            <ProjectCard
+              key={project.slug}
+              project={project}
+              number={i + 1}
+              top={(i + 1) * STEP}
+              onFocusCard={() => goTo(i + 1)}
+            />
+          ))}
+        </div>
+
+        <div className={styles.overlay} aria-hidden="true">
+          <div className={styles.guideH} />
+          <div className={styles.guideV} />
+          <div className={styles.crosshair} />
+        </div>
+        <div className={`${styles.fade} ${styles.fadeTop}`} aria-hidden="true" />
+        <div
+          className={`${styles.fade} ${styles.fadeBottom}`}
+          aria-hidden="true"
+        />
+      </div>
+
+      <button
+        type="button"
+        className={styles.themeToggle}
+        onClick={toggleTheme}
+        aria-label={`Switch to ${
+          effectiveTheme === "dark" ? "light" : "dark"
+        } mode`}
+      >
+        {effectiveTheme === "dark" ? (
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path
+              d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"
+              fill="currentColor"
+            />
+          </svg>
+        ) : (
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.6"
+            strokeLinecap="round"
+            aria-hidden="true"
+          >
+            <circle cx="12" cy="12" r="4" fill="currentColor" stroke="none" />
+            <path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M19.1 4.9l-1.8 1.8M6.7 17.3l-1.8 1.8" />
+          </svg>
+        )}
+      </button>
+
+      <a
+        className={styles.credit}
+        href="https://pablozarate.com"
+        aria-label="Designed by PabloZarate — pablozarate.com"
+      >
+        <Wordmark />
+      </a>
+    </main>
+  );
+}

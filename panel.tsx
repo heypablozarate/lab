@@ -1,0 +1,128 @@
+import type { CSSProperties, ReactNode } from "react";
+import Link from "next/link";
+
+import styles from "./lab.module.css";
+import type { LabProject } from "./projects";
+import { Wordmark } from "./wordmark";
+
+/** First card — Pablo's Lab identity, presented as staggered clip-reveal lines. */
+export function IntroCard({
+  top,
+  onFocusCard,
+}: {
+  top: number;
+  onFocusCard: () => void;
+}) {
+  const lines: ReactNode[] = [
+    "This is the",
+    "exploratory",
+    "playground of",
+    <>
+      <Wordmark />.
+    </>,
+    "Welcome to",
+    <>
+      the Lab<span className={styles.dot}>.</span>
+    </>,
+  ];
+
+  return (
+    <section
+      className={styles.card}
+      data-variant="intro"
+      style={{ top }}
+      aria-label="Lab — the exploratory playground of PabloZarate. Welcome to the Lab."
+      tabIndex={-1}
+      onFocus={onFocusCard}
+    >
+      <span className={styles.introShape} aria-hidden="true" />
+      <p className={styles.introLines}>
+        {lines.map((line, i) => (
+          <span className={styles.line} key={i}>
+            <span style={{ animationDelay: `${0.2 + i * 0.08}s` }}>{line}</span>
+          </span>
+        ))}
+      </p>
+    </section>
+  );
+}
+
+/**
+ * One card per project. Internal projects link to `/lab/<slug>`; projects with
+ * an `href` link out (new tab, ↗ indicator).
+ */
+export function ProjectCard({
+  project,
+  number,
+  top,
+  onFocusCard,
+}: {
+  project: LabProject;
+  number: number;
+  top: number;
+  onFocusCard: () => void;
+}) {
+  const style = {
+    top,
+    ...(project.accent ? { "--lab-accent": project.accent } : {}),
+  } as CSSProperties;
+
+  const external = Boolean(project.href);
+  const ariaLabel = `${project.title} — ${project.year}, ${project.kind}${
+    external ? ", opens in a new tab" : ""
+  }`;
+
+  const body = (
+    <>
+      <span className={styles.cardIndex} aria-hidden="true">
+        {String(number).padStart(2, "0")}
+      </span>
+      <div className={styles.content}>
+        <span className={styles.cardTitle}>{project.title}</span>
+        <span className={styles.meta}>
+          <span>{project.year}</span>
+          <span className={styles.metaDivider} aria-hidden="true" />
+          <span>{project.kind}</span>
+          {external ? (
+            <>
+              <span className={styles.metaDivider} aria-hidden="true" />
+              <span className={styles.external} aria-hidden="true">
+                ↗
+              </span>
+            </>
+          ) : null}
+        </span>
+      </div>
+    </>
+  );
+
+  if (project.href) {
+    return (
+      <a
+        className={styles.card}
+        data-variant="project"
+        style={style}
+        href={project.href}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label={ariaLabel}
+        onFocus={onFocusCard}
+      >
+        {body}
+      </a>
+    );
+  }
+
+  return (
+    <Link
+      className={styles.card}
+      data-variant="project"
+      style={style}
+      href={`/lab/${project.slug}`}
+      aria-label={ariaLabel}
+      onFocus={onFocusCard}
+    >
+      {body}
+    </Link>
+  );
+}

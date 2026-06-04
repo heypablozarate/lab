@@ -1,0 +1,479 @@
+/*
+ * Lab — pannable canvas index, rebuilt to match the interaction model of
+ * rauno.me (studied from its source): fixed-size 1200×720 frame cards floating
+ * in a world that a JS camera pans by transform (no scroll-snap), scaled to fit
+ * the viewport, with a velocity-driven zoom-out and clip-reveal intro. Tokens
+ * are scoped to .page so the Lab can be dark while the rest of the site stays
+ * light. Card content is authored in fixed px against the 1200×720 canvas and
+ * the camera scale handles responsiveness.
+ */
+
+.page {
+  --lab-paper: #ffffff;
+  --lab-surface: #f3f1ee; /* world background behind the cards */
+  --lab-ink: #1f1d1a;
+  --lab-muted: #6a6661;
+  --lab-accent: var(--brand-accent, #f4340a);
+  --lab-line: color-mix(in srgb, var(--lab-ink) 14%, transparent);
+  --lab-card-line: color-mix(in srgb, var(--lab-ink) 12%, transparent);
+  --lab-watermark: color-mix(in srgb, var(--lab-ink) 6%, transparent);
+  --lab-focus: var(--focus-ring, #de0000);
+
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  background: var(--lab-surface);
+  color: var(--lab-ink);
+  font-family: var(--font-display, system-ui, sans-serif);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Dark tokens. Applied when the user explicitly toggles dark, and — when the
+   user has not toggled at all (no data-theme) — when the system prefers dark.
+   data-theme="light" forces light by matching neither rule. */
+.page[data-theme="dark"] {
+  --lab-paper: #1a1816;
+  --lab-surface: #0e0d0c;
+  --lab-ink: #ece7e0;
+  --lab-muted: #8c867d;
+  --lab-line: color-mix(in srgb, var(--lab-ink) 16%, transparent);
+  --lab-card-line: color-mix(in srgb, var(--lab-ink) 14%, transparent);
+  --lab-watermark: color-mix(in srgb, var(--lab-ink) 9%, transparent);
+}
+
+@media (prefers-color-scheme: dark) {
+  .page:not([data-theme]) {
+    --lab-paper: #1a1816;
+    --lab-surface: #0e0d0c;
+    --lab-ink: #ece7e0;
+    --lab-muted: #8c867d;
+    --lab-line: color-mix(in srgb, var(--lab-ink) 16%, transparent);
+    --lab-card-line: color-mix(in srgb, var(--lab-ink) 14%, transparent);
+    --lab-watermark: color-mix(in srgb, var(--lab-ink) 9%, transparent);
+  }
+}
+
+/* ─────────────────────────  Pan surface + camera  ────────────────────── */
+
+.viewport {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  cursor: grab;
+  touch-action: none;
+  outline: none;
+}
+
+.viewport[data-dragging="true"] {
+  cursor: grabbing;
+}
+
+.viewport:focus-visible {
+  box-shadow: inset 0 0 0 2px var(--lab-focus);
+}
+
+.stage {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform-origin: 0 0;
+  will-change: transform;
+  animation: stageIn 0.5s ease both;
+}
+
+@keyframes stageIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* ─────────────────────────────  Cards  ───────────────────────────────── */
+
+.card {
+  position: absolute;
+  left: 0;
+  /* top is set inline (index × step) — cards stack vertically */
+  width: 1200px;
+  height: 720px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background: var(--lab-paper);
+  border: 1px solid var(--lab-card-line);
+  overflow: hidden;
+  isolation: isolate;
+  text-decoration: none;
+  color: inherit;
+}
+
+a.card:focus-visible {
+  outline: 3px solid var(--lab-focus);
+  outline-offset: 4px;
+}
+
+.cardIndex {
+  position: absolute;
+  z-index: 0;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-weight: 400;
+  font-size: 600px;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  color: var(--lab-watermark);
+  pointer-events: none;
+  user-select: none;
+  font-variant-numeric: tabular-nums;
+}
+
+.content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+  padding: 64px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.cardTitle {
+  display: block;
+  max-width: 100%;
+  margin: 0;
+  font-weight: 400;
+  font-size: 132px;
+  line-height: 0.9;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+  overflow-wrap: break-word;
+}
+
+.dot,
+.accent {
+  color: var(--lab-accent);
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  font-size: 22px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  color: var(--lab-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.metaDivider {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.6;
+}
+
+.external {
+  color: var(--lab-accent);
+  font-weight: 500;
+}
+
+/* ─────────────────────────  Intro card  ──────────────────────────────── */
+
+.introShape {
+  position: absolute;
+  z-index: 0;
+  top: 0;
+  right: 0;
+  height: 100%;
+  aspect-ratio: 1 / 1;
+  background: var(--lab-accent);
+  border-radius: 50%;
+  transform: scale(0);
+  animation: shapeIn 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) 0.35s forwards;
+  opacity: 0.12;
+}
+
+@keyframes shapeIn {
+  to {
+    transform: scale(1);
+  }
+}
+
+.introLines {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  font-weight: 400;
+  font-size: 92px;
+  line-height: 0.98;
+  letter-spacing: -0.03em;
+  text-align: left;
+}
+
+.line {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.04em;
+}
+
+.line > span {
+  display: inline-block;
+  transform: translateY(110%);
+  animation: lineUp 0.9s cubic-bezier(0.2, 0.85, 0.2, 1) both;
+}
+
+@keyframes lineUp {
+  to {
+    transform: translateY(0);
+  }
+}
+
+/* ─────────────────────────  Card label  ──────────────────────────────── */
+/* A small constant-size label above each card (kept legible by inverse
+   scale applied from JS via the --inv custom property). */
+
+.label {
+  position: absolute;
+  left: 0;
+  bottom: calc(100% + 16px);
+  transform: scale(var(--inv, 1));
+  transform-origin: left bottom;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--lab-muted);
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+/* ───────────────────────────  Minimap  ───────────────────────────────── */
+
+.minimap {
+  position: absolute;
+  z-index: 5;
+  right: clamp(1rem, 3vw, 2rem);
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+  padding: 8px;
+}
+
+.tick {
+  width: 15px;
+  height: 2px;
+  padding: 0;
+  border: 0;
+  background: var(--lab-line);
+  cursor: pointer;
+  transition:
+    background 0.25s ease,
+    width 0.25s ease,
+    transform 0.25s ease;
+}
+
+.tick:hover {
+  background: color-mix(in srgb, var(--lab-ink) 45%, transparent);
+  transform: scaleX(1.15);
+}
+
+.tick[data-active="true"] {
+  background: var(--lab-accent);
+  width: 19px;
+}
+
+.tick:focus-visible {
+  outline: 2px solid var(--lab-focus);
+  outline-offset: 3px;
+}
+
+/* ─────────────────────  Blueprint overlays  ──────────────────────────── */
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+}
+
+.guideH,
+.guideV {
+  position: absolute;
+  background-repeat: repeat;
+}
+
+.guideH {
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 1px;
+  background-image: repeating-linear-gradient(
+    to right,
+    var(--lab-line) 0 4px,
+    transparent 4px 10px
+  );
+}
+
+.guideV {
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 1px;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    var(--lab-line) 0 4px,
+    transparent 4px 10px
+  );
+}
+
+.crosshair {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 18px;
+  height: 18px;
+  transform: translate(-50%, -50%);
+  mix-blend-mode: difference;
+}
+
+.crosshair::before,
+.crosshair::after {
+  content: "";
+  position: absolute;
+  background: #fff;
+}
+
+.crosshair::before {
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 1.5px;
+  transform: translateY(-50%);
+}
+
+.crosshair::after {
+  left: 50%;
+  top: 0;
+  height: 100%;
+  width: 1.5px;
+  transform: translateX(-50%);
+}
+
+.fade {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: clamp(48px, 9vh, 96px);
+  z-index: 4;
+  pointer-events: none;
+}
+
+.fadeTop {
+  top: 0;
+  background: linear-gradient(to bottom, var(--lab-surface), transparent);
+}
+
+.fadeBottom {
+  bottom: 0;
+  background: linear-gradient(to top, var(--lab-surface), transparent);
+}
+
+/* ─────────────────────────────  Credit  ──────────────────────────────── */
+
+.credit {
+  position: absolute;
+  z-index: 5;
+  right: clamp(1rem, 3vw, 2rem);
+  bottom: clamp(1rem, 3vh, 1.75rem);
+  font-size: clamp(0.78rem, 0.95vw, 0.95rem);
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+
+.credit:hover {
+  opacity: 0.7;
+}
+
+.credit:focus-visible {
+  outline: 2px solid var(--lab-focus);
+  outline-offset: 3px;
+}
+
+/* Theme toggle — opposite corner from the credit (bottom-left). */
+.themeToggle {
+  position: absolute;
+  z-index: 5;
+  left: clamp(1rem, 3vw, 2rem);
+  bottom: clamp(1rem, 3vh, 1.75rem);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--lab-muted);
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.themeToggle:hover {
+  color: var(--lab-ink);
+}
+
+.themeToggle:focus-visible {
+  outline: 2px solid var(--lab-focus);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.themeToggle svg {
+  display: block;
+  width: 18px;
+  height: 18px;
+}
+
+.wordmark {
+  font-family: var(--type-logo-family, var(--font-body)), sans-serif;
+  white-space: nowrap;
+}
+
+.wordmarkName {
+  font-weight: var(--brand-signature-name-weight, 700);
+  color: var(--lab-ink);
+}
+
+.wordmarkMark {
+  font-weight: var(--brand-signature-name-weight, 700);
+  color: var(--lab-accent);
+  margin-left: var(--brand-wordmark-mark-gap, 0.01em);
+}
+
+/* ───────────────────────  Reduced motion  ────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .stage,
+  .introShape,
+  .line > span {
+    animation: none;
+  }
+  .line > span {
+    transform: translateY(0);
+  }
+  .introShape {
+    transform: scale(1);
+  }
+}
