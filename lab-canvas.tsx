@@ -5,6 +5,7 @@ import {
   useEffect,
   useRef,
   useState,
+  type CSSProperties,
   type KeyboardEvent,
   type MouseEvent,
   type PointerEvent,
@@ -16,17 +17,42 @@ import { IntroCard, ProjectCard } from "./panel";
 import { projects } from "./projects";
 import { Wordmark } from "./wordmark";
 
-// Fixed design canvas per card. Cards stack vertically on a CARD_H + GAP step;
-// the camera pans along Y (vertical scroll — natural on touch and responsive).
-const CARD_W = 1200;
-const CARD_H = 720;
-const GAP = 40;
-const STEP = CARD_H + GAP;
+// Cards float on a fixed design canvas and a JS camera pans along Y (vertical
+// scroll — natural on touch and responsive). The canvas is NOT a single fixed
+// size: its aspect ratio interpolates fluidly with the viewport width, from a
+// landscape 5:3 frame on wide screens to a ~3:4 portrait frame on phones, so a
+// phone held upright fills the screen instead of showing a tiny landscape card
+// floating between two empty bands. Card content is authored relative to the
+// card via CSS container units, so the typography reflows as the card reshapes.
+const LANDSCAPE = { w: 1200, h: 720 }; // 5:3 — wide screens
+const PORTRAIT = { w: 780, h: 1040 }; // 3:4 — phones held upright
+const NARROW = 480; // viewport width at/below which the canvas is full portrait
+const WIDE = 1024; // viewport width at/above which the canvas is full landscape
+const GAP = 40; // world gap between stacked cards
+const COUNT = projects.length + 1; // intro + projects
+
+const clamp01 = (v: number) => Math.max(0, Math.min(1, v));
+
+// Card geometry for a given viewport width. `t` runs 0 (portrait) → 1
+// (landscape); the aspect ratio and a reference height are interpolated so the
+// canvas morphs smoothly rather than snapping at a breakpoint.
+function cardSize(vw: number) {
+  const t = clamp01((vw - NARROW) / (WIDE - NARROW));
+  const arP = PORTRAIT.w / PORTRAIT.h;
+  const arL = LANDSCAPE.w / LANDSCAPE.h;
+  const ar = arP + (arL - arP) * t;
+  const h = PORTRAIT.h + (LANDSCAPE.h - PORTRAIT.h) * t;
+  return { w: Math.round(h * ar), h: Math.round(h) };
+}
 
 export function LabCanvas() {
   const viewportRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
+
+  // Card geometry mirrored into React state so each card's vertical position
+  // (top = index × step) re-renders when the canvas reshapes on resize.
+  const [geom, setGeom] = useState(LANDSCAPE);
 
   // Theme: null follows the system; "light"/"dark" is an explicit user choice
   // (persisted). The page reads it via the data-theme attribute.
@@ -54,17 +80,20 @@ export function LabCanvas() {
     }
   };
 
-  const count = projects.length + 1; // intro + projects
   const labels = ["Intro", ...projects.map((p) => p.title)];
-
-  const camMin = CARD_H / 2; // first card centred
-  const camMax = (count - 1) * STEP + CARD_H / 2; // last card centred
+  const step = geom.h + GAP; // vertical step used to lay the cards out
 
   // Mutable engine state lives in a ref so the rAF loop reads/writes without
-  // re-rendering. Only the active index is React state (for the minimap).
+  // re-rendering. Geometry (card size + camera bounds) also lives here so the
+  // loop and pointer/wheel handlers stay independent of React renders.
   const eng = useRef({
-    cam: camMin,
-    target: camMin,
+    cardW: LANDSCAPE.w,
+    cardH: LANDSCAPE.h,
+    step: LANDSCAPE.h + GAP,
+    camMin: LANDSCAPE.h / 2,
+    camMax: (COUNT - 1) * (LANDSCAPE.h + GAP) + LANDSCAPE.h / 2,
+    cam: LANDSCAPE.h / 2,
+    target: LANDSCAPE.h / 2,
     vel: 0, // world px per frame (inertia, along Y)
     scale: 1,
     scaleBase: 1,
@@ -87,26 +116,49 @@ export function LabCanvas() {
     const e = eng.current;
     e.vw = window.innerWidth;
     e.vh = window.innerHeight;
-    // fit the 1200×720 card (plus margin) to the viewport
-    const fit = Math.min(e.vw / 1340, e.vh / 880);
+
+    // Index currently centred, computed against the OLD geometry so we can keep
+    // the same card framed across an aspect change.
+    const idx = e.step ? Math.round((e.target - e.camMin) / e.step) : 0;
+
+    const { w, h } = cardSize(e.vw);
+    const changed = w !== e.cardW || h !== e.cardH;
+    e.cardW = w;
+    e.cardH = h;
+    e.step = h + GAP;
+    e.camMin = h / 2;
+    e.camMax = (COUNT - 1) * e.step + e.camMin;
+
+    // Fit the card (plus a small margin) to the viewport.
+    const fit = Math.min(e.vw / (w * 1.12), e.vh / (h * 1.2));
     e.scaleBase = Math.max(0.18, Math.min(fit, 1));
+
+    if (changed) {
+      // Re-centre the framed card on the new bounds. Only a width change
+      // reshapes the canvas; a vertical-only resize (e.g. a mobile URL bar
+      // showing/hiding) leaves the camera untouched, just the zoom.
+      const clampedIdx = Math.max(0, Math.min(COUNT - 1, idx));
+      e.target = e.camMin + clampedIdx * e.step;
+      e.cam = e.target;
+      e.vel = 0;
+      setGeom((prev) => (prev.w === w && prev.h === h ? prev : { w, h }));
+    } else {
+      e.target = Math.max(e.camMin, Math.min(e.camMax, e.target));
+    }
   }, []);
 
-  const clampTarget = useCallback(
-    (v: number) => Math.max(camMin, Math.min(camMax, v)),
-    [camMin, camMax],
-  );
+  const clampTarget = useCallback((v: number) => {
+    const e = eng.current;
+    return Math.max(e.camMin, Math.min(e.camMax, v));
+  }, []);
 
   // Move the camera to a card (keyboard / minimap / focus).
-  const goTo = useCallback(
-    (i: number) => {
-      const idx = Math.max(0, Math.min(count - 1, i));
-      const e = eng.current;
-      e.target = camMin + idx * STEP;
-      e.vel = 0;
-    },
-    [count, camMin],
-  );
+  const goTo = useCallback((i: number) => {
+    const idx = Math.max(0, Math.min(COUNT - 1, i));
+    const e = eng.current;
+    e.target = e.camMin + idx * e.step;
+    e.vel = 0;
+  }, []);
 
   // ── camera loop ──
   useEffect(() => {
@@ -127,7 +179,7 @@ export function LabCanvas() {
         e.vel *= 0.92;
         if (Math.abs(e.vel) < 0.02) e.vel = 0;
       }
-      if (e.target <= camMin || e.target >= camMax) e.vel = 0;
+      if (e.target <= e.camMin || e.target >= e.camMax) e.vel = 0;
 
       // ease the camera toward its target
       if (e.reduce) {
@@ -146,15 +198,17 @@ export function LabCanvas() {
 
       if (stage) {
         // horizontal stays centred; vertical follows the camera
-        const tx = e.vw / 2 - (CARD_W / 2) * e.scale;
+        const tx = e.vw / 2 - (e.cardW / 2) * e.scale;
         const ty = e.vh / 2 - e.cam * e.scale;
         stage.style.transform = `translate(${tx}px, ${ty}px) scale(${e.scale})`;
       }
 
-      const idx = Math.max(
-        0,
-        Math.min(count - 1, Math.round((e.cam - camMin) / STEP)),
-      );
+      const idx = e.step
+        ? Math.max(
+            0,
+            Math.min(COUNT - 1, Math.round((e.cam - e.camMin) / e.step)),
+          )
+        : 0;
       setActive((prev) => (prev === idx ? prev : idx));
 
       raf = requestAnimationFrame(tick);
@@ -167,7 +221,7 @@ export function LabCanvas() {
       cancelAnimationFrame(raf);
       window.removeEventListener("resize", onResize);
     };
-  }, [measure, clampTarget, camMin, camMax, count]);
+  }, [measure, clampTarget]);
 
   // ── wheel → vertical pan (both axes accepted; deltaY is the natural one) ──
   useEffect(() => {
@@ -266,15 +320,24 @@ export function LabCanvas() {
     if (ev.key === "ArrowDown" || ev.key === "ArrowRight") target = active + 1;
     else if (ev.key === "ArrowUp" || ev.key === "ArrowLeft") target = active - 1;
     else if (ev.key === "Home") target = 0;
-    else if (ev.key === "End") target = count - 1;
+    else if (ev.key === "End") target = COUNT - 1;
     else return;
     ev.preventDefault();
     goTo(target);
   };
 
   return (
-    <main className={styles.page} data-theme={theme ?? undefined}>
-      <Minimap total={count} active={active} labels={labels} onJump={goTo} />
+    <main
+      className={styles.page}
+      data-theme={theme ?? undefined}
+      style={
+        {
+          "--card-w": `${geom.w}px`,
+          "--card-h": `${geom.h}px`,
+        } as CSSProperties
+      }
+    >
+      <Minimap total={COUNT} active={active} labels={labels} onJump={goTo} />
 
       <div
         ref={viewportRef}
@@ -296,7 +359,7 @@ export function LabCanvas() {
               key={project.slug}
               project={project}
               number={i + 1}
-              top={(i + 1) * STEP}
+              top={(i + 1) * step}
               onFocusCard={() => goTo(i + 1)}
             />
           ))}
