@@ -39,8 +39,7 @@ que persiste la elección).
 - `/lab/llms.txt`, `/lab/robots.txt` y `/lab/sitemap.xml` son routes propias del
   submódulo. En producción el proxy del sitio contenedor las expone como
   `https://lab.pablozarate.com/llms.txt`, `/robots.txt` y `/sitemap.xml`.
-- El minimap conserva su forma visual de líneas, pero cada tick tiene un área de
-  activación de 44x44 px para cumplir con objetivos táctiles accesibles.
+- El minimap conserva su forma visual compacta de líneas.
 
 ## Estructura
 
@@ -55,4 +54,5 @@ que persiste la elección).
 ## Projects
 
 - `shader-experiment-01`: interactive PabloZarate wordmark shader with
-  RAMS-aligned dark-mode typography and visual effects.
+  RAMS-aligned dark-mode typography, visual effects, and a footer link back to
+  the Lab index.

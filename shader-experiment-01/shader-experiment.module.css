@@ -156,14 +156,60 @@
   bottom: var(--rams-page-padding);
   left: var(--rams-page-padding);
   display: flex;
-  align-items: baseline;
+  flex-direction: column;
+  align-items: center;
   justify-content: center;
+  gap: 0.45rem;
   color: var(--shader-muted);
   font-family: var(--type-footer-family), var(--font-body), sans-serif;
   font-size: var(--type-footer-size);
   font-weight: var(--type-footer-weight);
   line-height: var(--type-footer-leading);
   text-align: center;
+}
+
+.footerCredit {
+  display: inline-flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 0.25em;
+}
+
+.footerWordmark {
+  font-family: var(--type-logo-family, var(--font-body)), sans-serif;
+  white-space: nowrap;
+}
+
+.footerWordmarkName {
+  color: var(--shader-ink);
+  font-weight: var(--brand-signature-name-weight, 700);
+}
+
+.footerWordmarkMark {
+  color: var(--brand-accent);
+  font-weight: var(--brand-signature-name-weight, 700);
+  margin-left: var(--brand-wordmark-mark-gap, 0.01em);
+}
+
+.backLink {
+  color: var(--shader-muted);
+  font-family: var(--type-nav-family), var(--font-display), sans-serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1;
+  text-decoration: none;
+  transition:
+    color 160ms ease,
+    opacity 160ms ease;
+}
+
+.backLink:hover {
+  color: var(--shader-ink);
+}
+
+.backLink:focus-visible {
+  outline: 2px solid var(--brand-accent);
+  outline-offset: 4px;
 }
 
 @media (max-width: 640px) {
@@ -193,6 +239,10 @@
 
 @media (prefers-reduced-motion: reduce) {
   .effectButton {
+    transition: none;
+  }
+
+  .backLink {
     transition: none;
   }
 }

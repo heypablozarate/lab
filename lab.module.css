@@ -229,12 +229,13 @@ a.card:focus-visible {
 .introShape {
   position: absolute;
   z-index: 0;
-  top: 0;
-  right: 0;
+  top: 50%;
+  left: 50%;
   height: 100%;
   aspect-ratio: 1 / 1;
   background: var(--lab-accent);
   border-radius: 50%;
+  translate: -50% -50%;
   transform: scale(0);
   animation: shapeIn 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) 0.35s forwards;
   opacity: 0.12;

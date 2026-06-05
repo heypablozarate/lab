@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 
 import { WordmarkStage } from "./components/wordmark-stage";
 import styles from "./shader-experiment.module.css";
@@ -80,7 +81,18 @@ export default function ShaderExperimentPage() {
       <WordmarkStage />
 
       <footer className={styles.footer}>
-        Designed by PabloZarate™
+        <span className={styles.footerCredit}>
+          Designed by{" "}
+          <span className={styles.footerWordmark}>
+            <span className={styles.footerWordmarkName}>PabloZarate</span>
+            <span className={styles.footerWordmarkMark} aria-hidden="true">
+              ™
+            </span>
+          </span>
+        </span>
+        <Link className={styles.backLink} href="/lab">
+          Back to the Lab
+        </Link>
       </footer>
     </main>
   );

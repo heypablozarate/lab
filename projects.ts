@@ -49,7 +49,7 @@ export const projects: LabProject[] = [
     year: 2026,
     kind: "Design system",
     description:
-      "Live design-system preview for RAMS, PabloZarate's product design language for high-craft interfaces, tokens, motion, and visual systems.",
+      "A non-traditional way to show what a design system can do: experiments, philosophy, and interface studies that turn RAMS into a working point of view.",
     tags: ["design system", "product design", "visual systems", "RAMS", "interface craft"],
     href: "https://pablozarate.com/rams/theme-preview",
   },
@@ -59,7 +59,7 @@ export const projects: LabProject[] = [
     year: 2026,
     kind: "Puzzle game",
     description:
-      "A one-person puzzle-game prototype that treats gameplay, interaction design, and product experimentation as the same craft surface.",
+      "Simple premise: crack the next number, keep going. Hidden clues are waiting to be decoded. Each level gets harder. A love letter to the weird internet puzzles of the early 2000s.",
     tags: ["one man army", "game prototype", "interaction design", "experimentation", "product craft"],
     href: "https://hit-try.vercel.app/",
   },

@@ -45,8 +45,9 @@ export function IntroCard({
           ))}
         </h1>
         <p className={styles.introSummary}>
-          Product design experiments, digital experience prototypes, WebGL studies,
-          design systems, and one-person technology craft.
+          Design experiments, prototypes, WebGL studies, design systems & other
+          stuff — Driven by curiosity. Built at the intersection of technology
+          and the liberal arts.
         </p>
       </div>
     </section>
