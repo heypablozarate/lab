@@ -31,18 +31,24 @@ export function IntroCard({
       className={styles.card}
       data-variant="intro"
       style={{ top }}
-      aria-label="Lab — the exploratory playground of PabloZarate. Welcome to the Lab."
+      aria-labelledby="lab-title"
       tabIndex={-1}
       onFocus={onFocusCard}
     >
       <span className={styles.introShape} aria-hidden="true" />
-      <p className={styles.introLines}>
-        {lines.map((line, i) => (
-          <span className={styles.line} key={i}>
-            <span style={{ animationDelay: `${0.2 + i * 0.08}s` }}>{line}</span>
-          </span>
-        ))}
-      </p>
+      <div className={styles.introContent}>
+        <h1 id="lab-title" className={styles.introLines}>
+          {lines.map((line, i) => (
+            <span className={styles.line} key={i}>
+              <span style={{ animationDelay: `${0.2 + i * 0.08}s` }}>{line}</span>
+            </span>
+          ))}
+        </h1>
+        <p className={styles.introSummary}>
+          Product design experiments, digital experience prototypes, WebGL studies,
+          design systems, and one-person technology craft.
+        </p>
+      </div>
     </section>
   );
 }
@@ -78,7 +84,7 @@ export function ProjectCard({
         {String(number).padStart(2, "0")}
       </span>
       <div className={styles.content}>
-        <span className={styles.cardTitle}>{project.title}</span>
+        <h2 className={styles.cardTitle}>{project.title}</h2>
         <span className={styles.meta}>
           <span>{project.year}</span>
           <span className={styles.metaDivider} aria-hidden="true" />
@@ -92,6 +98,7 @@ export function ProjectCard({
             </>
           ) : null}
         </span>
+        <p className={styles.cardDescription}>{project.description}</p>
       </div>
     </>
   );

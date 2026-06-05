@@ -16,12 +16,31 @@ que persiste la elección).
 2. Agregá una entrada al manifiesto `projects.ts`:
 
    ```ts
-   { slug: "<slug>", title: "Título", year: 2026, kind: "Tipo" }
+   {
+     slug: "<slug>",
+     title: "Título",
+     year: 2026,
+     kind: "Tipo",
+     description: "Resumen indexable del experimento.",
+     tags: ["product design", "digital experience"]
+   }
    ```
 
    Eso genera automáticamente la tarjeta, su número de índice y su línea en el
    minimap. `accent` (color por proyecto) y `href` (link externo, abre en pestaña
-   nueva con ↗) son opcionales. El `slug` define la carpeta del proyecto.
+   nueva con ↗) son opcionales. El `slug` define la carpeta del proyecto. La
+   `description` y los `tags` alimentan las tarjetas, JSON-LD, sitemap/LLM
+   documents y la API pública del sitio contenedor.
+
+## SEO, accesibilidad y agentes
+
+- `/lab` renderiza un H1 real, headings por proyecto, summaries visibles, JSON-LD
+  `CollectionPage` + `ItemList`, y controles alternativos al drag.
+- `/lab/llms.txt`, `/lab/robots.txt` y `/lab/sitemap.xml` son routes propias del
+  submódulo. En producción el proxy del sitio contenedor las expone como
+  `https://lab.pablozarate.com/llms.txt`, `/robots.txt` y `/sitemap.xml`.
+- El minimap conserva su forma visual de líneas, pero cada tick tiene un área de
+  activación de 44x44 px para cumplir con objetivos táctiles accesibles.
 
 ## Estructura
 

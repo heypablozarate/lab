@@ -15,6 +15,10 @@ export type LabProject = {
   year: number;
   /** Short descriptor, e.g. "Shader / WebGL". */
   kind: string;
+  /** Search/agent-readable summary of the experiment. */
+  description: string;
+  /** Topic tags that describe the experiment for crawlers and LLMs. */
+  tags: string[];
   /** Optional per-project accent; falls back to the brand accent. */
   accent?: string;
   /**
@@ -35,12 +39,18 @@ export const projects: LabProject[] = [
     title: "Shader Experiment",
     year: 2026,
     kind: "Shader / WebGL",
+    description:
+      "Interactive WebGL wordmark study exploring typography, shader motion, interface craft, and technology-led digital experience design.",
+    tags: ["WebGL", "shader", "typography", "digital experience", "interface design"],
   },
   {
     slug: "rams-theme-preview",
     title: "RAMS Theme Preview",
     year: 2026,
     kind: "Design system",
+    description:
+      "Live design-system preview for RAMS, PabloZarate's product design language for high-craft interfaces, tokens, motion, and visual systems.",
+    tags: ["design system", "product design", "visual systems", "RAMS", "interface craft"],
     href: "https://pablozarate.com/rams/theme-preview",
   },
   {
@@ -48,6 +58,9 @@ export const projects: LabProject[] = [
     title: "Hit_Try",
     year: 2026,
     kind: "Puzzle game",
+    description:
+      "A one-person puzzle-game prototype that treats gameplay, interaction design, and product experimentation as the same craft surface.",
+    tags: ["one man army", "game prototype", "interaction design", "experimentation", "product craft"],
     href: "https://hit-try.vercel.app/",
   },
 ];

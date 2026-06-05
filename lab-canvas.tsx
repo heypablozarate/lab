@@ -5,6 +5,7 @@ import {
   useEffect,
   useRef,
   useState,
+  useSyncExternalStore,
   type CSSProperties,
   type KeyboardEvent,
   type MouseEvent,
@@ -32,6 +33,45 @@ const GAP = 40; // world gap between stacked cards
 const COUNT = projects.length + 1; // intro + projects
 
 const clamp01 = (v: number) => Math.max(0, Math.min(1, v));
+const COLOR_SCHEME_QUERY = "(prefers-color-scheme: dark)";
+const LAB_THEME_STORAGE_KEY = "lab-theme";
+const LAB_THEME_CHANGE_EVENT = "lab-theme-change";
+type LabTheme = "light" | "dark" | null;
+
+function getSystemDarkSnapshot() {
+  return typeof window !== "undefined" && window.matchMedia(COLOR_SCHEME_QUERY).matches;
+}
+
+function subscribeSystemDark(onStoreChange: () => void) {
+  if (typeof window === "undefined") return () => {};
+
+  const mq = window.matchMedia(COLOR_SCHEME_QUERY);
+  mq.addEventListener("change", onStoreChange);
+  return () => mq.removeEventListener("change", onStoreChange);
+}
+
+function normalizeTheme(value: string | null): LabTheme {
+  return value === "light" || value === "dark" ? value : null;
+}
+
+function getStoredThemeSnapshot() {
+  if (typeof window === "undefined") return null;
+  return normalizeTheme(localStorage.getItem(LAB_THEME_STORAGE_KEY));
+}
+
+function subscribeStoredTheme(onStoreChange: () => void) {
+  if (typeof window === "undefined") return () => {};
+
+  const onStorage = (ev: StorageEvent) => {
+    if (ev.key === LAB_THEME_STORAGE_KEY) onStoreChange();
+  };
+  window.addEventListener("storage", onStorage);
+  window.addEventListener(LAB_THEME_CHANGE_EVENT, onStoreChange);
+  return () => {
+    window.removeEventListener("storage", onStorage);
+    window.removeEventListener(LAB_THEME_CHANGE_EVENT, onStoreChange);
+  };
+}
 
 // Card geometry for a given viewport width. `t` runs 0 (portrait) → 1
 // (landscape); the aspect ratio and a reference height are interpolated so the
@@ -56,25 +96,23 @@ export function LabCanvas() {
 
   // Theme: null follows the system; "light"/"dark" is an explicit user choice
   // (persisted). The page reads it via the data-theme attribute.
-  const [theme, setTheme] = useState<"light" | "dark" | null>(null);
-  const [systemDark, setSystemDark] = useState(false);
-
-  useEffect(() => {
-    const mq = window.matchMedia("(prefers-color-scheme: dark)");
-    setSystemDark(mq.matches);
-    const onChange = (ev: MediaQueryListEvent) => setSystemDark(ev.matches);
-    mq.addEventListener("change", onChange);
-    const saved = localStorage.getItem("lab-theme");
-    if (saved === "light" || saved === "dark") setTheme(saved);
-    return () => mq.removeEventListener("change", onChange);
-  }, []);
+  const theme = useSyncExternalStore(
+    subscribeStoredTheme,
+    getStoredThemeSnapshot,
+    () => null,
+  );
+  const systemDark = useSyncExternalStore(
+    subscribeSystemDark,
+    getSystemDarkSnapshot,
+    () => false,
+  );
 
   const effectiveTheme = theme ?? (systemDark ? "dark" : "light");
   const toggleTheme = () => {
     const next = effectiveTheme === "dark" ? "light" : "dark";
-    setTheme(next);
     try {
-      localStorage.setItem("lab-theme", next);
+      localStorage.setItem(LAB_THEME_STORAGE_KEY, next);
+      window.dispatchEvent(new Event(LAB_THEME_CHANGE_EVENT));
     } catch {
       // storage unavailable
     }
@@ -329,6 +367,7 @@ export function LabCanvas() {
   return (
     <main
       className={styles.page}
+      aria-labelledby="lab-title"
       data-theme={theme ?? undefined}
       style={
         {
@@ -338,12 +377,20 @@ export function LabCanvas() {
       }
     >
       <Minimap total={COUNT} active={active} labels={labels} onJump={goTo} />
+      <p id="lab-canvas-instructions" className={styles.srOnly}>
+        Browse Lab panels with the arrow keys, Home and End, mouse wheel, touch
+        drag, or the Lab panels navigation buttons.
+      </p>
+      <p className={styles.srOnly} aria-live="polite">
+        Current Lab panel: {labels[active] ?? "Intro"}.
+      </p>
 
       <div
         ref={viewportRef}
         className={styles.viewport}
         role="region"
         aria-label="Lab projects — drag or scroll to browse"
+        aria-describedby="lab-canvas-instructions"
         tabIndex={0}
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
