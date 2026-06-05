@@ -321,36 +321,24 @@ a.card:focus-visible {
 }
 
 .tick {
-  position: relative;
-  width: 44px;
-  height: 44px;
-  padding: 0;
-  border: 0;
-  background: transparent;
-  cursor: pointer;
-}
-
-.tick::before {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
   width: 15px;
   height: 2px;
+  padding: 0;
+  border: 0;
   background: var(--lab-line);
-  transform: translate(-50%, -50%);
+  cursor: pointer;
   transition:
     background 0.25s ease,
     width 0.25s ease,
     transform 0.25s ease;
 }
 
-.tick:hover::before {
+.tick:hover {
   background: color-mix(in srgb, var(--lab-ink) 45%, transparent);
-  transform: translate(-50%, -50%) scaleX(1.15);
+  transform: scaleX(1.15);
 }
 
-.tick[data-active="true"]::before {
+.tick[data-active="true"] {
   background: var(--lab-accent);
   width: 19px;
 }
@@ -541,7 +529,7 @@ a.card:focus-visible {
   .introShape {
     transform: scale(1);
   }
-  .tick::before,
+  .tick,
   .credit,
   .themeToggle {
     transition: none;
