@@ -5,7 +5,7 @@ import { projects } from "./projects";
 
 const LAB_URL = "https://lab.pablozarate.com";
 const LAB_TITLE =
-  "PabloZarate Lab — Product Design Experiments & Digital Prototypes";
+  "Design Laboratory — Experiments & Digital Prototypes by PabloZarate™";
 const LAB_DESCRIPTION =
   "A product design and digital experimentation lab by Pablo Zarate exploring interfaces, WebGL, design systems, one-person product craft, and technology-led experiences.";
 
