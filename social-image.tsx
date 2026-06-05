@@ -20,7 +20,9 @@ export function generateLabSocialImage() {
           display: "flex",
           position: "relative",
           overflow: "hidden",
-          background: "#f4f1ed",
+          alignItems: "center",
+          justifyContent: "center",
+          background: "#f1eeea",
           color: "#1d1b19",
           fontFamily: "Arial, Helvetica, sans-serif",
         }}
@@ -30,121 +32,124 @@ export function generateLabSocialImage() {
             position: "absolute",
             inset: 0,
             background:
-              "linear-gradient(90deg, rgba(29,27,25,0.06) 1px, transparent 1px), linear-gradient(0deg, rgba(29,27,25,0.06) 1px, transparent 1px)",
-            backgroundSize: "120px 120px",
+              "linear-gradient(90deg, transparent 599px, rgba(29,27,25,0.09) 600px, transparent 601px), linear-gradient(0deg, transparent 314px, rgba(29,27,25,0.09) 315px, transparent 316px)",
           }}
         />
         <div
           style={{
-            position: "absolute",
-            right: 112,
-            top: 74,
-            width: 390,
-            height: 390,
-            borderRadius: "50%",
-            background: "#ff4b18",
-            opacity: 0.12,
-          }}
-        />
-        <div
-          style={{
-            position: "absolute",
-            left: 72,
-            right: 72,
-            top: 66,
-            bottom: 66,
             display: "flex",
+            position: "relative",
+            width: 980,
+            height: 588,
             flexDirection: "column",
             justifyContent: "space-between",
             border: "1px solid rgba(29,27,25,0.12)",
-            background: "rgba(255,255,255,0.44)",
-            padding: "54px 60px",
+            background: "rgba(255,255,255,0.62)",
+            overflow: "hidden",
           }}
         >
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <div
-              style={{
-                display: "flex",
-                gap: 10,
-                alignItems: "center",
-                fontSize: 24,
-                color: "rgba(29,27,25,0.58)",
-              }}
-            >
-              <span>Design</span>
-              <span style={{ color: "#ff4b18" }}>Experimentation</span>
-              <span>Technology</span>
-            </div>
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: 8,
-                alignItems: "flex-end",
-                paddingTop: 6,
-              }}
-            >
-              <div style={{ width: 26, height: 3, background: "#ff4b18" }} />
-              <div
-                style={{
-                  width: 18,
-                  height: 2,
-                  background: "rgba(29,27,25,0.18)",
-                }}
-              />
-              <div
-                style={{
-                  width: 18,
-                  height: 2,
-                  background: "rgba(29,27,25,0.18)",
-                }}
-              />
-            </div>
-          </div>
-
-          <div style={{ display: "flex", flexDirection: "column", gap: 28 }}>
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                fontSize: 104,
-                lineHeight: 0.92,
-                letterSpacing: "-0.055em",
-                maxWidth: 760,
-              }}
-            >
-              <span>PabloZarate</span>
-              <span>
-                Lab<span style={{ color: "#ff4b18" }}>.</span>
-              </span>
-            </div>
-            <div
-              style={{
-                maxWidth: 720,
-                fontSize: 31,
-                lineHeight: 1.14,
-                color: "rgba(29,27,25,0.66)",
-              }}
-            >
-              Product design experiments, digital experience prototypes, WebGL
-              studies, design systems, and one-person product craft.
-            </div>
-          </div>
-
           <div
             style={{
+              position: "absolute",
+              left: 196,
+              top: 0,
+              width: 588,
+              height: 588,
+              borderRadius: "50%",
+              background: "#ff4b18",
+              opacity: 0.12,
+            }}
+          />
+          <div
+            style={{
+              position: "absolute",
+              right: 20,
+              top: 286,
               display: "flex",
-              justifyContent: "space-between",
-              alignItems: "flex-end",
-              fontSize: 24,
-              color: "rgba(29,27,25,0.58)",
+              flexDirection: "column",
+              gap: 7,
+              alignItems: "center",
             }}
           >
-            <div>lab.pablozarate.com</div>
-            <div style={{ display: "flex" }}>
-              Designed by <span style={{ color: "#1d1b19" }}>PabloZarate</span>
-              <span style={{ color: "#ff4b18" }}>™</span>
-            </div>
+            <div style={{ width: 19, height: 2, background: "#ff4b18" }} />
+            <div
+              style={{
+                width: 15,
+                height: 2,
+                background: "rgba(29,27,25,0.16)",
+              }}
+            />
+            <div
+              style={{
+                width: 15,
+                height: 2,
+                background: "rgba(29,27,25,0.16)",
+              }}
+            />
+            <div
+              style={{
+                width: 15,
+                height: 2,
+                background: "rgba(29,27,25,0.16)",
+              }}
+            />
+          </div>
+          <div
+            style={{
+              position: "relative",
+              display: "flex",
+              flexDirection: "column",
+              gap: 7,
+              width: 690,
+              paddingLeft: 286,
+              paddingTop: 72,
+            }}
+          >
+            {[
+              "This is the",
+              "exploratory",
+              "playground of",
+              "PabloZarate™",
+              "Welcome to",
+              "the Lab",
+            ].map((line, index) => (
+              <div
+                key={line}
+                style={{
+                  display: "flex",
+                  fontSize: index === 3 ? 59 : 57,
+                  lineHeight: 0.93,
+                  letterSpacing: "-0.04em",
+                  fontWeight: index === 3 ? 700 : 400,
+                  color: "#1d1b19",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                {index === 5 ? (
+                  <span style={{ display: "flex" }}>
+                    the Lab<span style={{ color: "#ff4b18" }}>.</span>
+                  </span>
+                ) : (
+                  line
+                )}
+              </div>
+            ))}
+          </div>
+          <div
+            style={{
+              position: "absolute",
+              left: 286,
+              bottom: 50,
+              display: "flex",
+              width: 470,
+              fontSize: 17,
+              lineHeight: 1.22,
+              color: "rgba(29,27,25,0.64)",
+            }}
+          >
+            Design experiments, prototypes, WebGL studies, design systems &
+            other stuff — Driven by curiosity. Built at the intersection of
+            technology and the liberal arts.
           </div>
         </div>
       </div>
