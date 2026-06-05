@@ -39,8 +39,9 @@ que persiste la elección).
 - `/lab/llms.txt`, `/lab/robots.txt` y `/lab/sitemap.xml` son routes propias del
   submódulo. En producción el proxy del sitio contenedor las expone como
   `https://lab.pablozarate.com/llms.txt`, `/robots.txt` y `/sitemap.xml`.
-- `opengraph-image.tsx` y `twitter-image.tsx` generan la imagen social del Lab
-  para previews de Open Graph y X/Twitter.
+- `opengraph-image.jpg` y `twitter-image.jpg` son las imágenes sociales
+  estáticas del Lab para previews de Open Graph y X/Twitter; sus `.alt.txt`
+  hermanos definen el texto alternativo.
 - El minimap conserva su forma visual compacta de líneas.
 
 ## Estructura
