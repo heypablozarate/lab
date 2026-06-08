@@ -171,6 +171,12 @@ export function LabCanvas() {
     const fit = Math.min(e.vw / (w * 1.12), e.vh / (h * 1.2));
     e.scaleBase = Math.max(0.18, Math.min(fit, 1));
 
+    // Publish the resting fit scale to CSS so in-card secondary text can floor
+    // its on-screen size (the stage is transform-scaled by this, so cqw text
+    // would otherwise render at ~7px on phones). Set imperatively — it affects
+    // type size, not layout, so it doesn't need to drive a React render.
+    stageRef.current?.style.setProperty("--fit", String(e.scaleBase));
+
     if (changed) {
       // Re-centre the framed card on the new bounds. Only a width change
       // reshapes the canvas; a vertical-only resize (e.g. a mobile URL bar

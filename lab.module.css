@@ -176,7 +176,12 @@ a.card:focus-visible {
   max-width: 56cqw;
   margin: 0;
   font-family: var(--font-body, system-ui, sans-serif);
-  font-size: clamp(0.8rem, 2cqw, 1.5rem);
+  /* Sizing in cqw makes text track the card, but the whole stage is then
+     scaled down by the camera to fit the viewport (--fit, the resting fit
+     scale, is published from JS). On phones that downscale (~0.45×) turned
+     2cqw into ~7px on screen. max() keeps the card-relative size on wide
+     screens but pins a legible on-screen minimum (~15px) once --fit shrinks. */
+  font-size: max(2cqw, calc(15px / var(--fit, 1)));
   line-height: 1.25;
   letter-spacing: 0;
   color: var(--lab-muted);
@@ -194,7 +199,9 @@ a.card:focus-visible {
   align-items: center;
   justify-content: center;
   gap: 1.167cqw;
-  font-size: 1.833cqw; /* ≈22px on the landscape canvas */
+  /* ≈22px on the landscape canvas; floored to ~13px on screen once the camera
+     downscales the stage on small viewports (see .cardDescription). */
+  font-size: max(1.833cqw, calc(13px / var(--fit, 1)));
   font-weight: 500;
   letter-spacing: 0.01em;
   color: var(--lab-muted);
@@ -261,7 +268,9 @@ a.card:focus-visible {
   max-width: 50cqw;
   margin: 0;
   font-family: var(--font-body, system-ui, sans-serif);
-  font-size: clamp(0.82rem, 1.55cqw, 1.1875rem);
+  /* Card-relative on wide screens, floored to ~14px on screen once the camera
+     downscales the stage on small viewports (see .cardDescription). */
+  font-size: max(1.55cqw, calc(14px / var(--fit, 1)));
   line-height: 1.25;
   letter-spacing: 0;
   color: var(--lab-muted);
