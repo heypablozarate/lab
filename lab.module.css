@@ -74,6 +74,8 @@
   cursor: grab;
   touch-action: none;
   outline: none;
+  --guide-x: 50%;
+  --guide-y: 50%;
 }
 
 .viewport[data-dragging="true"] {
@@ -109,11 +111,12 @@
   left: 0;
   /* top is set inline (index × step) — cards stack vertically.
      Size comes from the canvas geometry set on .page (--card-w/--card-h):
-     a landscape 5:3 frame on wide screens that morphs to a ~3:4 portrait
+     a landscape 5:3 frame on wide screens that morphs to a tall portrait
      frame on phones. The card is a size container so its content can be
      authored in container units (cqw/cqmin) and reflow as the card reshapes. */
   width: var(--card-w, 1200px);
   height: var(--card-h, 720px);
+  --lab-card-text-measure: 56cqw;
   container-type: size;
   display: flex;
   align-items: center;
@@ -162,7 +165,7 @@ a.card:focus-visible {
 
 .cardTitle {
   display: block;
-  max-width: 100%;
+  max-width: var(--lab-card-text-measure);
   margin: 0;
   font-weight: 400;
   font-size: 11cqw; /* ≈132px on the landscape canvas; scales with card width */
@@ -173,7 +176,7 @@ a.card:focus-visible {
 }
 
 .cardDescription {
-  max-width: 56cqw;
+  max-width: var(--lab-card-text-measure);
   margin: 0;
   font-family: var(--font-body, system-ui, sans-serif);
   /* Sizing in cqw makes text track the card, but the whole stage is then
@@ -228,9 +231,11 @@ a.card:focus-visible {
   z-index: 1;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  gap: 4cqw;
-  max-width: 66cqw;
+  align-items: center;
+  gap: 2.333cqw;
+  padding: 5.333cqw;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .introShape {
@@ -256,32 +261,95 @@ a.card:focus-visible {
 
 .introLines {
   position: relative;
+  max-width: var(--lab-card-text-measure);
   margin: 0;
+  font-family: var(--font-body, system-ui, sans-serif);
   font-weight: 400;
-  font-size: 7.1cqw; /* ≈85px on the landscape canvas; scales with card width */
-  line-height: 0.98;
-  letter-spacing: -0.03em;
-  text-align: left;
+  font-size: 7.65cqw;
+  line-height: 0.9;
+  letter-spacing: -0.012em;
+  text-align: center;
+  text-wrap: balance;
+  overflow-wrap: break-word;
+}
+
+.introParagraph {
+  display: block;
+}
+
+.introParagraph + .introParagraph {
+  margin-top: 1.1cqw;
 }
 
 .introSummary {
-  max-width: 50cqw;
+  max-width: var(--lab-card-text-measure);
   margin: 0;
   font-family: var(--font-body, system-ui, sans-serif);
-  /* Card-relative on wide screens, floored to ~14px on screen once the camera
-     downscales the stage on small viewports (see .cardDescription). */
-  font-size: max(1.55cqw, calc(14px / var(--fit, 1)));
+  /* Shared with project descriptions: card-relative on wide screens, floored
+     to ~15px on screen once the camera downscales the stage. */
+  font-size: max(2cqw, calc(15px / var(--fit, 1)));
   line-height: 1.25;
   letter-spacing: 0;
   color: var(--lab-muted);
-  text-align: left;
+  text-align: center;
   text-wrap: balance;
+}
+
+@media (max-width: 720px) {
+  .card {
+    --lab-card-text-measure: 62cqw;
+  }
+
+  .content,
+  .introContent {
+    align-items: flex-start;
+    gap: 3.2cqw;
+    padding: 8cqw 9cqw;
+    text-align: left;
+  }
+
+  .cardTitle {
+    font-size: 12.25cqw;
+    line-height: 0.88;
+    text-align: left;
+  }
+
+  .meta {
+    justify-content: flex-start;
+    gap: 2cqw;
+    font-size: max(3.25cqw, calc(13px / var(--fit, 1)));
+    line-height: 1.1;
+    text-align: left;
+  }
+
+  .cardDescription {
+    font-size: max(3.45cqw, calc(15px / var(--fit, 1)));
+    line-height: 1.22;
+    text-align: left;
+  }
+
+  .introLines {
+    font-size: 8.4cqw;
+    line-height: 0.92;
+    text-align: left;
+  }
+
+  .introParagraph + .introParagraph {
+    margin-top: 1.35cqw;
+  }
+
+  .introSummary {
+    font-size: max(3.45cqw, calc(15px / var(--fit, 1)));
+    line-height: 1.22;
+    text-align: left;
+  }
 }
 
 .line {
   display: block;
   overflow: hidden;
-  padding-bottom: 0.04em;
+  margin-block: -0.04em -0.12em;
+  padding-block: 0.04em 0.18em;
 }
 
 .line > span {
@@ -376,7 +444,7 @@ a.card:focus-visible {
 .guideH {
   left: 0;
   right: 0;
-  top: 50%;
+  top: var(--guide-y);
   height: 1px;
   background-image: repeating-linear-gradient(
     to right,
@@ -388,7 +456,7 @@ a.card:focus-visible {
 .guideV {
   top: 0;
   bottom: 0;
-  left: 50%;
+  left: var(--guide-x);
   width: 1px;
   background-image: repeating-linear-gradient(
     to bottom,
@@ -399,8 +467,8 @@ a.card:focus-visible {
 
 .crosshair {
   position: absolute;
-  top: 50%;
-  left: 50%;
+  top: var(--guide-y);
+  left: var(--guide-x);
   width: 18px;
   height: 18px;
   transform: translate(-50%, -50%);

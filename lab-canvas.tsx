@@ -21,12 +21,12 @@ import { Wordmark } from "./wordmark";
 // Cards float on a fixed design canvas and a JS camera pans along Y (vertical
 // scroll — natural on touch and responsive). The canvas is NOT a single fixed
 // size: its aspect ratio interpolates fluidly with the viewport width, from a
-// landscape 5:3 frame on wide screens to a ~3:4 portrait frame on phones, so a
-// phone held upright fills the screen instead of showing a tiny landscape card
+// landscape 5:3 frame on wide screens to a tall phone-native portrait frame, so
+// a phone held upright fills the screen instead of showing a tiny landscape card
 // floating between two empty bands. Card content is authored relative to the
 // card via CSS container units, so the typography reflows as the card reshapes.
 const LANDSCAPE = { w: 1200, h: 720 }; // 5:3 — wide screens
-const PORTRAIT = { w: 780, h: 1040 }; // 3:4 — phones held upright
+const PORTRAIT = { w: 780, h: 1280 }; // tall portrait — phones held upright
 const NARROW = 480; // viewport width at/below which the canvas is full portrait
 const WIDE = 1024; // viewport width at/above which the canvas is full landscape
 const GAP = 40; // world gap between stacked cards
@@ -286,8 +286,17 @@ export function LabCanvas() {
   // ── drag to pan vertically (deferred capture so plain clicks open links) ──
   const DRAG_THRESHOLD = 6;
 
+  const updateGuide = (ev: PointerEvent<HTMLDivElement>) => {
+    if (ev.pointerType !== "mouse") return;
+
+    const rect = ev.currentTarget.getBoundingClientRect();
+    ev.currentTarget.style.setProperty("--guide-x", `${ev.clientX - rect.left}px`);
+    ev.currentTarget.style.setProperty("--guide-y", `${ev.clientY - rect.top}px`);
+  };
+
   const onPointerDown = (ev: PointerEvent<HTMLDivElement>) => {
     if (ev.pointerType === "mouse" && ev.button !== 0) return;
+    updateGuide(ev);
     const e = eng.current;
     e.down = true;
     e.dragging = false;
@@ -302,6 +311,8 @@ export function LabCanvas() {
   };
 
   const onPointerMove = (ev: PointerEvent<HTMLDivElement>) => {
+    updateGuide(ev);
+
     const e = eng.current;
     if (!e.down) return;
     const dy = ev.clientY - e.startPos;

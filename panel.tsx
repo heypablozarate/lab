@@ -13,18 +13,23 @@ export function IntroCard({
   top: number;
   onFocusCard: () => void;
 }) {
-  const lines: ReactNode[] = [
-    "This is the",
-    "exploratory",
-    "playground of",
-    <>
-      <Wordmark />.
-    </>,
-    "Welcome to",
-    <>
-      the Lab<span className={styles.dot}>.</span>
-    </>,
+  const lineGroups: ReactNode[][] = [
+    [
+      "This is the",
+      "exploratory",
+      "playground of",
+      <>
+        <Wordmark />
+      </>,
+    ],
+    [
+      "Welcome to",
+      <>
+        the Lab<span className={styles.dot}>.</span>
+      </>,
+    ],
   ];
+  let lineIndex = 0;
 
   return (
     <section
@@ -38,9 +43,18 @@ export function IntroCard({
       <span className={styles.introShape} aria-hidden="true" />
       <div className={styles.introContent}>
         <h1 id="lab-title" className={styles.introLines}>
-          {lines.map((line, i) => (
-            <span className={styles.line} key={i}>
-              <span style={{ animationDelay: `${0.2 + i * 0.08}s` }}>{line}</span>
+          {lineGroups.map((lines, groupIndex) => (
+            <span className={styles.introParagraph} key={groupIndex}>
+              {lines.map((line, i) => {
+                const delay = 0.2 + lineIndex * 0.08;
+                lineIndex += 1;
+
+                return (
+                  <span className={styles.line} key={i}>
+                    <span style={{ animationDelay: `${delay}s` }}>{line}</span>
+                  </span>
+                );
+              })}
             </span>
           ))}
         </h1>
