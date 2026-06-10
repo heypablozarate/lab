@@ -19,6 +19,8 @@ export type LabProject = {
   description: string;
   /** Topic tags that describe the experiment for crawlers and LLMs. */
   tags: string[];
+  /** Real content modification timestamp used by the Lab sitemap. */
+  updatedAt?: string;
   /** Optional per-project accent; falls back to the brand accent. */
   accent?: string;
   /**
@@ -31,6 +33,8 @@ export type LabProject = {
   href?: string;
 };
 
+export const labHomeUpdatedAt = "2026-06-09T08:23:35-03:00";
+
 // Newest first — the order here is the left-to-right order on the canvas
 // (the Intro panel is always first, prepended by the canvas).
 export const projects: LabProject[] = [
@@ -42,6 +46,7 @@ export const projects: LabProject[] = [
     description:
       "Interactive WebGL wordmark study exploring typography, shader motion, interface craft, and technology-led digital experience design.",
     tags: ["WebGL", "shader", "typography", "digital experience", "interface design"],
+    updatedAt: "2026-06-09T08:23:35-03:00",
   },
   {
     slug: "rams-theme-preview",
