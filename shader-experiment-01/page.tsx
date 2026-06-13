@@ -22,7 +22,7 @@ export const metadata: Metadata = {
     "digital experience design",
     "interface craft",
     "Pablo Zarate",
-    "PabloZarate Lab",
+    "PabloZarate™ Lab",
   ],
   alternates: {
     canonical: PAGE_URL,
@@ -58,7 +58,7 @@ export default function ShaderExperimentPage() {
     },
     isPartOf: {
       "@type": "CollectionPage",
-      name: "PabloZarate Lab",
+      name: "PabloZarate™ Lab",
       url: "https://lab.pablozarate.com",
     },
     keywords: [

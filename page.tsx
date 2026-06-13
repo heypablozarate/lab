@@ -62,7 +62,7 @@ function LabStructuredData() {
       {
         "@type": "ItemList",
         "@id": `${LAB_URL}/#experiments`,
-        name: "Lab experiments by PabloZarate",
+        name: "Lab experiments by PabloZarate™",
         itemListElement: projects.map((project, index) => ({
           "@type": "ListItem",
           position: index + 1,
@@ -96,7 +96,7 @@ export const metadata: Metadata = {
   description: LAB_DESCRIPTION,
   keywords: [
     "Pablo Zarate",
-    "PabloZarate Lab",
+    "PabloZarate™ Lab",
     "product design experiments",
     "digital experience design",
     "one man army design",
