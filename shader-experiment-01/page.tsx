@@ -5,6 +5,10 @@ import { WordmarkStage } from "./components/wordmark-stage";
 import styles from "./shader-experiment.module.css";
 
 const PAGE_URL = "https://lab.pablozarate.com/shader-experiment-01";
+// Reuse the Lab brand social cards (served from the /lab route group) so the
+// experiment has a valid og:image / twitter:image instead of falling back to none.
+const SOCIAL_IMAGE_URL = "https://lab.pablozarate.com/lab/opengraph-image.jpg";
+const TWITTER_IMAGE_URL = "https://lab.pablozarate.com/lab/twitter-image.jpg";
 const PAGE_TITLE = "Shader Experiment 01 — WebGL Typography Lab by PabloZarate™";
 const PAGE_DESCRIPTION =
   "Interactive WebGL wordmark experiment by Pablo Zarate exploring shader motion, typography, interface craft, and technology-led digital experience design.";
@@ -33,11 +37,20 @@ export const metadata: Metadata = {
     url: PAGE_URL,
     siteName: "Lab by PabloZarate™",
     type: "website",
+    images: [
+      {
+        url: SOCIAL_IMAGE_URL,
+        width: 1280,
+        height: 746,
+        alt: "PabloZarate Lab intro card, dark interface preview with large white welcome text and an orange accent shape.",
+      },
+    ],
   },
   twitter: {
-    card: "summary",
+    card: "summary_large_image",
     title: PAGE_TITLE,
     description: PAGE_DESCRIPTION,
+    images: [TWITTER_IMAGE_URL],
   },
 };
 
@@ -90,7 +103,7 @@ export default function ShaderExperimentPage() {
             </span>
           </span>
         </span>
-        <Link className={styles.backLink} href="/lab">
+        <Link className={styles.backLink} href="/">
           Back to the Lab
         </Link>
       </footer>

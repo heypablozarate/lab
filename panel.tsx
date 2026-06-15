@@ -69,8 +69,9 @@ export function IntroCard({
 }
 
 /**
- * One card per project. Internal projects link to `/lab/<slug>`; projects with
- * an `href` link out (new tab, ↗ indicator).
+ * One card per project. Internal projects link to the canonical public URL
+ * `/<slug>` (served from `lab.pablozarate.com`, internally routed to
+ * `/lab/<slug>`); projects with an `href` link out (new tab, ↗ indicator).
  */
 export function ProjectCard({
   project,
@@ -140,7 +141,7 @@ export function ProjectCard({
       className={styles.card}
       data-variant="project"
       style={style}
-      href={`/lab/${project.slug}`}
+      href={`/${project.slug}`}
       aria-label={ariaLabel}
       onFocus={onFocusCard}
     >
