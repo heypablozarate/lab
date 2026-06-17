@@ -263,9 +263,7 @@ a.card:focus-visible {
   position: relative;
   max-width: var(--lab-card-text-measure);
   margin: 0;
-  font-family: var(--font-body, system-ui, sans-serif);
   font-weight: 400;
-  font-size: 7.65cqw;
   line-height: 0.9;
   letter-spacing: -0.012em;
   text-align: center;

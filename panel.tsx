@@ -42,7 +42,10 @@ export function IntroCard({
     >
       <span className={styles.introShape} aria-hidden="true" />
       <div className={styles.introContent}>
-        <h1 id="lab-title" className={styles.introLines}>
+        <h1
+          id="lab-title"
+          className={`${styles.introLines} h-auto w-[550px] shrink-0 font-display text-[6.65cqw]`}
+        >
           {lineGroups.map((lines, groupIndex) => (
             <span className={styles.introParagraph} key={groupIndex}>
               {lines.map((line, i) => {
@@ -59,9 +62,10 @@ export function IntroCard({
           ))}
         </h1>
         <p className={styles.introSummary}>
-          Design experiments, prototypes, WebGL studies, design systems & other
-          stuff — Driven by curiosity. Built at the intersection of technology
-          and the liberal arts.
+          Stuff I decided to exist. No brief. No goal but to learn and
+          experiment. A prototype of ideas, WebGL studies, design systems,
+          games, and more — Driven by curiosity. Built at the intersection of
+          technology and the liberal arts.
         </p>
       </div>
     </section>
