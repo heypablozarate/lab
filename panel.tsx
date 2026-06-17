@@ -52,7 +52,7 @@ export function IntroCard({
 
                 return (
                   <span
-                    className={`${styles.line} relative left-1/2 w-max -translate-x-1/2`}
+                    className={`${styles.line} relative left-0 w-max translate-x-0 min-[721px]:left-1/2 min-[721px]:-translate-x-1/2`}
                     key={i}
                   >
                     <span
