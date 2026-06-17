@@ -15,17 +15,15 @@ export function IntroCard({
 }) {
   const lineGroups: ReactNode[][] = [
     [
-      "This is the",
-      "exploratory",
+      "This is the exploratory",
       "playground of",
       <>
         <Wordmark />
       </>,
     ],
     [
-      "Welcome to",
       <>
-        the Lab<span className={styles.dot}>.</span>
+        Welcome to the Lab<span className={styles.dot}>.</span>
       </>,
     ],
   ];
@@ -53,8 +51,13 @@ export function IntroCard({
                 lineIndex += 1;
 
                 return (
-                  <span className={styles.line} key={i}>
-                    <span style={{ animationDelay: `${delay}s` }}>{line}</span>
+                  <span className={`${styles.line} mx-auto w-max`} key={i}>
+                    <span
+                      className="whitespace-nowrap"
+                      style={{ animationDelay: `${delay}s` }}
+                    >
+                      {line}
+                    </span>
                   </span>
                 );
               })}
