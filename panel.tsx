@@ -51,7 +51,10 @@ export function IntroCard({
                 lineIndex += 1;
 
                 return (
-                  <span className={`${styles.line} mx-auto w-max`} key={i}>
+                  <span
+                    className={`${styles.line} relative left-1/2 w-max -translate-x-1/2`}
+                    key={i}
+                  >
                     <span
                       className="whitespace-nowrap"
                       style={{ animationDelay: `${delay}s` }}
