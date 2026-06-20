@@ -331,8 +331,15 @@ a.card:focus-visible {
     --lab-card-text-measure: 62cqw;
   }
 
-  /* Keep the initial text LCP independent of a web-font request. */
-  .page:not([data-interacted]) .introSummary {
+  /* Keep the complete initial canvas independent of web-font requests. The
+     adjusted Arial fallback preserves geometry until interaction starts the
+     camera and allows Neue Haas to load outside the LCP window. */
+  .page:not([data-interacted]),
+  .page:not([data-interacted]) .cardTitle,
+  .page:not([data-interacted]) .cardDescription,
+  .page:not([data-interacted]) .introLines,
+  .page:not([data-interacted]) .introSummary,
+  .page:not([data-interacted]) .wordmark {
     font-family: Arial, sans-serif;
   }
 
