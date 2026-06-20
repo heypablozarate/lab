@@ -331,9 +331,9 @@ a.card:focus-visible {
     --lab-card-text-measure: 62cqw;
   }
 
-  /* Keep the complete initial canvas independent of web-font requests. The
-     adjusted Arial fallback preserves geometry until interaction starts the
-     camera and allows Neue Haas to load outside the LCP window. */
+  /* Keep the complete initial canvas independent of web-font requests. Arial
+     preserves the initial geometry until interaction starts the camera and
+     allows Neue Haas to load outside the LCP window. */
   .page:not([data-interacted]),
   .page:not([data-interacted]) .cardTitle,
   .page:not([data-interacted]) .cardDescription,
