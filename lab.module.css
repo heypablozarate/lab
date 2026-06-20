@@ -9,6 +9,13 @@
  */
 
 .page {
+  --card-w: 1200px;
+  --card-h: 720px;
+  --camera-scale: min(
+    calc(100vw / 1344px),
+    calc(100svh / 864px),
+    1
+  );
   --lab-paper: #ffffff;
   --lab-surface: #f3f1ee; /* world background behind the cards */
   --lab-ink: #1f1d1a;
@@ -69,6 +76,7 @@
 
 .viewport {
   position: absolute;
+  z-index: 1;
   inset: 0;
   overflow: hidden;
   cursor: grab;
@@ -90,18 +98,43 @@
   position: absolute;
   top: 0;
   left: 0;
+  --fit: var(--camera-scale);
   transform-origin: 0 0;
   will-change: transform;
-  animation: stageIn 0.5s ease both;
 }
 
-@keyframes stageIn {
-  from {
-    opacity: 0;
+.page:not([data-camera-ready]) .stage {
+  transform:
+    translate(50vw, 50svh)
+    scale(var(--camera-scale))
+    translate(-600px, -360px);
+}
+
+@media (max-width: 480px) {
+  .page {
+    --card-w: 780px;
+    --card-h: 1280px;
+    --camera-scale: min(
+      calc(100vw / 873.6px),
+      calc(100svh / 1536px),
+      1
+    );
   }
-  to {
-    opacity: 1;
+
+  .page:not([data-camera-ready]) .stage {
+    top: 50%;
+    left: 50%;
+    width: min(89.285714vw, 50.78125svh);
+    aspect-ratio: 780 / 1280;
+    --fit: 1;
+    transform: translate(-50%, -50%);
   }
+
+  .page:not([data-camera-ready]) .card {
+    width: 100%;
+    height: 100%;
+  }
+
 }
 
 /* ─────────────────────────────  Cards  ───────────────────────────────── */
@@ -296,6 +329,11 @@ a.card:focus-visible {
 @media (max-width: 720px) {
   .card {
     --lab-card-text-measure: 62cqw;
+  }
+
+  /* Keep the initial text LCP independent of a web-font request. */
+  .page:not([data-interacted]) .introSummary {
+    font-family: Arial, sans-serif;
   }
 
   .content,
@@ -609,5 +647,20 @@ a.card:focus-visible {
   .credit,
   .themeToggle {
     transition: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .introShape,
+  .line > span {
+    animation: none;
+  }
+
+  .line > span {
+    transform: translateY(0);
+  }
+
+  .introShape {
+    transform: scale(1);
   }
 }

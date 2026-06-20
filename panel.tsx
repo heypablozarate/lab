@@ -5,12 +5,15 @@ import styles from "./lab.module.css";
 import type { LabProject } from "./projects";
 import { Wordmark } from "./wordmark";
 
+const LAB_INTRO_SUMMARY =
+  "Stuff I decided to exist. No brief. No goal but to learn and experiment. A prototype of ideas, WebGL studies, design systems, games, and more — Driven by curiosity. Built at the intersection of technology and the liberal arts.";
+
 /** First card — Pablo's Lab identity, presented as staggered clip-reveal lines. */
 export function IntroCard({
   top,
   onFocusCard,
 }: {
-  top: number;
+  top: CSSProperties["top"];
   onFocusCard: () => void;
 }) {
   const lineGroups: ReactNode[][] = [
@@ -67,12 +70,7 @@ export function IntroCard({
             </span>
           ))}
         </h1>
-        <p className={styles.introSummary}>
-          Stuff I decided to exist. No brief. No goal but to learn and
-          experiment. A prototype of ideas, WebGL studies, design systems,
-          games, and more — Driven by curiosity. Built at the intersection of
-          technology and the liberal arts.
-        </p>
+        <p className={styles.introSummary}>{LAB_INTRO_SUMMARY}</p>
       </div>
     </section>
   );
@@ -91,7 +89,7 @@ export function ProjectCard({
 }: {
   project: LabProject;
   number: number;
-  top: number;
+  top: CSSProperties["top"];
   onFocusCard: () => void;
 }) {
   const style = {

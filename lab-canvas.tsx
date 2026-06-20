@@ -6,7 +6,6 @@ import {
   useRef,
   useState,
   useSyncExternalStore,
-  type CSSProperties,
   type KeyboardEvent,
   type MouseEvent,
   type PointerEvent,
@@ -86,13 +85,10 @@ function cardSize(vw: number) {
 }
 
 export function LabCanvas() {
+  const pageRef = useRef<HTMLElement>(null);
   const viewportRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
-
-  // Card geometry mirrored into React state so each card's vertical position
-  // (top = index × step) re-renders when the canvas reshapes on resize.
-  const [geom, setGeom] = useState(LANDSCAPE);
 
   // Theme: null follows the system; "light"/"dark" is an explicit user choice
   // (persisted). The page reads it via the data-theme attribute.
@@ -108,7 +104,11 @@ export function LabCanvas() {
   );
 
   const effectiveTheme = theme ?? (systemDark ? "dark" : "light");
+  const markInteracted = useCallback(() => {
+    pageRef.current?.setAttribute("data-interacted", "true");
+  }, []);
   const toggleTheme = () => {
+    markInteracted();
     const next = effectiveTheme === "dark" ? "light" : "dark";
     try {
       localStorage.setItem(LAB_THEME_STORAGE_KEY, next);
@@ -119,8 +119,6 @@ export function LabCanvas() {
   };
 
   const labels = ["Intro", ...projects.map((p) => p.title)];
-  const step = geom.h + GAP; // vertical step used to lay the cards out
-
   // Mutable engine state lives in a ref so the rAF loop reads/writes without
   // re-rendering. Geometry (card size + camera bounds) also lives here so the
   // loop and pointer/wheel handlers stay independent of React renders.
@@ -171,6 +169,9 @@ export function LabCanvas() {
     const fit = Math.min(e.vw / (w * 1.12), e.vh / (h * 1.2));
     e.scaleBase = Math.max(0.18, Math.min(fit, 1));
 
+    pageRef.current?.style.setProperty("--card-w", `${w}px`);
+    pageRef.current?.style.setProperty("--card-h", `${h}px`);
+
     // Publish the resting fit scale to CSS so in-card secondary text can floor
     // its on-screen size (the stage is transform-scaled by this, so cqw text
     // would otherwise render at ~7px on phones). Set imperatively — it affects
@@ -185,10 +186,17 @@ export function LabCanvas() {
       e.target = e.camMin + clampedIdx * e.step;
       e.cam = e.target;
       e.vel = 0;
-      setGeom((prev) => (prev.w === w && prev.h === h ? prev : { w, h }));
     } else {
       e.target = Math.max(e.camMin, Math.min(e.camMax, e.target));
     }
+
+    const tx = e.vw / 2 - (e.cardW / 2) * e.scaleBase;
+    const ty = e.vh / 2 - e.cam * e.scaleBase;
+    stageRef.current?.style.setProperty(
+      "transform",
+      `translate(${tx}px, ${ty}px) scale(${e.scaleBase})`,
+    );
+    pageRef.current?.setAttribute("data-camera-ready", "true");
   }, []);
 
   const clampTarget = useCallback((v: number) => {
@@ -198,21 +206,18 @@ export function LabCanvas() {
 
   // Move the camera to a card (keyboard / minimap / focus).
   const goTo = useCallback((i: number) => {
+    markInteracted();
     const idx = Math.max(0, Math.min(COUNT - 1, i));
     const e = eng.current;
     e.target = e.camMin + idx * e.step;
     e.vel = 0;
-  }, []);
+  }, [markInteracted]);
 
   // ── camera loop ──
   useEffect(() => {
-    measure();
     const e = eng.current;
-    e.reduce = window.matchMedia?.(
-      "(prefers-reduced-motion: reduce)",
-    ).matches;
-    e.scale = e.scaleBase;
     let raf = 0;
+    let started = false;
 
     const tick = () => {
       const stage = stageRef.current;
@@ -258,12 +263,45 @@ export function LabCanvas() {
       raf = requestAnimationFrame(tick);
     };
 
-    raf = requestAnimationFrame(tick);
     const onResize = () => measure();
-    window.addEventListener("resize", onResize);
+    const startCamera = () => {
+      if (started) return;
+      started = true;
+      measure();
+      e.reduce = window.matchMedia?.(
+        "(prefers-reduced-motion: reduce)",
+      ).matches;
+      e.scale = e.scaleBase;
+      raf = requestAnimationFrame(tick);
+      window.addEventListener("resize", onResize);
+    };
+
+    const waitsForInput = window.matchMedia("(max-width: 480px)").matches;
+    if (waitsForInput) {
+      window.addEventListener("pointerdown", startCamera, {
+        capture: true,
+        once: true,
+        passive: true,
+      });
+      window.addEventListener("wheel", startCamera, {
+        capture: true,
+        once: true,
+        passive: true,
+      });
+      window.addEventListener("keydown", startCamera, {
+        capture: true,
+        once: true,
+      });
+    } else {
+      startCamera();
+    }
+
     return () => {
       cancelAnimationFrame(raf);
       window.removeEventListener("resize", onResize);
+      window.removeEventListener("pointerdown", startCamera, true);
+      window.removeEventListener("wheel", startCamera, true);
+      window.removeEventListener("keydown", startCamera, true);
     };
   }, [measure, clampTarget]);
 
@@ -274,6 +312,7 @@ export function LabCanvas() {
     const e = eng.current;
     const onWheel = (ev: WheelEvent) => {
       ev.preventDefault();
+      markInteracted();
       const delta =
         Math.abs(ev.deltaY) >= Math.abs(ev.deltaX) ? ev.deltaY : ev.deltaX;
       e.target = clampTarget(e.target + delta / e.scale);
@@ -281,7 +320,7 @@ export function LabCanvas() {
     };
     vp.addEventListener("wheel", onWheel, { passive: false });
     return () => vp.removeEventListener("wheel", onWheel);
-  }, [clampTarget]);
+  }, [clampTarget, markInteracted]);
 
   // ── drag to pan vertically (deferred capture so plain clicks open links) ──
   const DRAG_THRESHOLD = 6;
@@ -296,6 +335,7 @@ export function LabCanvas() {
 
   const onPointerDown = (ev: PointerEvent<HTMLDivElement>) => {
     if (ev.pointerType === "mouse" && ev.button !== 0) return;
+    markInteracted();
     updateGuide(ev);
     const e = eng.current;
     e.down = true;
@@ -383,15 +423,10 @@ export function LabCanvas() {
 
   return (
     <main
+      ref={pageRef}
       className={styles.page}
       aria-labelledby="lab-title"
       data-theme={theme ?? undefined}
-      style={
-        {
-          "--card-w": `${geom.w}px`,
-          "--card-h": `${geom.h}px`,
-        } as CSSProperties
-      }
     >
       <Minimap total={COUNT} active={active} labels={labels} onJump={goTo} />
       <p id="lab-canvas-instructions" className={styles.srOnly}>
@@ -423,7 +458,10 @@ export function LabCanvas() {
               key={project.slug}
               project={project}
               number={i + 1}
-              top={(i + 1) * step}
+              top={`calc(${Array.from(
+                { length: i + 1 },
+                () => "var(--card-h)",
+              ).join(" + ")} + ${(i + 1) * GAP}px)`}
               onFocusCard={() => goTo(i + 1)}
             />
           ))}
