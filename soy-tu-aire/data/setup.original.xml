@@ -1,0 +1,1051 @@
+<!-- Labuat dibuja música. Configuración del site  -->
+<xml>
+
+	<!-- Esto són los archivos externos que hay que cargar antes de empezar la reproducción -->
+	<media>
+	
+		<audio>
+			
+			<!-- La canción que se oye -->
+			<cancion>mp3/mix.mp3</cancion>
+			
+			<!-- Las pistas que no se oyen pero guian la animación, pueden estar comprimidas a calidad de mierda para que nadie se robe los MP3
+					 para mezclarlos -->
+			<pistas>
+				<pista>mp3/voz.mp3</pista>
+				<pista>mp3/instrumental.mp3</pista>
+				<pista>mp3/cascabeles.mp3</pista>
+				<pista>mp3/ritmo2.mp3</pista>
+			</pistas>
+		
+		</audio>
+		
+		<gfx>
+			
+			<!-- La textura de fondo que hace scroll -->
+			<fondo>gfx/fondo.jpg</fondo>
+			
+			<!-- La textura de tinta se compone de dos imágenes -->
+			<tinta>
+				<tinta1>gfx/tintas/tinta2.jpg</tinta1>
+				<tinta2>gfx/tintas/tinta2.jpg</tinta2>
+			</tinta>
+
+			<!-- Fotos que aparecen dentro de las manchas de tinta -->
+			<fotos>
+
+				<foto id="chica">gfx/fotos/chica.jpg</foto>
+				<foto id="pez">gfx/fotos/pez.jpg</foto>
+				<foto id="acomodo">gfx/fotos/acomodo.jpg</foto>
+
+				<foto id="aire">gfx/tintas/aire.jpg</foto>
+				<foto id="agua">gfx/tintas/agua.jpg</foto>
+				<foto id="surcos">gfx/tintas/surcos.jpg</foto>
+				<foto id="pequenitos">gfx/tintas/pequenitos.jpg</foto>
+				<foto id="cera">gfx/tintas/cera.jpg</foto>
+				<foto id="derretida">gfx/tintas/derretida.jpg</foto>
+				<foto id="ganas">gfx/tintas/ganas.jpg</foto>
+				<foto id="rias">gfx/tintas/rias.jpg</foto>
+				<foto id="enredo">gfx/tintas/enredo.jpg</foto>
+				<foto id="cuelo">gfx/tintas/cuelo.jpg</foto>
+				<foto id="avisar">gfx/tintas/avisar.jpg</foto>
+				<foto id="cosquillas">gfx/tintas/cosquillas.jpg</foto>
+				<foto id="bebes">gfx/tintas/bebes.jpg</foto>
+				<foto id="atraganto">gfx/tintas/atraganto.jpg</foto>
+				<foto id="respiras">gfx/tintas/respiras.jpg</foto>
+				<foto id="tragas">gfx/tintas/tragas.jpg</foto>
+				<foto id="enaguas">gfx/tintas/enaguas.jpg</foto>
+				<foto id="fantasias">gfx/tintas/fantasias.jpg</foto>
+				<foto id="memoria">gfx/tintas/memoria.jpg</foto>
+				<foto id="imposible">gfx/tintas/imposible.jpg</foto>
+				<foto id="construyo">gfx/tintas/construyo.jpg</foto>
+				<foto id="futuro">gfx/tintas/futuro.jpg</foto>
+				<foto id="improvisado">gfx/tintas/improvisado.jpg</foto>
+				<foto id="unoyuno">gfx/tintas/unoyuno.jpg</foto>
+
+			</fotos>
+			
+		</gfx>
+		
+		<animaciones>
+			
+			<!-- Los SWF externos que hay que cargar con las clases que corresponden a las animaciones. Se puede poner cualquier
+			clase que implemenete el interface animaciones.animacionLabuat -->
+			<swf>swf/animaciones.swf</swf>
+		
+		</animaciones>
+
+	</media>
+	
+	<!-- Aquí configuramos qué pistas mandan sobre cada comportamiento del site -->
+	<sincronizacion>
+	
+		<!-- El volumen combinado de estas pistas controla la velocidad de desplazamiento de la camara -->
+		<camara>0,1</camara>
+		
+		<!-- El trazo principal sigue estas pistas ( normalmente será la voz ) -->
+		<principal>0,3</principal>
+		
+		<!-- El trazo secundario sigue estas pistas ( la instrumentalización ) -->
+		<secundario>1</secundario>
+
+		<!-- Los cambios bruscos de volumen en estas pistas generan una onda en el cabezal de dibujo -->
+		<cabezal>3</cabezal>
+
+		<!-- Brillo de fondo -->
+		<brillo>1</brillo>
+
+		<!-- Sombra lateral -->
+		<lateral>1</lateral>
+
+		<!-- Los cambios bruscos de volumen en estas pistas generan la aparicion de brillos de fondo -->
+		<luces>2</luces>
+
+	</sincronizacion>
+	
+	<!-- En esta sección están los eventos que habrá que disparar en momentos concretos de la reproducción -->
+	<eventos>
+
+		<evento tiempo="00:00:00">																
+			<velocidad>1</velocidad>
+			<presion>0.2</presion>
+		</evento>	
+
+		<evento tiempo="00:01:00">																
+			<presion>1</presion>
+		</evento>	
+
+		<evento tiempo="00:18:00">																
+			<movieclip clase="animaciones.chica"/>
+		</evento>	
+		
+		<evento tiempo="00:20:50">																<!--  Soy de aire -->
+			<movieclip clase="animaciones.pajaros"/>
+			<tinta id="aire"/>
+		</evento>
+
+		<evento tiempo="00:21:20">																
+			<tinta/>
+		</evento>
+
+
+		<evento tiempo="00:24:50">																<!--  Soy de agua -->
+			<movieclip clase="animaciones.pezmancha"/>
+			<movieclip clase="animaciones.pececillo"/>
+			<movieclip clase="animaciones.pececillo"/>
+			<movieclip clase="animaciones.pececillo"/>
+			<movieclip clase="animaciones.pececillo"/>
+			<movieclip clase="animaciones.pececillo"/>
+			<movieclip clase="animaciones.pececillo"/>
+			<movieclip clase="animaciones.pececillo"/>
+			<movieclip clase="animaciones.pececillo"/>
+		</evento>
+		
+		<evento tiempo="00:28:00">																<!--  Hago surcos  -->
+			<movieclip clase="animaciones.surco"/>
+		</evento>
+		
+		<evento tiempo="00:28:30">																
+			<movieclip clase="animaciones.surco"/>
+			<tinta id="surcos"/>
+		</evento>
+
+
+		<evento tiempo="00:28:90">																<!--  Pequeñitos -->
+			<movieclip clase="animaciones.surco"/>
+			<tinta id="pequenitos"/>
+		</evento>
+		
+		<evento tiempo="00:29:70">																
+			<movieclip clase="animaciones.surco"/>
+			<tinta/>
+		</evento>
+
+		<evento tiempo="00:30:50">																<!--  En la cera --> 
+			<movieclip clase="animaciones.cera"/>
+		</evento>
+
+
+		<evento tiempo="00:31:50">																<!--  Derretida  -->
+			<tinta id="derretida"/>
+		</evento>
+		
+		<evento tiempo="00:32:40">																
+			<tinta/>
+		</evento>
+
+		<evento tiempo="00:32:60">																
+			<presion>0.1</presion>
+		</evento>
+
+		<evento tiempo="00:32:80">																<!--  De tus ganas -->
+			<movieclip clase="animaciones.cremallera" enlinea="true"/>
+		</evento>
+		
+		<evento tiempo="00:32:90">																
+			<presion>1</presion>
+		</evento>
+		
+		<evento tiempo="00:36:00">																<!--  Y voy entrando poco a poco, muy poquito  -->
+			<tinta/>
+		</evento>
+		
+		<evento tiempo="00:36:33">																
+		</evento>
+
+		<evento tiempo="00:36:66">																
+			<movieclip clase="animaciones.entrando"/>
+		</evento>
+
+		<evento tiempo="00:37:00">																
+		</evento>
+
+		<evento tiempo="00:37:20">																
+		</evento>
+
+
+		<evento tiempo="00:41:00">																<!--  En tus cosquillas  -->
+			<tinta id="cosquillas"/>
+		</evento>
+
+		<evento tiempo="00:41:15">																
+			<movieclip clase="animaciones.cosquilla"/>		
+			<movieclip clase="animaciones.cosquilla"/>		
+			<movieclip clase="animaciones.cosquilla"/>		
+		</evento>
+
+		<evento tiempo="00:41:20">																
+			<movieclip clase="animaciones.cosquilla"/>		
+			<movieclip clase="animaciones.cosquilla"/>		
+			<movieclip clase="animaciones.cosquilla"/>		
+		</evento>
+		<evento tiempo="00:41:25">																
+			<movieclip clase="animaciones.cosquilla"/>		
+			<movieclip clase="animaciones.cosquilla"/>		
+			<movieclip clase="animaciones.cosquilla"/>		
+		</evento>
+
+		<evento tiempo="00:41:30">																
+			<movieclip clase="animaciones.cosquilla"/>		
+			<movieclip clase="animaciones.cosquilla"/>		
+			<movieclip clase="animaciones.cosquilla"/>		
+		</evento>
+
+		<evento tiempo="00:41:35">																
+			<movieclip clase="animaciones.cosquilla"/>		
+			<movieclip clase="animaciones.cosquilla"/>		
+			<movieclip clase="animaciones.cosquilla"/>		
+		</evento>
+
+
+		<evento tiempo="00:41:40">																
+			<movieclip clase="animaciones.cosquilla"/>		
+			<movieclip clase="animaciones.cosquilla"/>		
+			<movieclip clase="animaciones.cosquilla"/>		
+		</evento>
+
+		<evento tiempo="00:41:45">																
+			<movieclip clase="animaciones.cosquilla"/>		
+			<movieclip clase="animaciones.cosquilla"/>		
+			<movieclip clase="animaciones.cosquilla"/>		
+		</evento>
+
+		<evento tiempo="00:41:50">																
+			<movieclip clase="animaciones.cosquilla"/>		
+			<movieclip clase="animaciones.cosquilla"/>		
+			<movieclip clase="animaciones.cosquilla"/>		
+		</evento>
+
+		<evento tiempo="00:41:41">																
+			<movieclip clase="animaciones.cosquilla"/>		
+			<movieclip clase="animaciones.cosquilla"/>		
+			<movieclip clase="animaciones.cosquilla"/>		
+		</evento>
+
+		<evento tiempo="00:41:60">																
+			<movieclip clase="animaciones.cosquilla"/>		
+			<movieclip clase="animaciones.cosquilla"/>		
+			<movieclip clase="animaciones.cosquilla"/>		
+		</evento>
+
+		<evento tiempo="00:41:65">																
+			<movieclip clase="animaciones.cosquilla"/>		
+			<movieclip clase="animaciones.cosquilla"/>		
+			<movieclip clase="animaciones.cosquilla"/>		
+		</evento>
+
+		<evento tiempo="00:41:70">																
+			<movieclip clase="animaciones.cosquilla"/>		
+			<movieclip clase="animaciones.cosquilla"/>		
+			<movieclip clase="animaciones.cosquilla"/>		
+		</evento>
+
+		<evento tiempo="00:41:75">																
+			<movieclip clase="animaciones.cosquilla"/>		
+			<movieclip clase="animaciones.cosquilla"/>		
+			<movieclip clase="animaciones.cosquilla"/>		
+		</evento>
+
+		<evento tiempo="00:41:80">																
+			<movieclip clase="animaciones.cosquilla"/>		
+			<movieclip clase="animaciones.cosquilla"/>		
+			<movieclip clase="animaciones.cosquilla"/>		
+		</evento>
+
+		<evento tiempo="00:41:85">																
+			<movieclip clase="animaciones.cosquilla"/>		
+			<movieclip clase="animaciones.cosquilla"/>		
+			<movieclip clase="animaciones.cosquilla"/>		
+		</evento>
+
+		<evento tiempo="00:41:90">																
+			<movieclip clase="animaciones.cosquilla"/>		
+			<movieclip clase="animaciones.cosquilla"/>		
+			<movieclip clase="animaciones.cosquilla"/>		
+		</evento>
+
+		<evento tiempo="00:41:95">																
+			<movieclip clase="animaciones.cosquilla"/>		
+			<movieclip clase="animaciones.cosquilla"/>		
+			<movieclip clase="animaciones.cosquilla"/>		
+		</evento>
+
+		<evento tiempo="00:42:00">																
+			<movieclip clase="animaciones.cosquilla"/>		
+			<movieclip clase="animaciones.cosquilla"/>		
+			<movieclip clase="animaciones.cosquilla"/>		
+		</evento>
+
+		<evento tiempo="00:42:05">																
+			<movieclip clase="animaciones.cosquilla"/>		
+			<movieclip clase="animaciones.cosquilla"/>		
+			<movieclip clase="animaciones.cosquilla"/>		
+		</evento>
+
+		<evento tiempo="00:42:10">																
+			<movieclip clase="animaciones.cosquilla"/>		
+			<movieclip clase="animaciones.cosquilla"/>		
+			<movieclip clase="animaciones.cosquilla"/>		
+		</evento>
+
+		<evento tiempo="00:42:15">																
+			<movieclip clase="animaciones.cosquilla"/>		
+			<movieclip clase="animaciones.cosquilla"/>		
+			<movieclip clase="animaciones.cosquilla"/>		
+		</evento>
+
+		<evento tiempo="00:42:20">																
+			<movieclip clase="animaciones.cosquilla"/>		
+			<movieclip clase="animaciones.cosquilla"/>		
+			<movieclip clase="animaciones.cosquilla"/>		
+		</evento>
+
+		<evento tiempo="00:42:25">																
+			<movieclip clase="animaciones.cosquilla"/>		
+			<movieclip clase="animaciones.cosquilla"/>		
+			<movieclip clase="animaciones.cosquilla"/>		
+		</evento>
+
+		<evento tiempo="00:42:30">																
+			<movieclip clase="animaciones.cosquilla"/>		
+			<movieclip clase="animaciones.cosquilla"/>		
+			<movieclip clase="animaciones.cosquilla"/>		
+		</evento>
+
+		<evento tiempo="00:42:00">																
+			<tinta/>
+		</evento>
+		
+		<evento tiempo="00:43:80">																<!--  Me acomodo, te incomodo, pa que rías  -->
+			<tinta/>
+			<foto id="acomodo" radio="90"/>
+			<presion>0.2</presion>
+		</evento>
+		
+		<evento tiempo="00:44:05">																
+			<movieclip clase="Ogrande" enlinea="true"/>
+		</evento>
+
+		<evento tiempo="00:44:30">																
+			<presion>0.2</presion>
+		</evento>
+		
+		<evento tiempo="00:45:00">																
+			<presion>1</presion>
+		</evento>
+
+		<evento tiempo="00:47:00">																
+			<tinta id="rias"/>
+		</evento>
+		
+		<evento tiempo="00:47:70">																
+			<tinta/>
+		</evento>
+
+		<evento tiempo="00:48:50">																<!--  Y me cuelo en este enredo sin llamar -->
+			<tinta id="cuelo"/>
+		</evento>
+
+		<evento tiempo="00:49:00">																
+			<tinta/>
+		</evento>
+
+		
+		<evento tiempo="00:49:20">																
+			<tinta id="enredo"/>
+		</evento>
+
+		<evento tiempo="00:50:00">																
+			<tinta/>
+		</evento>
+
+		<evento tiempo="00:51:50">																<!--  Sin avisar -->
+			<tinta id="avisar"/>
+		</evento>
+
+		<evento tiempo="00:52:00">																
+			<tinta/>
+		</evento>
+		
+		
+		<evento tiempo="00:55:00">																<!--  Soy tu aire -->
+		</evento>
+		
+		<evento tiempo="00:55:15">																
+			<movieclip clase="animaciones.burbuja"/>		
+			<movieclip clase="animaciones.burbuja"/>		
+			<movieclip clase="animaciones.burbuja"/>		
+		</evento>
+
+		<evento tiempo="00:55:20">																
+			<movieclip clase="animaciones.burbuja"/>		
+			<movieclip clase="animaciones.burbuja"/>		
+			<movieclip clase="animaciones.burbuja"/>		
+		</evento>
+		<evento tiempo="00:55:25">																
+			<movieclip clase="animaciones.burbuja"/>		
+			<movieclip clase="animaciones.burbuja"/>		
+			<movieclip clase="animaciones.burbuja"/>		
+		</evento>
+
+		<evento tiempo="00:55:30">																
+			<movieclip clase="animaciones.burbuja"/>		
+			<movieclip clase="animaciones.burbuja"/>		
+			<movieclip clase="animaciones.burbuja"/>		
+		</evento>
+
+		<evento tiempo="00:55:35">																
+			<movieclip clase="animaciones.burbuja"/>		
+			<movieclip clase="animaciones.burbuja"/>		
+			<movieclip clase="animaciones.burbuja"/>		
+		</evento>
+
+
+		<evento tiempo="00:55:40">																
+			<movieclip clase="animaciones.burbuja"/>		
+			<movieclip clase="animaciones.burbuja"/>		
+			<movieclip clase="animaciones.burbuja"/>		
+		</evento>
+
+		<evento tiempo="00:55:45">																
+			<movieclip clase="animaciones.burbuja"/>		
+			<movieclip clase="animaciones.burbuja"/>		
+			<movieclip clase="animaciones.burbuja"/>		
+		</evento>
+
+		<evento tiempo="00:55:50">																
+			<movieclip clase="animaciones.burbuja"/>		
+			<movieclip clase="animaciones.burbuja"/>		
+			<movieclip clase="animaciones.burbuja"/>		
+		</evento>
+
+		<evento tiempo="00:55:55">																
+			<movieclip clase="animaciones.burbuja"/>		
+			<movieclip clase="animaciones.burbuja"/>		
+			<movieclip clase="animaciones.burbuja"/>		
+		</evento>
+
+		<evento tiempo="00:55:60">																
+			<movieclip clase="animaciones.burbuja"/>		
+			<movieclip clase="animaciones.burbuja"/>		
+			<movieclip clase="animaciones.burbuja"/>		
+		</evento>
+
+		<evento tiempo="00:55:65">																
+			<movieclip clase="animaciones.burbuja"/>		
+			<movieclip clase="animaciones.burbuja"/>		
+			<movieclip clase="animaciones.burbuja"/>		
+		</evento>
+
+		<evento tiempo="00:55:70">																
+			<movieclip clase="animaciones.burbuja"/>		
+			<movieclip clase="animaciones.burbuja"/>		
+			<movieclip clase="animaciones.burbuja"/>		
+		</evento>
+
+		<evento tiempo="00:55:75">																
+			<movieclip clase="animaciones.burbuja"/>		
+			<movieclip clase="animaciones.burbuja"/>		
+			<movieclip clase="animaciones.burbuja"/>		
+		</evento>
+
+		<evento tiempo="00:55:80">																
+			<movieclip clase="animaciones.burbuja"/>		
+			<movieclip clase="animaciones.burbuja"/>		
+			<movieclip clase="animaciones.burbuja"/>		
+		</evento>
+
+		<evento tiempo="00:55:85">																
+			<movieclip clase="animaciones.burbuja"/>		
+			<movieclip clase="animaciones.burbuja"/>		
+			<movieclip clase="animaciones.burbuja"/>		
+		</evento>
+
+		<evento tiempo="00:55:90">																
+			<movieclip clase="animaciones.burbuja"/>		
+			<movieclip clase="animaciones.burbuja"/>		
+			<movieclip clase="animaciones.burbuja"/>		
+		</evento>
+
+		<evento tiempo="00:55:95">																
+			<movieclip clase="animaciones.burbuja"/>		
+			<movieclip clase="animaciones.burbuja"/>		
+			<movieclip clase="animaciones.burbuja"/>		
+		</evento>
+
+		<evento tiempo="00:56:00">																
+			<movieclip clase="animaciones.burbuja"/>		
+			<movieclip clase="animaciones.burbuja"/>		
+			<movieclip clase="animaciones.burbuja"/>		
+		</evento>
+
+		<evento tiempo="00:56:05">																
+			<movieclip clase="animaciones.burbuja"/>		
+			<movieclip clase="animaciones.burbuja"/>		
+			<movieclip clase="animaciones.burbuja"/>		
+		</evento>
+
+		<evento tiempo="00:56:10">																
+			<movieclip clase="animaciones.burbuja"/>		
+			<movieclip clase="animaciones.burbuja"/>		
+			<movieclip clase="animaciones.burbuja"/>		
+		</evento>
+
+		<evento tiempo="00:56:15">																
+			<movieclip clase="animaciones.burbuja"/>		
+			<movieclip clase="animaciones.burbuja"/>		
+			<movieclip clase="animaciones.burbuja"/>		
+		</evento>
+
+		<evento tiempo="00:56:20">																
+			<movieclip clase="animaciones.burbuja"/>		
+			<movieclip clase="animaciones.burbuja"/>		
+			<movieclip clase="animaciones.burbuja"/>		
+		</evento>
+
+		<evento tiempo="00:56:25">																
+			<movieclip clase="animaciones.burbuja"/>		
+			<movieclip clase="animaciones.burbuja"/>		
+			<movieclip clase="animaciones.burbuja"/>		
+		</evento>
+
+		<evento tiempo="00:56:30">																
+			<movieclip clase="animaciones.burbuja"/>		
+			<movieclip clase="animaciones.burbuja"/>		
+			<movieclip clase="animaciones.burbuja"/>		
+		</evento>
+
+
+		<evento tiempo="00:59:50">																<!--  Soy tu agua -->
+			<tinta id="agua"/>
+			<movieclip clase="Ondasagua" enlinea="false"/>	
+		</evento>
+		
+		<evento tiempo="01:00:20">																
+			<tinta/>
+		</evento>
+
+		<evento tiempo="01:02:80">																<!--  Te me bebes -->
+			<tinta id="bebes"/>
+		</evento>
+
+		<evento tiempo="01:03:30">
+			<tinta/>
+		</evento>
+		
+		<evento tiempo="01:04:00">																<!--  Te atraganto -->
+			<tinta id="atraganto"/>
+		</evento>
+		
+		<evento tiempo="01:04:70">
+			<tinta/>
+		</evento>
+
+		<evento tiempo="01:05:00">																<!--  Me respiras -->
+			<tinta id="respiras"/>
+		</evento>
+		
+		<evento tiempo="01:05:80">
+			<tinta/>
+		</evento>
+
+		<evento tiempo="01:06:50">																<!--  Te salpico -->
+			<movieclip clase="animaciones.salpico"/>
+		</evento>
+		
+		<evento tiempo="01:08:00">																<!--  Te me tragas -->
+			<tinta id="tragas"/>
+		</evento>
+		
+		<evento tiempo="01:08:50">
+			<tinta/>
+		</evento>
+		
+		<evento tiempo="01:11:00">																<!--  Y me entretengo, juego un rato en tus recuerdos -->
+		
+		</evento>
+
+
+		<evento tiempo="01:13:50">																
+			<movieclip clase="animaciones.recuerdo_b"/>		
+			<movieclip clase="animaciones.recuerdo_b"/>		
+		</evento>
+
+		<evento tiempo="01:13:60">																
+			<movieclip clase="animaciones.recuerdo_b"/>		
+			<movieclip clase="animaciones.recuerdo_b"/>		
+		</evento>
+
+		<evento tiempo="01:13:70">																
+			<movieclip clase="animaciones.recuerdo_b"/>		
+			<movieclip clase="animaciones.recuerdo_b"/>		
+		</evento>
+
+		<evento tiempo="01:13:80">																
+			<movieclip clase="animaciones.recuerdo_b"/>		
+			<movieclip clase="animaciones.recuerdo_b"/>		
+		</evento>
+
+		<evento tiempo="01:13:90">																
+			<movieclip clase="animaciones.recuerdo_b"/>		
+			<movieclip clase="animaciones.recuerdo_b"/>		
+		</evento>
+
+		<evento tiempo="01:14:00">																
+			<movieclip clase="animaciones.recuerdo_b"/>		
+			<movieclip clase="animaciones.recuerdo_b"/>		
+		</evento>
+
+		<evento tiempo="01:14:10">																
+			<movieclip clase="animaciones.recuerdo_b"/>		
+			<movieclip clase="animaciones.recuerdo_b"/>		
+		</evento>
+
+		<evento tiempo="01:14:20">																
+			<movieclip clase="animaciones.recuerdo_b"/>		
+			<movieclip clase="animaciones.recuerdo_b"/>		
+		</evento>
+		
+		<evento tiempo="01:14:30">																
+			<movieclip clase="animaciones.recuerdo_b"/>		
+			<movieclip clase="animaciones.recuerdo_b"/>		
+		</evento>
+
+		<evento tiempo="01:14:40">																
+			<movieclip clase="animaciones.recuerdo_b"/>		
+			<movieclip clase="animaciones.recuerdo_b"/>		
+		</evento>
+
+
+
+
+		<evento tiempo="01:15:00">																<!--  Me los pongo en mis enaguas -->
+		
+		</evento>
+
+		<evento tiempo="01:17:00">
+			<tinta id="enaguas"/>
+		</evento>
+
+		<evento tiempo="01:17:80">
+			<tinta/>
+		</evento>
+		
+		<evento tiempo="01:18:85">																<!--  Hago trizas tus lamentos, creo fantasías locas -->
+			<movieclip clase="animaciones.lagrima"/>		
+		</evento>
+		
+		<evento tiempo="01:21:50">
+			<tinta id="fantasias"/>
+		</evento>
+
+		<evento tiempo="01:22:10">
+			<tinta/>
+		</evento>
+
+		<evento tiempo="01:24:10">
+			<tinta id="memoria"/>
+		</evento>
+
+		<evento tiempo="01:24:70">
+			<tinta/>
+		</evento>
+
+		<evento tiempo="01:26:90">
+			<presion>0.5</presion>
+		</evento>
+
+		<evento tiempo="01:27:00">																<!--  Y confundo tu memoria con la punta de mis besos -->
+			<movieclip clase="animaciones.labios" enlinea="true"/>
+		</evento>
+		
+		<evento tiempo="01:28:0">
+			<presion>1.2</presion>
+		</evento>
+		
+		<evento tiempo="02:03:0">
+			<presion>1</presion>
+		</evento>
+		
+		<evento tiempo="02:04:80">																<!--  Soy de aire -->
+			<movieclip clase="animaciones.mariposa"/>
+		</evento>
+		
+		<evento tiempo="02:08:50">																<!--  Soy de agua -->
+			<movieclip clase="animaciones.pececillo"/>
+			<movieclip clase="animaciones.pececillo"/>
+			<movieclip clase="animaciones.pececillo"/>
+			<movieclip clase="animaciones.pececillo"/>
+		</evento>
+		
+
+		<evento tiempo="02:13:00">																<!--  Soy de aire -->
+			<movieclip clase="animaciones.dandelion"/>
+			<movieclip clase="animaciones.dandelion"/>
+			<movieclip clase="animaciones.dandelion"/>
+			<movieclip clase="animaciones.dandelion"/>
+			<movieclip clase="animaciones.dandelion"/>
+		</evento>
+		
+		<evento tiempo="02:16:20">																<!--  Soy de agua -->
+			<movieclip clase="animaciones.pececillo"/>
+			<movieclip clase="animaciones.pececillo"/>
+			<movieclip clase="animaciones.pececillo"/>
+			<movieclip clase="animaciones.pececillo"/>
+		</evento>
+
+		<evento tiempo="02:20:00">																<!--  Vuelo libre -->
+		
+		</evento>
+		
+		<evento tiempo="02:21:85">																
+			<presion>0</presion>
+		</evento>
+
+		<evento tiempo="02:22:00">																<!--  No me ates -->
+			<movieclip clase="animaciones.Entradaagujero"/>		
+		</evento>
+		
+		<evento tiempo="02:22:40">																
+			<movieclip clase="animaciones.Salidaagujero"/>		
+			<presion>0.1</presion>
+		</evento>
+
+		<evento tiempo="02:22:50">																
+			<presion>0</presion>
+		</evento>
+
+		<evento tiempo="02:22:65">																
+			<movieclip clase="animaciones.Entradaagujero"/>		
+		</evento>
+
+		<evento tiempo="02:23:00">																<!--  Que me escapo -->
+			<movieclip clase="animaciones.Salidaagujero"/>		
+			<presion>0.1</presion>
+		</evento>
+		
+		<evento tiempo="02:23:35">																
+			<presion>0</presion>
+		</evento>
+
+		<evento tiempo="02:23:50">																
+			<movieclip clase="animaciones.Entradaagujero"/>		
+		</evento>
+
+		<evento tiempo="02:23:80">																
+			<movieclip clase="animaciones.Salidaagujero"/>		
+			<presion>0.1</presion>
+		</evento>
+
+		<evento tiempo="02:24:00">																
+			<presion>0</presion>
+		</evento>
+
+		<evento tiempo="02:24:15">																<!--  Entre medio -->
+			<movieclip clase="animaciones.Entradaagujero"/>		
+		</evento>
+
+		<evento tiempo="02:24:60">																
+			<movieclip clase="animaciones.Salidaagujero"/>		
+			<presion>0.1</presion>
+		</evento>
+
+
+		<evento tiempo="02:25:00">																
+			<presion>0</presion>
+		</evento>
+
+		<evento tiempo="02:25:15">																
+			<movieclip clase="animaciones.Entradaagujero"/>		
+		</evento>
+
+		<evento tiempo="02:25:70">																<!--  De tus dedos -->
+			<movieclip clase="animaciones.Salidaagujero"/>		
+			<presion>1</presion>
+		</evento>
+
+		 
+		<evento tiempo="02:30:00">																<!--  Impasible te convierto lo imposible en impensado -->
+			<movieclip clase="animaciones.alambre"/>		
+		</evento>
+
+		<evento tiempo="02:31:10">
+			<tinta id="imposible"/>
+		</evento>
+
+		<evento tiempo="02:31:90">
+			<tinta/>
+		</evento>
+		
+		<evento tiempo="02:33:20">																<!--  Y construyo en lo inseguro -->
+			<tinta id="construyo"/>
+		</evento>
+
+		<evento tiempo="02:34:00">
+			<tinta/>
+		</evento>
+		
+		<evento tiempo="02:35:00">																<!--  Un futuro improvisado -->
+			<tinta id="futuro"/>
+		</evento>
+
+		<evento tiempo="02:35:60">
+			<tinta/>
+		</evento>
+
+		<evento tiempo="02:35:80">
+			<tinta id="improvisado"/>
+		</evento>
+
+		<evento tiempo="02:36:40">
+			<tinta/>
+		</evento>
+		
+		<evento tiempo="02:37:30">																<!--  En que uno y uno no hagan dos -->
+			<movieclip clase="animaciones.uno" enlinea="true"/>
+		</evento>
+
+		<evento tiempo="02:37:60">
+			<tinta/>
+		</evento>
+		
+		<evento tiempo="02:38:00">																<!--  En que tú y yo seamos nosotros -->
+		
+		</evento>
+		
+		<evento tiempo="02:39:00">																<!--  Y los demás estén de más -->
+		</evento>
+		
+		<evento tiempo="02:43:00">																<!--  Y ya no sean nadie -->
+			<presion>0.2</presion>
+		</evento>
+		
+		<evento tiempo="02:44:20">																
+			<presion>0.1</presion>
+		</evento>
+		
+		<evento tiempo="02:45:00">																
+			<presion>0.0</presion>
+		</evento>
+
+
+		<evento tiempo="02:48:70">																<!--  Soy tu aire -->
+			<velocidad>1.3</velocidad>
+			<presion>1.3</presion>
+			<movieclip clase="animaciones.Salidaagujero"/>		
+			<pincelClimax>3</pincelClimax>
+			<pincelClimax>5</pincelClimax>
+		</evento>
+
+		<evento tiempo="02:50:00">																
+			<movieclip clase="animaciones.dandelion"/>
+			<movieclip clase="animaciones.dandelion"/>
+			<movieclip clase="animaciones.dandelion"/>
+			<movieclip clase="animaciones.dandelion"/>
+			<movieclip clase="animaciones.dandelion"/>
+		</evento>
+
+		
+		<evento tiempo="02:54:00">																<!--  Soy tu agua -->
+			<movieclip clase="animaciones.pececillo"/>
+			<movieclip clase="animaciones.pececillo"/>
+			<movieclip clase="animaciones.pececillo"/>
+			<movieclip clase="animaciones.pececillo"/>
+			<pincelClimax>3</pincelClimax>
+			<pincelClimax>5</pincelClimax>
+		</evento>
+		
+		
+		<evento tiempo="02:58:20">																<!--  Soy tu aire -->
+			<pincelClimax>3</pincelClimax>
+			<pincelClimax>5</pincelClimax>
+			<movieclip clase="animaciones.mariposanoloop"/>
+		</evento>
+		
+		<evento tiempo="03:02:00">																<!--  Soy tu agua -->
+			<pincelClimax>3</pincelClimax>
+			<pincelClimax>5</pincelClimax>
+			<movieclip clase="animaciones.pececillo"/>
+			<movieclip clase="animaciones.pececillo"/>
+			<movieclip clase="animaciones.pececillo"/>
+			<movieclip clase="animaciones.pececillo"/>
+			<movieclip clase="animaciones.pececillo"/>
+		</evento>
+		
+		
+		<evento tiempo="03:06:00">																<!--  Soy tu aire -->
+			<pincelClimax>3</pincelClimax>
+			<pincelClimax>5</pincelClimax>
+			<movieclip clase="animaciones.mariposanoloop"/>
+		</evento>
+		
+		<evento tiempo="03:09:00">																<!--  Soy tu agua -->
+			<pincelClimax>3</pincelClimax>
+			<pincelClimax>5</pincelClimax>
+			<movieclip clase="animaciones.pececillo"/>
+			<movieclip clase="animaciones.pececillo"/>
+			<movieclip clase="animaciones.pececillo"/>
+			<movieclip clase="animaciones.pececillo"/>
+		</evento>
+		
+		
+		<evento tiempo="03:14:00">																<!--  Soy tu aire -->
+			<pincelClimax>3</pincelClimax>
+			<pincelClimax>5</pincelClimax>
+			<movieclip clase="animaciones.dandelion"/>
+			<movieclip clase="animaciones.dandelion"/>
+			<movieclip clase="animaciones.dandelion"/>
+			<movieclip clase="animaciones.dandelion"/>
+			<movieclip clase="animaciones.dandelion"/>
+			<movieclip clase="animaciones.dandelion"/>
+			<movieclip clase="animaciones.dandelion"/>
+			<movieclip clase="animaciones.dandelion"/>
+			<movieclip clase="animaciones.dandelion"/>
+			<movieclip clase="animaciones.dandelion"/>
+		</evento>
+		
+		<evento tiempo="03:18:00">																<!--  Soy tu agua -->
+			<pincelClimax>3</pincelClimax>
+			<pincelClimax>5</pincelClimax>
+			<movieclip clase="animaciones.pececillo"/>
+			<movieclip clase="animaciones.pececillo"/>
+			<movieclip clase="animaciones.pececillo"/>
+			<movieclip clase="animaciones.pececillo"/>
+			<movieclip clase="animaciones.pececillo"/>
+		</evento>
+		
+		<evento tiempo="03:23:00">																<!--  Soy tu aire -->
+			<pincelClimax>3</pincelClimax>
+			<pincelClimax>5</pincelClimax>
+			<movieclip clase="animaciones.mariposa"/>
+			<movieclip clase="animaciones.dandelion"/>
+			<movieclip clase="animaciones.dandelion"/>
+		</evento>
+		
+		<evento tiempo="03:27:00">																<!--  Soy tu agua -->
+			<pincelClimax>3</pincelClimax>
+			<pincelClimax>5</pincelClimax>
+			<movieclip clase="animaciones.pececillo"/>
+			<movieclip clase="animaciones.pececillo"/>
+			<movieclip clase="animaciones.pececillo"/>
+			<movieclip clase="animaciones.pececillo"/>
+		</evento>
+				
+		<evento tiempo="03:31:00">																<!--  Soy tu aire -->
+			<pincelClimax>3</pincelClimax>
+			<pincelClimax>5</pincelClimax>
+			<movieclip clase="animaciones.mariposa"/>
+			<movieclip clase="animaciones.dandelion"/>
+			<movieclip clase="animaciones.dandelion"/>
+		</evento>
+		
+		<evento tiempo="03:35:30">																<!--  Soy tu agua -->
+			<pincelClimax>2</pincelClimax>
+			<pincelClimax>1</pincelClimax>
+			<movieclip clase="animaciones.pececillo"/>
+			<movieclip clase="animaciones.pececillo"/>
+			<movieclip clase="animaciones.pececillo"/>
+			<movieclip clase="animaciones.pececillo"/>
+		</evento>
+		
+		<evento tiempo="03:38:00">																
+			<velocidad>0.7</velocidad>
+			<presion>1</presion>
+		</evento>
+
+		<evento tiempo="03:40:00">																
+		</evento>
+
+		<evento tiempo="03:40:20">																
+		</evento>
+
+		<evento tiempo="03:42:00">																
+		</evento>
+
+		<evento tiempo="03:42:10">																
+		</evento>
+
+
+		<evento tiempo="03:44:00">																
+		</evento>
+
+		<evento tiempo="03:45:00">																
+		</evento>
+
+		<evento tiempo="03:45:30">																
+		</evento>
+
+		<evento tiempo="03:47:00">																
+		</evento>
+
+		<evento tiempo="03:47:20">																
+		</evento>
+
+		<evento tiempo="03:49:00">																
+		</evento>
+
+		<evento tiempo="03:50:00">																
+		</evento>
+
+		<evento tiempo="03:50:20">																
+		</evento>
+
+		<evento tiempo="03:52:00">																
+		</evento>
+
+		<evento tiempo="03:53:00">																
+			<presion>0.5</presion>
+		</evento>
+
+		<evento tiempo="03:53:50">																
+			<presion>0</presion>
+		</evento>
+
+		<evento tiempo="03:53:70">																
+			<velocidad>0</velocidad>
+		</evento>
+
+
+	</eventos>
+
+</xml>
