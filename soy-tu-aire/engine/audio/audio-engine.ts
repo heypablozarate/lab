@@ -92,5 +92,8 @@ export class AudioEngine {
     this.analyser?.disconnect()
     void this.ctx?.close()
     this.ctx = null
+    this.source = null
+    this.analyser = null
+    this.playing = false
   }
 }
