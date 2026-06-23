@@ -1,0 +1,58 @@
+.page {
+  --paper: #ecebe6;
+  --ink: #16151a;
+  --accent: #c0392b;
+
+  position: relative;
+  display: flex;
+  min-height: 100svh;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: var(--paper);
+  color: var(--ink);
+  color-scheme: light;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.stage {
+  position: fixed;
+  inset: 0;
+}
+
+.canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.footer {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem 1.25rem;
+  font-size: 0.8rem;
+  color: var(--ink);
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
+
+.footer a {
+  pointer-events: auto;
+  color: inherit;
+}
