@@ -5,6 +5,7 @@ import { Camera } from "./camera/camera"
 import { Input } from "./input/input"
 import { screenToPaper } from "./input/screen-to-paper"
 import { Compositor } from "./render/compositor"
+import { createTarget, loadTexture } from "./render/gl"
 import { InkAccumulator } from "./render/ink-accumulator"
 import { Renderer } from "./render/renderer"
 import type { BrushMod } from "./types"
@@ -15,6 +16,7 @@ export class Engine {
   private renderer: Renderer
   private ink: InkAccumulator
   private compositor: Compositor
+  private paperTex: WebGLTexture
   private brush = new Brush()
   private camera = new Camera()
   private input: Input
@@ -28,6 +30,13 @@ export class Engine {
     this.renderer = new Renderer(canvas)
     this.ink = new InkAccumulator(this.renderer.gl, PAPER_W, PAPER_H)
     this.compositor = new Compositor(this.renderer.gl)
+    {
+      const fb = createTarget(this.renderer.gl, 1, 1) // textura 1×1; se ve como color plano del shader
+      this.paperTex = fb.tex
+    }
+    loadTexture(this.renderer.gl, "/lab/soy-tu-aire/textures/paper.jpg")
+      .then((t) => { this.paperTex = t })
+      .catch(() => { /* queda el fallback 1×1 */ })
     this.input = new Input(canvas)
   }
 
@@ -71,7 +80,7 @@ export class Engine {
       const camBands = this.audio ? this.audio.getBands() : { voz: 0, instrumental: 0 } as any
       const camSpeed = 1 + (camBands.voz + camBands.instrumental) * 0.5 // camara = voz+instrumental
       this.camera.follow(this.brush.pos, dt * camSpeed)
-      this.compositor.draw(this.ink.texture, this.camera.view(aspect), PAPER_W, PAPER_H, this.glowAt(t))
+      this.compositor.draw(this.ink.texture, this.paperTex, this.camera.view(aspect), PAPER_W, PAPER_H, this.glowAt(t))
       this.raf = requestAnimationFrame(loop)
     }
     this.raf = requestAnimationFrame(loop)

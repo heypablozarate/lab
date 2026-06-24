@@ -15,6 +15,7 @@ export class Compositor {
     this.quad = createQuad(gl)
     this.u = {
       ink: gl.getUniformLocation(this.program, "uInk"),
+      paperTex: gl.getUniformLocation(this.program, "uPaperTex"),
       view: gl.getUniformLocation(this.program, "uView"),
       paper: gl.getUniformLocation(this.program, "uPaper"),
       paperCol: gl.getUniformLocation(this.program, "uPaperCol"),
@@ -22,7 +23,7 @@ export class Compositor {
       glow: gl.getUniformLocation(this.program, "uGlow"),
     }
   }
-  draw(inkTex: WebGLTexture, view: ViewRect, paperW: number, paperH: number, glow: number): void {
+  draw(inkTex: WebGLTexture, paperTex: WebGLTexture, view: ViewRect, paperW: number, paperH: number, glow: number): void {
     const gl = this.gl
     gl.bindFramebuffer(gl.FRAMEBUFFER, null)
     gl.disable(gl.BLEND)
@@ -30,6 +31,9 @@ export class Compositor {
     gl.activeTexture(gl.TEXTURE0)
     gl.bindTexture(gl.TEXTURE_2D, inkTex)
     gl.uniform1i(this.u.ink, 0)
+    gl.activeTexture(gl.TEXTURE1)
+    gl.bindTexture(gl.TEXTURE_2D, paperTex)
+    gl.uniform1i(this.u.paperTex, 1)
     gl.uniform4f(this.u.view, view.x, view.y, view.w, view.h)
     gl.uniform2f(this.u.paper, paperW, paperH)
     gl.uniform3f(this.u.paperCol, PAPER_COL[0], PAPER_COL[1], PAPER_COL[2])

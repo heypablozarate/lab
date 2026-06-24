@@ -9,6 +9,7 @@ precision highp float;
 in vec2 vUv;
 out vec4 o;
 uniform sampler2D uInk;
+uniform sampler2D uPaperTex;
 uniform vec4 uView;     // x,y,w,h del view en px de papel
 uniform vec2 uPaper;    // tamaño del papel
 uniform vec3 uPaperCol;
@@ -19,7 +20,8 @@ void main() {
   vec2 paperPx = uView.xy + vec2(vUv.x, 1.0 - vUv.y) * uView.zw;
   vec2 inkUv = vec2(paperPx.x / uPaper.x, 1.0 - paperPx.y / uPaper.y);
   float coverage = texture(uInk, inkUv).a;
-  vec3 paper = uPaperCol + uGlow * 0.06;            // brillo de fondo
+  vec3 paperTex = texture(uPaperTex, vUv * 1.0).rgb;
+  vec3 paper = paperTex + uGlow * 0.06;            // brillo de fondo
   vec3 col = mix(paper, uInkCol, clamp(coverage, 0.0, 1.0));
   // viñeta suave
   float d = distance(vUv, vec2(0.5));

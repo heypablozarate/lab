@@ -86,3 +86,23 @@ export function createTarget(
   gl.bindFramebuffer(gl.FRAMEBUFFER, null)
   return { fbo, tex }
 }
+
+export function loadTexture(gl: WebGL2RenderingContext, url: string): Promise<WebGLTexture> {
+  return new Promise((resolve, reject) => {
+    const img = new Image()
+    img.crossOrigin = "anonymous"
+    img.onload = () => {
+      const tex = gl.createTexture()
+      if (!tex) return reject(new Error("createTexture null"))
+      gl.bindTexture(gl.TEXTURE_2D, tex)
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img)
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR)
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR)
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT)
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT)
+      resolve(tex)
+    }
+    img.onerror = () => reject(new Error(`No se pudo cargar ${url}`))
+    img.src = url
+  })
+}
