@@ -8,6 +8,7 @@ import { Compositor } from "./render/compositor"
 import { createTarget, loadTexture } from "./render/gl"
 import { InkAccumulator } from "./render/ink-accumulator"
 import { Renderer } from "./render/renderer"
+import { Reveals } from "./reveals/reveals"
 import type { BrushMod } from "./types"
 import type { AudioEngine } from "./audio/audio-engine"
 import type { Timeline } from "./timeline/timeline"
@@ -16,6 +17,8 @@ export class Engine {
   private renderer: Renderer
   private ink: InkAccumulator
   private compositor: Compositor
+  private reveals: Reveals
+  private prevT = 0
   private paperTex: WebGLTexture
   private brush = new Brush()
   private camera = new Camera()
@@ -30,6 +33,7 @@ export class Engine {
     this.renderer = new Renderer(canvas)
     this.ink = new InkAccumulator(this.renderer.gl, PAPER_W, PAPER_H)
     this.compositor = new Compositor(this.renderer.gl)
+    this.reveals = new Reveals(this.renderer.gl)
     {
       const fb = createTarget(this.renderer.gl, 1, 1) // textura 1×1; se ve como color plano del shader
       this.paperTex = fb.tex
@@ -77,10 +81,17 @@ export class Engine {
       const t = this.clock()
       const dabs = this.brush.update(dt, target, this.modAt(t))
       this.ink.stamp(dabs)
+      if (this.timeline) {
+        for (const e of this.timeline.fired(this.prevT, t)) {
+          for (const id of e.reveals) this.reveals.spawn(id, { x: this.brush.pos.x, y: this.brush.pos.y }, t)
+        }
+      }
+      this.prevT = t
       const camBands = this.audio ? this.audio.getBands() : { voz: 0, instrumental: 0 } as any
       const camSpeed = 1 + (camBands.voz + camBands.instrumental) * 0.5 // camara = voz+instrumental
       this.camera.follow(this.brush.pos, dt * camSpeed)
       this.compositor.draw(this.ink.texture, this.paperTex, this.camera.view(aspect), PAPER_W, PAPER_H, this.glowAt(t))
+      this.reveals.draw(this.camera.view(aspect), t)
       this.raf = requestAnimationFrame(loop)
     }
     this.raf = requestAnimationFrame(loop)
@@ -93,6 +104,7 @@ export class Engine {
     this.input.destroy()
     this.ink.destroy()
     this.compositor.destroy()
+    this.reveals.destroy()
     this.renderer.destroy()
   }
 }

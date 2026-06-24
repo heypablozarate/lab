@@ -65,6 +65,21 @@ export function createQuad(gl: WebGL2RenderingContext): WebGLVertexArrayObject {
   return vao
 }
 
+/** VAO de un quad real de 2 triángulos en clip-space [-1,1] (6 verts). Atributo 0 = aPos (vec2). */
+export function createUnitQuad(gl: WebGL2RenderingContext): WebGLVertexArrayObject {
+  const vao = gl.createVertexArray()
+  if (!vao) throw new Error("createVertexArray null")
+  gl.bindVertexArray(vao)
+  const buf = gl.createBuffer()
+  gl.bindBuffer(gl.ARRAY_BUFFER, buf)
+  const v = new Float32Array([-1, -1, 1, -1, -1, 1, -1, 1, 1, -1, 1, 1])
+  gl.bufferData(gl.ARRAY_BUFFER, v, gl.STATIC_DRAW)
+  gl.enableVertexAttribArray(0)
+  gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0)
+  gl.bindVertexArray(null)
+  return vao
+}
+
 /** Render target RGBA8 con su textura (para la hoja persistente / ping-pong). */
 export function createTarget(
   gl: WebGL2RenderingContext,
