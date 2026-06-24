@@ -9,6 +9,7 @@ import { createTarget, loadTexture } from "./render/gl"
 import { InkAccumulator } from "./render/ink-accumulator"
 import { Renderer } from "./render/renderer"
 import { Reveals } from "./reveals/reveals"
+import { Creatures } from "./creatures/creatures"
 import type { BrushMod } from "./types"
 import type { AudioEngine } from "./audio/audio-engine"
 import type { Timeline } from "./timeline/timeline"
@@ -18,6 +19,7 @@ export class Engine {
   private ink: InkAccumulator
   private compositor: Compositor
   private reveals: Reveals
+  private creatures: Creatures
   private prevT = 0
   private paperTex: WebGLTexture
   private brush = new Brush()
@@ -34,6 +36,17 @@ export class Engine {
     this.ink = new InkAccumulator(this.renderer.gl, PAPER_W, PAPER_H)
     this.compositor = new Compositor(this.renderer.gl)
     this.reveals = new Reveals(this.renderer.gl)
+    this.creatures = new Creatures(this.renderer.gl)
+    for (const name of [
+      "chica", "pajaros", "pezmancha", "pececillo", "surco", "cera", "cremallera",
+      "entrando", "cosquilla", "Ogrande", "burbuja", "Ondasagua", "salpico",
+      "recuerdo_b", "lagrima", "labios", "mariposa", "dandelion", "Entradaagujero",
+      "Salidaagujero", "alambre", "uno", "mariposanoloop",
+    ]) {
+      loadTexture(this.renderer.gl, `/lab/soy-tu-aire/creatures/${name}.png`)
+        .then((tex) => this.creatures.register(name, tex))
+        .catch(() => { /* clase sin sprite: no aparece */ })
+    }
     {
       const fb = createTarget(this.renderer.gl, 1, 1) // textura 1×1; se ve como color plano del shader
       this.paperTex = fb.tex
@@ -84,6 +97,7 @@ export class Engine {
       if (this.timeline) {
         for (const e of this.timeline.fired(this.prevT, t)) {
           for (const id of e.reveals) this.reveals.spawn(id, { x: this.brush.pos.x, y: this.brush.pos.y }, t)
+          for (const c of e.creatures) this.creatures.spawn(c, { x: this.brush.pos.x, y: this.brush.pos.y }, t)
         }
       }
       this.prevT = t
@@ -92,6 +106,7 @@ export class Engine {
       this.camera.follow(this.brush.pos, dt * camSpeed)
       this.compositor.draw(this.ink.texture, this.paperTex, this.camera.view(aspect), PAPER_W, PAPER_H, this.glowAt(t))
       this.reveals.draw(this.camera.view(aspect), t)
+      this.creatures.draw(this.camera.view(aspect), t)
       this.raf = requestAnimationFrame(loop)
     }
     this.raf = requestAnimationFrame(loop)
@@ -105,6 +120,7 @@ export class Engine {
     this.ink.destroy()
     this.compositor.destroy()
     this.reveals.destroy()
+    this.creatures.destroy()
     this.renderer.destroy()
   }
 }
