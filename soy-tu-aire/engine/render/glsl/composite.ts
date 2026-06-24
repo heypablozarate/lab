@@ -17,7 +17,7 @@ uniform float uGlow;    // 0..1
 void main() {
   // uv de pantalla (con y arriba) → coordenada de papel del view → uv de la textura de tinta.
   vec2 paperPx = uView.xy + vec2(vUv.x, 1.0 - vUv.y) * uView.zw;
-  vec2 inkUv = paperPx / uPaper;
+  vec2 inkUv = vec2(paperPx.x / uPaper.x, 1.0 - paperPx.y / uPaper.y);
   float coverage = texture(uInk, inkUv).a;
   vec3 paper = uPaperCol + uGlow * 0.06;            // brillo de fondo
   vec3 col = mix(paper, uInkCol, clamp(coverage, 0.0, 1.0));
