@@ -15,6 +15,7 @@ export function Stage() {
   const audioRef = useRef<AudioEngine | null>(null)
   const [phase, setPhase] = useState<Phase>("intro")
   const [progress, setProgress] = useState(0)
+  const [error, setError] = useState<string | null>(null)
 
   // Render loop (papel por ahora; Fase 2 dibuja tinta).
   useEffect(() => {
@@ -37,12 +38,20 @@ export function Stage() {
   }, [])
 
   async function handlePlay() {
+    setError(null)
     setPhase("loading")
     const audio = new AudioEngine(AUDIO_URL)
     audioRef.current = audio
-    await audio.load((p) => setProgress(p))
-    await audio.play()
-    setPhase("playing")
+    try {
+      await audio.load((p) => setProgress(p))
+      await audio.play()
+      setPhase("playing")
+    } catch {
+      audio.destroy()
+      audioRef.current = null
+      setPhase("intro")
+      setError("No se pudo cargar el audio. Probá de nuevo.")
+    }
   }
 
   useEffect(() => () => audioRef.current?.destroy(), [])
@@ -62,9 +71,12 @@ export function Stage() {
             </a>
           </p>
           {phase === "intro" ? (
-            <button className={styles.playButton} onClick={handlePlay}>
-              ▶ Pintar la canción
-            </button>
+            <>
+              {error && <p className={styles.credit}>{error}</p>}
+              <button className={styles.playButton} onClick={handlePlay}>
+                ▶ Pintar la canción
+              </button>
+            </>
           ) : (
             <p className={styles.loader}>Cargando… {Math.round(progress * 100)}%</p>
           )}
