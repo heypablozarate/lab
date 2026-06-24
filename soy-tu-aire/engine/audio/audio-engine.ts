@@ -8,7 +8,7 @@ export class AudioEngine {
   private analyser: AnalyserNode | null = null
   private buffer: AudioBuffer | null = null
   private source: AudioBufferSourceNode | null = null
-  private freq: Uint8Array = new Uint8Array(FFT_SIZE / 2)
+  private freq: Uint8Array<ArrayBuffer> = new Uint8Array(FFT_SIZE / 2)
   private startTime = 0
   private startOffset = 0
   private playing = false
@@ -41,7 +41,7 @@ export class AudioEngine {
     }
     const ctx = new AudioContext()
     this.ctx = ctx
-    this.buffer = await ctx.decodeAudioData(bytes.buffer)
+    this.buffer = await ctx.decodeAudioData(bytes.buffer as ArrayBuffer)
     const analyser = ctx.createAnalyser()
     analyser.fftSize = FFT_SIZE
     analyser.smoothingTimeConstant = 0.8

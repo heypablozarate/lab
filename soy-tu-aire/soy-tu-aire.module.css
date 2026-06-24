@@ -56,3 +56,32 @@
   pointer-events: auto;
   color: inherit;
 }
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  text-align: center;
+  background: color-mix(in srgb, var(--paper) 80%, transparent);
+  backdrop-filter: blur(2px);
+  z-index: 2;
+}
+
+.playButton {
+  font: inherit;
+  font-size: 1.1rem;
+  padding: 0.75rem 2rem;
+  border: 1px solid var(--ink);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.credit { max-width: 30rem; line-height: 1.5; }
+.credit a { color: var(--accent); }
+.loader { font-variant-numeric: tabular-nums; }
