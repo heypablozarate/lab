@@ -17,24 +17,16 @@ export function Stage() {
   const [progress, setProgress] = useState(0)
   const [error, setError] = useState<string | null>(null)
 
-  // Render loop (papel por ahora; Fase 2 dibuja tinta).
   useEffect(() => {
     const canvas = canvasRef.current
     if (!canvas) return
-    let renderer: import("../engine/render/renderer").Renderer | null = null
-    let raf = 0
+    let engine: import("../engine/engine").Engine | null = null
     let cancelled = false
-    import("../engine/render/renderer").then(({ Renderer }) => {
+    import("../engine/engine").then(({ Engine }) => {
       if (cancelled) return
-      try { renderer = new Renderer(canvas) } catch { return }
-      const loop = () => {
-        renderer!.resize()
-        renderer!.clearPaper()
-        raf = requestAnimationFrame(loop)
-      }
-      raf = requestAnimationFrame(loop)
+      try { engine = new Engine(canvas); engine.start() } catch { /* Fase 4: fallback WebGL2 */ }
     })
-    return () => { cancelled = true; cancelAnimationFrame(raf); renderer?.destroy() }
+    return () => { cancelled = true; engine?.destroy() }
   }, [])
 
   async function handlePlay() {
