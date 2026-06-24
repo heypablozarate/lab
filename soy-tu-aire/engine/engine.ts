@@ -30,6 +30,7 @@ export class Engine {
   private running = false
   private audio: AudioEngine | null = null
   private timeline: Timeline | null = null
+  private onVis = () => {}
 
   constructor(private canvas: HTMLCanvasElement) {
     this.renderer = new Renderer(canvas)
@@ -82,6 +83,8 @@ export class Engine {
     if (this.running) return
     this.running = true
     this.last = performance.now()
+    this.onVis = () => { if (document.hidden) this.stop(); else if (!this.running) this.start() }
+    document.addEventListener("visibilitychange", this.onVis)
     const loop = (now: number) => {
       const dt = Math.min((now - this.last) / 1000, 1 / 20)
       this.last = now
@@ -92,7 +95,10 @@ export class Engine {
         ? screenToPaper(this.input.screen.x, this.input.screen.y, this.canvas.clientWidth, this.canvas.clientHeight, view)
         : null
       const t = this.clock()
-      const dabs = this.brush.update(dt, target, this.modAt(t))
+      const mod = this.modAt(t)
+      const st = this.timeline ? this.timeline.query(t) : { climax: 0 }
+      this.camera.setZoom(1.6 + (st.climax ?? 0) * 0.5) // acerca en climax
+      const dabs = this.brush.update(dt, target, mod)
       this.ink.stamp(dabs)
       if (this.timeline) {
         for (const e of this.timeline.fired(this.prevT, t)) {
@@ -116,6 +122,7 @@ export class Engine {
 
   destroy(): void {
     this.stop()
+    document.removeEventListener("visibilitychange", this.onVis)
     this.input.destroy()
     this.ink.destroy()
     this.compositor.destroy()

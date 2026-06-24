@@ -17,6 +17,7 @@ export function Stage() {
   const [phase, setPhase] = useState<Phase>("intro")
   const [progress, setProgress] = useState(0)
   const [error, setError] = useState<string | null>(null)
+  const [unsupported, setUnsupported] = useState(false)
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -24,7 +25,7 @@ export function Stage() {
     let cancelled = false
     import("../engine/engine").then(({ Engine }) => {
       if (cancelled || !canvas) return
-      try { const e = new Engine(canvas); e.start(); engineRef.current = e } catch { /* fallback fase 4 */ }
+      try { const e = new Engine(canvas); e.start(); engineRef.current = e } catch { setUnsupported(true) }
     })
     return () => { cancelled = true; engineRef.current?.destroy(); engineRef.current = null }
   }, [])
@@ -58,6 +59,12 @@ export function Stage() {
   return (
     <div className={styles.stage}>
       <canvas ref={canvasRef} className={styles.canvas} aria-label="Lienzo de tinta" />
+
+      {unsupported && (
+        <div className={styles.overlay}>
+          <p className={styles.credit}>Tu navegador no soporta WebGL2. Probá Chrome/Safari/Firefox actualizados.</p>
+        </div>
+      )}
 
       {phase !== "playing" && (
         <div className={styles.overlay}>
