@@ -1,0 +1,1873 @@
+{
+  "duration": 233.7,
+  "events": [
+    {
+      "t": 0,
+      "velocidad": 1,
+      "presion": 0.2,
+      "climax": 0,
+      "reveals": [],
+      "creatures": []
+    },
+    {
+      "t": 1,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": []
+    },
+    {
+      "t": 18,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": [
+        "chica"
+      ]
+    },
+    {
+      "t": 20.5,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": [
+        "pajaros"
+      ]
+    },
+    {
+      "t": 21.2,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": []
+    },
+    {
+      "t": 24.5,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": [
+        "pezmancha",
+        "pececillo",
+        "pececillo",
+        "pececillo",
+        "pececillo",
+        "pececillo",
+        "pececillo",
+        "pececillo",
+        "pececillo"
+      ]
+    },
+    {
+      "t": 28,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": [
+        "surco"
+      ]
+    },
+    {
+      "t": 28.3,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": [
+        "surco"
+      ]
+    },
+    {
+      "t": 28.9,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": [
+        "surco"
+      ]
+    },
+    {
+      "t": 29.7,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": [
+        "surco"
+      ]
+    },
+    {
+      "t": 30.5,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": [
+        "cera"
+      ]
+    },
+    {
+      "t": 31.5,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": []
+    },
+    {
+      "t": 32.4,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": []
+    },
+    {
+      "t": 32.6,
+      "velocidad": 1,
+      "presion": 0.1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": []
+    },
+    {
+      "t": 32.8,
+      "velocidad": 1,
+      "presion": 0.1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": [
+        "cremallera"
+      ]
+    },
+    {
+      "t": 32.9,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": []
+    },
+    {
+      "t": 36,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": []
+    },
+    {
+      "t": 36.33,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": []
+    },
+    {
+      "t": 36.66,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": [
+        "entrando"
+      ]
+    },
+    {
+      "t": 37,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": []
+    },
+    {
+      "t": 37.2,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": []
+    },
+    {
+      "t": 41,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": []
+    },
+    {
+      "t": 41.15,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": [
+        "cosquilla",
+        "cosquilla",
+        "cosquilla"
+      ]
+    },
+    {
+      "t": 41.2,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": [
+        "cosquilla",
+        "cosquilla",
+        "cosquilla"
+      ]
+    },
+    {
+      "t": 41.25,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": [
+        "cosquilla",
+        "cosquilla",
+        "cosquilla"
+      ]
+    },
+    {
+      "t": 41.3,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": [
+        "cosquilla",
+        "cosquilla",
+        "cosquilla"
+      ]
+    },
+    {
+      "t": 41.35,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": [
+        "cosquilla",
+        "cosquilla",
+        "cosquilla"
+      ]
+    },
+    {
+      "t": 41.4,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": [
+        "cosquilla",
+        "cosquilla",
+        "cosquilla"
+      ]
+    },
+    {
+      "t": 41.41,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": [
+        "cosquilla",
+        "cosquilla",
+        "cosquilla"
+      ]
+    },
+    {
+      "t": 41.45,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": [
+        "cosquilla",
+        "cosquilla",
+        "cosquilla"
+      ]
+    },
+    {
+      "t": 41.5,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": [
+        "cosquilla",
+        "cosquilla",
+        "cosquilla"
+      ]
+    },
+    {
+      "t": 41.6,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": [
+        "cosquilla",
+        "cosquilla",
+        "cosquilla"
+      ]
+    },
+    {
+      "t": 41.65,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": [
+        "cosquilla",
+        "cosquilla",
+        "cosquilla"
+      ]
+    },
+    {
+      "t": 41.7,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": [
+        "cosquilla",
+        "cosquilla",
+        "cosquilla"
+      ]
+    },
+    {
+      "t": 41.75,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": [
+        "cosquilla",
+        "cosquilla",
+        "cosquilla"
+      ]
+    },
+    {
+      "t": 41.8,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": [
+        "cosquilla",
+        "cosquilla",
+        "cosquilla"
+      ]
+    },
+    {
+      "t": 41.85,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": [
+        "cosquilla",
+        "cosquilla",
+        "cosquilla"
+      ]
+    },
+    {
+      "t": 41.9,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": [
+        "cosquilla",
+        "cosquilla",
+        "cosquilla"
+      ]
+    },
+    {
+      "t": 41.95,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": [
+        "cosquilla",
+        "cosquilla",
+        "cosquilla"
+      ]
+    },
+    {
+      "t": 42,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": [
+        "cosquilla",
+        "cosquilla",
+        "cosquilla"
+      ]
+    },
+    {
+      "t": 42,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": []
+    },
+    {
+      "t": 42.05,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": [
+        "cosquilla",
+        "cosquilla",
+        "cosquilla"
+      ]
+    },
+    {
+      "t": 42.1,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": [
+        "cosquilla",
+        "cosquilla",
+        "cosquilla"
+      ]
+    },
+    {
+      "t": 42.15,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": [
+        "cosquilla",
+        "cosquilla",
+        "cosquilla"
+      ]
+    },
+    {
+      "t": 42.2,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": [
+        "cosquilla",
+        "cosquilla",
+        "cosquilla"
+      ]
+    },
+    {
+      "t": 42.25,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": [
+        "cosquilla",
+        "cosquilla",
+        "cosquilla"
+      ]
+    },
+    {
+      "t": 42.3,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": [
+        "cosquilla",
+        "cosquilla",
+        "cosquilla"
+      ]
+    },
+    {
+      "t": 43.8,
+      "velocidad": 1,
+      "presion": 0.2,
+      "climax": 0,
+      "reveals": [
+        "acomodo"
+      ],
+      "creatures": []
+    },
+    {
+      "t": 44.05,
+      "velocidad": 1,
+      "presion": 0.2,
+      "climax": 0,
+      "reveals": [],
+      "creatures": [
+        "Ogrande"
+      ]
+    },
+    {
+      "t": 44.3,
+      "velocidad": 1,
+      "presion": 0.2,
+      "climax": 0,
+      "reveals": [],
+      "creatures": []
+    },
+    {
+      "t": 45,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": []
+    },
+    {
+      "t": 47,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": []
+    },
+    {
+      "t": 47.7,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": []
+    },
+    {
+      "t": 48.5,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": []
+    },
+    {
+      "t": 49,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": []
+    },
+    {
+      "t": 49.2,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": []
+    },
+    {
+      "t": 50,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": []
+    },
+    {
+      "t": 51.5,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": []
+    },
+    {
+      "t": 52,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": []
+    },
+    {
+      "t": 55,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": []
+    },
+    {
+      "t": 55.15,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": [
+        "burbuja",
+        "burbuja",
+        "burbuja"
+      ]
+    },
+    {
+      "t": 55.2,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": [
+        "burbuja",
+        "burbuja",
+        "burbuja"
+      ]
+    },
+    {
+      "t": 55.25,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": [
+        "burbuja",
+        "burbuja",
+        "burbuja"
+      ]
+    },
+    {
+      "t": 55.3,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": [
+        "burbuja",
+        "burbuja",
+        "burbuja"
+      ]
+    },
+    {
+      "t": 55.35,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": [
+        "burbuja",
+        "burbuja",
+        "burbuja"
+      ]
+    },
+    {
+      "t": 55.4,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": [
+        "burbuja",
+        "burbuja",
+        "burbuja"
+      ]
+    },
+    {
+      "t": 55.45,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": [
+        "burbuja",
+        "burbuja",
+        "burbuja"
+      ]
+    },
+    {
+      "t": 55.5,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": [
+        "burbuja",
+        "burbuja",
+        "burbuja"
+      ]
+    },
+    {
+      "t": 55.55,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": [
+        "burbuja",
+        "burbuja",
+        "burbuja"
+      ]
+    },
+    {
+      "t": 55.6,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": [
+        "burbuja",
+        "burbuja",
+        "burbuja"
+      ]
+    },
+    {
+      "t": 55.65,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": [
+        "burbuja",
+        "burbuja",
+        "burbuja"
+      ]
+    },
+    {
+      "t": 55.7,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": [
+        "burbuja",
+        "burbuja",
+        "burbuja"
+      ]
+    },
+    {
+      "t": 55.75,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": [
+        "burbuja",
+        "burbuja",
+        "burbuja"
+      ]
+    },
+    {
+      "t": 55.8,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": [
+        "burbuja",
+        "burbuja",
+        "burbuja"
+      ]
+    },
+    {
+      "t": 55.85,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": [
+        "burbuja",
+        "burbuja",
+        "burbuja"
+      ]
+    },
+    {
+      "t": 55.9,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": [
+        "burbuja",
+        "burbuja",
+        "burbuja"
+      ]
+    },
+    {
+      "t": 55.95,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": [
+        "burbuja",
+        "burbuja",
+        "burbuja"
+      ]
+    },
+    {
+      "t": 56,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": [
+        "burbuja",
+        "burbuja",
+        "burbuja"
+      ]
+    },
+    {
+      "t": 56.05,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": [
+        "burbuja",
+        "burbuja",
+        "burbuja"
+      ]
+    },
+    {
+      "t": 56.1,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": [
+        "burbuja",
+        "burbuja",
+        "burbuja"
+      ]
+    },
+    {
+      "t": 56.15,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": [
+        "burbuja",
+        "burbuja",
+        "burbuja"
+      ]
+    },
+    {
+      "t": 56.2,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": [
+        "burbuja",
+        "burbuja",
+        "burbuja"
+      ]
+    },
+    {
+      "t": 56.25,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": [
+        "burbuja",
+        "burbuja",
+        "burbuja"
+      ]
+    },
+    {
+      "t": 56.3,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": [
+        "burbuja",
+        "burbuja",
+        "burbuja"
+      ]
+    },
+    {
+      "t": 59.5,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": [
+        "Ondasagua"
+      ]
+    },
+    {
+      "t": 60.2,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": []
+    },
+    {
+      "t": 62.8,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": []
+    },
+    {
+      "t": 63.3,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": []
+    },
+    {
+      "t": 64,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": []
+    },
+    {
+      "t": 64.7,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": []
+    },
+    {
+      "t": 65,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": []
+    },
+    {
+      "t": 65.8,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": []
+    },
+    {
+      "t": 66.5,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": [
+        "salpico"
+      ]
+    },
+    {
+      "t": 68,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": []
+    },
+    {
+      "t": 68.5,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": []
+    },
+    {
+      "t": 71,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": []
+    },
+    {
+      "t": 73.5,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": [
+        "recuerdo_b",
+        "recuerdo_b"
+      ]
+    },
+    {
+      "t": 73.6,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": [
+        "recuerdo_b",
+        "recuerdo_b"
+      ]
+    },
+    {
+      "t": 73.7,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": [
+        "recuerdo_b",
+        "recuerdo_b"
+      ]
+    },
+    {
+      "t": 73.8,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": [
+        "recuerdo_b",
+        "recuerdo_b"
+      ]
+    },
+    {
+      "t": 73.9,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": [
+        "recuerdo_b",
+        "recuerdo_b"
+      ]
+    },
+    {
+      "t": 74,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": [
+        "recuerdo_b",
+        "recuerdo_b"
+      ]
+    },
+    {
+      "t": 74.1,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": [
+        "recuerdo_b",
+        "recuerdo_b"
+      ]
+    },
+    {
+      "t": 74.2,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": [
+        "recuerdo_b",
+        "recuerdo_b"
+      ]
+    },
+    {
+      "t": 74.3,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": [
+        "recuerdo_b",
+        "recuerdo_b"
+      ]
+    },
+    {
+      "t": 74.4,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": [
+        "recuerdo_b",
+        "recuerdo_b"
+      ]
+    },
+    {
+      "t": 75,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": []
+    },
+    {
+      "t": 77,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": []
+    },
+    {
+      "t": 77.8,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": []
+    },
+    {
+      "t": 78.85,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": [
+        "lagrima"
+      ]
+    },
+    {
+      "t": 81.5,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": []
+    },
+    {
+      "t": 82.1,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": []
+    },
+    {
+      "t": 84.1,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": []
+    },
+    {
+      "t": 84.7,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": []
+    },
+    {
+      "t": 86.9,
+      "velocidad": 1,
+      "presion": 0.5,
+      "climax": 0,
+      "reveals": [],
+      "creatures": []
+    },
+    {
+      "t": 87,
+      "velocidad": 1,
+      "presion": 0.5,
+      "climax": 0,
+      "reveals": [],
+      "creatures": [
+        "labios"
+      ]
+    },
+    {
+      "t": 88,
+      "velocidad": 1,
+      "presion": 1.2,
+      "climax": 0,
+      "reveals": [],
+      "creatures": []
+    },
+    {
+      "t": 123,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": []
+    },
+    {
+      "t": 124.8,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": [
+        "mariposa"
+      ]
+    },
+    {
+      "t": 128.5,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": [
+        "pececillo",
+        "pececillo",
+        "pececillo",
+        "pececillo"
+      ]
+    },
+    {
+      "t": 133,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": [
+        "dandelion",
+        "dandelion",
+        "dandelion",
+        "dandelion",
+        "dandelion"
+      ]
+    },
+    {
+      "t": 136.2,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": [
+        "pececillo",
+        "pececillo",
+        "pececillo",
+        "pececillo"
+      ]
+    },
+    {
+      "t": 140,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": []
+    },
+    {
+      "t": 141.85,
+      "velocidad": 1,
+      "presion": 0,
+      "climax": 0,
+      "reveals": [],
+      "creatures": []
+    },
+    {
+      "t": 142,
+      "velocidad": 1,
+      "presion": 0,
+      "climax": 0,
+      "reveals": [],
+      "creatures": [
+        "Entradaagujero"
+      ]
+    },
+    {
+      "t": 142.4,
+      "velocidad": 1,
+      "presion": 0.1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": [
+        "Salidaagujero"
+      ]
+    },
+    {
+      "t": 142.5,
+      "velocidad": 1,
+      "presion": 0,
+      "climax": 0,
+      "reveals": [],
+      "creatures": []
+    },
+    {
+      "t": 142.65,
+      "velocidad": 1,
+      "presion": 0,
+      "climax": 0,
+      "reveals": [],
+      "creatures": [
+        "Entradaagujero"
+      ]
+    },
+    {
+      "t": 143,
+      "velocidad": 1,
+      "presion": 0.1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": [
+        "Salidaagujero"
+      ]
+    },
+    {
+      "t": 143.35,
+      "velocidad": 1,
+      "presion": 0,
+      "climax": 0,
+      "reveals": [],
+      "creatures": []
+    },
+    {
+      "t": 143.5,
+      "velocidad": 1,
+      "presion": 0,
+      "climax": 0,
+      "reveals": [],
+      "creatures": [
+        "Entradaagujero"
+      ]
+    },
+    {
+      "t": 143.8,
+      "velocidad": 1,
+      "presion": 0.1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": [
+        "Salidaagujero"
+      ]
+    },
+    {
+      "t": 144,
+      "velocidad": 1,
+      "presion": 0,
+      "climax": 0,
+      "reveals": [],
+      "creatures": []
+    },
+    {
+      "t": 144.15,
+      "velocidad": 1,
+      "presion": 0,
+      "climax": 0,
+      "reveals": [],
+      "creatures": [
+        "Entradaagujero"
+      ]
+    },
+    {
+      "t": 144.6,
+      "velocidad": 1,
+      "presion": 0.1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": [
+        "Salidaagujero"
+      ]
+    },
+    {
+      "t": 145,
+      "velocidad": 1,
+      "presion": 0,
+      "climax": 0,
+      "reveals": [],
+      "creatures": []
+    },
+    {
+      "t": 145.15,
+      "velocidad": 1,
+      "presion": 0,
+      "climax": 0,
+      "reveals": [],
+      "creatures": [
+        "Entradaagujero"
+      ]
+    },
+    {
+      "t": 145.7,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": [
+        "Salidaagujero"
+      ]
+    },
+    {
+      "t": 150,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": [
+        "alambre"
+      ]
+    },
+    {
+      "t": 151.1,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": []
+    },
+    {
+      "t": 151.9,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": []
+    },
+    {
+      "t": 153.2,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": []
+    },
+    {
+      "t": 154,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": []
+    },
+    {
+      "t": 155,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": []
+    },
+    {
+      "t": 155.6,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": []
+    },
+    {
+      "t": 155.8,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": []
+    },
+    {
+      "t": 156.4,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": []
+    },
+    {
+      "t": 157.3,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": [
+        "uno"
+      ]
+    },
+    {
+      "t": 157.6,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": []
+    },
+    {
+      "t": 158,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": []
+    },
+    {
+      "t": 159,
+      "velocidad": 1,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": []
+    },
+    {
+      "t": 163,
+      "velocidad": 1,
+      "presion": 0.2,
+      "climax": 0,
+      "reveals": [],
+      "creatures": []
+    },
+    {
+      "t": 164.2,
+      "velocidad": 1,
+      "presion": 0.1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": []
+    },
+    {
+      "t": 165,
+      "velocidad": 1,
+      "presion": 0,
+      "climax": 0,
+      "reveals": [],
+      "creatures": []
+    },
+    {
+      "t": 168.7,
+      "velocidad": 1.3,
+      "presion": 1.3,
+      "climax": 1,
+      "reveals": [],
+      "creatures": [
+        "Salidaagujero"
+      ]
+    },
+    {
+      "t": 170,
+      "velocidad": 1.3,
+      "presion": 1.3,
+      "climax": 0,
+      "reveals": [],
+      "creatures": [
+        "dandelion",
+        "dandelion",
+        "dandelion",
+        "dandelion",
+        "dandelion"
+      ]
+    },
+    {
+      "t": 174,
+      "velocidad": 1.3,
+      "presion": 1.3,
+      "climax": 1,
+      "reveals": [],
+      "creatures": [
+        "pececillo",
+        "pececillo",
+        "pececillo",
+        "pececillo"
+      ]
+    },
+    {
+      "t": 178.2,
+      "velocidad": 1.3,
+      "presion": 1.3,
+      "climax": 1,
+      "reveals": [],
+      "creatures": [
+        "mariposanoloop"
+      ]
+    },
+    {
+      "t": 182,
+      "velocidad": 1.3,
+      "presion": 1.3,
+      "climax": 1,
+      "reveals": [],
+      "creatures": [
+        "pececillo",
+        "pececillo",
+        "pececillo",
+        "pececillo",
+        "pececillo"
+      ]
+    },
+    {
+      "t": 186,
+      "velocidad": 1.3,
+      "presion": 1.3,
+      "climax": 1,
+      "reveals": [],
+      "creatures": [
+        "mariposanoloop"
+      ]
+    },
+    {
+      "t": 189,
+      "velocidad": 1.3,
+      "presion": 1.3,
+      "climax": 1,
+      "reveals": [],
+      "creatures": [
+        "pececillo",
+        "pececillo",
+        "pececillo",
+        "pececillo"
+      ]
+    },
+    {
+      "t": 194,
+      "velocidad": 1.3,
+      "presion": 1.3,
+      "climax": 1,
+      "reveals": [],
+      "creatures": [
+        "dandelion",
+        "dandelion",
+        "dandelion",
+        "dandelion",
+        "dandelion",
+        "dandelion",
+        "dandelion",
+        "dandelion",
+        "dandelion",
+        "dandelion"
+      ]
+    },
+    {
+      "t": 198,
+      "velocidad": 1.3,
+      "presion": 1.3,
+      "climax": 1,
+      "reveals": [],
+      "creatures": [
+        "pececillo",
+        "pececillo",
+        "pececillo",
+        "pececillo",
+        "pececillo"
+      ]
+    },
+    {
+      "t": 203,
+      "velocidad": 1.3,
+      "presion": 1.3,
+      "climax": 1,
+      "reveals": [],
+      "creatures": [
+        "mariposa",
+        "dandelion",
+        "dandelion"
+      ]
+    },
+    {
+      "t": 207,
+      "velocidad": 1.3,
+      "presion": 1.3,
+      "climax": 1,
+      "reveals": [],
+      "creatures": [
+        "pececillo",
+        "pececillo",
+        "pececillo",
+        "pececillo"
+      ]
+    },
+    {
+      "t": 211,
+      "velocidad": 1.3,
+      "presion": 1.3,
+      "climax": 1,
+      "reveals": [],
+      "creatures": [
+        "mariposa",
+        "dandelion",
+        "dandelion"
+      ]
+    },
+    {
+      "t": 215.3,
+      "velocidad": 1.3,
+      "presion": 1.3,
+      "climax": 1,
+      "reveals": [],
+      "creatures": [
+        "pececillo",
+        "pececillo",
+        "pececillo",
+        "pececillo"
+      ]
+    },
+    {
+      "t": 218,
+      "velocidad": 0.7,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": []
+    },
+    {
+      "t": 220,
+      "velocidad": 0.7,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": []
+    },
+    {
+      "t": 220.2,
+      "velocidad": 0.7,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": []
+    },
+    {
+      "t": 222,
+      "velocidad": 0.7,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": []
+    },
+    {
+      "t": 222.1,
+      "velocidad": 0.7,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": []
+    },
+    {
+      "t": 224,
+      "velocidad": 0.7,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": []
+    },
+    {
+      "t": 225,
+      "velocidad": 0.7,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": []
+    },
+    {
+      "t": 225.3,
+      "velocidad": 0.7,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": []
+    },
+    {
+      "t": 227,
+      "velocidad": 0.7,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": []
+    },
+    {
+      "t": 227.2,
+      "velocidad": 0.7,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": []
+    },
+    {
+      "t": 229,
+      "velocidad": 0.7,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": []
+    },
+    {
+      "t": 230,
+      "velocidad": 0.7,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": []
+    },
+    {
+      "t": 230.2,
+      "velocidad": 0.7,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": []
+    },
+    {
+      "t": 232,
+      "velocidad": 0.7,
+      "presion": 1,
+      "climax": 0,
+      "reveals": [],
+      "creatures": []
+    },
+    {
+      "t": 233,
+      "velocidad": 0.7,
+      "presion": 0.5,
+      "climax": 0,
+      "reveals": [],
+      "creatures": []
+    },
+    {
+      "t": 233.5,
+      "velocidad": 0.7,
+      "presion": 0,
+      "climax": 0,
+      "reveals": [],
+      "creatures": []
+    },
+    {
+      "t": 233.7,
+      "velocidad": 0,
+      "presion": 0,
+      "climax": 0,
+      "reveals": [],
+      "creatures": []
+    }
+  ],
+  "fotos": {
+    "chica": "gfx/fotos/chica.jpg",
+    "pez": "gfx/fotos/pez.jpg",
+    "acomodo": "gfx/fotos/acomodo.jpg",
+    "aire": "gfx/tintas/aire.jpg",
+    "agua": "gfx/tintas/agua.jpg",
+    "surcos": "gfx/tintas/surcos.jpg",
+    "pequenitos": "gfx/tintas/pequenitos.jpg",
+    "cera": "gfx/tintas/cera.jpg",
+    "derretida": "gfx/tintas/derretida.jpg",
+    "ganas": "gfx/tintas/ganas.jpg",
+    "rias": "gfx/tintas/rias.jpg",
+    "enredo": "gfx/tintas/enredo.jpg",
+    "cuelo": "gfx/tintas/cuelo.jpg",
+    "avisar": "gfx/tintas/avisar.jpg",
+    "cosquillas": "gfx/tintas/cosquillas.jpg",
+    "bebes": "gfx/tintas/bebes.jpg",
+    "atraganto": "gfx/tintas/atraganto.jpg",
+    "respiras": "gfx/tintas/respiras.jpg",
+    "tragas": "gfx/tintas/tragas.jpg",
+    "enaguas": "gfx/tintas/enaguas.jpg",
+    "fantasias": "gfx/tintas/fantasias.jpg",
+    "memoria": "gfx/tintas/memoria.jpg",
+    "imposible": "gfx/tintas/imposible.jpg",
+    "construyo": "gfx/tintas/construyo.jpg",
+    "futuro": "gfx/tintas/futuro.jpg",
+    "improvisado": "gfx/tintas/improvisado.jpg",
+    "unoyuno": "gfx/tintas/unoyuno.jpg"
+  }
+}
