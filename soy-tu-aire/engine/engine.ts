@@ -30,7 +30,8 @@ export class Engine {
   private running = false
   private audio: AudioEngine | null = null
   private timeline: Timeline | null = null
-  private onVis = () => {}
+  // Stable reference so repeated addEventListener calls de-dupe (no listener leak across tab switches).
+  private onVis = () => { if (document.hidden) this.stop(); else if (!this.running) this.start() }
 
   constructor(private canvas: HTMLCanvasElement) {
     this.renderer = new Renderer(canvas)
@@ -83,7 +84,6 @@ export class Engine {
     if (this.running) return
     this.running = true
     this.last = performance.now()
-    this.onVis = () => { if (document.hidden) this.stop(); else if (!this.running) this.start() }
     document.addEventListener("visibilitychange", this.onVis)
     const loop = (now: number) => {
       const dt = Math.min((now - this.last) / 1000, 1 / 20)
