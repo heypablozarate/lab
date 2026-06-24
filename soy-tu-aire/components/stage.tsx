@@ -69,7 +69,7 @@ export function Stage() {
       {phase !== "playing" && (
         <div className={styles.overlay}>
           <p className={styles.credit}>
-            Homenaje a <strong>"Soy tu aire" de Labuat</strong> (Herraiz Soto &amp; Co.).
+            Homenaje a <strong>“Soy tu aire” de Labuat</strong> (Herraiz Soto &amp; Co.).
             <br />
             Apoyá a la artista:{" "}
             <a href={SPOTIFY_URL} target="_blank" rel="noopener noreferrer">

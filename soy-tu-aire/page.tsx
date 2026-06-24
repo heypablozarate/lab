@@ -75,7 +75,7 @@ export default function SoyTuAirePage() {
 
       <footer className={styles.footer}>
         <span>
-          Homenaje a <strong>Labuat — "Soy tu aire"</strong>. Recreación por PabloZarate™.
+          Homenaje a <strong>Labuat — “Soy tu aire”</strong>. Recreación por PabloZarate™.
         </span>
         <Link href="/">Back to the Lab</Link>
       </footer>

@@ -75,7 +75,7 @@ export class Engine {
     }
   }
 
-  private glowAt(_t: number): number {
+  private glowAt(): number {
     const b = this.audio ? this.audio.getBands() : { cascabeles: 0 } as { cascabeles: number }
     return Math.min(1, b.cascabeles * 1.5) // luces = cascabeles
   }
@@ -107,10 +107,10 @@ export class Engine {
         }
       }
       this.prevT = t
-      const camBands = this.audio ? this.audio.getBands() : { voz: 0, instrumental: 0 } as any
+      const camBands = this.audio ? this.audio.getBands() : { voz: 0, instrumental: 0, cascabeles: 0, ritmo2: 0 }
       const camSpeed = 1 + (camBands.voz + camBands.instrumental) * 0.5 // camara = voz+instrumental
       this.camera.follow(this.brush.pos, dt * camSpeed)
-      this.compositor.draw(this.ink.texture, this.paperTex, this.camera.view(aspect), PAPER_W, PAPER_H, this.glowAt(t))
+      this.compositor.draw(this.ink.texture, this.paperTex, this.camera.view(aspect), PAPER_W, PAPER_H, this.glowAt())
       this.reveals.draw(this.camera.view(aspect), t)
       this.creatures.draw(this.camera.view(aspect), t)
       this.raf = requestAnimationFrame(loop)

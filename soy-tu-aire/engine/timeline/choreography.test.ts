@@ -1,9 +1,10 @@
 // choreography.test.ts
 import { describe, expect, it } from "vitest"
 import choreo from "../../data/choreography.json"
+import type { Choreography } from "./choreography"
 
 describe("choreography.json", () => {
-  const c = choreo as { duration: number; events: any[]; fotos: Record<string, string> }
+  const c = choreo as Choreography
   it("tiene ~185 eventos ordenados por tiempo", () => {
     expect(c.events.length).toBeGreaterThan(150)
     for (let i = 1; i < c.events.length; i++) {
