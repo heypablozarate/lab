@@ -13,6 +13,7 @@ type Phase = "intro" | "loading" | "playing"
 export function Stage() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
   const audioRef = useRef<AudioEngine | null>(null)
+  const engineRef = useRef<import("../engine/engine").Engine | null>(null)
   const [phase, setPhase] = useState<Phase>("intro")
   const [progress, setProgress] = useState(0)
   const [error, setError] = useState<string | null>(null)
@@ -20,13 +21,12 @@ export function Stage() {
   useEffect(() => {
     const canvas = canvasRef.current
     if (!canvas) return
-    let engine: import("../engine/engine").Engine | null = null
     let cancelled = false
     import("../engine/engine").then(({ Engine }) => {
-      if (cancelled) return
-      try { engine = new Engine(canvas); engine.start() } catch { /* Fase 4: fallback WebGL2 */ }
+      if (cancelled || !canvas) return
+      try { const e = new Engine(canvas); e.start(); engineRef.current = e } catch { /* fallback fase 4 */ }
     })
-    return () => { cancelled = true; engine?.destroy() }
+    return () => { cancelled = true; engineRef.current?.destroy(); engineRef.current = null }
   }, [])
 
   async function handlePlay() {
@@ -36,6 +36,13 @@ export function Stage() {
     audioRef.current = audio
     try {
       await audio.load((p) => setProgress(p))
+      const [{ Timeline }, { loadChoreography }] = await Promise.all([
+        import("../engine/timeline/timeline"),
+        import("../engine/timeline/choreography"),
+      ])
+      const choreo = await loadChoreography()
+      engineRef.current?.attachAudio(audio)
+      engineRef.current?.attachTimeline(new Timeline(choreo.events))
       await audio.play()
       setPhase("playing")
     } catch {

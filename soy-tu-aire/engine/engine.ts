@@ -8,8 +8,8 @@ import { Compositor } from "./render/compositor"
 import { InkAccumulator } from "./render/ink-accumulator"
 import { Renderer } from "./render/renderer"
 import type { BrushMod } from "./types"
-
-const DEFAULT_MOD: BrushMod = { pressure: 0.5, climax: 0 }
+import type { AudioEngine } from "./audio/audio-engine"
+import type { Timeline } from "./timeline/timeline"
 
 export class Engine {
   private renderer: Renderer
@@ -21,6 +21,8 @@ export class Engine {
   private raf = 0
   private last = 0
   private running = false
+  private audio: AudioEngine | null = null
+  private timeline: Timeline | null = null
 
   constructor(private canvas: HTMLCanvasElement) {
     this.renderer = new Renderer(canvas)
@@ -29,10 +31,26 @@ export class Engine {
     this.input = new Input(canvas)
   }
 
-  // Fase 3 sobreescribe estos para inyectar audio/timeline.
-  protected modAt(_t: number): BrushMod { return DEFAULT_MOD }
-  protected glowAt(_t: number): number { return 0 }
-  protected clock(): number { return performance.now() / 1000 }
+  attachAudio(audio: AudioEngine): void { this.audio = audio }
+  attachTimeline(timeline: Timeline): void { this.timeline = timeline }
+
+  private clock(): number { return this.audio ? this.audio.currentTime : performance.now() / 1000 }
+
+  private modAt(t: number): BrushMod {
+    const base = this.timeline ? this.timeline.query(t) : { presion: 0.5, climax: 0, velocidad: 1 }
+    const b = this.audio ? this.audio.getBands() : { voz: 0, instrumental: 0, cascabeles: 0, ritmo2: 0 }
+    // principal = voz + ritmo2 (mapeo original)
+    const principal = Math.min(1, b.voz + b.ritmo2)
+    return {
+      pressure: Math.min(1, base.presion * 0.6 + principal * 0.6),
+      climax: Math.min(1, base.climax + b.ritmo2 * 0.4),
+    }
+  }
+
+  private glowAt(_t: number): number {
+    const b = this.audio ? this.audio.getBands() : { cascabeles: 0 } as { cascabeles: number }
+    return Math.min(1, b.cascabeles * 1.5) // luces = cascabeles
+  }
 
   start(): void {
     if (this.running) return
@@ -50,7 +68,9 @@ export class Engine {
       const t = this.clock()
       const dabs = this.brush.update(dt, target, this.modAt(t))
       this.ink.stamp(dabs)
-      this.camera.follow(this.brush.pos, dt)
+      const camBands = this.audio ? this.audio.getBands() : { voz: 0, instrumental: 0 } as any
+      const camSpeed = 1 + (camBands.voz + camBands.instrumental) * 0.5 // camara = voz+instrumental
+      this.camera.follow(this.brush.pos, dt * camSpeed)
       this.compositor.draw(this.ink.texture, this.camera.view(aspect), PAPER_W, PAPER_H, this.glowAt(t))
       this.raf = requestAnimationFrame(loop)
     }
