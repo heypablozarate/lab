@@ -1,5 +1,6 @@
 // engine.ts
 import { Brush } from "./brush/brush"
+import { pointAtDistanceFromEnd } from "./brush/stroke-history"
 import { Camera } from "./camera/camera"
 import { Input } from "./input/input"
 import { screenToPaper } from "./input/screen-to-paper"
@@ -205,8 +206,14 @@ export class Engine {
     this.pendingRevealSpawns = this.pendingRevealSpawns.filter((spawn) => {
       if (spawn.fireAt <= prevT) return false
       if (spawn.fireAt > t) return true
-      const at = { x: this.brush.pos.x + spawn.offset.x, y: this.brush.pos.y + spawn.offset.y }
-      this.reveals.spawn(spawn.name, at, spawn.fireAt)
+      const anchor = pointAtDistanceFromEnd(this.brush.getRibbonSamples(), 90)
+      const at = anchor
+        ? { x: anchor.x, y: anchor.y }
+        : { x: this.brush.pos.x + spawn.offset.x, y: this.brush.pos.y + spawn.offset.y }
+      this.reveals.spawn(spawn.name, at, spawn.fireAt, {
+        strokeAnchor: anchor,
+        strokeOffset: { along: spawn.offset.x, normal: -0.18 },
+      })
       return false
     })
   }
