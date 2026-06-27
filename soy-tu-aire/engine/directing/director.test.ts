@@ -66,4 +66,13 @@ describe("expandDirectedEvents", () => {
       { startAt: 86.95, endAt: 88.2, pressure: 0.08 },
     ])
   })
+
+  it("keeps future delayed spawns out of the current frame window", () => {
+    const batch = expandDirectedEvents(event({ t: 66.5, creatures: ["salpico"] }))
+    const readyAtNominalTime = batch.creatures.filter((spawn) => spawn.fireAt > 66.4 && spawn.fireAt <= 66.6)
+    const readyAtBurstTime = batch.creatures.filter((spawn) => spawn.fireAt > 68.4 && spawn.fireAt <= 68.5)
+
+    expect(readyAtNominalTime).toHaveLength(0)
+    expect(readyAtBurstTime).toHaveLength(1)
+  })
 })
