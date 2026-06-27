@@ -4,7 +4,11 @@ import type { ChoreoEvent } from "./choreography"
 export type TimelineState = { velocidad: number; presion: number; climax: number }
 
 export class Timeline {
-  constructor(private events: ChoreoEvent[]) {}
+  readonly duration: number
+
+  constructor(private events: ChoreoEvent[], duration?: number) {
+    this.duration = duration ?? events[events.length - 1]?.t ?? 0
+  }
 
   query(t: number): TimelineState {
     const ev = this.events
@@ -33,5 +37,12 @@ export class Timeline {
     return this.events.filter(
       (e) => (e.reveals.length > 0 || e.creatures.length > 0) && e.t > prevT && e.t <= t,
     )
+  }
+
+  inkAt(t: number): number {
+    if (this.duration <= 0) return 1
+    const finalFade = Math.min(1, Math.max(0, (this.duration - t) / 7.5))
+    const speedFade = Math.min(1, Math.max(0, this.query(t).velocidad / 0.7))
+    return Math.min(finalFade, speedFade)
   }
 }

@@ -20,6 +20,28 @@ describe("Timeline.query", () => {
   })
 })
 
+describe("Timeline.inkAt", () => {
+  it("keeps ink flowing until the final fade window", () => {
+    const tl = new Timeline([
+      { ...ev(0, 0.5), velocidad: 1 },
+      { ...ev(10, 0.5), velocidad: 1 },
+    ], 20)
+
+    expect(tl.inkAt(10)).toBe(1)
+  })
+
+  it("dries out at the end of the song", () => {
+    const tl = new Timeline([
+      { ...ev(0, 0.5), velocidad: 1 },
+      { ...ev(12.5, 0.5), velocidad: 0.7 },
+      { ...ev(20, 0), velocidad: 0 },
+    ], 20)
+
+    expect(tl.inkAt(16.25)).toBeCloseTo(0.5)
+    expect(tl.inkAt(20)).toBe(0)
+  })
+})
+
 describe("Timeline.fired", () => {
   const tl = new Timeline([ev(0, 0.2), ev(5, 0.5, 0, ["chica"]), ev(8, 0.5, 0, ["pez"])])
   it("devuelve eventos cuyo t cae en (prevT, t]", () => {

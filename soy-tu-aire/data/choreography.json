@@ -32,7 +32,9 @@
       "velocidad": 1,
       "presion": 1,
       "climax": 0,
-      "reveals": [],
+      "reveals": [
+        "aire"
+      ],
       "creatures": [
         "pajaros"
       ]
@@ -78,7 +80,9 @@
       "velocidad": 1,
       "presion": 1,
       "climax": 0,
-      "reveals": [],
+      "reveals": [
+        "surcos"
+      ],
       "creatures": [
         "surco"
       ]
@@ -88,7 +92,9 @@
       "velocidad": 1,
       "presion": 1,
       "climax": 0,
-      "reveals": [],
+      "reveals": [
+        "pequenitos"
+      ],
       "creatures": [
         "surco"
       ]
@@ -118,7 +124,9 @@
       "velocidad": 1,
       "presion": 1,
       "climax": 0,
-      "reveals": [],
+      "reveals": [
+        "derretida"
+      ],
       "creatures": []
     },
     {
@@ -202,7 +210,9 @@
       "velocidad": 1,
       "presion": 1,
       "climax": 0,
-      "reveals": [],
+      "reveals": [
+        "cosquillas"
+      ],
       "creatures": []
     },
     {
@@ -542,7 +552,9 @@
       "velocidad": 1,
       "presion": 1,
       "climax": 0,
-      "reveals": [],
+      "reveals": [
+        "rias"
+      ],
       "creatures": []
     },
     {
@@ -558,7 +570,9 @@
       "velocidad": 1,
       "presion": 1,
       "climax": 0,
-      "reveals": [],
+      "reveals": [
+        "cuelo"
+      ],
       "creatures": []
     },
     {
@@ -574,7 +588,9 @@
       "velocidad": 1,
       "presion": 1,
       "climax": 0,
-      "reveals": [],
+      "reveals": [
+        "enredo"
+      ],
       "creatures": []
     },
     {
@@ -590,7 +606,9 @@
       "velocidad": 1,
       "presion": 1,
       "climax": 0,
-      "reveals": [],
+      "reveals": [
+        "avisar"
+      ],
       "creatures": []
     },
     {
@@ -902,7 +920,9 @@
       "velocidad": 1,
       "presion": 1,
       "climax": 0,
-      "reveals": [],
+      "reveals": [
+        "agua"
+      ],
       "creatures": [
         "Ondasagua"
       ]
@@ -920,7 +940,9 @@
       "velocidad": 1,
       "presion": 1,
       "climax": 0,
-      "reveals": [],
+      "reveals": [
+        "bebes"
+      ],
       "creatures": []
     },
     {
@@ -936,7 +958,9 @@
       "velocidad": 1,
       "presion": 1,
       "climax": 0,
-      "reveals": [],
+      "reveals": [
+        "atraganto"
+      ],
       "creatures": []
     },
     {
@@ -952,7 +976,9 @@
       "velocidad": 1,
       "presion": 1,
       "climax": 0,
-      "reveals": [],
+      "reveals": [
+        "respiras"
+      ],
       "creatures": []
     },
     {
@@ -978,7 +1004,9 @@
       "velocidad": 1,
       "presion": 1,
       "climax": 0,
-      "reveals": [],
+      "reveals": [
+        "tragas"
+      ],
       "creatures": []
     },
     {
@@ -1120,7 +1148,9 @@
       "velocidad": 1,
       "presion": 1,
       "climax": 0,
-      "reveals": [],
+      "reveals": [
+        "enaguas"
+      ],
       "creatures": []
     },
     {
@@ -1146,7 +1176,9 @@
       "velocidad": 1,
       "presion": 1,
       "climax": 0,
-      "reveals": [],
+      "reveals": [
+        "fantasias"
+      ],
       "creatures": []
     },
     {
@@ -1162,7 +1194,9 @@
       "velocidad": 1,
       "presion": 1,
       "climax": 0,
-      "reveals": [],
+      "reveals": [
+        "memoria"
+      ],
       "creatures": []
     },
     {
@@ -1420,7 +1454,9 @@
       "velocidad": 1,
       "presion": 1,
       "climax": 0,
-      "reveals": [],
+      "reveals": [
+        "imposible"
+      ],
       "creatures": []
     },
     {
@@ -1436,7 +1472,9 @@
       "velocidad": 1,
       "presion": 1,
       "climax": 0,
-      "reveals": [],
+      "reveals": [
+        "construyo"
+      ],
       "creatures": []
     },
     {
@@ -1452,7 +1490,9 @@
       "velocidad": 1,
       "presion": 1,
       "climax": 0,
-      "reveals": [],
+      "reveals": [
+        "futuro"
+      ],
       "creatures": []
     },
     {
@@ -1468,7 +1508,9 @@
       "velocidad": 1,
       "presion": 1,
       "climax": 0,
-      "reveals": [],
+      "reveals": [
+        "improvisado"
+      ],
       "creatures": []
     },
     {

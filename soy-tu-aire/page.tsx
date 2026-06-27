@@ -9,7 +9,7 @@ const SOCIAL_IMAGE_URL = "https://lab.pablozarate.com/lab/opengraph-image.jpg"
 const TWITTER_IMAGE_URL = "https://lab.pablozarate.com/lab/twitter-image.jpg"
 const PAGE_TITLE = "Soy tu aire — Homenaje interactivo · Lab by PabloZarate™"
 const PAGE_DESCRIPTION =
-  "Homenaje moderno a 'Soy tu aire' de Labuat: un pincel de tinta que dibuja la música y respondés con el mouse. WebGL2 + Web Audio por Pablo Zarate."
+  "Homenaje moderno a 'Soy tu aire' de Labuat: un pincel de tinta que dibuja la música y respondés con el mouse. PixiJS + Web Audio por Pablo Zarate."
 
 function serializeJsonLd(data: Record<string, unknown>) {
   return JSON.stringify(data).replace(/</g, "\\u003c")
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
   keywords: [
     "Labuat",
     "Soy tu aire",
-    "WebGL",
+    "PixiJS",
     "audio reactive",
     "generative ink",
     "Pablo Zarate",

@@ -38,6 +38,38 @@
   height: 100%;
 }
 
+/* Lens character over the canvas (z-index 1: above canvas, below the UI overlay
+   at z-index 2). Both layers are inert to the pointer. */
+.vignette,
+.grain {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.vignette {
+  background: radial-gradient(
+    ellipse at 50% 45%,
+    transparent 38%,
+    rgba(20, 19, 24, 0.22) 68%,
+    rgba(16, 15, 20, 0.42) 88%,
+    rgba(12, 11, 16, 0.62) 100%
+  );
+  mix-blend-mode: multiply;
+}
+
+.grain {
+  opacity: 0.52;
+  mix-blend-mode: overlay;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .grain { opacity: 0.32; }
+}
+
 .footer {
   position: fixed;
   left: 0;
