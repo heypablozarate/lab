@@ -47,6 +47,7 @@ type Active = {
   life: number
   alpha: number
   reveal: RevealMode
+  maskNode: InstanceType<PixiModule["Graphics"]> | null
   // null => static (no per-frame swap). Otherwise the frame sequence to play.
   frames: Texture[] | null
   fps: number
@@ -81,6 +82,13 @@ export function resolveCreaturePresentation(
     alpha: options.alpha ?? 1,
     offset: options.offset ?? { x: 0, y: 0 },
   }
+}
+
+export function revealProgress(reveal: RevealMode, age: number, life: number): number {
+  if (reveal === "hardCut" || reveal === "fade" || reveal === "strokeMask") return 1
+  if (reveal === "drawLeftToRight") return clamp01(age / Math.max(0.001, life * 0.3))
+  if (reveal === "radialBurst") return clamp01(age / Math.max(0.001, life * 0.09))
+  return 1
 }
 
 export class Creatures {
@@ -139,6 +147,13 @@ export class Creatures {
     const baseScale = presentation.targetLongSide / maxSide
     node.scale.set(baseScale * 0.72)
     this.layerFor(options.layer ?? "overInk").addChild(node)
+    const maskNode = options.reveal === "drawLeftToRight" || options.reveal === "radialBurst"
+      ? new this.pixi.Graphics()
+      : null
+    if (maskNode) {
+      node.mask = maskNode
+      node.parent?.addChild(maskNode)
+    }
     this.active.push({
       node,
       born: now,
@@ -146,6 +161,7 @@ export class Creatures {
       life: presentation.life,
       alpha: presentation.alpha,
       reveal: options.reveal ?? "fade",
+      maskNode,
       frames,
       fps: entry.fps,
       loop: entry.loop,
@@ -164,8 +180,7 @@ export class Creatures {
     this.active = this.active.filter((active) => {
       const age = now - active.born
       if (age > active.life) {
-        active.node.parent?.removeChild(active.node)
-        active.node.destroy()
+        destroyActive(active)
         return false
       }
       // Advance frame sequence (if animated).
@@ -180,14 +195,32 @@ export class Creatures {
       const pulse = Math.sin(age * Math.PI * 1.2) * 0.08
       active.node.alpha = alpha * active.alpha
       active.node.scale.set(active.baseScale * (0.82 + Math.min(1, age / active.life) * 0.28 + pulse))
+      if (active.maskNode) {
+        const progress = revealProgress(active.reveal, age, active.life)
+        active.maskNode.clear()
+        if (active.reveal === "drawLeftToRight") {
+          const bounds = active.node.getLocalBounds()
+          active.maskNode
+            .rect(
+              active.node.x + bounds.x * active.node.scale.x,
+              active.node.y + bounds.y * active.node.scale.y,
+              bounds.width * active.node.scale.x * progress,
+              bounds.height * active.node.scale.y,
+            )
+            .fill({ color: 0xffffff, alpha: 1 })
+        } else if (active.reveal === "radialBurst") {
+          active.maskNode
+            .circle(active.node.x, active.node.y, Math.max(active.node.width, active.node.height) * progress * 0.72)
+            .fill({ color: 0xffffff, alpha: 1 })
+        }
+      }
       return true
     })
   }
 
   destroy(): void {
     for (const active of this.active) {
-      active.node.parent?.removeChild(active.node)
-      active.node.destroy()
+      destroyActive(active)
     }
     this.active = []
     this.entries.clear()
@@ -201,4 +234,15 @@ export class Creatures {
     if (layer === "screenForeground") return this.stage.screenForegroundLayer
     return this.stage.overInkLayer
   }
+}
+
+function clamp01(value: number): number {
+  return Math.min(1, Math.max(0, value))
+}
+
+function destroyActive(active: Active): void {
+  active.maskNode?.parent?.removeChild(active.maskNode)
+  active.maskNode?.destroy()
+  active.node.parent?.removeChild(active.node)
+  active.node.destroy()
 }
