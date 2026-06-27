@@ -7,7 +7,13 @@ export type DirectedLayer =
 
 export type AttachmentMode = "world" | "screen" | "brushHead" | "strokeEnd" | "recentStroke"
 
-export type RevealMode = "fade" | "hardCut" | "drawLeftToRight" | "radialBurst" | "strokeMask"
+export type RevealMode =
+  | "fade"
+  | "hardCut"
+  | "drawLeftToRight"
+  | "radialBurst"
+  | "strokeMask"
+  | "inkPop"
 
 export type VecOffset = { x: number; y: number }
 
@@ -20,6 +26,7 @@ export type BrushHoldDirective = {
 export type SpawnDirective = {
   at: number
   count: number
+  stagger?: number
   layer: DirectedLayer
   attachment: AttachmentMode
   reveal: RevealMode
@@ -27,9 +34,11 @@ export type SpawnDirective = {
   life: number
   offset?: VecOffset
   scatter?: VecOffset
+  drift?: VecOffset
   scaleJitter?: number
   alpha?: number
   rotationJitter?: number
+  frameOffset?: number
 }
 
 export type EventDirective = {
@@ -70,11 +79,11 @@ export const EVENT_DIRECTIVES: EventDirective[] = [
     creatures: {
       salpico: [
         {
-          at: 1.95,
+          at: 1.8,
           count: 1,
           layer: "overInk",
-          attachment: "world",
-          reveal: "radialBurst",
+          attachment: "strokeEnd",
+          reveal: "inkPop",
           targetLongSide: 860,
           life: 3.2,
           offset: { x: -80, y: -24 },
@@ -95,7 +104,7 @@ export const EVENT_DIRECTIVES: EventDirective[] = [
           count: 1,
           layer: "overInk",
           attachment: "strokeEnd",
-          reveal: "drawLeftToRight",
+          reveal: "inkPop",
           targetLongSide: 430,
           life: 4.5,
           offset: { x: 72, y: 18 },
@@ -105,23 +114,48 @@ export const EVENT_DIRECTIVES: EventDirective[] = [
     },
   },
   {
+    key: "pajaros-intro",
+    match: "pajaros",
+    timeRange: [0, 40],
+    notes: "Bird silhouettes stay as a staggered flock carried by the camera, not as a single centered sprite.",
+    creatures: {
+      pajaros: [
+        {
+          at: 0,
+          count: 7,
+          stagger: 0.055,
+          layer: "foreground",
+          attachment: "recentStroke",
+          reveal: "hardCut",
+          targetLongSide: 118,
+          life: 4.4,
+          scatter: { x: 230, y: 118 },
+          drift: { x: -72, y: -18 },
+          scaleJitter: 0.56,
+          rotationJitter: 0.75,
+          frameOffset: 0.34,
+          alpha: 0.92,
+        },
+      ],
+    },
+  },
+  {
     key: "pececillo-intro",
     match: "pececillo",
     timeRange: [0, 40],
-    notes: "Intro fish read as a few visible figures around a thin stroke, with one larger koi.",
+    notes: "Intro fish is drawn from the head after the earlier bird flock clears, rather than fading in as a loose cluster.",
     creatures: {
       pececillo: [
         {
-          at: 0,
-          count: 4,
-          layer: "underInk",
-          attachment: "world",
-          reveal: "fade",
-          targetLongSide: 185,
-          life: 4.2,
-          scatter: { x: 190, y: 110 },
-          scaleJitter: 0.5,
-          rotationJitter: 0.45,
+          at: 1.62,
+          count: 1,
+          layer: "overInk",
+          attachment: "brushHead",
+          reveal: "inkPop",
+          targetLongSide: 310,
+          life: 3.7,
+          offset: { x: -8, y: 44 },
+          rotationJitter: 0.18,
         },
       ],
     },
@@ -136,14 +170,17 @@ export const EVENT_DIRECTIVES: EventDirective[] = [
         {
           at: 0,
           count: 5,
-          layer: "underInk",
-          attachment: "world",
-          reveal: "fade",
-          targetLongSide: 145,
+          stagger: 0.075,
+          layer: "foreground",
+          attachment: "recentStroke",
+          reveal: "hardCut",
+          targetLongSide: 105,
           life: 5.5,
-          scatter: { x: 220, y: 86 },
-          scaleJitter: 0.42,
-          rotationJitter: 0.35,
+          scatter: { x: 210, y: 92 },
+          drift: { x: -82, y: 16 },
+          scaleJitter: 0.48,
+          rotationJitter: 0.55,
+          frameOffset: 0.36,
         },
       ],
     },
@@ -156,14 +193,15 @@ export const EVENT_DIRECTIVES: EventDirective[] = [
       cosquilla: [
         {
           at: 0,
-          count: 3,
+          count: 1,
           layer: "insideInk",
           attachment: "recentStroke",
-          reveal: "strokeMask",
-          targetLongSide: 210,
+          reveal: "inkPop",
+          targetLongSide: 245,
           life: 2.4,
-          scatter: { x: 120, y: 36 },
-          scaleJitter: 0.36,
+          scatter: { x: 42, y: 14 },
+          scaleJitter: 0.18,
+          rotationJitter: 0.25,
         },
       ],
     },
@@ -207,23 +245,100 @@ export const EVENT_DIRECTIVES: EventDirective[] = [
     },
   },
   {
-    key: "dandelion-climax",
+    key: "mariposa-cluster",
+    match: "mariposa",
+    notes: "Butterflies appear late as several small silhouettes flapping around the brush head.",
+    creatures: {
+      mariposa: [
+        {
+          at: 1.52,
+          count: 5,
+          stagger: 0.08,
+          layer: "foreground",
+          attachment: "brushHead",
+          reveal: "hardCut",
+          targetLongSide: 96,
+          life: 2.7,
+          scatter: { x: 145, y: 82 },
+          drift: { x: -64, y: 28 },
+          scaleJitter: 0.44,
+          rotationJitter: 0.9,
+          frameOffset: 0.42,
+          alpha: 0.96,
+        },
+      ],
+    },
+  },
+  {
+    key: "mariposanoloop-cluster",
+    match: "mariposanoloop",
+    notes: "No-loop butterflies also arrive late and small, with staggered opening phases near the head.",
+    creatures: {
+      mariposanoloop: [
+        {
+          at: 1.78,
+          count: 4,
+          stagger: 0.08,
+          layer: "foreground",
+          attachment: "brushHead",
+          reveal: "hardCut",
+          targetLongSide: 88,
+          life: 2.4,
+          scatter: { x: 112, y: 70 },
+          drift: { x: -52, y: 18 },
+          scaleJitter: 0.4,
+          rotationJitter: 0.86,
+          frameOffset: 0.38,
+          alpha: 0.94,
+        },
+      ],
+    },
+  },
+  {
+    key: "dandelion-small",
     match: "dandelion",
-    timeRange: [168, 218],
-    notes: "Dandelion climax reads as many small marks scattered around the thick horizontal ink.",
+    timeRange: [0, 168],
+    notes: "Pre-climax dandelion marks read as tiny seed-like scratches near the stroke, not large flowers.",
     creatures: {
       dandelion: [
         {
           at: 0,
-          count: 10,
-          layer: "underInk",
-          attachment: "world",
-          reveal: "fade",
-          targetLongSide: 150,
+          count: 5,
+          stagger: 0.05,
+          layer: "insideInk",
+          attachment: "recentStroke",
+          reveal: "hardCut",
+          targetLongSide: 72,
+          life: 2.8,
+          scatter: { x: 120, y: 44 },
+          drift: { x: -38, y: -10 },
+          scaleJitter: 0.52,
+          rotationJitter: 0.7,
+          alpha: 0.74,
+        },
+      ],
+    },
+  },
+  {
+    key: "dandelion-climax",
+    match: "dandelion",
+    timeRange: [168, 218],
+    notes: "Dandelion climax reads as small dark marks scattered around the thick horizontal ink.",
+    creatures: {
+      dandelion: [
+        {
+          at: 0,
+          count: 7,
+          stagger: 0.065,
+          layer: "foreground",
+          attachment: "recentStroke",
+          reveal: "hardCut",
+          targetLongSide: 92,
           life: 5.2,
-          scatter: { x: 260, y: 90 },
-          scaleJitter: 0.48,
-          rotationJitter: 0.55,
+          scatter: { x: 230, y: 92 },
+          drift: { x: -78, y: 8 },
+          scaleJitter: 0.5,
+          rotationJitter: 0.72,
         },
       ],
     },

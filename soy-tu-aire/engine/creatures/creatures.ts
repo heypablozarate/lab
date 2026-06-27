@@ -42,12 +42,17 @@ type Entry = {
 
 type Active = {
   node: InstanceType<PixiModule["Sprite"]>
+  origin: Vec2
   born: number
   baseScale: number
   life: number
   alpha: number
   reveal: RevealMode
   maskNode: InstanceType<PixiModule["Graphics"]> | null
+  drift: Vec2
+  rotationBase: number
+  frameOffset: number
+  screenPinned: boolean
   // null => static (no per-frame swap). Otherwise the frame sequence to play.
   frames: Texture[] | null
   fps: number
@@ -61,6 +66,9 @@ export type CreatureSpawnOptions = {
   life?: number
   alpha?: number
   offset?: Vec2
+  drift?: Vec2
+  rotation?: number
+  frameOffset?: number
   layer?: DirectedLayer
   reveal?: RevealMode
 }
@@ -85,10 +93,41 @@ export function resolveCreaturePresentation(
 }
 
 export function revealProgress(reveal: RevealMode, age: number, life: number): number {
-  if (reveal === "hardCut" || reveal === "fade" || reveal === "strokeMask") return 1
-  if (reveal === "drawLeftToRight") return clamp01(age / Math.max(0.001, life * 0.3))
-  if (reveal === "radialBurst") return clamp01(age / Math.max(0.001, life * 0.09))
+  if (reveal === "hardCut" || reveal === "fade" || reveal === "strokeMask" || reveal === "inkPop") return 1
+  if (reveal === "drawLeftToRight") return clamp01(age / 0.42)
+  if (reveal === "radialBurst") return clamp01(age / Math.max(0.001, life * 0.07))
   return 1
+}
+
+export function creatureAlpha(reveal: RevealMode, age: number, life: number): number {
+  if (age < 0 || age > life) return 0
+  if (reveal === "hardCut" || reveal === "inkPop") {
+    const inAlpha = reveal === "inkPop" ? clamp01(age / 0.08) : 1
+    const outStart = life * 0.78
+    const outAlpha = age > outStart ? clamp01((life - age) / Math.max(0.001, life - outStart)) : 1
+    return inAlpha * outAlpha
+  }
+  if (reveal === "strokeMask") {
+    const inAlpha = clamp01(age / 0.12)
+    const outStart = life * 0.72
+    const outAlpha = age > outStart ? clamp01((life - age) / Math.max(0.001, life - outStart)) : 1
+    return inAlpha * outAlpha
+  }
+  return fadeAlpha(age, life)
+}
+
+export function creatureScaleMultiplier(reveal: RevealMode, age: number, life: number, phase = 0): number {
+  if (reveal === "inkPop") {
+    const pop = clamp01(age / 0.22)
+    const overshoot = Math.sin(pop * Math.PI) * 0.22
+    return 0.58 + pop * 0.42 + overshoot
+  }
+  if (reveal === "hardCut") {
+    const settle = Math.min(1, age / Math.max(0.001, life * 0.4))
+    return 0.94 + Math.sin((age + phase) * Math.PI * 1.8) * 0.035 * (1 - settle * 0.55)
+  }
+  const pulse = Math.sin((age + phase) * Math.PI * 1.2) * 0.05
+  return 0.92 + Math.min(1, age / life) * 0.1 + pulse
 }
 
 export class Creatures {
@@ -136,9 +175,11 @@ export class Creatures {
 
     const node = new this.pixi.Sprite(firstTexture)
     node.anchor.set(0.5)
-    node.position.set(at.x + presentation.offset.x, at.y + presentation.offset.y)
+    const origin = { x: at.x + presentation.offset.x, y: at.y + presentation.offset.y }
+    node.position.set(origin.x, origin.y)
     node.alpha = 0
-    node.rotation = Math.sin(now + at.y * 0.003) * 0.28
+    const rotationBase = options.rotation ?? (Math.sin(now + at.y * 0.003) * 0.28)
+    node.rotation = rotationBase
     // "normal" (not "multiply"): in this Pixi v8 setup, multiply blend makes
     // textured Sprites render invisibly — which is why no creatures ever appeared.
     // Black ink figures on transparent read correctly over the paper as normal.
@@ -156,12 +197,17 @@ export class Creatures {
     }
     this.active.push({
       node,
+      origin,
       born: now,
       baseScale,
       life: presentation.life,
       alpha: presentation.alpha,
       reveal: options.reveal ?? "fade",
       maskNode,
+      drift: options.drift ?? { x: 0, y: 0 },
+      rotationBase,
+      frameOffset: options.frameOffset ?? 0,
+      screenPinned: options.layer === "screenForeground",
       frames,
       fps: entry.fps,
       loop: entry.loop,
@@ -171,6 +217,9 @@ export class Creatures {
   // Conveyor recycle: keep live creatures pinned to the world as it wraps.
   shift(sx: number, sy: number): void {
     for (const active of this.active) {
+      if (active.screenPinned) continue
+      active.origin.x += sx
+      active.origin.y += sy
       active.node.x += sx
       active.node.y += sy
     }
@@ -186,15 +235,21 @@ export class Creatures {
       // Advance frame sequence (if animated).
       if (active.frames && active.frames.length > 0) {
         const n = active.frames.length
-        const raw = Math.floor(age * active.fps)
+        const raw = Math.floor((age + active.frameOffset) * active.fps)
         const idx = active.loop ? ((raw % n) + n) % n : Math.min(n - 1, raw)
         const tex = active.frames[idx]
         if (active.node.texture !== tex) active.node.texture = tex
       }
-      const alpha = fadeAlpha(age, active.life)
-      const pulse = Math.sin(age * Math.PI * 1.2) * 0.08
+      const phase = active.frameOffset
+      const alpha = creatureAlpha(active.reveal, age, active.life)
+      const driftProgress = easeOutCubic(clamp01(age / Math.max(0.001, active.life * 0.78)))
       active.node.alpha = alpha * active.alpha
-      active.node.scale.set(active.baseScale * (0.82 + Math.min(1, age / active.life) * 0.28 + pulse))
+      active.node.position.set(
+        active.origin.x + active.drift.x * driftProgress,
+        active.origin.y + active.drift.y * driftProgress + Math.sin((age + phase) * 4.2) * 2.8,
+      )
+      active.node.rotation = active.rotationBase + Math.sin((age + phase) * 3.1) * 0.045
+      active.node.scale.set(active.baseScale * creatureScaleMultiplier(active.reveal, age, active.life, phase))
       if (active.maskNode) {
         const progress = revealProgress(active.reveal, age, active.life)
         active.maskNode.clear()
@@ -238,6 +293,10 @@ export class Creatures {
 
 function clamp01(value: number): number {
   return Math.min(1, Math.max(0, value))
+}
+
+function easeOutCubic(value: number): number {
+  return 1 - (1 - value) ** 3
 }
 
 function destroyActive(active: Active): void {

@@ -22,11 +22,11 @@ describe("EVENT_DIRECTIVES", () => {
     const burst = getEventDirective("salpico")?.creatures?.salpico?.[0]
 
     expect(burst).toMatchObject({
-      at: 1.95,
+      at: 1.8,
       count: 1,
       layer: "overInk",
-      attachment: "world",
-      reveal: "radialBurst",
+      attachment: "strokeEnd",
+      reveal: "inkPop",
       targetLongSide: 860,
       life: 3.2,
     })
@@ -41,10 +41,27 @@ describe("EVENT_DIRECTIVES", () => {
       at: 1.85,
       layer: "overInk",
       attachment: "strokeEnd",
-      reveal: "drawLeftToRight",
+      reveal: "inkPop",
       targetLongSide: 430,
       life: 4.5,
     })
+  })
+
+  it("captures birds as a staggered flock carried by the camera", () => {
+    const birds = getEventDirective("pajaros", 20.5)?.creatures?.pajaros?.[0]
+
+    expect(birds).toMatchObject({
+      at: 0,
+      count: 7,
+      stagger: 0.055,
+      layer: "foreground",
+      attachment: "recentStroke",
+      reveal: "hardCut",
+      targetLongSide: 118,
+      life: 4.4,
+    })
+    expect(birds?.drift).toEqual({ x: -72, y: -18 })
+    expect(birds?.frameOffset).toBe(0.34)
   })
 
   it("captures climax fish as scattered small clusters", () => {
@@ -53,14 +70,16 @@ describe("EVENT_DIRECTIVES", () => {
     expect(fish).toMatchObject({
       at: 0,
       count: 5,
-      layer: "underInk",
-      attachment: "world",
-      reveal: "fade",
-      targetLongSide: 145,
+      stagger: 0.075,
+      layer: "foreground",
+      attachment: "recentStroke",
+      reveal: "hardCut",
+      targetLongSide: 105,
       life: 5.5,
     })
-    expect(fish?.scatter).toEqual({ x: 220, y: 86 })
-    expect(fish?.scaleJitter).toBe(0.42)
+    expect(fish?.scatter).toEqual({ x: 210, y: 92 })
+    expect(fish?.drift).toEqual({ x: -82, y: 16 })
+    expect(fish?.scaleJitter).toBe(0.48)
   })
 
   it("directs cosquilla as a fast repeated cluster", () => {
@@ -68,14 +87,14 @@ describe("EVENT_DIRECTIVES", () => {
 
     expect(burst).toMatchObject({
       at: 0,
-      count: 3,
+      count: 1,
       layer: "insideInk",
       attachment: "recentStroke",
-      reveal: "strokeMask",
-      targetLongSide: 210,
+      reveal: "inkPop",
+      targetLongSide: 245,
       life: 2.4,
     })
-    expect(burst?.scatter).toEqual({ x: 120, y: 36 })
+    expect(burst?.scatter).toEqual({ x: 42, y: 14 })
   })
 
   it("directs hole events as tiny low-pressure marks", () => {
@@ -92,13 +111,46 @@ describe("EVENT_DIRECTIVES", () => {
     const dandelion = getEventDirective("dandelion", 194)?.creatures?.dandelion?.[0]
 
     expect(dandelion).toMatchObject({
-      count: 10,
-      targetLongSide: 150,
-      layer: "underInk",
-      attachment: "world",
+      count: 7,
+      targetLongSide: 92,
+      layer: "foreground",
+      attachment: "recentStroke",
       life: 5.2,
     })
-    expect(dandelion?.scatter).toEqual({ x: 260, y: 90 })
+    expect(dandelion?.scatter).toEqual({ x: 230, y: 92 })
+  })
+
+  it("directs pre-climax dandelion as tiny scratches", () => {
+    const dandelion = getEventDirective("dandelion", 133)?.creatures?.dandelion?.[0]
+
+    expect(dandelion).toMatchObject({
+      count: 5,
+      targetLongSide: 72,
+      layer: "insideInk",
+      attachment: "recentStroke",
+      reveal: "hardCut",
+      life: 2.8,
+    })
+  })
+
+  it("directs butterfly events as delayed small clusters", () => {
+    const mariposa = getEventDirective("mariposa", 124.8)?.creatures?.mariposa?.[0]
+    const noLoop = getEventDirective("mariposanoloop", 178.2)?.creatures?.mariposanoloop?.[0]
+
+    expect(mariposa).toMatchObject({
+      at: 1.52,
+      count: 5,
+      targetLongSide: 96,
+      attachment: "brushHead",
+      frameOffset: 0.42,
+    })
+    expect(noLoop).toMatchObject({
+      at: 1.78,
+      count: 4,
+      targetLongSide: 88,
+      attachment: "brushHead",
+      frameOffset: 0.38,
+    })
   })
 })
 

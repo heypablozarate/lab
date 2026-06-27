@@ -18,6 +18,9 @@ export type DirectedSpawn = {
   targetLongSide?: number
   life: number
   offset: Vec2
+  drift: Vec2
+  rotation: number
+  frameOffset: number
   alpha: number
 }
 
@@ -40,9 +43,14 @@ export function expandDirectedEvents(event: ChoreoEvent): DirectedEventBatch {
   const creatures: DirectedSpawn[] = []
   const reveals: DirectedSpawn[] = []
   const brushHolds: DirectedBrushHold[] = []
+  const expandedDirectedCreatures = new Set<string>()
 
   event.creatures.forEach((name, rawIndex) => {
     const directive = getEventDirective(name, event.t)
+    if (directive?.creatures?.[name]) {
+      if (expandedDirectedCreatures.has(name)) return
+      expandedDirectedCreatures.add(name)
+    }
 
     creatures.push(
       ...expandSpawn(name, event.t, rawIndex, directive?.creatures?.[name]),
@@ -75,31 +83,24 @@ function expandSpawn(
   }
 
   return directives.flatMap((directive, directiveIndex) =>
-    Array.from({ length: directive.count }, (_, instanceIndex) => ({
-      name,
-      fireAt: roundTime(baseTime + directive.at),
-      layer: directive.layer,
-      attachment: directive.attachment,
-      reveal: directive.reveal,
-      targetLongSide: resolveTargetLongSide(
-        directive,
+    Array.from({ length: directive.count }, (_, instanceIndex) => {
+      const seed = seedFor(name, baseTime, rawIndex, directiveIndex, instanceIndex)
+
+      return {
         name,
-        baseTime,
-        rawIndex,
-        directiveIndex,
-        instanceIndex,
-      ),
-      life: directive.life ?? DEFAULT_LIFE,
-      offset: resolveOffset(
-        directive,
-        name,
-        baseTime,
-        rawIndex,
-        directiveIndex,
-        instanceIndex,
-      ),
-      alpha: directive.alpha ?? 1,
-    })),
+        fireAt: roundTime(baseTime + directive.at + instanceIndex * (directive.stagger ?? 0)),
+        layer: directive.layer,
+        attachment: directive.attachment,
+        reveal: directive.reveal,
+        targetLongSide: resolveTargetLongSide(directive, rawIndex, directiveIndex, instanceIndex, seed),
+        life: directive.life ?? DEFAULT_LIFE,
+        offset: resolveOffset(directive, seed),
+        drift: resolveDrift(directive, seed),
+        rotation: resolveRotation(directive, seed),
+        frameOffset: resolveFrameOffset(directive, seed, instanceIndex),
+        alpha: directive.alpha ?? 1,
+      }
+    }),
   )
 }
 
@@ -113,6 +114,9 @@ function defaultSpawn(name: string, baseTime: number): DirectedSpawn {
     targetLongSide: undefined,
     life: DEFAULT_LIFE,
     offset: { ...DEFAULT_OFFSET },
+    drift: { ...DEFAULT_OFFSET },
+    rotation: 0,
+    frameOffset: 0,
     alpha: 1,
   }
 }
@@ -129,11 +133,7 @@ function expandBrushHold(baseTime: number, directive: BrushHoldDirective): Direc
 
 function resolveOffset(
   directive: SpawnDirective,
-  name: string,
-  baseTime: number,
-  rawIndex: number,
-  directiveIndex: number,
-  instanceIndex: number,
+  seed: string,
 ): Vec2 {
   const offset = directive.offset ?? DEFAULT_OFFSET
 
@@ -141,21 +141,47 @@ function resolveOffset(
     return { ...offset }
   }
 
-  const seed = seedFor(name, baseTime, rawIndex, directiveIndex, instanceIndex)
-
   return {
     x: roundPosition(offset.x + randomSigned(`${seed}:x`) * directive.scatter.x),
     y: roundPosition(offset.y + randomSigned(`${seed}:y`) * directive.scatter.y),
   }
 }
 
+function resolveDrift(directive: SpawnDirective, seed: string): Vec2 {
+  if (!directive.drift) {
+    return { ...DEFAULT_OFFSET }
+  }
+
+  const xScale = 0.72 + random01(`${seed}:drift-x`) * 0.56
+  const yScale = 0.72 + random01(`${seed}:drift-y`) * 0.56
+
+  return {
+    x: roundPosition(directive.drift.x * xScale),
+    y: roundPosition(directive.drift.y * yScale),
+  }
+}
+
+function resolveRotation(directive: SpawnDirective, seed: string): number {
+  if (!directive.rotationJitter) return 0
+  return roundPosition(randomSigned(`${seed}:rotation`) * directive.rotationJitter)
+}
+
+function resolveFrameOffset(
+  directive: SpawnDirective,
+  seed: string,
+  instanceIndex: number,
+): number {
+  if (!directive.frameOffset) return 0
+  const deterministic = random01(`${seed}:frame`) * directive.frameOffset
+  return roundTime(deterministic + instanceIndex * 0.037)
+}
+
 function resolveTargetLongSide(
   directive: SpawnDirective,
-  name: string,
-  baseTime: number,
   rawIndex: number,
   directiveIndex: number,
   instanceIndex: number,
+  seed: string,
 ): number {
   const baseSize = Math.max(1, Math.round(directive.targetLongSide))
 
@@ -167,9 +193,7 @@ function resolveTargetLongSide(
     return baseSize
   }
 
-  const signed = randomSigned(
-    `${seedFor(name, baseTime, rawIndex, directiveIndex, instanceIndex)}:scale`,
-  )
+  const signed = randomSigned(`${seed}:scale`)
   const jittered = Math.max(
     1,
     Math.round(directive.targetLongSide * (1 + signed * directive.scaleJitter)),
@@ -205,6 +229,10 @@ function hash(input: string): number {
 
 function randomSigned(seed: string): number {
   return (hash(seed) / 0xffffffff) * 2 - 1
+}
+
+function random01(seed: string): number {
+  return hash(seed) / 0xffffffff
 }
 
 function roundTime(value: number): number {

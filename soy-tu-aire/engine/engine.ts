@@ -187,16 +187,46 @@ export class Engine {
     return this.brushHolds.find((hold) => t >= hold.startAt && t <= hold.endAt) ?? null
   }
 
-  private flushDirectedSpawns(prevT: number, t: number): void {
+  private creatureAnchorForSpawn(
+    spawn: DirectedSpawn,
+    canvasW: number,
+    canvasH: number,
+  ): { x: number; y: number } {
+    if (spawn.attachment === "screen") {
+      return { x: canvasW / 2, y: canvasH / 2 }
+    }
+
+    if (spawn.attachment === "recentStroke") {
+      const anchor = pointAtDistanceFromEnd(this.brush.getRibbonSamples(), 110)
+      if (anchor) return { x: anchor.x, y: anchor.y }
+    }
+
+    if (spawn.attachment === "strokeEnd") {
+      const anchor = pointAtDistanceFromEnd(this.brush.getRibbonSamples(), 18)
+      if (anchor) return { x: anchor.x, y: anchor.y }
+    }
+
+    return { x: this.brush.pos.x, y: this.brush.pos.y }
+  }
+
+  private flushDirectedSpawns(
+    prevT: number,
+    t: number,
+    canvasW: number,
+    canvasH: number,
+  ): void {
     this.pendingCreatureSpawns = this.pendingCreatureSpawns.filter((spawn) => {
       if (spawn.fireAt <= prevT) return false
       if (spawn.fireAt > t) return true
-      const at = { x: this.brush.pos.x, y: this.brush.pos.y }
+      const at = this.creatureAnchorForSpawn(spawn, canvasW, canvasH)
       this.creatures.spawn(spawn.name, at, spawn.fireAt, {
         targetLongSide: spawn.targetLongSide,
         life: spawn.life,
         alpha: spawn.alpha,
         offset: spawn.offset,
+        drift: spawn.drift,
+        rotation: spawn.rotation,
+        frameOffset: spawn.frameOffset,
         layer: spawn.layer,
         reveal: spawn.reveal,
       })
@@ -296,7 +326,7 @@ export class Engine {
         }
         this.brush.update(dt, brushTarget, mod)
         this.ink.stampRibbon(this.brush.getRibbonSamples())
-        this.flushDirectedSpawns(this.prevT, t)
+        this.flushDirectedSpawns(this.prevT, t, cw, ch)
         this.prevT = t
       }
       this.reveals.draw(t)
