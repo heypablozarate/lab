@@ -148,6 +148,86 @@ export const EVENT_DIRECTIVES: EventDirective[] = [
       ],
     },
   },
+  {
+    key: "cosquilla",
+    match: "cosquilla",
+    notes: "Repeated white/black tickle marks ride in the dark stroke instead of floating on paper.",
+    creatures: {
+      cosquilla: [
+        {
+          at: 0,
+          count: 3,
+          layer: "insideInk",
+          attachment: "recentStroke",
+          reveal: "strokeMask",
+          targetLongSide: 210,
+          life: 2.4,
+          scatter: { x: 120, y: 36 },
+          scaleJitter: 0.36,
+        },
+      ],
+    },
+  },
+  {
+    key: "Entradaagujero",
+    match: "Entradaagujero",
+    notes: "Hole entrance is a small low-pressure mark around 142-145s.",
+    creatures: {
+      Entradaagujero: [
+        {
+          at: 0,
+          count: 1,
+          layer: "underInk",
+          attachment: "world",
+          reveal: "fade",
+          targetLongSide: 180,
+          life: 2.8,
+          alpha: 0.88,
+        },
+      ],
+    },
+  },
+  {
+    key: "Salidaagujero",
+    match: "Salidaagujero",
+    notes: "Hole exit is a small low-pressure mark alternating with the entrance marks.",
+    creatures: {
+      Salidaagujero: [
+        {
+          at: 0,
+          count: 1,
+          layer: "underInk",
+          attachment: "world",
+          reveal: "fade",
+          targetLongSide: 160,
+          life: 2.8,
+          alpha: 0.82,
+        },
+      ],
+    },
+  },
+  {
+    key: "dandelion-climax",
+    match: "dandelion",
+    timeRange: [168, 218],
+    notes: "Dandelion climax reads as many small marks scattered around the thick horizontal ink.",
+    creatures: {
+      dandelion: [
+        {
+          at: 0,
+          count: 10,
+          layer: "underInk",
+          attachment: "world",
+          reveal: "fade",
+          targetLongSide: 150,
+          life: 5.2,
+          scatter: { x: 260, y: 90 },
+          scaleJitter: 0.48,
+          rotationJitter: 0.55,
+        },
+      ],
+    },
+  },
 ]
 
 export function getEventDirective(name: string, t = Number.NaN): EventDirective | undefined {

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest"
 
-import { EVENT_DIRECTIVES, getEventDirective } from "./event-directives"
+import { getEventDirective } from "./event-directives"
 
 describe("EVENT_DIRECTIVES", () => {
   it("captures the delayed full-frame entrando silhouette", () => {
@@ -61,6 +61,44 @@ describe("EVENT_DIRECTIVES", () => {
     })
     expect(fish?.scatter).toEqual({ x: 220, y: 86 })
     expect(fish?.scaleJitter).toBe(0.42)
+  })
+
+  it("directs cosquilla as a fast repeated cluster", () => {
+    const burst = getEventDirective("cosquilla")?.creatures?.cosquilla?.[0]
+
+    expect(burst).toMatchObject({
+      at: 0,
+      count: 3,
+      layer: "insideInk",
+      attachment: "recentStroke",
+      reveal: "strokeMask",
+      targetLongSide: 210,
+      life: 2.4,
+    })
+    expect(burst?.scatter).toEqual({ x: 120, y: 36 })
+  })
+
+  it("directs hole events as tiny low-pressure marks", () => {
+    const entrada = getEventDirective("Entradaagujero")?.creatures?.Entradaagujero?.[0]
+    const salida = getEventDirective("Salidaagujero")?.creatures?.Salidaagujero?.[0]
+
+    expect(entrada?.targetLongSide).toBe(180)
+    expect(salida?.targetLongSide).toBe(160)
+    expect(entrada?.layer).toBe("underInk")
+    expect(salida?.layer).toBe("underInk")
+  })
+
+  it("directs dandelion climax as many small world-space marks", () => {
+    const dandelion = getEventDirective("dandelion", 194)?.creatures?.dandelion?.[0]
+
+    expect(dandelion).toMatchObject({
+      count: 10,
+      targetLongSide: 150,
+      layer: "underInk",
+      attachment: "world",
+      life: 5.2,
+    })
+    expect(dandelion?.scatter).toEqual({ x: 260, y: 90 })
   })
 })
 
