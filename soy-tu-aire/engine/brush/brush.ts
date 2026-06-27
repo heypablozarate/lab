@@ -1,17 +1,67 @@
 import { PAPER_W, PAPER_H } from "../constants"
+import { computeStrokeDynamics } from "./stroke-dynamics"
 import { springStep, emitDabs } from "./spring"
-import type { BrushMod, Dab, Vec2 } from "../types"
+import type { BrushMod, Dab, RibbonSample, Vec2 } from "../types"
 
 const STIFFNESS = 90
 const DAMPING = 14
 const DAB_SPACING = 4
-const BASE_SIZE = 22
+const MAX_CENTERLINE_SAMPLES = 180
+
+type BrushStroke = { size: number; alpha: number }
+
+export function computeBrushStroke(speed: number, mod: BrushMod): BrushStroke {
+  const dynamics = computeStrokeDynamics({
+    speed,
+    previousSpeed: speed,
+    curvature: 0,
+    pressure: mod.pressure,
+    climax: mod.climax,
+    ink: mod.ink ?? 1,
+    hold: mod.hold === true,
+  })
+  return { size: dynamics.width, alpha: dynamics.alpha }
+}
 
 export class Brush {
   pos: Vec2 = { x: PAPER_W / 2, y: PAPER_H / 2 }
   private vel: Vec2 = { x: 0, y: 0 }
   private prev: Vec2 = { ...this.pos }
+  private samples: RibbonSample[] = []
+  private previousSpeed = 0
   private wanderT = 0
+
+  get velocity(): Vec2 {
+    return { x: this.vel.x, y: this.vel.y }
+  }
+
+  getRibbonSamples(): readonly RibbonSample[] {
+    return this.samples
+  }
+
+  // Conveyor recycle: shift the head and the whole centerline history by the
+  // world-shift vector so the ribbon stays continuous across an (invisible) wrap.
+  shift(sx: number, sy: number): void {
+    this.pos.x += sx
+    this.pos.y += sy
+    this.prev.x += sx
+    this.prev.y += sy
+    for (const sample of this.samples) {
+      sample.x += sx
+      sample.y += sy
+    }
+  }
+
+  // Birth the stroke at a fresh position (used when the song starts): drop the
+  // head there, reset velocity, and clear the centerline so no line connects to
+  // any pre-birth wander.
+  bornAt(pos: Vec2): void {
+    this.pos = { x: pos.x, y: pos.y }
+    this.prev = { x: pos.x, y: pos.y }
+    this.vel = { x: 0, y: 0 }
+    this.samples = []
+    this.previousSpeed = 0
+  }
 
   update(dt: number, target: Vec2 | null, mod: BrushMod): Dab[] {
     let t = target
@@ -26,8 +76,50 @@ export class Brush {
     this.prev.x = this.pos.x; this.prev.y = this.pos.y
     springStep(this.pos, this.vel, t, STIFFNESS, DAMPING, dt)
     const speed = Math.hypot(this.pos.x - this.prev.x, this.pos.y - this.prev.y) / Math.max(dt, 1e-3)
-    const size = BASE_SIZE * (0.6 + mod.pressure) * (1 + mod.climax * 0.8)
-    const alpha = Math.min(1, 0.25 + mod.pressure * 0.5 + Math.min(speed / 4000, 0.3))
-    return emitDabs(this.prev, this.pos, DAB_SPACING).map((p) => ({ x: p.x, y: p.y, size, alpha }))
+    const prevSample = this.samples.at(-2)
+    const lastSample = this.samples.at(-1)
+    const curvature = prevSample && lastSample ? curvatureBetween(prevSample, lastSample, this.pos) : 0
+    const held = mod.hold === true
+    const dynamics = computeStrokeDynamics({
+      speed: held ? Math.min(speed, 48) : speed,
+      previousSpeed: this.previousSpeed,
+      curvature,
+      pressure: mod.pressure,
+      climax: mod.climax,
+      ink: mod.ink ?? 1,
+      hold: held,
+    })
+    this.previousSpeed = speed
+    this.samples.push({
+      x: this.pos.x,
+      y: this.pos.y,
+      width: dynamics.width,
+      alpha: dynamics.alpha,
+      dryness: dynamics.dryness,
+      bristleSplit: dynamics.bristleSplit,
+      headPool: dynamics.headPool,
+      edgeJitter: dynamics.edgeJitter,
+    })
+    if (this.samples.length > MAX_CENTERLINE_SAMPLES) {
+      this.samples.splice(0, this.samples.length - MAX_CENTERLINE_SAMPLES)
+    }
+    return emitDabs(this.prev, this.pos, DAB_SPACING).map((p) => ({
+      x: p.x,
+      y: p.y,
+      size: dynamics.width,
+      alpha: dynamics.alpha,
+    }))
   }
+}
+
+function curvatureBetween(a: Vec2, b: Vec2, c: Vec2): number {
+  const ab = normalize(b.x - a.x, b.y - a.y)
+  const bc = normalize(c.x - b.x, c.y - b.y)
+  return Math.max(0, 1 - (ab.x * bc.x + ab.y * bc.y))
+}
+
+function normalize(dx: number, dy: number): Vec2 {
+  const length = Math.hypot(dx, dy)
+  if (length < 1e-6) return { x: 1, y: 0 }
+  return { x: dx / length, y: dy / length }
 }
