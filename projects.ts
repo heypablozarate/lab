@@ -33,7 +33,7 @@ export type LabProject = {
   href?: string;
 };
 
-export const labHomeUpdatedAt = "2026-06-09T08:23:35-03:00";
+export const labHomeUpdatedAt = "2026-06-30T20:30:00-03:00";
 
 // Newest first — the order here is the left-to-right order on the canvas
 // (the Intro panel is always first, prepended by the canvas).
@@ -46,7 +46,7 @@ export const projects: LabProject[] = [
     description:
       "A browser-native homage to Labuat's Soy tu aire: Web Audio buffers and analyzes the song while a PixiJS ink engine paints a choreographed, cursor-led visual performance in real time.",
     tags: ["PixiJS", "Web Audio", "audio reactive", "generative", "ink", "homage", "experience design"],
-    updatedAt: "2026-06-30T00:00:00-03:00",
+    updatedAt: "2026-06-30T20:30:00-03:00",
     accent: "#c0392b",
   },
   {
@@ -57,7 +57,7 @@ export const projects: LabProject[] = [
     description:
       "Interactive WebGL wordmark study exploring typography, shader motion, interface craft, and technology-led digital experience design.",
     tags: ["WebGL", "shader", "typography", "digital experience", "interface design"],
-    updatedAt: "2026-06-09T08:23:35-03:00",
+    updatedAt: "2026-06-30T20:30:00-03:00",
   },
   {
     slug: "rams-theme-preview",

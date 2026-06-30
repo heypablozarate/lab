@@ -28,6 +28,30 @@
   height: 100%;
 }
 
+.serverContext {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  clip-path: inset(50%);
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.serverContext h1 {
+  margin: 0 0 0.5rem;
+  color: var(--accent);
+  font-family: var(--font-display), Arial, sans-serif;
+  font-size: clamp(1.05rem, 1.2vw, 1.35rem);
+  font-weight: 700;
+  letter-spacing: 0;
+  line-height: 1.1;
+}
+
+.serverContext p {
+  margin: 0;
+  font-size: clamp(0.78rem, 0.95vw, 0.92rem);
+}
+
 /* Lens character over the canvas (z-index 1: above canvas, below the UI overlay
    at z-index 2). Both layers are inert to the pointer. */
 .vignette,
