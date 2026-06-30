@@ -7,7 +7,7 @@ const LAB_URL = "https://lab.pablozarate.com";
 const LAB_TITLE =
   "Design Engineering Lab — Product Experiments by PabloZarate™";
 const LAB_DESCRIPTION =
-  "A Design Engineering and Experience Design lab by Pablo Zarate exploring AI Design, product specialist craft, WebGL interfaces, design systems, technology-led experiences, design engineering, and agent-ready interfaces.";
+  "PabloZarate™ Lab is a design engineering playground where WebGL studies, interaction prototypes, and experience design experiments turn personal curiosity into working interfaces.";
 
 function getProjectUrl(project: (typeof projects)[number]) {
   return project.href ?? `${LAB_URL}/${project.slug}`;

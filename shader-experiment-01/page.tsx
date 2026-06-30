@@ -13,6 +13,8 @@ const PAGE_TITLE =
   "Shader Experiment 01 — Design Engineering WebGL Typography Lab by PabloZarate™";
 const PAGE_DESCRIPTION =
   "Interactive WebGL wordmark experiment by Pablo Zarate exploring shader motion, typography, interface craft, design engineering, creative coding, and technology-led digital experience design.";
+const SERVER_CONTEXT =
+  "Shader Experiment 01 is a small WebGL typography lab built around the PabloZarate™ wordmark. It explores how a static identity can behave like a living interface: shader motion, pointer input, distortion, and control states turn letterforms into a tactile surface. The experiment is built with a custom fragment shader, React controls, and RAMS tokens, keeping the WebGL canvas expressive while the surrounding page stays legible to people, crawlers, and LLMs.";
 
 function serializeJsonLd(data: Record<string, unknown>) {
   return JSON.stringify(data).replace(/</g, "\\u003c");
@@ -90,7 +92,15 @@ export default function ShaderExperimentPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
       />
-      <h1 className={styles.srOnly}>Shader Experiment 01</h1>
+
+      {"\n"}
+      <section className={styles.intro} aria-labelledby="shader-experiment-title">
+        <h1 id="shader-experiment-title" className={styles.title}>
+          Shader Experiment 01
+        </h1>
+        <p>{SERVER_CONTEXT}</p>
+      </section>
+      {"\n"}
 
       <WordmarkStage />
 

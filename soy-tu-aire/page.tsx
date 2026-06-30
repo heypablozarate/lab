@@ -9,6 +9,8 @@ const TWITTER_IMAGE_URL = "https://lab.pablozarate.com/lab/twitter-image.jpg"
 const PAGE_TITLE = "Soy tu aire — Interactive Design Engineering Homage by PabloZarate™"
 const PAGE_DESCRIPTION =
   "An interactive Experience Design and Design Engineering homage to Labuat's Soy tu aire by Pablo Zarate, using PixiJS, Web Audio, and generative ink to paint music in the browser."
+const SERVER_CONTEXT =
+  "Soy tu aire is an interactive homage to the 2009 Labuat web piece: a song painted in ink rather than a canvas demo. It explores how memory, cursor movement, and music can become one generative interface. The experience is built with PixiJS, Web Audio, a choreography timeline recovered from archival material, and a custom ink engine that reacts to the track while the browser draws a unique performance on every play."
 
 function serializeJsonLd(data: Record<string, unknown>) {
   return JSON.stringify(data).replace(/</g, "\\u003c")
@@ -76,6 +78,13 @@ export default function SoyTuAirePage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
       />
+
+      {"\n"}
+      <section className={styles.serverContext} aria-labelledby="soy-tu-aire-server-title">
+        <h1 id="soy-tu-aire-server-title">Soy tu aire</h1>
+        <p>{SERVER_CONTEXT}</p>
+      </section>
+      {"\n"}
 
       <Stage />
     </main>
