@@ -9,9 +9,10 @@ const PAGE_URL = "https://lab.pablozarate.com/shader-experiment-01";
 // experiment has a valid og:image / twitter:image instead of falling back to none.
 const SOCIAL_IMAGE_URL = "https://lab.pablozarate.com/lab/opengraph-image.jpg";
 const TWITTER_IMAGE_URL = "https://lab.pablozarate.com/lab/twitter-image.jpg";
-const PAGE_TITLE = "Shader Experiment 01 — WebGL Typography Lab by PabloZarate™";
+const PAGE_TITLE =
+  "Shader Experiment 01 — Design Engineering WebGL Typography Lab by PabloZarate™";
 const PAGE_DESCRIPTION =
-  "Interactive WebGL wordmark experiment by Pablo Zarate exploring shader motion, typography, interface craft, and technology-led digital experience design.";
+  "Interactive WebGL wordmark experiment by Pablo Zarate exploring shader motion, typography, interface craft, design engineering, creative coding, and technology-led digital experience design.";
 
 function serializeJsonLd(data: Record<string, unknown>) {
   return JSON.stringify(data).replace(/</g, "\\u003c");
