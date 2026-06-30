@@ -1,5 +1,4 @@
 import type { Metadata } from "next"
-import Link from "next/link"
 
 import { Stage } from "./components/stage"
 import styles from "./soy-tu-aire.module.css"
@@ -7,9 +6,9 @@ import styles from "./soy-tu-aire.module.css"
 const PAGE_URL = "https://lab.pablozarate.com/soy-tu-aire"
 const SOCIAL_IMAGE_URL = "https://lab.pablozarate.com/lab/opengraph-image.jpg"
 const TWITTER_IMAGE_URL = "https://lab.pablozarate.com/lab/twitter-image.jpg"
-const PAGE_TITLE = "Soy tu aire — Homenaje interactivo · Lab by PabloZarate™"
+const PAGE_TITLE = "Soy tu aire — Interactive Design Engineering Homage by PabloZarate™"
 const PAGE_DESCRIPTION =
-  "Homenaje moderno a 'Soy tu aire' de Labuat: un pincel de tinta que dibuja la música y respondés con el mouse. PixiJS + Web Audio por Pablo Zarate."
+  "An interactive Experience Design and Design Engineering homage to Labuat's Soy tu aire by Pablo Zarate, using PixiJS, Web Audio, and generative ink to paint music in the browser."
 
 function serializeJsonLd(data: Record<string, unknown>) {
   return JSON.stringify(data).replace(/</g, "\\u003c")
@@ -24,6 +23,12 @@ export const metadata: Metadata = {
     "PixiJS",
     "audio reactive",
     "generative ink",
+    "Design Engineering",
+    "Experience Design",
+    "AI Design",
+    "Product Specialist",
+    "creative coding",
+    "interactive web experience",
     "Pablo Zarate",
     "PabloZarate™ Lab",
   ],
@@ -58,6 +63,8 @@ export default function SoyTuAirePage() {
       name: "Pablo Zarate",
       alternateName: "PabloZarate™",
       url: "https://pablozarate.com",
+      jobTitle: "Design Manager, Product Specialist",
+      knowsAbout: ["Design Engineering", "AI Design", "Product Design", "Experience Design"],
     },
     isBasedOn: "Soy tu aire — Labuat (Herraiz Soto & Co.)",
     isPartOf: { "@type": "CollectionPage", name: "PabloZarate™ Lab", url: "https://lab.pablozarate.com" },
@@ -69,16 +76,8 @@ export default function SoyTuAirePage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
       />
-      <h1 className={styles.srOnly}>Soy tu aire — homenaje interactivo</h1>
 
       <Stage />
-
-      <footer className={styles.footer}>
-        <span>
-          Homenaje a <strong>Labuat — “Soy tu aire”</strong>. Recreación por PabloZarate™.
-        </span>
-        <Link href="/">Back to the Lab</Link>
-      </footer>
     </main>
   )
 }

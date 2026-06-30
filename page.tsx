@@ -5,9 +5,9 @@ import { projects } from "./projects";
 
 const LAB_URL = "https://lab.pablozarate.com";
 const LAB_TITLE =
-  "Design Laboratory — Experiments & Digital Prototypes by PabloZarate™";
+  "Design Engineering Lab — Experiments & Digital Prototypes by PabloZarate™";
 const LAB_DESCRIPTION =
-  "A product design and digital experimentation lab by Pablo Zarate exploring interfaces, WebGL, design systems, one-person product craft, and technology-led experiences.";
+  "A Design Engineering and Experience Design lab by Pablo Zarate exploring AI Design, product specialist craft, WebGL interfaces, design systems, and technology-led experiences.";
 
 function getProjectUrl(project: (typeof projects)[number]) {
   return project.href ?? `${LAB_URL}/${project.slug}`;
@@ -50,6 +50,10 @@ function LabStructuredData() {
         author: { "@id": "https://pablozarate.com/#person" },
         about: [
           "Product design",
+          "Design Engineering",
+          "AI Design",
+          "Experience Design",
+          "Product Specialist",
           "Digital experimentation",
           "Digital experiences",
           "Technology prototypes",
@@ -97,6 +101,10 @@ export const metadata: Metadata = {
   keywords: [
     "Pablo Zarate",
     "PabloZarate™ Lab",
+    "Design Engineering",
+    "AI Design",
+    "Product Specialist",
+    "Experience Design",
     "product design experiments",
     "digital experience design",
     "one man army design",

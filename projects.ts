@@ -42,11 +42,11 @@ export const projects: LabProject[] = [
     slug: "soy-tu-aire",
     title: "Soy tu aire",
     year: 2026,
-    kind: "Audio-reactive / WebGL",
+    kind: "Audio-reactive / PixiJS",
     description:
-      "Interactive homage to Labuat's Flash classic 'Soy tu aire': an ink brush paints the music in real time and responds to your cursor. WebGL2 accumulation, Web Audio FFT, choreographed timeline.",
-    tags: ["WebGL", "audio reactive", "generative", "ink", "homage", "interaction design"],
-    updatedAt: "2026-06-23T00:00:00-03:00",
+      "A browser-native homage to Labuat's Soy tu aire: Web Audio buffers and analyzes the song while a PixiJS ink engine paints a choreographed, cursor-led visual performance in real time.",
+    tags: ["PixiJS", "Web Audio", "audio reactive", "generative", "ink", "homage", "experience design"],
+    updatedAt: "2026-06-30T00:00:00-03:00",
     accent: "#c0392b",
   },
   {

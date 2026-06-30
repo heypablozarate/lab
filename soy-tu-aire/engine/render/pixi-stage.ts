@@ -42,6 +42,9 @@ export class PixiStage {
   readonly overInkLayer: Pixi.Container
   readonly foregroundLayer: Pixi.Container
   readonly screenForegroundLayer: Pixi.Container
+  private lastWidth = 0
+  private lastHeight = 0
+  private lastResolution = 0
 
   private constructor(
     app: Pixi.Application,
@@ -133,7 +136,12 @@ export class PixiStage {
 
   resize(): void {
     const { width, height } = measureCanvas(this.app.canvas)
-    this.app.renderer.resolution = Math.min(window.devicePixelRatio || 1, MAX_DPR)
+    const resolution = Math.min(window.devicePixelRatio || 1, MAX_DPR)
+    if (width === this.lastWidth && height === this.lastHeight && resolution === this.lastResolution) return
+    this.lastWidth = width
+    this.lastHeight = height
+    this.lastResolution = resolution
+    this.app.renderer.resolution = resolution
     this.app.renderer.resize(width, height)
   }
 

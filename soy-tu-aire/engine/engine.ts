@@ -8,38 +8,53 @@ import { expandDirectedEvents, type DirectedBrushHold, type DirectedSpawn } from
 import { InkSurface } from "./render/ink-surface"
 import { PixiCompositor } from "./render/pixi-compositor"
 import { PixiStage, type PixiModule } from "./render/pixi-stage"
-import { Reveals } from "./reveals/reveals"
-import { Creatures } from "./creatures/creatures"
+import {
+  Reveals,
+  WORD_REVEAL_LEADING_OFFSET,
+  WORD_TARGET_LONG_SIDE,
+  hasRevealTexture,
+  wordWriteSecondsForLongSide,
+} from "./reveals/reveals"
+import { Creatures, type FramePlayback } from "./creatures/creatures"
 import type { BrushMod } from "./types"
 import type { AudioEngine } from "./audio/audio-engine"
 import type { Timeline } from "./timeline/timeline"
 
-// Names that animate as frame sequences (loaded separately below); they must NOT
-// be loaded as a single {name}.png the old way.
-const ANIMATED_NAMES = new Set(["pececillo", "pajaros", "mariposa", "mariposanoloop"])
-
-const CREATURE_NAMES = [
-  "chica", "pajaros", "pezmancha", "pececillo", "surco", "cera", "cremallera",
+const STATIC_CREATURE_TEXTURES = [
+  ["chica", "chica"], ["pajaros", "pajaros"], ["pezmancha", "pezmancha"], ["surco", "surco"], ["cera", "cera"], ["cremallera", "cremallera"],
   "entrando", "cosquilla", "Ogrande", "burbuja", "Ondasagua", "salpico",
-  "recuerdo_b", "lagrima", "labios", "mariposa", "dandelion", "Entradaagujero",
+  "recuerdo_b", "lagrima", "labios", "dandelion",
+  ["EntradaagujeroPortal", "Entradaagujero"],
   "Salidaagujero", "alambre", "uno", "mariposanoloop",
-] as const
+].map((entry) => Array.isArray(entry) ? { name: entry[0], file: entry[1] } : { name: entry, file: entry }) as readonly {
+  name: string
+  file: string
+}[]
 
 const CREATURES_BASE = "/lab/soy-tu-aire/creatures"
+
+// While a word PNG writes itself in, the pen lifts (stops painting) so the word
+// reads as drawn by the same brush; once it finishes the stroke resumes.
+const WORD_BRUSH_LIFT_PAD = 0.08
 
 // Frame sequences (filenames already exist in public/lab/soy-tu-aire/creatures/).
 const PECECILLO_FRAMES = [
   "_0000_Pececillo-01", "_0001_Pececillo-02", "_0002_Pececillo-03", "_0003_Pececillo-04",
   "_0004_Pececillo-05", "_0005_Pececillo-06", "_0006_Pececillo-07", "_0007_Pececillo-08",
 ]
+
 const PAJAROS_FRAMES = [
   "pajaros__0000_Bird-Sprite-01", "pajaros__0001_Bird-Sprite-02", "pajaros__0002_Bird-Sprite-03",
   "pajaros__0003_Bird-Sprite-04", "pajaros__0004_Bird-Sprite-05", "pajaros__0005_Bird-Sprite-06",
 ]
-// Butterfly opening, ordered by the Mariposa-0X token (01..07).
-const MARIPOSA_FRAMES = [
-  "mariposanoloop__0006_Mariposa-01", "mariposanoloop__0005_Mariposa-02", "mariposanoloop__0004_Mariposa-03",
-  "mariposanoloop__0003_Mariposa-04", "mariposanoloop__0002_Mariposa-05", "mariposanoloop__0001_Mariposa-06",
+
+const MARIPOSANOLOOP_FRAMES = [
+  "mariposanoloop__0006_Mariposa-01",
+  "mariposanoloop__0005_Mariposa-02",
+  "mariposanoloop__0004_Mariposa-03",
+  "mariposanoloop__0003_Mariposa-04",
+  "mariposanoloop__0002_Mariposa-05",
+  "mariposanoloop__0001_Mariposa-06",
   "mariposanoloop__0001_Mariposa-07",
 ]
 
@@ -66,6 +81,10 @@ export class Engine {
   private raf = 0
   private last = 0
   private running = false
+  // Debug freeze: a click toggles this. While paused the loop renders nothing new
+  // (the last frame stays on screen) and the audio is paused, so the clock — and
+  // every time-driven directive — holds exactly where it was for inspection.
+  private paused = false
   private audio: AudioEngine | null = null
   private timeline: Timeline | null = null
   private pendingCreatureSpawns: DirectedSpawn[] = []
@@ -80,17 +99,14 @@ export class Engine {
     this.reveals = new Reveals(stage, pixi)
     this.creatures = new Creatures(stage, pixi)
     // Static single-texture creatures.
-    for (const name of CREATURE_NAMES) {
-      if (ANIMATED_NAMES.has(name)) continue
-      this.pixi.Assets.load(`${CREATURES_BASE}/${name}.png`)
+    for (const { name, file } of STATIC_CREATURE_TEXTURES) {
+      this.pixi.Assets.load(`${CREATURES_BASE}/${file}.png`)
         .then((tex) => this.creatures.register(name, tex))
         .catch(() => { /* clase sin sprite: no aparece */ })
     }
     this.loadFrames("pececillo", PECECILLO_FRAMES, { fps: 12, loop: true, koi: `${CREATURES_BASE}/pececillo.png` })
-    this.loadFrames("pajaros", PAJAROS_FRAMES, { fps: 12, loop: true })
-    // "mariposa" and "mariposanoloop" share the same play-once opening sequence.
-    this.loadFrames("mariposa", MARIPOSA_FRAMES, { fps: 14, loop: false })
-    this.loadFrames("mariposanoloop", MARIPOSA_FRAMES, { fps: 14, loop: false })
+    this.loadFrames("pajarosVolando", PAJAROS_FRAMES, { fps: 10, loop: true })
+    this.loadFrames("mariposanoloopVolando", MARIPOSANOLOOP_FRAMES, { fps: 10, playback: "bounce" })
     this.input = new Input(canvas)
   }
 
@@ -99,7 +115,7 @@ export class Engine {
   private loadFrames(
     name: string,
     fileNames: string[],
-    opts: { fps: number; loop: boolean; koi?: string },
+    opts: { fps: number; loop?: boolean; playback?: FramePlayback; koi?: string },
   ): void {
     type Texture = InstanceType<PixiModule["Texture"]>
     const frameUrls = fileNames.map((f) => `${CREATURES_BASE}/${f}.png`)
@@ -120,6 +136,7 @@ export class Engine {
         this.creatures.registerFrames(name, frameTextures, {
           fps: opts.fps,
           loop: opts.loop,
+          playback: opts.playback,
           koi: koi ?? null,
         })
       })
@@ -179,6 +196,16 @@ export class Engine {
       this.pendingCreatureSpawns.push(...batch.creatures)
       this.pendingRevealSpawns.push(...batch.reveals)
       this.brushHolds.push(...batch.brushHolds)
+      for (const spawn of batch.reveals) {
+        if (!hasRevealTexture(spawn.name)) continue
+        const writeSeconds = writeSecondsForRevealSpawn(spawn)
+        this.brushHolds.push({
+          startAt: spawn.fireAt,
+          endAt: roundTime(spawn.fireAt + writeSeconds + WORD_BRUSH_LIFT_PAD),
+          pressure: 0,
+          paint: false,
+        })
+      }
     }
   }
 
@@ -222,13 +249,16 @@ export class Engine {
       this.creatures.spawn(spawn.name, at, spawn.fireAt, {
         targetLongSide: spawn.targetLongSide,
         life: spawn.life,
-        alpha: spawn.alpha,
         offset: spawn.offset,
         drift: spawn.drift,
         rotation: spawn.rotation,
         frameOffset: spawn.frameOffset,
         layer: spawn.layer,
         reveal: spawn.reveal,
+        strokeFit: spawn.strokeFit,
+        strokeSamples: spawn.strokeFit ? this.brush.getRibbonSamples() : undefined,
+        fixed: spawn.fixed,
+        revealDuration: spawn.revealDuration,
       })
       return false
     })
@@ -236,13 +266,17 @@ export class Engine {
     this.pendingRevealSpawns = this.pendingRevealSpawns.filter((spawn) => {
       if (spawn.fireAt <= prevT) return false
       if (spawn.fireAt > t) return true
-      const anchor = pointAtDistanceFromEnd(this.brush.getRibbonSamples(), 90)
+      const anchor = pointAtDistanceFromEnd(this.brush.getRibbonSamples(), 0)
+      const leadingOffset = hasRevealTexture(spawn.name) ? WORD_REVEAL_LEADING_OFFSET : 0
+      const writeSeconds = writeSecondsForRevealSpawn(spawn)
       const at = anchor
         ? { x: anchor.x, y: anchor.y }
-        : { x: this.brush.pos.x + spawn.offset.x, y: this.brush.pos.y + spawn.offset.y }
+        : { x: this.brush.pos.x + spawn.offset.x + leadingOffset, y: this.brush.pos.y + spawn.offset.y }
       this.reveals.spawn(spawn.name, at, spawn.fireAt, {
         strokeAnchor: anchor,
-        strokeOffset: { along: spawn.offset.x, normal: -0.18 },
+        strokeOffset: { along: spawn.offset.x + leadingOffset, normal: 0 },
+        targetLongSide: spawn.targetLongSide ?? WORD_TARGET_LONG_SIDE,
+        writeSeconds,
       })
       return false
     })
@@ -254,9 +288,14 @@ export class Engine {
     this.last = performance.now()
     document.addEventListener("visibilitychange", this.onVis)
     const loop = (now: number) => {
+      if (this.paused) {
+        // Frozen: keep the RAF alive (so resume is instant) but advance nothing.
+        this.last = now
+        this.raf = requestAnimationFrame(loop)
+        return
+      }
       const dt = Math.min((now - this.last) / 1000, 1 / 20)
       this.last = now
-      this.stage.resize()
       const aspect = this.canvas.clientWidth / Math.max(this.canvas.clientHeight, 1)
       const t = this.clock()
       const mod = this.modAt(t)
@@ -318,26 +357,71 @@ export class Engine {
       if (this.born) {
         this.collectDirectedEvents(this.prevT, t)
         const hold = this.activeBrushHold(t)
-        const brushTarget = hold ? { x: this.brush.pos.x, y: this.brush.pos.y } : target
+        const freezeBrush = hold ? hold.freeze !== false : false
+        const brushTarget = freezeBrush ? { x: this.brush.pos.x, y: this.brush.pos.y } : target
         if (hold) {
           mod.pressure = hold.pressure
+          if (!hold.paint) mod.ink = 0
           const heldMod = mod as BrushMod & { hold?: boolean }
-          heldMod.hold = true
+          heldMod.hold = freezeBrush
         }
         this.brush.update(dt, brushTarget, mod)
-        this.ink.stampRibbon(this.brush.getRibbonSamples())
+        if (hold?.paint !== false) {
+          this.ink.stampRibbon(this.brush.getRibbonSamples())
+        }
         this.flushDirectedSpawns(this.prevT, t, cw, ch)
         this.prevT = t
       }
+      // Sync the world transform to THIS frame's view BEFORE the creature/reveal
+      // off-screen culling reads it. compositor.draw applies the same view again
+      // (idempotent) right before rendering. Without this, on a frame where the
+      // conveyor wrapped (maybeWrap shifted every node by sx/sy) the cull would
+      // still use the previous frame's world.position/scale and wrongly destroy
+      // sprites that were actually on-screen — the "PNGs disappear when I move the
+      // mouse a lot" bug, since fast camera motion makes wraps frequent.
+      this.stage.applyView(view)
       this.reveals.draw(t)
       this.creatures.draw(t)
-      this.compositor.draw(this.camera.view(aspect), this.glowAt())
+      this.compositor.draw(view, this.glowAt(), t)
       this.raf = requestAnimationFrame(loop)
     }
     this.raf = requestAnimationFrame(loop)
   }
 
   stop(): void { this.running = false; cancelAnimationFrame(this.raf) }
+
+  // Debug pause toggle (driven by a click on the canvas). Freezes the visuals and
+  // the audio together and returns the frozen song time so feedback can be tied to
+  // an exact reference — `time` (seconds) maps 1:1 to the choreography `t` values.
+  togglePause(): { paused: boolean; time: number } {
+    this.paused = !this.paused
+    if (this.paused) this.audio?.pause()
+    else this.audio?.resume()
+    return { paused: this.paused, time: this.clock() }
+  }
+
+  isPaused(): boolean { return this.paused }
+
+  freezeVisuals(): void {
+    this.paused = true
+    this.audio?.pause()
+  }
+
+  resetForReplay(): void {
+    this.audio = null
+    this.timeline = null
+    this.prevT = 0
+    this.brush = new Brush()
+    this.camera = new Camera()
+    this.born = false
+    this.pendingBirth = false
+    this.idleT = 0
+    this.paused = false
+    this.resetDirectedEvents()
+    this.ink.clear()
+    this.reveals.destroy()
+    this.creatures.clearActive()
+  }
 
   destroy(): void {
     this.stop()
@@ -349,4 +433,12 @@ export class Engine {
     this.creatures.destroy()
     this.stage.destroy()
   }
+}
+
+function writeSecondsForRevealSpawn(spawn: DirectedSpawn): number {
+  return wordWriteSecondsForLongSide(spawn.targetLongSide ?? WORD_TARGET_LONG_SIDE)
+}
+
+function roundTime(value: number): number {
+  return Math.round(value * 1000) / 1000
 }

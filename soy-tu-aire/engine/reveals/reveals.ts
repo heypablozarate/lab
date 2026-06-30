@@ -1,11 +1,19 @@
-import { fadeAlpha } from "./fade"
 import type { StrokeAnchor } from "../brush/stroke-history"
 import type { Vec2 } from "../types"
 import type { PixiModule, PixiStage } from "../render/pixi-stage"
 
 const LIFE = 3
 // Target longest side of a PNG word-sprite in paper-space pixels.
-const PNG_TARGET_SIZE = 360
+export const WORD_TARGET_LONG_SIDE = 360
+export const WORD_REVEAL_LEADING_OFFSET = WORD_TARGET_LONG_SIDE / 2
+const WORD_REVEAL_SPEED = 560
+// How long the word takes to "write" itself in. Derived from display size so the
+// reveal keeps pace with the moving brush instead of lingering as a separate fade.
+export const WORD_WRITE_TIME = wordWriteSecondsForLongSide()
+// The four hand-drawn word PNGs that form as part of the brush stroke: the pen
+// stops, the word draws itself left-to-right along the trace, then the pen
+// resumes. Every other lyric cue still renders nothing (no generic text).
+const REVEAL_TEXTURE_NAMES = new Set(["cuelo", "lagrima", "surco", "cosquilla"])
 
 type Texture = InstanceType<PixiModule["Texture"]>
 
@@ -14,8 +22,11 @@ type Active = {
   // simply never renders). We never fall back to generic text: only the artist's
   // hand-drawn word PNGs appear, like the original.
   node: InstanceType<PixiModule["Sprite"]> | null
+  maskNode: InstanceType<PixiModule["Graphics"]> | null
   born: number
   alive: boolean
+  targetLongSide: number
+  writeSeconds: number
 }
 
 export type RevealStrokeOffset = { along: number; normal: number }
@@ -23,6 +34,13 @@ export type RevealStrokeOffset = { along: number; normal: number }
 export type RevealSpawnOptions = {
   strokeAnchor?: StrokeAnchor | null
   strokeOffset?: RevealStrokeOffset
+  targetLongSide?: number
+  writeSeconds?: number
+}
+
+export function wordWriteSecondsForLongSide(longSide = WORD_TARGET_LONG_SIDE): number {
+  const seconds = Math.max(0.28, Math.min(0.82, longSide / WORD_REVEAL_SPEED))
+  return round(seconds)
 }
 
 export function positionRevealOnStroke(
@@ -36,6 +54,10 @@ export function positionRevealOnStroke(
   }
 }
 
+export function hasRevealTexture(word: string): boolean {
+  return REVEAL_TEXTURE_NAMES.has(word)
+}
+
 export class Reveals {
   private active: Active[] = []
   /** Per-word texture cache so repeat spawns skip the network round-trip. */
@@ -44,16 +66,30 @@ export class Reveals {
   constructor(private stage: PixiStage, private pixi: PixiModule) {}
 
   spawn(word: string, at: Vec2, now: number, options: RevealSpawnOptions = {}): void {
-    const strokePlacement = options.strokeAnchor
-      ? positionRevealOnStroke(options.strokeAnchor, options.strokeOffset ?? { along: 0, normal: -0.18 })
-      : null
-    const spawnAt = strokePlacement ? { x: strokePlacement.x, y: strokePlacement.y } : at
-    const rotation = strokePlacement?.rotation ?? (Math.sin(now + at.x * 0.002) * Math.PI) / 28
-    const active: Active = { node: null, born: now, alive: true }
+    const cached = this.textureCache.get(word)
+    if (cached === null) return // known to have no PNG -> render nothing
+    if (!cached && !hasRevealTexture(word)) {
+      this.textureCache.set(word, null)
+      return
+    }
+
+    void now
+    const placed = options.strokeAnchor
+      ? positionRevealOnStroke(options.strokeAnchor, options.strokeOffset ?? { along: 0, normal: 0 })
+      : { x: at.x, y: at.y, rotation: 0 }
+    const spawnAt = { x: placed.x, y: placed.y }
+    const rotation = placed.rotation
+    const targetLongSide = options.targetLongSide ?? WORD_TARGET_LONG_SIDE
+    const active: Active = {
+      node: null,
+      maskNode: null,
+      born: now,
+      alive: true,
+      targetLongSide,
+      writeSeconds: options.writeSeconds ?? wordWriteSecondsForLongSide(targetLongSide),
+    }
     this.active.push(active)
 
-    const cached = this.textureCache.get(word)
-    if (cached === null) return // known to have no PNG → render nothing
     if (cached) {
       this.attachSprite(active, cached, spawnAt, rotation)
       return
@@ -73,16 +109,20 @@ export class Reveals {
     const sprite = new this.pixi.Sprite(texture)
     sprite.anchor.set(0.5)
     sprite.position.set(at.x, at.y)
-    sprite.alpha = 0
+    sprite.alpha = 1
     sprite.rotation = rotation
     // Hand-drawn word PNGs include white-on-transparent text meant to read over
     // the dark ink stroke; "normal" keeps white visible (multiply would hide it).
     sprite.blendMode = "normal"
     const orig = texture.orig ?? texture.frame
     const longest = Math.max(orig.width, orig.height)
-    if (longest > 0) sprite.scale.set(PNG_TARGET_SIZE / longest)
+    if (longest > 0) sprite.scale.set(active.targetLongSide / longest)
     this.stage.overInkLayer.addChild(sprite)
+    const maskNode = new this.pixi.Graphics()
+    sprite.mask = maskNode
+    this.stage.overInkLayer.addChild(maskNode)
     active.node = sprite
+    active.maskNode = maskNode
   }
 
   // Conveyor recycle: keep live words pinned to the world as it wraps.
@@ -99,20 +139,38 @@ export class Reveals {
     this.active = this.active.filter((active) => {
       const age = now - active.born
       if (age > LIFE) {
-        if (active.node) {
-          active.node.parent?.removeChild(active.node)
-          active.node.destroy()
-        }
+        destroyActive(active)
         active.alive = false
         return false
       }
       if (active.node) {
-        const alpha = fadeAlpha(age, LIFE)
-        active.node.alpha = alpha * 0.72
+        active.node.alpha = 1
         const orig = active.node.texture.orig ?? active.node.texture.frame
         const longest = Math.max(orig.width, orig.height)
-        const breathe = 0.92 + Math.min(1, age / LIFE) * 0.1
-        if (longest > 0) active.node.scale.set((PNG_TARGET_SIZE / longest) * breathe)
+        const scale = longest > 0 ? active.targetLongSide / longest : 1
+        active.node.scale.set(scale)
+        if (active.maskNode) {
+          const progress = Math.min(1, Math.max(0, age / active.writeSeconds))
+          if (progress >= 1) {
+            active.node.mask = null
+            active.maskNode.parent?.removeChild(active.maskNode)
+            active.maskNode.destroy()
+            active.maskNode = null
+          } else {
+            // Left-to-right "writing" wipe oriented along the stroke: reveal a
+            // growing slice of the word from its leading (left) edge, rotated to
+            // match the trace so it reads as part of the same brush line.
+            drawWriteMask(
+              active.maskNode,
+              active.node.x,
+              active.node.y,
+              active.node.rotation,
+              orig.width * scale,
+              orig.height * scale,
+              progress,
+            )
+          }
+        }
       }
       return true
     })
@@ -120,14 +178,57 @@ export class Reveals {
 
   destroy(): void {
     for (const active of this.active) {
-      if (active.node) {
-        active.node.parent?.removeChild(active.node)
-        active.node.destroy()
-      }
+      destroyActive(active)
       active.alive = false
     }
     this.active = []
   }
+}
+
+type WriteMaskTarget = {
+  clear(): WriteMaskTarget | void
+  poly(points: number[]): { fill(style: unknown): unknown }
+}
+
+// Draw the writing wipe: a rectangle covering the word's leading `progress`
+// fraction (from the left edge), rotated by `rotation` around the word centre so
+// the reveal advances along the trace direction rather than screen-horizontally.
+export function drawWriteMask(
+  mask: WriteMaskTarget,
+  cx: number,
+  cy: number,
+  rotation: number,
+  width: number,
+  height: number,
+  progress: number,
+): void {
+  mask.clear()
+  if (progress <= 0 || width <= 0 || height <= 0) return
+  const halfW = width / 2
+  const halfH = height / 2
+  const leadX = -halfW + width * Math.min(1, progress)
+  const cos = Math.cos(rotation)
+  const sin = Math.sin(rotation)
+  const toWorld = (lx: number, ly: number): { x: number; y: number } => ({
+    x: cx + lx * cos - ly * sin,
+    y: cy + lx * sin + ly * cos,
+  })
+  const corners = [
+    toWorld(-halfW, -halfH),
+    toWorld(leadX, -halfH),
+    toWorld(leadX, halfH),
+    toWorld(-halfW, halfH),
+  ]
+  mask.poly(corners.flatMap((point) => [point.x, point.y])).fill({ color: 0xffffff, alpha: 1 })
+}
+
+function destroyActive(active: Active): void {
+  active.maskNode?.parent?.removeChild(active.maskNode)
+  active.maskNode?.destroy()
+  active.maskNode = null
+  active.node?.parent?.removeChild(active.node)
+  active.node?.destroy()
+  active.node = null
 }
 
 function round(value: number): number {

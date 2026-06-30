@@ -2,8 +2,24 @@ import type { RibbonGeometry, RibbonSample, Vec2 } from "../types"
 
 const EPSILON = 1e-6
 
+// Mean of |sin| over a full period — used to normalise the nib modulation so it
+// reshapes the stroke (thick/thin) without changing its average ink mass.
+const MEAN_ABS_SIN = 2 / Math.PI
+
 type RibbonOptions = {
   taperSamples?: number
+}
+
+// Broad-nib width law: a flat nib oriented at `nibAngle` paints its full width
+// when the stroke runs across it and a hairline when the stroke runs along it.
+// `floor` keeps the hairline from vanishing entirely; the result is normalised
+// so its mean over all directions is 1 (preserves overall ink mass).
+export function nibWidthFactor(tangentAngle: number, nibAngle: number, floor = 0.28): number {
+  const f = Math.min(0.95, Math.max(0, floor))
+  const across = Math.abs(Math.sin(tangentAngle - nibAngle))
+  const raw = f + (1 - f) * across
+  const mean = f + (1 - f) * MEAN_ABS_SIN
+  return raw / mean
 }
 
 const EMPTY_GEOMETRY: RibbonGeometry = {
@@ -91,7 +107,10 @@ export function buildRibbonGeometry(
     const sample = samples[i]
     const tangent = tangentAt(samples, i)
     const normal = { x: -tangent.y, y: tangent.x }
-    const halfWidth = Math.max(0, sample.width) * taperAt(i, samples.length, taperSamples) * 0.5
+    const nib = sample.nib === undefined
+      ? 1
+      : nibWidthFactor(Math.atan2(tangent.y, tangent.x), sample.nib)
+    const halfWidth = Math.max(0, sample.width) * taperAt(i, samples.length, taperSamples) * 0.5 * nib
     const leftIndex = i * 4
     const alphaIndex = i * 2
 

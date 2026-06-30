@@ -1,12 +1,14 @@
 import { PAPER_W, PAPER_H } from "../constants"
 import { computeStrokeDynamics } from "./stroke-dynamics"
-import { springStep, emitDabs } from "./spring"
-import type { BrushMod, Dab, RibbonSample, Vec2 } from "../types"
+import { springStep } from "./spring"
+import type { BrushMod, RibbonSample, Vec2 } from "../types"
 
 const STIFFNESS = 90
 const DAMPING = 14
-const DAB_SPACING = 4
 const MAX_CENTERLINE_SAMPLES = 180
+const NIB_BASE = 0.7
+const NIB_DRIFT = 0.85
+const NIB_RATE = 0.085
 
 type BrushStroke = { size: number; alpha: number }
 
@@ -30,6 +32,7 @@ export class Brush {
   private samples: RibbonSample[] = []
   private previousSpeed = 0
   private wanderT = 0
+  private nibT = 0
 
   get velocity(): Vec2 {
     return { x: this.vel.x, y: this.vel.y }
@@ -63,7 +66,7 @@ export class Brush {
     this.previousSpeed = 0
   }
 
-  update(dt: number, target: Vec2 | null, mod: BrushMod): Dab[] {
+  update(dt: number, target: Vec2 | null, mod: BrushMod): void {
     let t = target
     if (!t) {
       // Wander procedural suave (figura de Lissajous lenta) cuando no hay input.
@@ -89,26 +92,27 @@ export class Brush {
       ink: mod.ink ?? 1,
       hold: held,
     })
+    const bristleNoise = Math.abs(Math.sin(this.pos.x * 0.017 + this.pos.y * 0.031 + this.samples.length * 0.73))
+    const dryCut = !held && dynamics.dryness > 0.54 && bristleNoise > 0.68
+      ? (bristleNoise - 0.68) / 0.32
+      : 0
     this.previousSpeed = speed
+    this.nibT += dt
+    const nibAngle = NIB_BASE + Math.sin(this.nibT * NIB_RATE) * NIB_DRIFT
     this.samples.push({
       x: this.pos.x,
       y: this.pos.y,
-      width: dynamics.width,
-      alpha: dynamics.alpha,
+      width: dynamics.width * (1 - dryCut * 0.38),
+      alpha: dynamics.alpha * (1 - dryCut * 0.62),
       dryness: dynamics.dryness,
-      bristleSplit: dynamics.bristleSplit,
+      bristleSplit: Math.min(1, dynamics.bristleSplit + dryCut * 0.32),
       headPool: dynamics.headPool,
-      edgeJitter: dynamics.edgeJitter,
+      edgeJitter: Math.min(1, dynamics.edgeJitter + dryCut * 0.22),
+      nib: nibAngle,
     })
     if (this.samples.length > MAX_CENTERLINE_SAMPLES) {
       this.samples.splice(0, this.samples.length - MAX_CENTERLINE_SAMPLES)
     }
-    return emitDabs(this.prev, this.pos, DAB_SPACING).map((p) => ({
-      x: p.x,
-      y: p.y,
-      size: dynamics.width,
-      alpha: dynamics.alpha,
-    }))
   }
 }
 

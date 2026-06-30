@@ -1,11 +1,33 @@
 import { describe, expect, it } from "vitest"
 
-import { buildRibbonGeometry } from "./ribbon"
+import { buildRibbonGeometry, nibWidthFactor } from "./ribbon"
 import type { RibbonSample } from "../types"
 
 function sample(x: number, y: number, width = 10, alpha = 1): RibbonSample {
   return { x, y, width, alpha }
 }
+
+describe("nibWidthFactor", () => {
+  it("collapses toward a hairline along the nib axis and swells across it", () => {
+    const along = nibWidthFactor(0, 0) // stroke parallel to the nib
+    const across = nibWidthFactor(Math.PI / 2, 0) // stroke perpendicular to the nib
+    expect(along).toBeLessThan(across)
+    expect(along).toBeGreaterThan(0) // floored so it never fully vanishes
+    expect(across).toBeGreaterThan(1) // belly is wider than the average
+  })
+
+  it("is invariant to the sign/period of the angle difference", () => {
+    expect(nibWidthFactor(Math.PI, 0)).toBeCloseTo(nibWidthFactor(0, 0), 10)
+    expect(nibWidthFactor(0.9, 0.2)).toBeCloseTo(nibWidthFactor(0.2, 0.9), 10)
+  })
+
+  it("averages to ~1 over all directions (preserves ink mass)", () => {
+    let sum = 0
+    const n = 720
+    for (let i = 0; i < n; i += 1) sum += nibWidthFactor((i / n) * Math.PI * 2, 0.6)
+    expect(sum / n).toBeCloseTo(1, 2)
+  })
+})
 
 describe("buildRibbonGeometry", () => {
   it("builds a two-sided strip for a straight horizontal centerline", () => {

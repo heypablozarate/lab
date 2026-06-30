@@ -70,7 +70,9 @@
       "velocidad": 1,
       "presion": 1,
       "climax": 0,
-      "reveals": [],
+      "reveals": [
+        "surco"
+      ],
       "creatures": [
         "surco"
       ]
@@ -211,7 +213,8 @@
       "presion": 1,
       "climax": 0,
       "reveals": [
-        "cosquillas"
+        "cosquillas",
+        "cosquilla"
       ],
       "creatures": []
     },
@@ -1166,7 +1169,9 @@
       "velocidad": 1,
       "presion": 1,
       "climax": 0,
-      "reveals": [],
+      "reveals": [
+        "lagrima"
+      ],
       "creatures": [
         "lagrima"
       ]

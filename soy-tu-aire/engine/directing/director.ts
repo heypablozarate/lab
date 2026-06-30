@@ -5,6 +5,7 @@ import {
   type DirectedLayer,
   type RevealMode,
   type SpawnDirective,
+  type StrokeFitDirective,
 } from "./event-directives"
 import type { ChoreoEvent } from "../timeline/choreography"
 import type { Vec2 } from "../types"
@@ -21,13 +22,17 @@ export type DirectedSpawn = {
   drift: Vec2
   rotation: number
   frameOffset: number
-  alpha: number
+  strokeFit?: StrokeFitDirective
+  fixed?: boolean
+  revealDuration?: number
 }
 
 export type DirectedBrushHold = {
   startAt: number
   endAt: number
   pressure: number
+  paint: boolean
+  freeze?: boolean
 }
 
 export type DirectedEventBatch = {
@@ -47,6 +52,7 @@ export function expandDirectedEvents(event: ChoreoEvent): DirectedEventBatch {
 
   event.creatures.forEach((name, rawIndex) => {
     const directive = getEventDirective(name, event.t)
+    if (directive?.skipCreature) return
     if (directive?.creatures?.[name]) {
       if (expandedDirectedCreatures.has(name)) return
       expandedDirectedCreatures.add(name)
@@ -87,7 +93,7 @@ function expandSpawn(
       const seed = seedFor(name, baseTime, rawIndex, directiveIndex, instanceIndex)
 
       return {
-        name,
+        name: directive.spawnName ?? name,
         fireAt: roundTime(baseTime + directive.at + instanceIndex * (directive.stagger ?? 0)),
         layer: directive.layer,
         attachment: directive.attachment,
@@ -98,7 +104,9 @@ function expandSpawn(
         drift: resolveDrift(directive, seed),
         rotation: resolveRotation(directive, seed),
         frameOffset: resolveFrameOffset(directive, seed, instanceIndex),
-        alpha: directive.alpha ?? 1,
+        strokeFit: directive.strokeFit,
+        fixed: directive.fixed,
+        revealDuration: directive.revealDuration,
       }
     }),
   )
@@ -109,26 +117,27 @@ function defaultSpawn(name: string, baseTime: number): DirectedSpawn {
     name,
     fireAt: roundTime(baseTime),
     layer: "overInk",
-    attachment: "world",
-    reveal: "fade",
+    attachment: "strokeEnd",
+    reveal: "strokeBorn",
     targetLongSide: undefined,
     life: DEFAULT_LIFE,
     offset: { ...DEFAULT_OFFSET },
     drift: { ...DEFAULT_OFFSET },
     rotation: 0,
     frameOffset: 0,
-    alpha: 1,
   }
 }
 
 function expandBrushHold(baseTime: number, directive: BrushHoldDirective): DirectedBrushHold {
   const startAt = roundTime(baseTime + directive.startOffset)
-
-  return {
+  const hold: DirectedBrushHold = {
     startAt,
     endAt: roundTime(startAt + directive.duration),
     pressure: directive.pressure,
+    paint: directive.paint ?? true,
   }
+  if (directive.freeze !== undefined) hold.freeze = directive.freeze
+  return hold
 }
 
 function resolveOffset(

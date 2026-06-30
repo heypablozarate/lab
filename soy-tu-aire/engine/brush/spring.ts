@@ -12,16 +12,3 @@ export function springStep(
     pos.x += vel.x * h; pos.y += vel.y * h
   }
 }
-export function emitDabs(from: Vec2, to: Vec2, spacing: number): Vec2[] {
-  const dx = to.x - from.x, dy = to.y - from.y
-  const dist = Math.hypot(dx, dy)
-  const out: Vec2[] = []
-  if (dist < spacing) { out.push({ x: to.x, y: to.y }); return out }
-  const n = Math.floor(dist / spacing)
-  for (let i = 1; i <= n; i++) {
-    const t = (i * spacing) / dist
-    out.push({ x: from.x + dx * t, y: from.y + dy * t })
-  }
-  if (out[out.length - 1].x !== to.x || out[out.length - 1].y !== to.y) out.push({ x: to.x, y: to.y })
-  return out
-}
