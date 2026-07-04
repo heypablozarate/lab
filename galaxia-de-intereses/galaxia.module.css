@@ -1,0 +1,420 @@
+/* Galaxia de Intereses — constelación sobre papel.
+   Todos los colores salen de tokens RAMS globales (globals.css); acá no se
+   declara ningún hex nuevo. El único color saturado de la pieza es
+   --brand-accent y queda reservado a selección/hover. */
+
+.page {
+  position: relative;
+  min-height: 100svh;
+  overflow: hidden;
+  background: var(--surface-raised);
+  color: var(--ink);
+  color-scheme: light;
+}
+
+.serverContext {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  clip-path: inset(50%);
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.stage {
+  position: fixed;
+  inset: 0;
+}
+
+.stage[data-hovering="true"] {
+  cursor: pointer;
+}
+
+.canvasHost {
+  position: absolute;
+  inset: 0;
+}
+
+.loading {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  margin: 0;
+  color: var(--muted);
+  font-family: var(--font-body), Arial, sans-serif;
+  font-size: 0.9rem;
+}
+
+/* ---- Labels (pool fijo de 25 spans, mutados desde useFrame) ---- */
+
+.labels {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.label {
+  position: absolute;
+  top: 0;
+  left: 0;
+  max-width: 16rem;
+  overflow: hidden;
+  color: var(--ink);
+  font-family: var(--font-body), Arial, sans-serif;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+.label[data-active="true"] {
+  color: var(--brand-accent);
+  font-weight: 700;
+}
+
+/* ---- HUD ---- */
+
+.hud {
+  position: absolute;
+  top: clamp(1rem, 3vh, 2rem);
+  left: clamp(1rem, 3vw, 2rem);
+  display: flex;
+  width: min(20rem, calc(100vw - 2rem));
+  flex-direction: column;
+  gap: 0.65rem;
+  pointer-events: none;
+}
+
+.hud > * {
+  pointer-events: auto;
+}
+
+.backLink {
+  width: fit-content;
+  color: var(--muted);
+  font-family: var(--font-body), Arial, sans-serif;
+  font-size: 0.8rem;
+  font-weight: 500;
+  text-decoration: none;
+  border-bottom: 1px solid var(--line);
+}
+
+.backLink:hover,
+.backLink:focus-visible {
+  color: var(--ink);
+  border-bottom-color: var(--ink);
+}
+
+.hudTitle {
+  margin: 0;
+  color: var(--ink);
+  font-family: var(--font-display), Arial, sans-serif;
+  font-size: clamp(1.35rem, 2.4vw, 1.8rem);
+  font-weight: 700;
+  line-height: 1.05;
+}
+
+.hudCount {
+  margin: 0;
+  color: var(--muted);
+  font-family: var(--font-body), Arial, sans-serif;
+  font-size: 0.78rem;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---- Buscador ---- */
+
+.search {
+  position: relative;
+}
+
+.searchInput {
+  width: 100%;
+  padding: 0.45rem 0;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  color: var(--ink);
+  font-family: var(--font-body), Arial, sans-serif;
+  font-size: 0.85rem;
+}
+
+.searchInput::placeholder {
+  color: var(--muted);
+}
+
+.searchInput:focus-visible {
+  outline: none;
+  border-bottom-color: var(--ink);
+}
+
+.searchResults {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 3;
+  margin: 0.35rem 0 0;
+  padding: 0.35rem 0;
+  list-style: none;
+  background: var(--paper);
+  border: 1px solid var(--line);
+}
+
+.searchResults li button {
+  display: block;
+  width: 100%;
+  padding: 0.35rem 0.75rem;
+  background: transparent;
+  border: 0;
+  color: var(--ink);
+  font-family: var(--font-body), Arial, sans-serif;
+  font-size: 0.8rem;
+  text-align: left;
+  cursor: pointer;
+}
+
+.searchResults li button:hover,
+.searchResults li button:focus-visible {
+  color: var(--brand-accent);
+}
+
+.searchEmpty {
+  padding: 0.35rem 0.75rem;
+  color: var(--muted);
+  font-family: var(--font-body), Arial, sans-serif;
+  font-size: 0.8rem;
+}
+
+/* ---- Filtros por cluster ---- */
+
+.clusterList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.clusterChip {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.35rem;
+  padding: 0.28rem 0.6rem;
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--muted);
+  font-family: var(--font-body), Arial, sans-serif;
+  font-size: 0.72rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.clusterChip[data-active="true"] {
+  border-color: var(--ink);
+  color: var(--ink);
+}
+
+.clusterChip:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 1px;
+}
+
+.clusterCount {
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---- FPS meter (dev / ?fps=1) ---- */
+
+.fps {
+  position: absolute;
+  right: clamp(1rem, 3vw, 2rem);
+  bottom: clamp(1rem, 3vh, 2rem);
+  margin: 0;
+  color: var(--muted);
+  font-family: var(--font-body), Arial, sans-serif;
+  font-size: 0.72rem;
+  font-variant-numeric: tabular-nums;
+  pointer-events: none;
+}
+
+/* ---- Panel de detalle: lateral en desktop, bottom sheet en mobile ---- */
+
+.panel {
+  position: absolute;
+  top: clamp(1rem, 3vh, 2rem);
+  right: clamp(1rem, 3vw, 2rem);
+  bottom: clamp(1rem, 3vh, 2rem);
+  width: min(22rem, calc(100vw - 2rem));
+  overflow-y: auto;
+  padding: 1.25rem 1.4rem 1.5rem;
+  background: var(--paper);
+  border: 1px solid var(--line);
+}
+
+.panelClose {
+  float: right;
+  margin-left: 0.75rem;
+  padding: 0.2rem 0;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  color: var(--muted);
+  font-family: var(--font-body), Arial, sans-serif;
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+
+.panelClose:hover,
+.panelClose:focus-visible {
+  color: var(--ink);
+  border-bottom-color: var(--ink);
+}
+
+.panelMeta {
+  margin: 0 0 0.4rem;
+  color: var(--muted);
+  font-family: var(--font-body), Arial, sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.02em;
+  text-transform: lowercase;
+}
+
+.panelTitle {
+  margin: 0 0 0.6rem;
+  color: var(--ink);
+  font-family: var(--font-display), Arial, sans-serif;
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.15;
+  text-wrap: balance;
+}
+
+.panelDescription {
+  margin: 0 0 0.8rem;
+  color: var(--ink);
+  font-family: var(--font-body), Arial, sans-serif;
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+.panelTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  margin: 0 0 0.9rem;
+  padding: 0;
+  list-style: none;
+}
+
+.panelTags li {
+  padding: 0.15rem 0.5rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--muted);
+  font-family: var(--font-body), Arial, sans-serif;
+  font-size: 0.68rem;
+}
+
+.panelLink {
+  display: inline-block;
+  margin-bottom: 1rem;
+  color: var(--brand-accent);
+  font-family: var(--font-body), Arial, sans-serif;
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-decoration: none;
+  border-bottom: 1px solid var(--brand-accent);
+}
+
+.panelConnections h3 {
+  margin: 0 0 0.5rem;
+  color: var(--ink);
+  font-family: var(--font-body), Arial, sans-serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.panelConnections ul {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.panelConnections li {
+  border-top: 1px solid var(--line);
+  padding-top: 0.6rem;
+}
+
+.panelConnections li button {
+  padding: 0;
+  background: transparent;
+  border: 0;
+  color: var(--ink);
+  font-family: var(--font-body), Arial, sans-serif;
+  font-size: 0.82rem;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+}
+
+.panelConnections li button:hover,
+.panelConnections li button:focus-visible {
+  color: var(--brand-accent);
+}
+
+.panelConnections li p {
+  margin: 0.25rem 0 0.2rem;
+  color: var(--muted);
+  font-family: var(--font-body), Arial, sans-serif;
+  font-size: 0.75rem;
+  line-height: 1.45;
+}
+
+.panelProvenance {
+  color: var(--muted);
+  font-family: var(--font-body), Arial, sans-serif;
+  font-size: 0.68rem;
+  font-style: italic;
+}
+
+@media (max-width: 720px) {
+  .panel {
+    top: auto;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    max-height: 55svh;
+    border-left: 0;
+    border-right: 0;
+    border-bottom: 0;
+    padding-bottom: calc(1.5rem + env(safe-area-inset-bottom));
+  }
+
+  .hud {
+    width: calc(100vw - 2rem);
+  }
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  clip-path: inset(50%);
+  overflow: hidden;
+  white-space: nowrap;
+}
