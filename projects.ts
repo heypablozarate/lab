@@ -33,20 +33,20 @@ export type LabProject = {
   href?: string;
 };
 
-export const labHomeUpdatedAt = "2026-07-04T00:00:00-03:00";
+export const labHomeUpdatedAt = "2026-07-04T12:00:00-03:00";
 
 // Newest first — the order here is the left-to-right order on the canvas
 // (the Intro panel is always first, prepended by the canvas).
 export const projects: LabProject[] = [
   {
-    slug: "galaxia-de-intereses",
-    title: "Galaxia de Intereses",
+    slug: "synapsis",
+    title: "Synapsis",
     year: 2026,
     kind: "3D graph / R3F",
     description:
       "A navigable 3D constellation of the topics, links, and ideas Pablo saves across platforms — deterministic layout, hand-curated and AI-proposed connections, rendered in light mode on paper with RAMS tokens and React Three Fiber.",
     tags: ["React Three Fiber", "WebGL", "knowledge graph", "information design", "3D", "design engineering"],
-    updatedAt: "2026-07-04T00:00:00-03:00",
+    updatedAt: "2026-07-04T12:00:00-03:00",
   },
   {
     slug: "soy-tu-aire",

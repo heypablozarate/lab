@@ -1,4 +1,4 @@
-// Deterministic constellation layout for Galaxia de Intereses.
+// Deterministic constellation layout for Synapsis.
 //
 // dsaints-style: no runtime physics. Node positions derive from a hash of the
 // node id, relevance sets distance to center (inverse) and visual size

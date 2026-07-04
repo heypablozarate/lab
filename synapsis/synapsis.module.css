@@ -1,4 +1,4 @@
-/* Galaxia de Intereses — constelación sobre papel.
+/* Synapsis — constelación sobre papel.
    Todos los colores salen de tokens RAMS globales (globals.css); acá no se
    declara ningún hex nuevo. El único color saturado de la pieza es
    --brand-accent y queda reservado a selección/hover. */
@@ -77,20 +77,31 @@
   font-weight: 700;
 }
 
-/* ---- HUD ---- */
+/* ---- HUD / sidebar ----
+   Apple HIG sidebar: full-height column anchored to an edge, floating with
+   an outer margin, liquid glass material so the scene reads through it. */
 
 .hud {
   position: absolute;
-  top: clamp(1rem, 3vh, 2rem);
-  left: clamp(1rem, 3vw, 2rem);
+  top: clamp(0.75rem, 2vh, 1.25rem);
+  bottom: clamp(0.75rem, 2vh, 1.25rem);
+  left: clamp(0.75rem, 2vh, 1.25rem);
   display: flex;
-  width: min(20rem, calc(100vw - 2rem));
+  width: min(19rem, calc(100vw - 2rem));
   flex-direction: column;
+  align-items: stretch;
   gap: 0.65rem;
-  pointer-events: none;
-}
-
-.hud > * {
+  padding: 1.25rem 1.4rem 1.5rem;
+  overflow-y: auto;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-line);
+  border-radius: 1.25rem;
+  backdrop-filter: blur(calc(var(--glass-fallback-blur) * 1px))
+    saturate(calc(var(--glass-fallback-saturation) * 1%)) contrast(var(--glass-fallback-contrast))
+    brightness(var(--glass-fallback-brightness));
+  -webkit-backdrop-filter: blur(calc(var(--glass-fallback-blur) * 1px))
+    saturate(calc(var(--glass-fallback-saturation) * 1%)) contrast(var(--glass-fallback-contrast))
+    brightness(var(--glass-fallback-brightness));
   pointer-events: auto;
 }
 
@@ -154,10 +165,7 @@
 }
 
 .searchResults {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
+  position: relative;
   z-index: 3;
   margin: 0.35rem 0 0;
   padding: 0.35rem 0;
@@ -406,7 +414,13 @@
   }
 
   .hud {
-    width: calc(100vw - 2rem);
+    top: clamp(0.75rem, 2vh, 1.25rem);
+    bottom: auto;
+    left: clamp(0.75rem, 2vh, 1.25rem);
+    right: clamp(0.75rem, 2vh, 1.25rem);
+    width: auto;
+    height: auto;
+    max-height: 45svh;
   }
 }
 

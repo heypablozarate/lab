@@ -52,7 +52,7 @@ function distance(positions: number[], index: number) {
   return Math.hypot(x, y, z);
 }
 
-describe("galaxia layout engine", () => {
+describe("synapsis layout engine", () => {
   it("is fully deterministic for the same graph", () => {
     const data = syntheticGalaxy();
     const a = computeLayout(data);

@@ -6,11 +6,11 @@ import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "reac
 
 import type { GalaxyData, GalaxyLayout } from "../layout-engine";
 import type { LabelPool, SceneTokens } from "./galaxy-scene";
-import styles from "../galaxia.module.css";
+import styles from "../synapsis.module.css";
 
 const GalaxyScene = dynamic(() => import("./galaxy-scene"), {
   ssr: false,
-  loading: () => <p className={styles.loading}>Cargando la galaxia…</p>,
+  loading: () => <p className={styles.loading}>Cargando Synapsis…</p>,
 });
 
 const LABEL_POOL_SIZE = 25;
@@ -232,17 +232,17 @@ export function GalaxyStage({ data, layout }: StageProps) {
         <Link className={styles.backLink} href="/">
           Back to the Lab
         </Link>
-        <p className={styles.hudTitle}>Galaxia de Intereses</p>
+        <p className={styles.hudTitle}>Synapsis</p>
         <p className={styles.hudCount}>
           {nodes.length} nodos · {edges.length} conexiones · {clusters.length} clusters
         </p>
 
         <div className={styles.search}>
-          <label className={styles.srOnly} htmlFor="galaxia-search">
+          <label className={styles.srOnly} htmlFor="synapsis-search">
             Buscar nodos
           </label>
           <input
-            id="galaxia-search"
+            id="synapsis-search"
             className={styles.searchInput}
             type="search"
             placeholder="Buscar"
