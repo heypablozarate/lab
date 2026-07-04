@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 
+import galaxy from "@/content/data/synapsis/galaxy.json";
+
 import { GalaxyStage } from "./components/galaxy-stage";
-import galaxy from "./data/galaxy.dummy.json";
 import { computeLayout, type GalaxyData } from "./layout-engine";
 import styles from "./synapsis.module.css";
 
