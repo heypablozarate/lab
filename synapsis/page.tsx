@@ -75,7 +75,7 @@ export default function SynapsisPage() {
   };
 
   return (
-    <main className={styles.page} data-theme="light">
+    <main className={styles.page}>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }} />
 
       {"\n"}

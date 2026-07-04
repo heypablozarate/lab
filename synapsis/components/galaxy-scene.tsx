@@ -14,11 +14,13 @@ import { useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
 import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
 
+// Resolved per-theme colors. Only literal-valued tokens are read here —
+// THREE.Color cannot parse color-mix() — so the edge/line color is derived in
+// buildPalette with the same rule the Lab home uses (ink at ~16% over the
+// background).
 export type SceneTokens = {
   surfaceRaised: string;
   ink: string;
-  muted: string;
-  line: string;
   accent: string;
 };
 
@@ -70,14 +72,15 @@ type Palette = {
 function buildPalette(tokens: SceneTokens): Palette {
   const surface = new THREE.Color(tokens.surfaceRaised);
   const ink = new THREE.Color(tokens.ink);
-  const line = new THREE.Color(tokens.line);
+  // Lab home line rule (ink 16% over the background), resolved to a solid.
+  const line = surface.clone().lerp(ink, 0.16);
   return {
     surface,
     accent: new THREE.Color(tokens.accent),
     nodeRest: ink.clone(),
     nodeDim: ink.clone().lerp(surface, 0.82),
-    edgeRest: line.clone().lerp(surface, 0.45),
-    edgeFaint: line.clone().lerp(surface, 0.84),
+    edgeRest: line.clone().lerp(surface, 0.4),
+    edgeFaint: surface.clone().lerp(ink, 0.045),
   };
 }
 

@@ -1,6 +1,7 @@
 /* Synapsis — constelación sobre papel.
-   Todos los colores salen de tokens RAMS globales (globals.css); acá no se
-   declara ningún hex nuevo. El único color saturado de la pieza es
+   Todos los colores salen de tokens RAMS globales (globals.css); el único
+   hex declarado acá es la paleta dark reutilizada tal cual de la home del
+   Lab (lab.module.css). El único color saturado de la pieza es
    --brand-accent y queda reservado a selección/hover. */
 
 .page {
@@ -24,10 +25,39 @@
 .stage {
   position: fixed;
   inset: 0;
+  background: var(--surface-raised);
+  color: var(--ink);
+  color-scheme: light;
 }
 
 .stage[data-hovering="true"] {
   cursor: pointer;
+}
+
+/* ---- Tema oscuro ----
+   Mismas reglas de color que la home del Lab (lab.module.css,
+   .page[data-theme="dark"]); no son hex nuevos. El probe es un nodo efímero
+   desde el que el cliente resuelve los tokens de la escena por tema. */
+
+.stage[data-theme="dark"],
+.tokenProbe[data-theme="dark"] {
+  --paper: #1a1816;
+  --surface-raised: #0e0d0c;
+  --ink: #ece7e0;
+  --muted: #8c867d;
+  --line: color-mix(in srgb, var(--ink) 16%, transparent);
+  --glass-bg: color-mix(in srgb, var(--paper) 72%, transparent);
+  --glass-line: color-mix(in srgb, var(--ink) 14%, transparent);
+  color-scheme: dark;
+}
+
+.tokenProbe {
+  position: fixed;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  visibility: hidden;
+  pointer-events: none;
 }
 
 .canvasHost {
@@ -43,7 +73,7 @@
   margin: 0;
   color: var(--muted);
   font-family: var(--font-body), Arial, sans-serif;
-  font-size: 0.9rem;
+  font-size: 0.9375rem;
 }
 
 /* ---- Labels (pool fijo de 25 spans, mutados desde useFrame) ---- */
@@ -63,7 +93,7 @@
   overflow: hidden;
   color: var(--ink);
   font-family: var(--font-body), Arial, sans-serif;
-  font-size: 0.72rem;
+  font-size: 0.8125rem;
   font-weight: 500;
   letter-spacing: 0.01em;
   white-space: nowrap;
@@ -109,7 +139,7 @@
   width: fit-content;
   color: var(--muted);
   font-family: var(--font-body), Arial, sans-serif;
-  font-size: 0.8rem;
+  font-size: 0.875rem;
   font-weight: 500;
   text-decoration: none;
   border-bottom: 1px solid var(--line);
@@ -134,7 +164,7 @@
   margin: 0;
   color: var(--muted);
   font-family: var(--font-body), Arial, sans-serif;
-  font-size: 0.78rem;
+  font-size: 0.875rem;
   font-variant-numeric: tabular-nums;
 }
 
@@ -152,7 +182,7 @@
   border-bottom: 1px solid var(--line);
   color: var(--ink);
   font-family: var(--font-body), Arial, sans-serif;
-  font-size: 0.85rem;
+  font-size: 0.9375rem;
 }
 
 .searchInput::placeholder {
@@ -182,7 +212,7 @@
   border: 0;
   color: var(--ink);
   font-family: var(--font-body), Arial, sans-serif;
-  font-size: 0.8rem;
+  font-size: 0.875rem;
   text-align: left;
   cursor: pointer;
 }
@@ -196,7 +226,7 @@
   padding: 0.35rem 0.75rem;
   color: var(--muted);
   font-family: var(--font-body), Arial, sans-serif;
-  font-size: 0.8rem;
+  font-size: 0.875rem;
 }
 
 /* ---- Filtros por cluster ---- */
@@ -214,13 +244,13 @@
   display: inline-flex;
   align-items: baseline;
   gap: 0.35rem;
-  padding: 0.28rem 0.6rem;
+  padding: 0.32rem 0.7rem;
   background: transparent;
   border: 1px solid var(--line);
   border-radius: 999px;
   color: var(--muted);
   font-family: var(--font-body), Arial, sans-serif;
-  font-size: 0.72rem;
+  font-size: 0.8125rem;
   font-weight: 500;
   cursor: pointer;
 }
@@ -240,6 +270,41 @@
   font-variant-numeric: tabular-nums;
 }
 
+/* ---- Toggle de tema (pie del sidebar, mismas reglas que la home del Lab) ---- */
+
+.themeToggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  align-self: flex-start;
+  margin-top: auto;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.themeToggle:hover {
+  color: var(--ink);
+}
+
+.themeToggle:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.themeToggle svg {
+  display: block;
+  width: 18px;
+  height: 18px;
+}
+
 /* ---- FPS meter (dev / ?fps=1) ---- */
 
 .fps {
@@ -249,7 +314,7 @@
   margin: 0;
   color: var(--muted);
   font-family: var(--font-body), Arial, sans-serif;
-  font-size: 0.72rem;
+  font-size: 0.8125rem;
   font-variant-numeric: tabular-nums;
   pointer-events: none;
 }
@@ -258,14 +323,21 @@
 
 .panel {
   position: absolute;
-  top: clamp(1rem, 3vh, 2rem);
-  right: clamp(1rem, 3vw, 2rem);
-  bottom: clamp(1rem, 3vh, 2rem);
+  top: clamp(0.75rem, 2vh, 1.25rem);
+  right: clamp(0.75rem, 2vh, 1.25rem);
+  bottom: clamp(0.75rem, 2vh, 1.25rem);
   width: min(22rem, calc(100vw - 2rem));
   overflow-y: auto;
   padding: 1.25rem 1.4rem 1.5rem;
-  background: var(--paper);
-  border: 1px solid var(--line);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-line);
+  border-radius: 1.25rem;
+  backdrop-filter: blur(calc(var(--glass-fallback-blur) * 1px))
+    saturate(calc(var(--glass-fallback-saturation) * 1%)) contrast(var(--glass-fallback-contrast))
+    brightness(var(--glass-fallback-brightness));
+  -webkit-backdrop-filter: blur(calc(var(--glass-fallback-blur) * 1px))
+    saturate(calc(var(--glass-fallback-saturation) * 1%)) contrast(var(--glass-fallback-contrast))
+    brightness(var(--glass-fallback-brightness));
 }
 
 .panelClose {
@@ -277,7 +349,7 @@
   border-bottom: 1px solid var(--line);
   color: var(--muted);
   font-family: var(--font-body), Arial, sans-serif;
-  font-size: 0.75rem;
+  font-size: 0.875rem;
   cursor: pointer;
 }
 
@@ -291,7 +363,7 @@
   margin: 0 0 0.4rem;
   color: var(--muted);
   font-family: var(--font-body), Arial, sans-serif;
-  font-size: 0.72rem;
+  font-size: 0.8125rem;
   letter-spacing: 0.02em;
   text-transform: lowercase;
 }
@@ -300,7 +372,7 @@
   margin: 0 0 0.6rem;
   color: var(--ink);
   font-family: var(--font-display), Arial, sans-serif;
-  font-size: 1.25rem;
+  font-size: 1.5rem;
   font-weight: 700;
   line-height: 1.15;
   text-wrap: balance;
@@ -310,7 +382,7 @@
   margin: 0 0 0.8rem;
   color: var(--ink);
   font-family: var(--font-body), Arial, sans-serif;
-  font-size: 0.85rem;
+  font-size: 0.9375rem;
   line-height: 1.5;
 }
 
@@ -329,7 +401,7 @@
   border-radius: 999px;
   color: var(--muted);
   font-family: var(--font-body), Arial, sans-serif;
-  font-size: 0.68rem;
+  font-size: 0.8125rem;
 }
 
 .panelLink {
@@ -337,7 +409,7 @@
   margin-bottom: 1rem;
   color: var(--brand-accent);
   font-family: var(--font-body), Arial, sans-serif;
-  font-size: 0.85rem;
+  font-size: 0.9375rem;
   font-weight: 500;
   text-decoration: none;
   border-bottom: 1px solid var(--brand-accent);
@@ -347,7 +419,7 @@
   margin: 0 0 0.5rem;
   color: var(--ink);
   font-family: var(--font-body), Arial, sans-serif;
-  font-size: 0.78rem;
+  font-size: 0.875rem;
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -373,7 +445,7 @@
   border: 0;
   color: var(--ink);
   font-family: var(--font-body), Arial, sans-serif;
-  font-size: 0.82rem;
+  font-size: 0.9375rem;
   font-weight: 500;
   text-align: left;
   cursor: pointer;
@@ -388,14 +460,14 @@
   margin: 0.25rem 0 0.2rem;
   color: var(--muted);
   font-family: var(--font-body), Arial, sans-serif;
-  font-size: 0.75rem;
+  font-size: 0.875rem;
   line-height: 1.45;
 }
 
 .panelProvenance {
   color: var(--muted);
   font-family: var(--font-body), Arial, sans-serif;
-  font-size: 0.68rem;
+  font-size: 0.8125rem;
   font-style: italic;
 }
 
@@ -410,6 +482,7 @@
     border-left: 0;
     border-right: 0;
     border-bottom: 0;
+    border-radius: 1.25rem 1.25rem 0 0;
     padding-bottom: calc(1.5rem + env(safe-area-inset-bottom));
   }
 

@@ -22,27 +22,69 @@ type StageProps = {
   layout: GalaxyLayout;
 };
 
-function readTokens(): SceneTokens {
-  const css = getComputedStyle(document.documentElement);
+// Theme store: identical contract to the Lab home (lab-canvas.tsx) — same
+// storage key and change event, so the preference travels across Lab pages.
+// null = follow the system; "light"/"dark" = explicit user choice.
+const LAB_THEME_STORAGE_KEY = "lab-theme";
+const LAB_THEME_CHANGE_EVENT = "lab-theme-change";
+const COLOR_SCHEME_QUERY = "(prefers-color-scheme: dark)";
+type LabTheme = "light" | "dark" | null;
+
+function normalizeTheme(value: string | null): LabTheme {
+  return value === "light" || value === "dark" ? value : null;
+}
+
+const storedThemeSnapshot = () => normalizeTheme(localStorage.getItem(LAB_THEME_STORAGE_KEY));
+
+const subscribeStoredTheme = (onChange: () => void) => {
+  const onStorage = (event: StorageEvent) => {
+    if (event.key === LAB_THEME_STORAGE_KEY) onChange();
+  };
+  window.addEventListener("storage", onStorage);
+  window.addEventListener(LAB_THEME_CHANGE_EVENT, onChange);
+  return () => {
+    window.removeEventListener("storage", onStorage);
+    window.removeEventListener(LAB_THEME_CHANGE_EVENT, onChange);
+  };
+};
+
+const systemDarkSnapshot = () => window.matchMedia(COLOR_SCHEME_QUERY).matches;
+const subscribeSystemDark = (onChange: () => void) => {
+  const media = window.matchMedia(COLOR_SCHEME_QUERY);
+  media.addEventListener("change", onChange);
+  return () => media.removeEventListener("change", onChange);
+};
+
+// Per-theme scene tokens, resolved once from a detached probe carrying the
+// same CSS-module overrides the stage uses, then cached (stable references
+// for useSyncExternalStore snapshots).
+const tokenCache: Partial<Record<"light" | "dark", SceneTokens>> = {};
+
+function readThemeTokens(theme: "light" | "dark"): SceneTokens {
+  const cached = tokenCache[theme];
+  if (cached) return cached;
+  const probe = document.createElement("div");
+  probe.className = styles.tokenProbe;
+  probe.dataset.theme = theme;
+  document.body.appendChild(probe);
+  const css = getComputedStyle(probe);
   const token = (name: string) => css.getPropertyValue(name).trim();
-  return {
+  const tokens: SceneTokens = {
     surfaceRaised: token("--surface-raised"),
     ink: token("--ink"),
-    muted: token("--muted"),
-    line: token("--line"),
     accent: token("--brand-accent"),
   };
+  probe.remove();
+  tokenCache[theme] = tokens;
+  return tokens;
 }
+
+const lightTokensSnapshot = () => readThemeTokens("light");
+const darkTokensSnapshot = () => readThemeTokens("dark");
 
 // Client-only environment reads, exposed through useSyncExternalStore (same
 // pattern as the Lab canvas) so hydration renders the server snapshot first.
 const subscribeNever = () => () => {};
-
-let cachedTokens: SceneTokens | null = null;
-const tokensSnapshot = () => {
-  if (!cachedTokens) cachedTokens = readTokens();
-  return cachedTokens;
-};
 
 const dprSnapshot = () => {
   const coarse = window.matchMedia("(pointer: coarse)").matches;
@@ -63,7 +105,12 @@ const reducedMotionSnapshot = () => window.matchMedia(REDUCED_MOTION_QUERY).matc
 export function GalaxyStage({ data, layout }: StageProps) {
   const { nodes, edges, clusters } = data;
 
-  const tokens = useSyncExternalStore(subscribeNever, tokensSnapshot, () => null);
+  const storedTheme = useSyncExternalStore(subscribeStoredTheme, storedThemeSnapshot, () => null);
+  const systemDark = useSyncExternalStore(subscribeSystemDark, systemDarkSnapshot, () => false);
+  const effectiveTheme = storedTheme ?? (systemDark ? "dark" : "light");
+  const lightTokens = useSyncExternalStore(subscribeNever, lightTokensSnapshot, () => null);
+  const darkTokens = useSyncExternalStore(subscribeNever, darkTokensSnapshot, () => null);
+  const tokens = effectiveTheme === "dark" ? darkTokens : lightTokens;
   const reducedMotion = useSyncExternalStore(subscribeReducedMotion, reducedMotionSnapshot, () => false);
   const dpr = useSyncExternalStore(subscribeNever, dprSnapshot, () => 1);
   const showFps = useSyncExternalStore(subscribeNever, showFpsSnapshot, () => false);
@@ -184,8 +231,22 @@ export function GalaxyStage({ data, layout }: StageProps) {
     setSelected(index);
   }
 
+  function toggleTheme() {
+    const next = effectiveTheme === "dark" ? "light" : "dark";
+    try {
+      localStorage.setItem(LAB_THEME_STORAGE_KEY, next);
+      window.dispatchEvent(new Event(LAB_THEME_CHANGE_EVENT));
+    } catch {
+      // storage unavailable
+    }
+  }
+
   return (
-    <div className={styles.stage} data-hovering={hovered !== null ? "true" : "false"}>
+    <div
+      className={styles.stage}
+      data-theme={effectiveTheme}
+      data-hovering={hovered !== null ? "true" : "false"}
+    >
       <div className={styles.canvasHost}>
         {tokens && (
           <GalaxyScene
@@ -279,6 +340,31 @@ export function GalaxyStage({ data, layout }: StageProps) {
             </li>
           ))}
         </ul>
+
+        <button
+          type="button"
+          className={styles.themeToggle}
+          onClick={toggleTheme}
+          aria-label={`Switch to ${effectiveTheme === "dark" ? "light" : "dark"} mode`}
+        >
+          {effectiveTheme === "dark" ? (
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z" fill="currentColor" />
+            </svg>
+          ) : (
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.6"
+              strokeLinecap="round"
+              aria-hidden="true"
+            >
+              <circle cx="12" cy="12" r="4" fill="currentColor" stroke="none" />
+              <path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M19.1 4.9l-1.8 1.8M6.7 17.3l-1.8 1.8" />
+            </svg>
+          )}
+        </button>
       </header>
 
       {showFps && (
