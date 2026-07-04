@@ -1,8 +1,10 @@
 /* Synapsis — constelación sobre papel.
-   Todos los colores salen de tokens RAMS globales (globals.css); el único
-   hex declarado acá es la paleta dark reutilizada tal cual de la home del
-   Lab (lab.module.css). El único color saturado de la pieza es
-   --brand-accent y queda reservado a selección/hover. */
+   Colores desde tokens RAMS globales (globals.css). El modo oscuro reescribe
+   los nombres de token reales SOLO dentro del scope de la pieza, con la misma
+   paleta que la home del Lab (lab.module.css) — no son hex nuevos de diseño.
+   El vidrio del sidebar y del panel es el motor RAMS `GlassHeaderLayer`
+   (backdrop-filter en vivo + shader de shimmer), no un material propio.
+   --brand-accent queda reservado a selección/hover. */
 
 .page {
   position: relative;
@@ -36,8 +38,10 @@
 
 /* ---- Tema oscuro ----
    Mismas reglas de color que la home del Lab (lab.module.css,
-   .page[data-theme="dark"]); no son hex nuevos. El probe es un nodo efímero
-   desde el que el cliente resuelve los tokens de la escena por tema. */
+   .page[data-theme="dark"]). Se reescriben los tokens reales dentro del scope
+   de la escena y del probe, así todo el CSS que ya usa var(--ink)/var(--paper)
+   voltea sin duplicar reglas. El vidrio se retiñe vía --glass-bg/--glass-line
+   (tokens del motor RAMS), sin tocar el blur/saturación del engine. */
 
 .stage[data-theme="dark"],
 .tokenProbe[data-theme="dark"] {
@@ -46,11 +50,13 @@
   --ink: #ece7e0;
   --muted: #8c867d;
   --line: color-mix(in srgb, var(--ink) 16%, transparent);
-  --glass-bg: color-mix(in srgb, var(--paper) 72%, transparent);
-  --glass-line: color-mix(in srgb, var(--ink) 14%, transparent);
+  --glass-bg: color-mix(in srgb, var(--paper) 66%, transparent);
+  --glass-line: color-mix(in srgb, var(--ink) 16%, transparent);
   color-scheme: dark;
 }
 
+/* Nodo efímero desde el que el cliente resuelve los tokens de la escena por
+   tema (getComputedStyle). No participa del layout ni es visible. */
 .tokenProbe {
   position: fixed;
   width: 0;
@@ -76,6 +82,12 @@
   font-size: 0.9375rem;
 }
 
+/* Motor de vidrio RAMS montado como capa de fondo del sidebar y del panel.
+   Se recorta a las esquinas del contenedor (overflow:hidden + border-radius). */
+.glass {
+  border-radius: inherit;
+}
+
 /* ---- Labels (pool fijo de 25 spans, mutados desde useFrame) ---- */
 
 .labels {
@@ -93,7 +105,7 @@
   overflow: hidden;
   color: var(--ink);
   font-family: var(--font-body), Arial, sans-serif;
-  font-size: 0.8125rem;
+  font-size: 0.875rem;
   font-weight: 500;
   letter-spacing: 0.01em;
   white-space: nowrap;
@@ -108,8 +120,9 @@
 }
 
 /* ---- HUD / sidebar ----
-   Apple HIG sidebar: full-height column anchored to an edge, floating with
-   an outer margin, liquid glass material so the scene reads through it. */
+   Apple HIG sidebar: columna al alto completo anclada al borde, flotando con
+   margen exterior y esquinas redondeadas. El vidrio (GlassHeaderLayer) es una
+   capa absoluta de fondo; el contenido va encima y hace scroll propio. */
 
 .hud {
   position: absolute;
@@ -117,29 +130,33 @@
   bottom: clamp(0.75rem, 2vh, 1.25rem);
   left: clamp(0.75rem, 2vh, 1.25rem);
   display: flex;
-  width: min(19rem, calc(100vw - 2rem));
+  flex-direction: column;
+  width: min(19.5rem, calc(100vw - 2rem));
+  border-radius: 1.5rem;
+  overflow: hidden;
+  isolation: isolate;
+  pointer-events: auto;
+}
+
+.hudContent {
+  position: relative;
+  z-index: 1;
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
   flex-direction: column;
   align-items: stretch;
-  gap: 0.65rem;
-  padding: 1.25rem 1.4rem 1.5rem;
+  gap: 0.8rem;
+  padding: 1.4rem 1.5rem 1.5rem;
   overflow-y: auto;
-  background: var(--glass-bg);
-  border: 1px solid var(--glass-line);
-  border-radius: 1.25rem;
-  backdrop-filter: blur(calc(var(--glass-fallback-blur) * 1px))
-    saturate(calc(var(--glass-fallback-saturation) * 1%)) contrast(var(--glass-fallback-contrast))
-    brightness(var(--glass-fallback-brightness));
-  -webkit-backdrop-filter: blur(calc(var(--glass-fallback-blur) * 1px))
-    saturate(calc(var(--glass-fallback-saturation) * 1%)) contrast(var(--glass-fallback-contrast))
-    brightness(var(--glass-fallback-brightness));
-  pointer-events: auto;
+  overscroll-behavior: contain;
 }
 
 .backLink {
   width: fit-content;
   color: var(--muted);
   font-family: var(--font-body), Arial, sans-serif;
-  font-size: 0.875rem;
+  font-size: 0.9375rem;
   font-weight: 500;
   text-decoration: none;
   border-bottom: 1px solid var(--line);
@@ -155,9 +172,10 @@
   margin: 0;
   color: var(--ink);
   font-family: var(--font-display), Arial, sans-serif;
-  font-size: clamp(1.35rem, 2.4vw, 1.8rem);
+  font-size: clamp(1.55rem, 2.6vw, 1.95rem);
   font-weight: 700;
-  line-height: 1.05;
+  line-height: 1.04;
+  letter-spacing: -0.01em;
 }
 
 .hudCount {
@@ -165,6 +183,7 @@
   color: var(--muted);
   font-family: var(--font-body), Arial, sans-serif;
   font-size: 0.875rem;
+  line-height: 1.4;
   font-variant-numeric: tabular-nums;
 }
 
@@ -176,7 +195,7 @@
 
 .searchInput {
   width: 100%;
-  padding: 0.45rem 0;
+  padding: 0.5rem 0;
   background: transparent;
   border: 0;
   border-bottom: 1px solid var(--line);
@@ -197,22 +216,23 @@
 .searchResults {
   position: relative;
   z-index: 3;
-  margin: 0.35rem 0 0;
+  margin: 0.4rem 0 0;
   padding: 0.35rem 0;
   list-style: none;
   background: var(--paper);
   border: 1px solid var(--line);
+  border-radius: 0.6rem;
 }
 
 .searchResults li button {
   display: block;
   width: 100%;
-  padding: 0.35rem 0.75rem;
+  padding: 0.4rem 0.8rem;
   background: transparent;
   border: 0;
   color: var(--ink);
   font-family: var(--font-body), Arial, sans-serif;
-  font-size: 0.875rem;
+  font-size: 0.9375rem;
   text-align: left;
   cursor: pointer;
 }
@@ -223,10 +243,10 @@
 }
 
 .searchEmpty {
-  padding: 0.35rem 0.75rem;
+  padding: 0.4rem 0.8rem;
   color: var(--muted);
   font-family: var(--font-body), Arial, sans-serif;
-  font-size: 0.875rem;
+  font-size: 0.9375rem;
 }
 
 /* ---- Filtros por cluster ---- */
@@ -234,7 +254,7 @@
 .clusterList {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.35rem;
+  gap: 0.4rem;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -243,14 +263,14 @@
 .clusterChip {
   display: inline-flex;
   align-items: baseline;
-  gap: 0.35rem;
-  padding: 0.32rem 0.7rem;
+  gap: 0.4rem;
+  padding: 0.36rem 0.75rem;
   background: transparent;
   border: 1px solid var(--line);
   border-radius: 999px;
   color: var(--muted);
   font-family: var(--font-body), Arial, sans-serif;
-  font-size: 0.8125rem;
+  font-size: 0.875rem;
   font-weight: 500;
   cursor: pointer;
 }
@@ -272,37 +292,50 @@
 
 /* ---- Toggle de tema (pie del sidebar, mismas reglas que la home del Lab) ---- */
 
+.hudFooter {
+  margin-top: auto;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--line);
+}
+
 .themeToggle {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  width: 44px;
-  height: 44px;
-  flex-shrink: 0;
-  align-self: flex-start;
-  margin-top: auto;
-  padding: 0;
-  border: 0;
+  gap: 0.55rem;
+  width: 100%;
+  padding: 0.55rem 0.7rem;
+  border: 1px solid var(--line);
+  border-radius: 0.75rem;
   background: transparent;
   color: var(--muted);
+  font-family: var(--font-body), Arial, sans-serif;
+  font-size: 0.875rem;
+  font-weight: 500;
   cursor: pointer;
-  transition: color 0.2s ease;
+  transition:
+    color 0.2s ease,
+    border-color 0.2s ease;
 }
 
 .themeToggle:hover {
   color: var(--ink);
+  border-color: var(--ink);
 }
 
 .themeToggle:focus-visible {
   outline: 2px solid var(--focus-ring);
-  outline-offset: 3px;
-  border-radius: 4px;
+  outline-offset: 2px;
 }
 
 .themeToggle svg {
   display: block;
   width: 18px;
   height: 18px;
+  flex-shrink: 0;
+}
+
+.themeToggleLabel {
+  line-height: 1;
 }
 
 /* ---- FPS meter (dev / ?fps=1) ---- */
@@ -319,25 +352,30 @@
   pointer-events: none;
 }
 
-/* ---- Panel de detalle: lateral en desktop, bottom sheet en mobile ---- */
+/* ---- Panel de detalle: mismo vidrio que el sidebar.
+   Lateral en desktop, bottom sheet en mobile. ---- */
 
 .panel {
   position: absolute;
   top: clamp(0.75rem, 2vh, 1.25rem);
   right: clamp(0.75rem, 2vh, 1.25rem);
   bottom: clamp(0.75rem, 2vh, 1.25rem);
-  width: min(22rem, calc(100vw - 2rem));
+  display: flex;
+  flex-direction: column;
+  width: min(22.5rem, calc(100vw - 2rem));
+  border-radius: 1.5rem;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.panelContent {
+  position: relative;
+  z-index: 1;
+  flex: 1 1 auto;
+  min-height: 0;
   overflow-y: auto;
-  padding: 1.25rem 1.4rem 1.5rem;
-  background: var(--glass-bg);
-  border: 1px solid var(--glass-line);
-  border-radius: 1.25rem;
-  backdrop-filter: blur(calc(var(--glass-fallback-blur) * 1px))
-    saturate(calc(var(--glass-fallback-saturation) * 1%)) contrast(var(--glass-fallback-contrast))
-    brightness(var(--glass-fallback-brightness));
-  -webkit-backdrop-filter: blur(calc(var(--glass-fallback-blur) * 1px))
-    saturate(calc(var(--glass-fallback-saturation) * 1%)) contrast(var(--glass-fallback-contrast))
-    brightness(var(--glass-fallback-brightness));
+  overscroll-behavior: contain;
+  padding: 1.4rem 1.5rem 1.5rem;
 }
 
 .panelClose {
@@ -360,43 +398,44 @@
 }
 
 .panelMeta {
-  margin: 0 0 0.4rem;
+  margin: 0 0 0.45rem;
   color: var(--muted);
   font-family: var(--font-body), Arial, sans-serif;
-  font-size: 0.8125rem;
+  font-size: 0.875rem;
   letter-spacing: 0.02em;
   text-transform: lowercase;
 }
 
 .panelTitle {
-  margin: 0 0 0.6rem;
+  margin: 0 0 0.65rem;
   color: var(--ink);
   font-family: var(--font-display), Arial, sans-serif;
-  font-size: 1.5rem;
+  font-size: 1.6rem;
   font-weight: 700;
-  line-height: 1.15;
+  line-height: 1.12;
+  letter-spacing: -0.01em;
   text-wrap: balance;
 }
 
 .panelDescription {
-  margin: 0 0 0.8rem;
+  margin: 0 0 0.9rem;
   color: var(--ink);
   font-family: var(--font-body), Arial, sans-serif;
   font-size: 0.9375rem;
-  line-height: 1.5;
+  line-height: 1.55;
 }
 
 .panelTags {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.3rem;
-  margin: 0 0 0.9rem;
+  gap: 0.35rem;
+  margin: 0 0 1rem;
   padding: 0;
   list-style: none;
 }
 
 .panelTags li {
-  padding: 0.15rem 0.5rem;
+  padding: 0.2rem 0.6rem;
   border: 1px solid var(--line);
   border-radius: 999px;
   color: var(--muted);
@@ -406,7 +445,7 @@
 
 .panelLink {
   display: inline-block;
-  margin-bottom: 1rem;
+  margin-bottom: 1.1rem;
   color: var(--brand-accent);
   font-family: var(--font-body), Arial, sans-serif;
   font-size: 0.9375rem;
@@ -416,19 +455,19 @@
 }
 
 .panelConnections h3 {
-  margin: 0 0 0.5rem;
+  margin: 0 0 0.6rem;
   color: var(--ink);
   font-family: var(--font-body), Arial, sans-serif;
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
   font-weight: 700;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
 }
 
 .panelConnections ul {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 0.85rem;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -436,7 +475,7 @@
 
 .panelConnections li {
   border-top: 1px solid var(--line);
-  padding-top: 0.6rem;
+  padding-top: 0.7rem;
 }
 
 .panelConnections li button {
@@ -457,11 +496,11 @@
 }
 
 .panelConnections li p {
-  margin: 0.25rem 0 0.2rem;
+  margin: 0.3rem 0 0.25rem;
   color: var(--muted);
   font-family: var(--font-body), Arial, sans-serif;
   font-size: 0.875rem;
-  line-height: 1.45;
+  line-height: 1.5;
 }
 
 .panelProvenance {
@@ -474,26 +513,22 @@
 @media (max-width: 720px) {
   .panel {
     top: auto;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    max-height: 55svh;
-    border-left: 0;
-    border-right: 0;
-    border-bottom: 0;
-    border-radius: 1.25rem 1.25rem 0 0;
+    right: clamp(0.6rem, 2vw, 1rem);
+    bottom: clamp(0.6rem, 2vh, 1rem);
+    left: clamp(0.6rem, 2vw, 1rem);
+    width: auto;
+    max-height: 58svh;
+  }
+
+  .panelContent {
     padding-bottom: calc(1.5rem + env(safe-area-inset-bottom));
   }
 
   .hud {
-    top: clamp(0.75rem, 2vh, 1.25rem);
     bottom: auto;
-    left: clamp(0.75rem, 2vh, 1.25rem);
     right: clamp(0.75rem, 2vh, 1.25rem);
     width: auto;
-    height: auto;
-    max-height: 45svh;
+    max-height: 46svh;
   }
 }
 

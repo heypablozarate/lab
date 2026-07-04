@@ -4,6 +4,8 @@ import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 
+import { GlassHeaderLayer } from "@/components/site/glass-header-layer";
+
 import type { GalaxyData, GalaxyLayout } from "../layout-engine";
 import type { LabelPool, SceneTokens } from "./galaxy-scene";
 import styles from "../synapsis.module.css";
@@ -290,81 +292,87 @@ export function GalaxyStage({ data, layout }: StageProps) {
       </div>
 
       <header className={styles.hud}>
-        <Link className={styles.backLink} href="/">
-          Back to the Lab
-        </Link>
-        <p className={styles.hudTitle}>Synapsis</p>
-        <p className={styles.hudCount}>
-          {nodes.length} nodos · {edges.length} conexiones · {clusters.length} clusters
-        </p>
+        <GlassHeaderLayer active hairline className={styles.glass} />
+        <div className={styles.hudContent}>
+          <Link className={styles.backLink} href="/">
+            Back to the Lab
+          </Link>
+          <p className={styles.hudTitle}>Synapsis</p>
+          <p className={styles.hudCount}>
+            {nodes.length} nodos · {edges.length} conexiones · {clusters.length} clusters
+          </p>
 
-        <div className={styles.search}>
-          <label className={styles.srOnly} htmlFor="synapsis-search">
-            Buscar nodos
-          </label>
-          <input
-            id="synapsis-search"
-            className={styles.searchInput}
-            type="search"
-            placeholder="Buscar"
-            autoComplete="off"
-            value={query}
-            onChange={(event) => setQuery(event.target.value)}
-          />
-          {normalizedQuery && (
-            <ul className={styles.searchResults}>
-              {searchMatches.slice(0, MAX_SEARCH_RESULTS).map((index) => (
-                <li key={nodes[index].title + index}>
-                  <button type="button" onClick={() => focusSearchResult(index)}>
-                    {nodes[index].title}
-                  </button>
-                </li>
-              ))}
-              {searchMatches.length === 0 && <li className={styles.searchEmpty}>Sin resultados</li>}
-            </ul>
-          )}
-        </div>
+          <div className={styles.search}>
+            <label className={styles.srOnly} htmlFor="synapsis-search">
+              Buscar nodos
+            </label>
+            <input
+              id="synapsis-search"
+              className={styles.searchInput}
+              type="search"
+              placeholder="Buscar"
+              autoComplete="off"
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+            />
+            {normalizedQuery && (
+              <ul className={styles.searchResults}>
+                {searchMatches.slice(0, MAX_SEARCH_RESULTS).map((index) => (
+                  <li key={nodes[index].title + index}>
+                    <button type="button" onClick={() => focusSearchResult(index)}>
+                      {nodes[index].title}
+                    </button>
+                  </li>
+                ))}
+                {searchMatches.length === 0 && <li className={styles.searchEmpty}>Sin resultados</li>}
+              </ul>
+            )}
+          </div>
 
-        <ul className={styles.clusterList}>
-          {clusters.map((cluster) => (
-            <li key={cluster.id}>
-              <button
-                type="button"
-                className={styles.clusterChip}
-                data-active={activeClusters.size === 0 || activeClusters.has(cluster.id) ? "true" : "false"}
-                onClick={() => toggleCluster(cluster.id)}
-              >
-                {cluster.label}
-                <span className={styles.clusterCount}>{clusterCounts.get(cluster.id) ?? 0}</span>
-              </button>
-            </li>
-          ))}
-        </ul>
+          <ul className={styles.clusterList}>
+            {clusters.map((cluster) => (
+              <li key={cluster.id}>
+                <button
+                  type="button"
+                  className={styles.clusterChip}
+                  data-active={activeClusters.size === 0 || activeClusters.has(cluster.id) ? "true" : "false"}
+                  onClick={() => toggleCluster(cluster.id)}
+                >
+                  {cluster.label}
+                  <span className={styles.clusterCount}>{clusterCounts.get(cluster.id) ?? 0}</span>
+                </button>
+              </li>
+            ))}
+          </ul>
 
-        <button
-          type="button"
-          className={styles.themeToggle}
-          onClick={toggleTheme}
-          aria-label={`Switch to ${effectiveTheme === "dark" ? "light" : "dark"} mode`}
-        >
-          {effectiveTheme === "dark" ? (
-            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z" fill="currentColor" />
-            </svg>
-          ) : (
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.6"
-              strokeLinecap="round"
-              aria-hidden="true"
+          <div className={styles.hudFooter}>
+            <button
+              type="button"
+              className={styles.themeToggle}
+              onClick={toggleTheme}
+              aria-label={`Switch to ${effectiveTheme === "dark" ? "light" : "dark"} mode`}
             >
-              <circle cx="12" cy="12" r="4" fill="currentColor" stroke="none" />
-              <path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M19.1 4.9l-1.8 1.8M6.7 17.3l-1.8 1.8" />
-            </svg>
-          )}
-        </button>
+              {effectiveTheme === "dark" ? (
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z" fill="currentColor" />
+                </svg>
+              ) : (
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.6"
+                  strokeLinecap="round"
+                  aria-hidden="true"
+                >
+                  <circle cx="12" cy="12" r="4" fill="currentColor" stroke="none" />
+                  <path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M19.1 4.9l-1.8 1.8M6.7 17.3l-1.8 1.8" />
+                </svg>
+              )}
+              <span className={styles.themeToggleLabel}>{effectiveTheme === "dark" ? "Light" : "Dark"} mode</span>
+            </button>
+          </div>
+        </div>
       </header>
 
       {showFps && (
@@ -375,42 +383,45 @@ export function GalaxyStage({ data, layout }: StageProps) {
 
       {selectedNode && (
         <aside className={styles.panel} aria-label={`Detalle de ${selectedNode.title}`}>
-          <button type="button" className={styles.panelClose} onClick={() => setSelected(null)}>
-            Cerrar
-          </button>
-          <p className={styles.panelMeta}>
-            {clusterLabel(selectedNode.cluster)} · {selectedNode.type} · relevancia {selectedNode.relevance}
-          </p>
-          <h2 className={styles.panelTitle}>{selectedNode.title}</h2>
-          {selectedNode.description && <p className={styles.panelDescription}>{selectedNode.description}</p>}
-          {selectedNode.tags.length > 0 && (
-            <ul className={styles.panelTags}>
-              {selectedNode.tags.map((tag) => (
-                <li key={tag}>{tag}</li>
-              ))}
-            </ul>
-          )}
-          <a className={styles.panelLink} href={selectedNode.url} target="_blank" rel="noopener noreferrer">
-            Abrir link ↗
-          </a>
-          {selectedConnections.length > 0 && (
-            <section className={styles.panelConnections}>
-              <h3>Conexiones</h3>
-              <ul>
-                {selectedConnections.map(({ edge, otherTitle, otherIndex }) => (
-                  <li key={`${edge.source}-${edge.target}`}>
-                    <button type="button" onClick={() => setSelected(otherIndex)}>
-                      {otherTitle}
-                    </button>
-                    <p>{edge.rationale}</p>
-                    <span className={styles.panelProvenance}>
-                      {edge.provenance === "ai-approved" ? "propuesta por AI, aprobada" : "curada a mano"}
-                    </span>
-                  </li>
+          <GlassHeaderLayer active hairline className={styles.glass} />
+          <div className={styles.panelContent}>
+            <button type="button" className={styles.panelClose} onClick={() => setSelected(null)}>
+              Cerrar
+            </button>
+            <p className={styles.panelMeta}>
+              {clusterLabel(selectedNode.cluster)} · {selectedNode.type} · relevancia {selectedNode.relevance}
+            </p>
+            <h2 className={styles.panelTitle}>{selectedNode.title}</h2>
+            {selectedNode.description && <p className={styles.panelDescription}>{selectedNode.description}</p>}
+            {selectedNode.tags.length > 0 && (
+              <ul className={styles.panelTags}>
+                {selectedNode.tags.map((tag) => (
+                  <li key={tag}>{tag}</li>
                 ))}
               </ul>
-            </section>
-          )}
+            )}
+            <a className={styles.panelLink} href={selectedNode.url} target="_blank" rel="noopener noreferrer">
+              Abrir link ↗
+            </a>
+            {selectedConnections.length > 0 && (
+              <section className={styles.panelConnections}>
+                <h3>Conexiones</h3>
+                <ul>
+                  {selectedConnections.map(({ edge, otherTitle, otherIndex }) => (
+                    <li key={`${edge.source}-${edge.target}`}>
+                      <button type="button" onClick={() => setSelected(otherIndex)}>
+                        {otherTitle}
+                      </button>
+                      <p>{edge.rationale}</p>
+                      <span className={styles.panelProvenance}>
+                        {edge.provenance === "ai-approved" ? "propuesta por AI, aprobada" : "curada a mano"}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            )}
+          </div>
         </aside>
       )}
     </div>
