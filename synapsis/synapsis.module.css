@@ -2,8 +2,9 @@
    Colores desde tokens RAMS globales (globals.css). El modo oscuro reescribe
    los nombres de token reales SOLO dentro del scope de la pieza, con la misma
    paleta que la home del Lab (lab.module.css) — no son hex nuevos de diseño.
-   El vidrio del sidebar y del panel es el motor RAMS `GlassHeaderLayer`
-   (backdrop-filter en vivo + shader de shimmer), no un material propio.
+   El vidrio del sidebar y del panel es el motor propio de Synapsis
+   (`LiquidGlass`: mapa de desplazamiento SDF + `feDisplacementMap` sobre el
+   backdrop, aberración cromática y tint de papel), no el motor global de RAMS.
    --brand-accent queda reservado a selección/hover. */
 
 .page {
@@ -40,8 +41,8 @@
    Mismas reglas de color que la home del Lab (lab.module.css,
    .page[data-theme="dark"]). Se reescriben los tokens reales dentro del scope
    de la escena y del probe, así todo el CSS que ya usa var(--ink)/var(--paper)
-   voltea sin duplicar reglas. El vidrio se retiñe vía --glass-bg/--glass-line
-   (tokens del motor RAMS), sin tocar el blur/saturación del engine. */
+   voltea sin duplicar reglas. El LiquidGlass deriva su tint y su rim de
+   --paper/--ink, así que también voltea con el tema sin reglas extra. */
 
 .stage[data-theme="dark"],
 .tokenProbe[data-theme="dark"] {
@@ -50,8 +51,6 @@
   --ink: #ece7e0;
   --muted: #8c867d;
   --line: color-mix(in srgb, var(--ink) 16%, transparent);
-  --glass-bg: color-mix(in srgb, var(--paper) 66%, transparent);
-  --glass-line: color-mix(in srgb, var(--ink) 16%, transparent);
   color-scheme: dark;
 }
 
@@ -82,11 +81,10 @@
   font-size: 0.9375rem;
 }
 
-/* Motor de vidrio RAMS montado como capa de fondo del sidebar y del panel.
-   Se recorta a las esquinas del contenedor (overflow:hidden + border-radius). */
-.glass {
-  border-radius: inherit;
-}
+/* El vidrio (refracción, tint, blur, rim) lo dibuja el GlassPass en WebGL bajo
+   la caja de cada panel. El panel DOM queda transparente y sólo recorta su
+   contenido a las esquinas (overflow:hidden + border-radius = --lg-radius, el
+   mismo radio que usa el shader, para que el clip y la lente coincidan). */
 
 /* ---- Labels (pool fijo de 25 spans, mutados desde useFrame) ---- */
 
@@ -121,7 +119,7 @@
 
 /* ---- HUD / sidebar ----
    Apple HIG sidebar: columna al alto completo anclada al borde, flotando con
-   margen exterior y esquinas redondeadas. El vidrio (GlassHeaderLayer) es una
+   margen exterior y esquinas redondeadas. El vidrio (LiquidGlass) es una
    capa absoluta de fondo; el contenido va encima y hace scroll propio. */
 
 .hud {
@@ -132,7 +130,7 @@
   display: flex;
   flex-direction: column;
   width: min(19.5rem, calc(100vw - 2rem));
-  border-radius: 1.5rem;
+  border-radius: var(--lg-radius, 1.5rem);
   overflow: hidden;
   isolation: isolate;
   pointer-events: auto;
@@ -363,7 +361,7 @@
   display: flex;
   flex-direction: column;
   width: min(22.5rem, calc(100vw - 2rem));
-  border-radius: 1.5rem;
+  border-radius: var(--lg-radius, 1.5rem);
   overflow: hidden;
   isolation: isolate;
 }

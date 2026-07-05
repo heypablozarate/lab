@@ -4,7 +4,7 @@ import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 
-import { GlassHeaderLayer } from "@/components/site/glass-header-layer";
+import { DARK_LIQUID_GLASS, LIGHT_LIQUID_GLASS, type LiquidGlassConfig } from "./liquid-glass";
 
 import type { GalaxyData, GalaxyLayout } from "../layout-engine";
 import type { LabelPool, SceneTokens } from "./galaxy-scene";
@@ -14,6 +14,10 @@ const GalaxyScene = dynamic(() => import("./galaxy-scene"), {
   ssr: false,
   loading: () => <p className={styles.loading}>Cargando Synapsis…</p>,
 });
+
+// Dev-only glass tuning panel. Loaded only when `?dialkit=1` is present outside
+// production, so the dialkit bundle never reaches the public lab surface.
+const LiquidGlassDials = dynamic(() => import("./liquid-glass-dials"), { ssr: false });
 
 const LABEL_POOL_SIZE = 25;
 const ALWAYS_LABELED = 20;
@@ -75,6 +79,7 @@ function readThemeTokens(theme: "light" | "dark"): SceneTokens {
     surfaceRaised: token("--surface-raised"),
     ink: token("--ink"),
     accent: token("--brand-accent"),
+    paper: token("--paper"),
   };
   probe.remove();
   tokenCache[theme] = tokens;
@@ -96,6 +101,10 @@ const dprSnapshot = () => {
 const showFpsSnapshot = () =>
   process.env.NODE_ENV === "development" || window.location.search.includes("fps=1");
 
+// Explicit opt-in (never auto-on in dev) and hard-off in production.
+const showDialsSnapshot = () =>
+  process.env.NODE_ENV !== "production" && window.location.search.includes("dialkit=1");
+
 const REDUCED_MOTION_QUERY = "(prefers-reduced-motion: reduce)";
 const subscribeReducedMotion = (onChange: () => void) => {
   const media = window.matchMedia(REDUCED_MOTION_QUERY);
@@ -116,6 +125,14 @@ export function GalaxyStage({ data, layout }: StageProps) {
   const reducedMotion = useSyncExternalStore(subscribeReducedMotion, reducedMotionSnapshot, () => false);
   const dpr = useSyncExternalStore(subscribeNever, dprSnapshot, () => 1);
   const showFps = useSyncExternalStore(subscribeNever, showFpsSnapshot, () => false);
+  const showDials = useSyncExternalStore(subscribeNever, showDialsSnapshot, () => false);
+  const [glassConfig, setGlassConfig] = useState<LiquidGlassConfig | null>(null);
+  // Per-theme tuned glass; the dev dialkit overrides both while tuning.
+  const themeGlass = effectiveTheme === "dark" ? DARK_LIQUID_GLASS : LIGHT_LIQUID_GLASS;
+  const glass = glassConfig ?? themeGlass;
+  // Live DOM refs of the glass panels (sidebar, detail panel), read every frame
+  // by the WebGL GlassPass to place the refraction under them.
+  const panelEls = useRef<(HTMLElement | null)[]>([null, null]);
   const [hovered, setHovered] = useState<number | null>(null);
   const [selected, setSelected] = useState<number | null>(null);
   const [activeClusters, setActiveClusters] = useState<Set<string>>(new Set());
@@ -266,6 +283,8 @@ export function GalaxyStage({ data, layout }: StageProps) {
             fpsRef={fpsRef}
             reducedMotion={reducedMotion}
             dpr={dpr}
+            glass={glass}
+            panelEls={panelEls}
             onHover={setHovered}
             onSelect={setSelected}
           />
@@ -291,8 +310,13 @@ export function GalaxyStage({ data, layout }: StageProps) {
         ))}
       </div>
 
-      <header className={styles.hud}>
-        <GlassHeaderLayer active hairline className={styles.glass} />
+      <header
+        className={styles.hud}
+        ref={(el) => {
+          panelEls.current[0] = el;
+        }}
+        style={{ "--lg-radius": `${glass.radius}px` } as React.CSSProperties}
+      >
         <div className={styles.hudContent}>
           <Link className={styles.backLink} href="/">
             Back to the Lab
@@ -381,9 +405,17 @@ export function GalaxyStage({ data, layout }: StageProps) {
         </p>
       )}
 
+      {showDials && <LiquidGlassDials seed={themeGlass} onChange={setGlassConfig} />}
+
       {selectedNode && (
-        <aside className={styles.panel} aria-label={`Detalle de ${selectedNode.title}`}>
-          <GlassHeaderLayer active hairline className={styles.glass} />
+        <aside
+          className={styles.panel}
+          aria-label={`Detalle de ${selectedNode.title}`}
+          ref={(el) => {
+            panelEls.current[1] = el;
+          }}
+          style={{ "--lg-radius": `${glass.radius}px` } as React.CSSProperties}
+        >
           <div className={styles.panelContent}>
             <button type="button" className={styles.panelClose} onClick={() => setSelected(null)}>
               Cerrar

@@ -14,6 +14,9 @@ import { useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
 import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
 
+import { GlassPass } from "./glass-pass";
+import type { LiquidGlassConfig } from "./liquid-glass";
+
 // Resolved per-theme colors. Only literal-valued tokens are read here —
 // THREE.Color cannot parse color-mix() — so the edge/line color is derived in
 // buildPalette with the same rule the Lab home uses (ink at ~16% over the
@@ -22,6 +25,8 @@ export type SceneTokens = {
   surfaceRaised: string;
   ink: string;
   accent: string;
+  /** Panel tint colour for the liquid glass (usually --paper). */
+  paper: string;
 };
 
 export type LabelPool = {
@@ -47,6 +52,10 @@ export type GalaxySceneProps = {
   fpsRef: React.RefObject<HTMLSpanElement | null>;
   reducedMotion: boolean;
   dpr: number;
+  /** Tunable liquid-glass parameters, rendered by the WebGL GlassPass. */
+  glass: LiquidGlassConfig;
+  /** Live DOM refs of the glass panels (sidebar, detail panel). */
+  panelEls: React.RefObject<(HTMLElement | null)[]>;
   onHover: (index: number | null) => void;
   onSelect: (index: number | null) => void;
 };
@@ -449,7 +458,7 @@ function GalaxyContents(props: GalaxySceneProps) {
 }
 
 export default function GalaxyScene(props: GalaxySceneProps) {
-  const { tokens, dpr, onSelect } = props;
+  const { tokens, dpr, glass, panelEls, onSelect } = props;
   return (
     <Canvas
       dpr={dpr}
@@ -460,6 +469,7 @@ export default function GalaxyScene(props: GalaxySceneProps) {
       <color attach="background" args={[tokens.surfaceRaised]} />
       <fog attach="fog" args={[tokens.surfaceRaised, FOG_NEAR, FOG_FAR]} />
       <GalaxyContents {...props} />
+      <GlassPass glass={glass} panelEls={panelEls} paper={tokens.paper} />
     </Canvas>
   );
 }
