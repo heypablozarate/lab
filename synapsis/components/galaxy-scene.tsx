@@ -89,8 +89,8 @@ function buildPalette(tokens: SceneTokens): Palette {
   // mix per theme because WebGL cannot parse CSS color-mix().
   const edgeRest = isDark ? surface.clone().lerp(ink, 0.18) : surface.clone().lerp(ink, 0.075);
   const edgeFaint = isDark ? surface.clone().lerp(ink, 0.065) : surface.clone().lerp(ink, 0.03);
-  const nodeRest = isDark ? surface.clone().lerp(ink, 0.68) : ink.clone().lerp(surface, 0.16);
-  const nodeDim = isDark ? surface.clone().lerp(ink, 0.15) : ink.clone().lerp(surface, 0.84);
+  const nodeRest = isDark ? surface.clone().lerp(ink, 0.44) : ink.clone().lerp(surface, 0.58);
+  const nodeDim = isDark ? surface.clone().lerp(ink, 0.1) : ink.clone().lerp(surface, 0.9);
 
   return {
     surface,
