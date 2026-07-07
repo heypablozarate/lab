@@ -36,9 +36,18 @@ export type GalaxyCluster = {
   rationale: string;
 };
 
+export type GalaxyMetadata = {
+  title: string;
+  metadataTitle: string;
+  description: string;
+  serverContext: string;
+  keywords: string[];
+};
+
 export type GalaxyData = {
   version: number;
   updatedAt: string;
+  metadata?: GalaxyMetadata;
   nodes: GalaxyNode[];
   edges: GalaxyEdge[];
   clusters: GalaxyCluster[];

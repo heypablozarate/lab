@@ -115,6 +115,7 @@ const reducedMotionSnapshot = () => window.matchMedia(REDUCED_MOTION_QUERY).matc
 
 export function GalaxyStage({ data, layout }: StageProps) {
   const { nodes, edges, clusters } = data;
+  const stageTitle = data.metadata?.title ?? "Synapsis";
 
   const storedTheme = useSyncExternalStore(subscribeStoredTheme, storedThemeSnapshot, () => null);
   const systemDark = useSyncExternalStore(subscribeSystemDark, systemDarkSnapshot, () => false);
@@ -321,7 +322,7 @@ export function GalaxyStage({ data, layout }: StageProps) {
           <Link className={styles.backLink} href="/">
             Back to the Lab
           </Link>
-          <p className={styles.hudTitle}>Synapsis</p>
+          <p className={styles.hudTitle}>{stageTitle}</p>
           <p className={styles.hudCount}>
             {nodes.length} nodos · {edges.length} conexiones · {clusters.length} clusters
           </p>
