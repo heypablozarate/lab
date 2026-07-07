@@ -34,14 +34,101 @@ type SpriteNode = InstanceType<PixiModule["Sprite"]>
 type DisplayNode = InstanceType<PixiModule["Container"]>
 export type FramePlayback = "once" | "loop" | "bounce"
 
+// A tight box (texture-pixel space, top-left origin) around a PNG's visible
+// (non-transparent) art. Many creature PNGs are mostly transparent padding —
+// full flocks/fields that fill the whole canvas, or single figures with a lot
+// of margin — so `targetLongSide` needs to scale THIS, not the padded canvas,
+// or directed sizes read as much smaller than intended.
+export type VisibleBounds = { x: number; y: number; width: number; height: number }
+
+// Below this alpha (0-255) a pixel counts as transparent padding, not art.
+const VISIBLE_ALPHA_THRESHOLD = 16
+// The offscreen sample canvas is capped to this long side for speed — a few px
+// of edge slop at this resolution does not matter for choosing a display size.
+const VISIBLE_BOUNDS_SAMPLE_SIDE = 128
+
+// Pure scan over a decoded RGBA buffer (ImageData-shaped): the tight bounding
+// box of every pixel whose alpha exceeds the threshold, in the buffer's own
+// pixel space. Exported standalone so it is unit-testable with synthetic pixel
+// arrays — no canvas or DOM required.
+export function scanVisibleAlphaBounds(
+  data: ArrayLike<number>,
+  width: number,
+  height: number,
+  threshold: number = VISIBLE_ALPHA_THRESHOLD,
+): VisibleBounds {
+  let minX = width
+  let minY = height
+  let maxX = -1
+  let maxY = -1
+  for (let y = 0; y < height; y += 1) {
+    const rowStart = y * width
+    for (let x = 0; x < width; x += 1) {
+      if (data[(rowStart + x) * 4 + 3] > threshold) {
+        if (x < minX) minX = x
+        if (x > maxX) maxX = x
+        if (y < minY) minY = y
+        if (y > maxY) maxY = y
+      }
+    }
+  }
+  // Fully transparent (or empty) buffer: nothing to trim, fall back to the
+  // full frame so callers never divide by a zero-size box.
+  if (maxX < minX || maxY < minY) {
+    return { x: 0, y: 0, width, height }
+  }
+  return { x: minX, y: minY, width: maxX - minX + 1, height: maxY - minY + 1 }
+}
+
+// Measure a texture's visible bounding box in texture-pixel space: rasterize
+// its source into a small offscreen canvas, scan alpha, then rescale back to
+// full resolution. Any failure here (no DOM canvas, an undrawable source, a
+// tainted-canvas read, …) falls back to the full texture rect so a creature
+// always has a usable size and the spawn never breaks.
+export function measureVisibleTextureBounds(texture: Texture): VisibleBounds {
+  const fullWidth = Math.max(1, texture.width || 1)
+  const fullHeight = Math.max(1, texture.height || 1)
+  const fallback: VisibleBounds = { x: 0, y: 0, width: fullWidth, height: fullHeight }
+  if (typeof document === "undefined") return fallback
+  try {
+    const resource = (texture.source as { resource?: CanvasImageSource } | undefined)?.resource
+    if (!resource) return fallback
+    const scale = Math.min(1, VISIBLE_BOUNDS_SAMPLE_SIDE / Math.max(fullWidth, fullHeight))
+    const sampleW = Math.max(1, Math.round(fullWidth * scale))
+    const sampleH = Math.max(1, Math.round(fullHeight * scale))
+    const canvas = document.createElement("canvas")
+    canvas.width = sampleW
+    canvas.height = sampleH
+    const ctx = canvas.getContext("2d", { willReadFrequently: true })
+    if (!ctx) return fallback
+    ctx.clearRect(0, 0, sampleW, sampleH)
+    ctx.drawImage(resource, 0, 0, sampleW, sampleH)
+    const { data } = ctx.getImageData(0, 0, sampleW, sampleH)
+    const sampled = scanVisibleAlphaBounds(data, sampleW, sampleH)
+    const rescale = 1 / scale
+    return {
+      x: Math.max(0, Math.min(fullWidth - 1, Math.round(sampled.x * rescale))),
+      y: Math.max(0, Math.min(fullHeight - 1, Math.round(sampled.y * rescale))),
+      width: Math.max(1, Math.min(fullWidth, Math.round(sampled.width * rescale))),
+      height: Math.max(1, Math.min(fullHeight, Math.round(sampled.height * rescale))),
+    }
+  } catch {
+    return fallback
+  }
+}
+
 // A registered creature: a single static texture, or an ordered frame sequence
 // that advances over time. `koi` (when present) is a one-off static texture used
 // for the very first spawn of that name (e.g. pececillo's detailed koi drawing).
+// Frame sequences share one layout, so `visibleBounds` is measured once from
+// the first frame/koi texture and reused for every frame.
 type Entry = {
   frames: Texture[]
   fps: number
   playback: FramePlayback
   koi: Texture | null
+  visibleBounds: VisibleBounds
+  koiVisibleBounds: VisibleBounds | null
 }
 
 type Active = {
@@ -53,6 +140,9 @@ type Active = {
   born: number
   baseScale: number
   targetLongSide: number
+  // Visible-art bounds (texture-pixel space) of the spawned texture, used to
+  // wipe/mask just the art instead of its padded canvas.
+  visibleBounds: VisibleBounds
   life: number
   reveal: RevealMode
   revealDuration?: number
@@ -154,14 +244,19 @@ export function brushResumePoint(center: Vec2, width: number): Vec2 {
   return { x: center.x + Math.max(0, width * 0.5 - inset), y: center.y }
 }
 
-// The artist's PNGs for stroke-drawn figures carry ink-smudge zones meant to
-// fuse with the trace: the trace feeds INTO the entry smudge and grows back out
-// of the exit smudge. Coordinates are texture pixels (top-left origin), read
-// off each PNG's connection marks.
+// The artist's PNGs for stroke-drawn (and some hard-cut) figures carry
+// ink-smudge zones meant to fuse with the trace: the trace feeds INTO the
+// entry smudge and grows back out of the exit smudge. Coordinates are texture
+// pixels (top-left origin), read off each PNG's connection marks. `hardCut`
+// creatures listed here (salpico, cera) skip the wipe reveal but still use
+// these to place themselves on the tip and hand back a resume point, instead
+// of defaulting to their canvas centre.
 export const BRUSH_DRAW_ANCHORS: Record<string, { entry: Vec2; exit: Vec2 }> = {
   chica: { entry: { x: 20, y: 468 }, exit: { x: 812, y: 355 } },
   labios: { entry: { x: 285, y: 635 }, exit: { x: 1062, y: 645 } },
   Ogrande: { entry: { x: 175, y: 665 }, exit: { x: 1205, y: 665 } },
+  salpico: { entry: { x: 159, y: 682 }, exit: { x: 1164, y: 654 } },
+  cera: { entry: { x: 60, y: 235 }, exit: { x: 483, y: 240 } },
 }
 
 // How far the artwork's connection points tuck INTO the painted line (paper
@@ -325,18 +420,25 @@ export class Creatures {
       fps: 0,
       playback: "once",
       koi: prev?.koi ?? null,
+      visibleBounds: measureVisibleTextureBounds(texture),
+      koiVisibleBounds: prev?.koiVisibleBounds ?? null,
     })
   }
 
   // Animated multi-frame creature. `opts.koi` is an optional static texture used
-  // for the first spawn only (the rest use the frame sequence).
+  // for the first spawn only (the rest use the frame sequence). Visible bounds
+  // are measured once from the first frame (frames share layout) and once more
+  // from `koi` since it is typically a different, more detailed drawing.
   registerFrames(name: string, textures: Texture[], opts: FrameOpts = {}): void {
     if (textures.length === 0) return
+    const koi = opts.koi ?? null
     this.entries.set(name, {
       frames: textures,
       fps: opts.fps ?? 12,
       playback: opts.playback ?? (opts.loop === false ? "once" : "loop"),
-      koi: opts.koi ?? null,
+      koi,
+      visibleBounds: measureVisibleTextureBounds(textures[0]),
+      koiVisibleBounds: koi ? measureVisibleTextureBounds(koi) : null,
     })
   }
 
@@ -354,6 +456,9 @@ export class Creatures {
     const useKoi = count === 0 && entry.koi !== null
     const frames: Texture[] | null = useKoi ? null : (entry.fps > 0 ? entry.frames : null)
     const firstTexture = useKoi ? (entry.koi as Texture) : entry.frames[0]
+    const visibleBounds = useKoi
+      ? (entry.koiVisibleBounds ?? entry.visibleBounds)
+      : entry.visibleBounds
     const presentation = resolveCreaturePresentation(name, options)
     const initialReveal = options.reveal ?? "strokeBorn"
     // The portal takeover uses screen scale, not paper scale: the PNG starts
@@ -379,17 +484,26 @@ export class Creatures {
     const node: DisplayNode = embedded?.node ?? new this.pixi.Sprite(firstTexture)
     const sprite = embedded ? null : (node as SpriteNode)
     sprite?.anchor.set(0.5)
-    const maxSide = Math.max(firstTexture.width || 1, firstTexture.height || 1)
+    // `targetLongSide` sizes the VISIBLE art, not the padded canvas around it —
+    // portal takeover and stroke-embedded art keep their own canvas-based sizing
+    // (see isPortal/embedded below), everything else scales off the measured
+    // alpha bounds so a directed size reads as the size it was actually meant
+    // to be, even for mostly-transparent flock/field PNGs.
+    const visibleLongSide = Math.max(1, visibleBounds.width, visibleBounds.height)
     const screen = this.stage.app.screen
     const portalBase = Math.max(
       screen.width / (firstTexture.width || 1),
       screen.height / (firstTexture.height || 1),
     ) * 0.74
-    const baseScale = embedded ? 1 : isPortal ? portalBase : presentation.targetLongSide / maxSide
+    const baseScale = embedded ? 1 : isPortal ? portalBase : presentation.targetLongSide / visibleLongSide
     // Stroke-drawn art with smudge anchors fuses with the trace: the entry
     // smudge sits on (slightly behind) the stroke tip and the pen later resumes
-    // from the exit smudge.
-    const anchor = !embedded && initialReveal === "brushDraw" ? BRUSH_DRAW_ANCHORS[name] : undefined
+    // from the exit smudge. Some hard-cut blots (salpico, cera) carry the same
+    // kind of connection marks — they skip the wipe reveal but still use the
+    // anchor to land on the tip instead of the canvas centre.
+    const anchor = !embedded && (initialReveal === "brushDraw" || initialReveal === "hardCut")
+      ? BRUSH_DRAW_ANCHORS[name]
+      : undefined
     const anchoredPlacement = anchor
       ? anchoredBrushDrawPlacement(at, anchor, firstTexture.width || 1, firstTexture.height || 1, baseScale)
       : null
@@ -476,6 +590,7 @@ export class Creatures {
       born: now,
       baseScale,
       targetLongSide: presentation.targetLongSide,
+      visibleBounds,
       life,
       reveal: options.reveal ?? "strokeBorn",
       revealDuration,
@@ -498,14 +613,24 @@ export class Creatures {
       playback: entry.playback,
     })
 
+    const anchoredResume = anchoredPlacement
+      ? {
+          x: anchoredPlacement.resume.x + presentation.offset.x,
+          y: anchoredPlacement.resume.y + presentation.offset.y,
+        }
+      : null
     if (initialReveal === "brushDraw" || initialReveal === "drawLeftToRight") {
-      const pos = anchoredPlacement
-        ? {
-            x: anchoredPlacement.resume.x + presentation.offset.x,
-            y: anchoredPlacement.resume.y + presentation.offset.y,
-          }
-        : brushResumePoint(origin, (firstTexture.width || 1) * baseScale)
+      // Without an anchor, resume from just inside the VISIBLE art's right
+      // edge — using the full (padded) canvas width here would land the pen
+      // well past the actual drawing, leaving a gap.
+      const pos = anchoredResume
+        ?? brushResumePoint(origin, Math.max(1, visibleBounds.width) * baseScale)
       return { pos, dir: { x: 1, y: 0 } }
+    }
+    // Anchored hard-cut blots (salpico, cera) show up all at once — no wipe —
+    // but still hand back where the line resumes, from their exit smudge.
+    if (anchoredResume) {
+      return { pos: anchoredResume, dir: { x: 1, y: 0 } }
     }
     return null
   }
@@ -586,13 +711,21 @@ export class Creatures {
           active.maskNode = null
         } else if (active.sprite && (active.reveal === "drawLeftToRight" || active.reveal === "brushDraw")) {
           active.maskNode.clear()
+          // The wipe covers the VISIBLE art's box, not the padded canvas: the
+          // sprite is still anchored at the full canvas centre, so the box is
+          // offset from node.x/y by the bounds' offset from that centre.
           const textureFrame = active.sprite.texture.orig ?? active.sprite.texture.frame
-          const width = textureFrame.width * active.node.scale.x
-          const height = textureFrame.height * active.node.scale.y
+          const bounds = active.visibleBounds
+          const scaleX = active.node.scale.x
+          const scaleY = active.node.scale.y
+          const left = active.node.x + (bounds.x - textureFrame.width * 0.5) * scaleX
+          const top = active.node.y + (bounds.y - textureFrame.height * 0.5) * scaleY
+          const width = bounds.width * scaleX
+          const height = bounds.height * scaleY
           active.maskNode
             .rect(
-              active.node.x - width * 0.5,
-              active.node.y - height * 0.5,
+              left,
+              top,
               width * progress,
               height,
             )

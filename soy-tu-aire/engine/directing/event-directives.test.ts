@@ -81,7 +81,7 @@ describe("EVENT_DIRECTIVES", () => {
       layer: "overInk",
       attachment: "brushHead",
       reveal: "brushDraw",
-      targetLongSide: 480,
+      targetLongSide: 300,
       life: 5.2,
       fixed: true,
     })
@@ -96,12 +96,12 @@ describe("EVENT_DIRECTIVES", () => {
     expect(birds).toMatchObject({
       spawnName: "pajaros",
       at: 2,
-      count: 4,
+      count: 2,
       stagger: 0.055,
       layer: "overInk",
       attachment: "strokeEnd",
       reveal: "strokeBorn",
-      targetLongSide: 310,
+      targetLongSide: 650,
       life: 3,
     })
     expect(birds?.offset).toEqual({ x: -116, y: 8 })
@@ -177,7 +177,7 @@ describe("EVENT_DIRECTIVES", () => {
       layer: "overInk",
       attachment: "brushHead",
       reveal: "inkPop",
-      targetLongSide: 190,
+      targetLongSide: 420,
     })
     // Short-lived so they blink intermittently as the choreography fires them ~5x.
     expect(entrada?.life).toBeLessThan(1)
@@ -185,7 +185,7 @@ describe("EVENT_DIRECTIVES", () => {
       layer: "overInk",
       attachment: "brushHead",
       reveal: "inkPop",
-      targetLongSide: 168,
+      targetLongSide: 420,
     })
     expect(salida?.life).toBeLessThan(1)
   })
@@ -207,7 +207,7 @@ describe("EVENT_DIRECTIVES", () => {
 
     expect(dandelion).toMatchObject({
       count: 5,
-      targetLongSide: 76,
+      targetLongSide: 320,
       layer: "overInk",
       attachment: "recentStroke",
       reveal: "strokeBorn",
@@ -220,8 +220,8 @@ describe("EVENT_DIRECTIVES", () => {
     const dandelion = getEventDirective("dandelion", 133)?.creatures?.dandelion?.[0]
 
     expect(dandelion).toMatchObject({
-      count: 3,
-      targetLongSide: 48,
+      count: 2,
+      targetLongSide: 260,
       layer: "insideInk",
       attachment: "recentStroke",
       reveal: "strokeBorn",
@@ -251,7 +251,7 @@ describe("EVENT_DIRECTIVES", () => {
       spawnName: "mariposanoloop",
       at: 1.42,
       count: 1,
-      targetLongSide: 135,
+      targetLongSide: 300,
       attachment: "strokeEnd",
       reveal: "strokeBorn",
     })
@@ -266,7 +266,7 @@ describe("EVENT_DIRECTIVES", () => {
     expect(noLoop?.[0]).toMatchObject({
       at: 0.35,
       count: 1,
-      targetLongSide: 150,
+      targetLongSide: 300,
       attachment: "recentStroke",
       reveal: "strokeBorn",
     })
@@ -287,10 +287,12 @@ describe("EVENT_DIRECTIVES", () => {
       layer: "overInk",
       attachment: "brushHead",
       reveal: "hardCut",
-      targetLongSide: 560,
+      targetLongSide: 520,
       fixed: true,
     })
-    expect(ceraDirective?.creatures?.cera?.[0].offset).toEqual({ x: 0, y: 132 })
+    // Cera no longer carries a manual offset: its BRUSH_DRAW_ANCHORS entry
+    // positions the blot on the tip instead.
+    expect(ceraDirective?.creatures?.cera?.[0].offset).toBeUndefined()
     expect(getEventDirective("cremallera")?.creatures?.cremallera?.[0]).toMatchObject({
       layer: "insideInk",
       attachment: "strokeEnd",
@@ -301,7 +303,7 @@ describe("EVENT_DIRECTIVES", () => {
     expect(getEventDirective("Ogrande")?.creatures?.Ogrande?.[0]).toMatchObject({
       attachment: "brushHead",
       reveal: "brushDraw",
-      targetLongSide: 360,
+      targetLongSide: 280,
       fixed: true,
       revealDuration: 0.61,
     })
@@ -313,23 +315,19 @@ describe("EVENT_DIRECTIVES", () => {
       layer: "overInk",
       attachment: "brushHead",
       reveal: "strokeBorn",
-      targetLongSide: 96,
+      targetLongSide: 340,
     })
     expect(getEventDirective("Ondasagua")?.creatures?.Ondasagua?.[0]).toMatchObject({
       attachment: "brushHead",
       reveal: "strokeBorn",
-      targetLongSide: 178,
+      targetLongSide: 360,
     })
     expect(getEventDirective("recuerdo_b")?.creatures?.recuerdo_b?.[0]).toMatchObject({
       attachment: "brushHead",
       reveal: "strokeBorn",
-      targetLongSide: 60,
+      targetLongSide: 400,
     })
-    expect(getEventDirective("lagrima")?.creatures?.lagrima?.[0]).toMatchObject({
-      attachment: "strokeEnd",
-      reveal: "drawLeftToRight",
-      targetLongSide: 190,
-    })
+    expect(getEventDirective("lagrima")?.skipCreature).toBe(true)
   })
 
   it("embeds wire and zipper marks inside the brush trace", () => {

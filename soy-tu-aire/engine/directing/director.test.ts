@@ -90,7 +90,7 @@ describe("expandDirectedEvents", () => {
       layer: "overInk",
       attachment: "brushHead",
       reveal: "brushDraw",
-      targetLongSide: 480,
+      targetLongSide: 300,
       life: 5.2,
       offset: { x: 0, y: 0 },
       fixed: true,
@@ -157,7 +157,7 @@ describe("expandDirectedEvents", () => {
       layer: "overInk",
       attachment: "brushHead",
       reveal: "inkPop",
-      targetLongSide: 190,
+      targetLongSide: 420,
     })
   })
 
@@ -180,7 +180,7 @@ describe("expandDirectedEvents", () => {
       layer: "overInk",
       attachment: "strokeEnd",
       reveal: "strokeBorn",
-      targetLongSide: 135,
+      targetLongSide: 300,
     })
     expect(result.creatures[1]).toMatchObject({
       name: "mariposanoloopVolando",
@@ -202,8 +202,10 @@ describe("expandDirectedEvents", () => {
       layer: "overInk",
       attachment: "brushHead",
       reveal: "hardCut",
-      targetLongSide: 560,
-      offset: { x: 0, y: 132 },
+      targetLongSide: 520,
+      // No manual offset anymore: cera's BRUSH_DRAW_ANCHORS entry positions
+      // it on the tip, so the resolved offset defaults to zero.
+      offset: { x: 0, y: 0 },
       fixed: true,
     })
     expect(result.brushHolds).toEqual([
@@ -240,19 +242,20 @@ describe("expandDirectedEvents", () => {
   it("expands late birds after the raw cue and keeps them attached to the stroke", () => {
     const result = expandDirectedEvents(event({ t: 20.5, creatures: ["pajaros"] }))
 
-    expect(result.creatures).toHaveLength(7)
+    // 2 pajaros (count reduced from 4) + 3 pajarosVolando (unchanged) = 5.
+    expect(result.creatures).toHaveLength(5)
     expect(result.creatures[0]).toMatchObject({
       name: "pajaros",
       fireAt: 22.5,
       layer: "overInk",
       attachment: "strokeEnd",
       reveal: "strokeBorn",
-      targetLongSide: 310,
+      targetLongSide: 650,
     })
     expect(result.creatures[0].offset.x).toBeLessThan(-70)
     expect(result.creatures[0].offset.y).toBeGreaterThan(-50)
     expect(result.creatures[1].offset.x).not.toBe(result.creatures[0].offset.x)
-    expect(result.creatures[4]).toMatchObject({
+    expect(result.creatures[2]).toMatchObject({
       name: "pajarosVolando",
       fireAt: 22.58,
       layer: "foreground",
@@ -260,8 +263,8 @@ describe("expandDirectedEvents", () => {
       reveal: "strokeBorn",
       targetLongSide: 150,
     })
-    expect(result.creatures[4].drift.x).toBeLessThan(-130)
-    expect(result.creatures[4].drift.y).toBeLessThan(-40)
+    expect(result.creatures[2].drift.x).toBeLessThan(-130)
+    expect(result.creatures[2].drift.y).toBeLessThan(-40)
   })
 
   it("expands intro koi as a large fish, school, and two sprites above the trace", () => {

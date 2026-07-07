@@ -164,7 +164,10 @@ export const EVENT_DIRECTIVES: EventDirective[] = [
           layer: "overInk",
           attachment: "brushHead",
           reveal: "brushDraw",
-          targetLongSide: 480,
+          // 300 = old 480 rescaled to the lips' VISIBLE art (~65% of the PNG
+          // canvas is transparent margin) so the on-screen size is unchanged
+          // now that targetLongSide scales the visible bounds, not the canvas.
+          targetLongSide: 300,
           life: 5.2,
           offset: { x: 0, y: 0 },
           drift: { x: 0, y: 0 },
@@ -184,12 +187,17 @@ export const EVENT_DIRECTIVES: EventDirective[] = [
         {
           spawnName: "pajaros",
           at: 2.0,
-          count: 4,
+          // 2 (was 4): the flock PNG already draws ~35 birds, so 4 impressions
+          // stacked the same field on top of itself. Bigger and fewer reads as
+          // one flock instead of a blur.
+          count: 2,
           stagger: 0.055,
           layer: "overInk",
           attachment: "strokeEnd",
           reveal: "strokeBorn",
-          targetLongSide: 310,
+          // 650 (was 310): the flock PNG is ~96%w/34%h visible — at 310 the
+          // individual birds were unreadable. Scaled to the visible art now.
+          targetLongSide: 650,
           life: 3,
           offset: { x: -116, y: 8 },
           scatter: { x: 145, y: 54 },
@@ -230,7 +238,9 @@ export const EVENT_DIRECTIVES: EventDirective[] = [
           layer: "insideInk",
           attachment: "brushHead",
           reveal: "strokeBorn",
-          targetLongSide: 185,
+          // 440 (was 185): the koi-school PNG is a wide, mostly-full-width
+          // field — scaled up so the individual fish read.
+          targetLongSide: 440,
           life: 2.1,
           offset: { x: -6, y: 24 },
           drift: { x: -45, y: 6 },
@@ -358,7 +368,7 @@ export const EVENT_DIRECTIVES: EventDirective[] = [
   {
     key: "cera",
     match: "cera",
-    notes: "Cera is a brush stamp, not a separate sprite: the ribbon stops, an oversized wax/ink burst lands fixed with its bulky mass centered on the brush trace, then painting resumes.",
+    notes: "Cera is a brush stamp, not a separate sprite: the ribbon stops, and the wax/ink blot's own connection anchor (engine BRUSH_DRAW_ANCHORS) lands its upper mass on the brush tip — no offset needed, the anchor already positions it — then painting resumes from its exit smudge.",
     brushHold: { startOffset: 0, duration: 0.28, pressure: 0, paint: false },
     creatures: {
       cera: [
@@ -368,9 +378,11 @@ export const EVENT_DIRECTIVES: EventDirective[] = [
           layer: "overInk",
           attachment: "brushHead",
           reveal: "hardCut",
-          targetLongSide: 560,
+          // 520 (was 560): the blob-without-drips reads at roughly this scale
+          // once targetLongSide sizes the visible art (blob + drips, ~98% of
+          // the canvas) rather than the padded canvas.
+          targetLongSide: 520,
           life: 3.6,
-          offset: { x: 0, y: 132 },
           drift: { x: 0, y: 0 },
           fixed: true,
         },
@@ -410,7 +422,9 @@ export const EVENT_DIRECTIVES: EventDirective[] = [
           layer: "overInk",
           attachment: "brushHead",
           reveal: "brushDraw",
-          targetLongSide: 360,
+          // 280 = old 360 rescaled to Ogrande's VISIBLE art (~78% of the PNG
+          // canvas) so the on-screen ring size is unchanged under visible-art scaling.
+          targetLongSide: 280,
           life: 3.5,
           offset: { x: 0, y: 0 },
           drift: { x: 0, y: 0 },
@@ -432,8 +446,11 @@ export const EVENT_DIRECTIVES: EventDirective[] = [
           layer: "overInk",
           attachment: "brushHead",
           reveal: "strokeBorn",
-          targetLongSide: 96,
-          life: 0.9,
+          // 340 (was 96): the bubble field PNG is a wide scatter of ~50
+          // bubbles — scaled up so individual bubbles read, with a longer
+          // life to match (was flickering out almost immediately).
+          targetLongSide: 340,
+          life: 1.6,
           scatter: { x: 36, y: 26 },
           drift: { x: -18, y: -8 },
           scaleJitter: 0.5,
@@ -454,7 +471,9 @@ export const EVENT_DIRECTIVES: EventDirective[] = [
           layer: "overInk",
           attachment: "brushHead",
           reveal: "strokeBorn",
-          targetLongSide: 178,
+          // 360 (was 178): the water-splash PNG fills nearly the whole
+          // canvas, so this is close to a like-for-like visible-art rescale.
+          targetLongSide: 360,
           life: 1.35,
           offset: { x: -18, y: -8 },
           drift: { x: -24, y: -4 },
@@ -474,8 +493,11 @@ export const EVENT_DIRECTIVES: EventDirective[] = [
           layer: "overInk",
           attachment: "brushHead",
           reveal: "strokeBorn",
-          targetLongSide: 60,
-          life: 1.25,
+          // 400 (was 60): the memory-block PNG is a cluster of 5 ramilletes
+          // that reads as a single blob at 60 — scaled up so the leaf
+          // clusters read, with a longer life to match.
+          targetLongSide: 400,
+          life: 2.2,
           scatter: { x: 96, y: 70 },
           drift: { x: -70, y: -18 },
           scaleJitter: 0.45,
@@ -487,22 +509,8 @@ export const EVENT_DIRECTIVES: EventDirective[] = [
   {
     key: "lagrima",
     match: "lagrima",
-    notes: "The tear reads as an inline calligraphic loop close to the trace.",
-    creatures: {
-      lagrima: [
-        {
-          at: 0.12,
-          count: 1,
-          layer: "overInk",
-          attachment: "strokeEnd",
-          reveal: "drawLeftToRight",
-          targetLongSide: 190,
-          life: 2.05,
-          offset: { x: -68, y: 22 },
-          drift: { x: -30, y: 4 },
-        },
-      ],
-    },
+    notes: "Lagrima is written once by the word reveal layer; the raw creature sprite is suppressed.",
+    skipCreature: true,
   },
   {
     key: "cuelo",
@@ -536,7 +544,9 @@ export const EVENT_DIRECTIVES: EventDirective[] = [
           layer: "overInk",
           attachment: "brushHead",
           reveal: "inkPop",
-          targetLongSide: 190,
+          // 420 (was 190): the splatter PNG is a dispersed spray — scaled up
+          // so its scattered dots read as a splash instead of a smudge.
+          targetLongSide: 420,
           life: 0.66,
           offset: { x: -6, y: 0 },
           scatter: { x: 70, y: 22 },
@@ -558,7 +568,8 @@ export const EVENT_DIRECTIVES: EventDirective[] = [
           layer: "overInk",
           attachment: "brushHead",
           reveal: "inkPop",
-          targetLongSide: 168,
+          // 420 (was 168): same dispersed-splatter rescale as the entrance bead.
+          targetLongSide: 420,
           life: 0.6,
           offset: { x: -10, y: 0 },
           scatter: { x: 64, y: 20 },
@@ -613,21 +624,23 @@ export const EVENT_DIRECTIVES: EventDirective[] = [
   {
     key: "uno",
     match: "uno",
-    notes: "The one/one mark is a compact scratch embedded in the horizontal trace.",
+    notes: "\"Uno\" is stamped as a brush-drawn word, like chica/labios/Ogrande: the pen pauses while it writes in at the tip, then resumes from its right edge (engine brushResume) instead of scattering as an illegible mark.",
+    brushHold: { startOffset: 0, duration: 0.6, pressure: 0, paint: false },
     creatures: {
       uno: [
         {
           at: 0.05,
           count: 1,
-          layer: "insideInk",
-          attachment: "recentStroke",
-          reveal: "strokeBorn",
-          targetLongSide: 130,
-          life: 1.7,
-          scatter: { x: 42, y: 18 },
-          drift: { x: -26, y: 0 },
-          scaleJitter: 0.28,
-          rotationJitter: 0.2,
+          layer: "overInk",
+          attachment: "brushHead",
+          reveal: "brushDraw",
+          targetLongSide: 300,
+          life: 2.5,
+          fixed: true,
+          // Tighter than the hold's 0.6s duration (like chica/labios/Ogrande)
+          // so the write-in finishes with a small buffer before the pen
+          // resumes, instead of the auto-derived ~0.56s cutting it close.
+          revealDuration: 0.5,
         },
       ],
     },
@@ -645,7 +658,9 @@ export const EVENT_DIRECTIVES: EventDirective[] = [
           layer: "overInk",
           attachment: "strokeEnd",
           reveal: "strokeBorn",
-          targetLongSide: 135,
+          // 300 (was 135): the static impression PNG is ~66% visible art —
+          // scaled up so the butterfly reads.
+          targetLongSide: 300,
           life: 1.9,
           offset: { x: -34, y: -6 },
           drift: { x: -45, y: 12 },
@@ -680,7 +695,8 @@ export const EVENT_DIRECTIVES: EventDirective[] = [
           layer: "overInk",
           attachment: "recentStroke",
           reveal: "strokeBorn",
-          targetLongSide: 150,
+          // 300 (was 150): same static-impression rescale as the mariposa cluster.
+          targetLongSide: 300,
           life: 2.2,
           offset: { x: -54, y: 8 },
           drift: { x: -64, y: 12 },
@@ -712,12 +728,16 @@ export const EVENT_DIRECTIVES: EventDirective[] = [
       dandelion: [
         {
           at: 0.04,
-          count: 3,
+          // 2 (was 3): fewer, bigger seeds read as individual dandelion seeds
+          // instead of a cluster of specks.
+          count: 2,
           stagger: 0.045,
           layer: "insideInk",
           attachment: "recentStroke",
           reveal: "strokeBorn",
-          targetLongSide: 48,
+          // 260 (was 48): the seed PNG is ~85% visible art — scaled up so a
+          // single seed is actually legible.
+          targetLongSide: 260,
           life: 1.5,
           scatter: { x: 96, y: 28 },
           drift: { x: -26, y: -6 },
@@ -741,7 +761,8 @@ export const EVENT_DIRECTIVES: EventDirective[] = [
           layer: "overInk",
           attachment: "recentStroke",
           reveal: "strokeBorn",
-          targetLongSide: 76,
+          // 320 (was 76): same visible-art rescale as the pre-climax seeds.
+          targetLongSide: 320,
           life: 2.3,
           scatter: { x: 150, y: 54 },
           drift: { x: -68, y: 0 },
