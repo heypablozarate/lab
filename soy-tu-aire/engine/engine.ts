@@ -10,13 +10,14 @@ import { PixiCompositor } from "./render/pixi-compositor"
 import { PixiStage, type PixiModule } from "./render/pixi-stage"
 import {
   Reveals,
+  WORD_ENTRY_OVERLAP,
   WORD_REVEAL_LEADING_OFFSET,
   WORD_TARGET_LONG_SIDE,
   hasRevealTexture,
   wordWriteSecondsForLongSide,
 } from "./reveals/reveals"
 import { Creatures, type FramePlayback } from "./creatures/creatures"
-import type { BrushMod } from "./types"
+import type { BrushMod, BrushResumeHint, Vec2 } from "./types"
 import type { AudioEngine } from "./audio/audio-engine"
 import type { Timeline } from "./timeline/timeline"
 
@@ -36,6 +37,13 @@ const CREATURES_BASE = "/lab/soy-tu-aire/creatures"
 // While a word PNG writes itself in, the pen lifts (stops painting) so the word
 // reads as drawn by the same brush; once it finishes the stroke resumes.
 const WORD_BRUSH_LIFT_PAD = 0.08
+
+// Forward-escape window after a resume: how long the head is steered along the
+// image's exit direction, how far ahead the synthetic target sits, and the
+// minimum forward projection a real pointer target needs to take over early.
+const RESUME_GUARD_SECONDS = 0.6
+const RESUME_GUARD_REACH = 300
+const RESUME_GUARD_MIN_AHEAD = 170
 
 // Frame sequences (filenames already exist in public/lab/soy-tu-aire/creatures/).
 const PECECILLO_FRAMES = [
@@ -90,6 +98,14 @@ export class Engine {
   private pendingCreatureSpawns: DirectedSpawn[] = []
   private pendingRevealSpawns: DirectedSpawn[] = []
   private brushHolds: DirectedBrushHold[] = []
+  // Where the pen touches down again after the active hold ends: the far edge of
+  // an image the stroke just "drew" (girl, lips, O, word PNGs), so the resumed
+  // line grows out of the artwork instead of striking through it.
+  private brushResume: BrushResumeHint | null = null
+  // For a short window after resuming, the head is steered forward along the
+  // image's exit direction even if the pointer/idle target sits behind it —
+  // otherwise the spring would double back and strike through the artwork.
+  private resumeGuard: { until: number; pos: Vec2; dir: Vec2 } | null = null
   // Stable reference so repeated addEventListener calls de-dupe (no listener leak across tab switches).
   private onVis = () => { if (document.hidden) this.stop(); else if (!this.running) this.start() }
 
@@ -187,6 +203,8 @@ export class Engine {
     this.pendingCreatureSpawns = []
     this.pendingRevealSpawns = []
     this.brushHolds = []
+    this.brushResume = null
+    this.resumeGuard = null
   }
 
   private collectDirectedEvents(prevT: number, t: number): void {
@@ -246,7 +264,7 @@ export class Engine {
       if (spawn.fireAt <= prevT) return false
       if (spawn.fireAt > t) return true
       const at = this.creatureAnchorForSpawn(spawn, canvasW, canvasH)
-      this.creatures.spawn(spawn.name, at, spawn.fireAt, {
+      const resume = this.creatures.spawn(spawn.name, at, spawn.fireAt, {
         targetLongSide: spawn.targetLongSide,
         life: spawn.life,
         offset: spawn.offset,
@@ -260,6 +278,12 @@ export class Engine {
         fixed: spawn.fixed,
         revealDuration: spawn.revealDuration,
       })
+      // Only detour the stroke when the pen actually lifted for this image: a
+      // non-painting hold covering the spawn means the image is being "drawn"
+      // by the stroke, so painting resumes from the image's far edge.
+      if (resume && this.liftedHoldCovers(spawn.fireAt)) {
+        this.brushResume = resume
+      }
       return false
     })
 
@@ -267,19 +291,32 @@ export class Engine {
       if (spawn.fireAt <= prevT) return false
       if (spawn.fireAt > t) return true
       const anchor = pointAtDistanceFromEnd(this.brush.getRibbonSamples(), 0)
-      const leadingOffset = hasRevealTexture(spawn.name) ? WORD_REVEAL_LEADING_OFFSET : 0
+      // The word's leading edge tucks slightly INTO the stroke tip so it grows
+      // out of the painted line instead of floating detached ahead of it.
+      const leadingOffset = hasRevealTexture(spawn.name)
+        ? WORD_REVEAL_LEADING_OFFSET - WORD_ENTRY_OVERLAP
+        : 0
       const writeSeconds = writeSecondsForRevealSpawn(spawn)
       const at = anchor
         ? { x: anchor.x, y: anchor.y }
         : { x: this.brush.pos.x + spawn.offset.x + leadingOffset, y: this.brush.pos.y + spawn.offset.y }
-      this.reveals.spawn(spawn.name, at, spawn.fireAt, {
+      const resume = this.reveals.spawn(spawn.name, at, spawn.fireAt, {
         strokeAnchor: anchor,
         strokeOffset: { along: spawn.offset.x + leadingOffset, normal: 0 },
         targetLongSide: spawn.targetLongSide ?? WORD_TARGET_LONG_SIDE,
         writeSeconds,
       })
+      if (resume) {
+        this.brushResume = resume
+      }
       return false
     })
+  }
+
+  private liftedHoldCovers(fireAt: number): boolean {
+    return this.brushHolds.some(
+      (hold) => hold.paint === false && fireAt >= hold.startAt && fireAt <= hold.endAt,
+    )
   }
 
   start(): void {
@@ -325,6 +362,14 @@ export class Engine {
         this.brush.shift(wrap.sx, wrap.sy)
         this.reveals.shift(wrap.sx, wrap.sy)
         this.creatures.shift(wrap.sx, wrap.sy)
+        if (this.brushResume) {
+          this.brushResume.pos.x += wrap.sx
+          this.brushResume.pos.y += wrap.sy
+        }
+        if (this.resumeGuard) {
+          this.resumeGuard.pos.x += wrap.sx
+          this.resumeGuard.pos.y += wrap.sy
+        }
       }
       const cw = this.canvas.clientWidth
       const ch = this.canvas.clientHeight
@@ -357,8 +402,34 @@ export class Engine {
       if (this.born) {
         this.collectDirectedEvents(this.prevT, t)
         const hold = this.activeBrushHold(t)
+        if (!hold && this.brushResume) {
+          // The image the stroke was "drawing" has finished appearing: the pen
+          // resumes from its far edge (slightly inside it), never across it.
+          this.brush.resumeFrom(this.brushResume.pos, this.brushResume.dir)
+          this.resumeGuard = {
+            until: t + RESUME_GUARD_SECONDS,
+            pos: { ...this.brushResume.pos },
+            dir: { ...this.brushResume.dir },
+          }
+          this.brushResume = null
+        }
         const freezeBrush = hold ? hold.freeze !== false : false
-        const brushTarget = freezeBrush ? { x: this.brush.pos.x, y: this.brush.pos.y } : target
+        let brushTarget = freezeBrush ? { x: this.brush.pos.x, y: this.brush.pos.y } : target
+        if (!hold && this.resumeGuard) {
+          if (t >= this.resumeGuard.until) {
+            this.resumeGuard = null
+          } else {
+            const guard = this.resumeGuard
+            const ahead = (brushTarget.x - guard.pos.x) * guard.dir.x
+              + (brushTarget.y - guard.pos.y) * guard.dir.y
+            if (ahead < RESUME_GUARD_MIN_AHEAD) {
+              brushTarget = {
+                x: guard.pos.x + guard.dir.x * RESUME_GUARD_REACH,
+                y: guard.pos.y + guard.dir.y * RESUME_GUARD_REACH,
+              }
+            }
+          }
+        }
         if (hold) {
           mod.pressure = hold.pressure
           if (!hold.paint) mod.ink = 0

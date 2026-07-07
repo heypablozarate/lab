@@ -81,7 +81,7 @@ describe("expandDirectedEvents", () => {
     const result = expandDirectedEvents(event({ t: 87, creatures: ["labios"] }))
 
     expect(result.brushHolds).toEqual([
-      { startAt: 88.58, endAt: 89.83, pressure: 0.12, paint: true },
+      { startAt: 88.58, endAt: 89.53, pressure: 0, paint: false },
     ])
     expect(result.creatures).toHaveLength(1)
     expect(result.creatures[0]).toMatchObject({
@@ -90,11 +90,12 @@ describe("expandDirectedEvents", () => {
       layer: "overInk",
       attachment: "brushHead",
       reveal: "brushDraw",
-      targetLongSide: 360,
+      targetLongSide: 480,
       life: 5.2,
-      offset: { x: 178, y: 12 },
+      offset: { x: 0, y: 0 },
+      fixed: true,
     })
-    expect(result.creatures[0].drift.x).toBeLessThan(0)
+    expect(result.creatures[0].drift).toEqual({ x: 0, y: 0 })
   })
 
   it("passes explicit brush-drawn reveal durations through directed spawns", () => {
@@ -105,10 +106,10 @@ describe("expandDirectedEvents", () => {
       name: "chica",
       fireAt: 20.12,
       reveal: "brushDraw",
-      revealDuration: 0.36,
+      revealDuration: 0.44,
     })
     expect(chica.brushHolds).toEqual([
-      { startAt: 20.04, endAt: 20.62, pressure: 0, paint: false, freeze: false },
+      { startAt: 20.04, endAt: 20.62, pressure: 0, paint: false },
     ])
     expect(ogrande.creatures[0]).toMatchObject({
       name: "Ogrande",

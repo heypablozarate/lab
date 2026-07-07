@@ -5,6 +5,8 @@ import type { BrushMod, RibbonSample, Vec2 } from "../types"
 
 const STIFFNESS = 90
 const DAMPING = 14
+// Initial head speed (paper px/s) when the pen resumes after an image reveal.
+const RESUME_LAUNCH_SPEED = 260
 const MAX_CENTERLINE_SAMPLES = 180
 const NIB_BASE = 0.7
 const NIB_DRIFT = 0.85
@@ -64,6 +66,18 @@ export class Brush {
     this.vel = { x: 0, y: 0 }
     this.samples = []
     this.previousSpeed = 0
+  }
+
+  // Lift-and-resume: after an image is "drawn" by the stroke, the pen touches
+  // down again at `pos` (the image's far edge) with a fresh centerline, so no
+  // ribbon segment ever connects across — or strikes through — the artwork.
+  // `dir` launches the head forward so the line flows OUT of the image instead
+  // of stalling on its edge.
+  resumeFrom(pos: Vec2, dir?: Vec2): void {
+    this.bornAt(pos)
+    if (dir) {
+      this.vel = { x: dir.x * RESUME_LAUNCH_SPEED, y: dir.y * RESUME_LAUNCH_SPEED }
+    }
   }
 
   update(dt: number, target: Vec2 | null, mod: BrushMod): void {

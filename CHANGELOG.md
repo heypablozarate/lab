@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Changed
+
+- 2026-07-07 / Claude: Soy tu aire experience pass. (1) Creatures now respect a 64px on-screen visibility floor at spawn (`ensureVisibleLongSide`): directed paper-space sizes shrink with the camera zoom, so the smallest marks (dandelion seeds, dry-scratch fish, hole beads) could all but disappear on wide shots; they are lifted to the floor while everything already readable keeps its choreographed size (portal takeover and stroke-embedded art keep their own sizing). (2) Images "drawn by the stroke" (chica, labios, Ogrande, and the cuelo/lagrima/surco/cosquilla word PNGs) now integrate with the trace instead of being struck through: the pen lifts while the image wipes in from the stroke tip, and when the hold ends the brush touches down again just inside the image's exit edge with a fresh centerline (`Brush.resumeFrom`), so no ribbon segment ever crosses the artwork. Figures with ink-smudge connection zones painted into their PNGs (chica, labios, Ogrande) are placed by those marks (`BRUSH_DRAW_ANCHORS` + `anchoredBrushDrawPlacement`): the trace feeds INTO the entry smudge and the resumed line grows back out of the exit smudge; words overlap the tip by `WORD_ENTRY_OVERLAP` and resume from just inside their trailing letter (`wordResumePoint`). A short post-resume guard (`RESUME_GUARD_*` in the engine) keeps the resumed line moving forward out of the artwork even when the pointer/idle target sits behind it, which was what previously dragged the line back across the words. Chica grew 190→340, labios 360→480 and now pins in place while being drawn, Ogrande 330→360; all three anchored pieces are fixed with zeroed offsets/drift. Verified in-browser at the 0:20 (chica), 0:42 (cosquillas), and 0:50 (cuelo) beats.
+
 ### Added
 
 - 2026-07-04 / Claude: Renamed the Galaxia de Intereses experiment to Synapsis (brand form "Synapsis by PabloZarate™"): route folder and public slug are now /synapsis, page metadata/JSON-LD/server context, HUD title, and the Lab manifest entry updated. No redirect from the old slug (it was live only hours).

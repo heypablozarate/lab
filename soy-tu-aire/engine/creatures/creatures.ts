@@ -1,4 +1,4 @@
-import type { RibbonSample, Vec2 } from "../types"
+import type { BrushResumeHint, RibbonSample, Vec2 } from "../types"
 import type { DirectedLayer, RevealMode, StrokeFitDirective } from "../directing/event-directives"
 import type { PixiModule, PixiStage } from "../render/pixi-stage"
 
@@ -132,6 +132,65 @@ type StrokeFitPath = {
   length: number
   angle: number
   revealSeconds: number
+}
+
+// Directed sizes are paper-space and shrink with the camera zoom, so the
+// smallest marks (seeds, scratches, hole beads) could all but disappear on wide
+// shots. Every spawn is lifted to this on-screen floor so it stays readable
+// without touching the choreography of the larger pieces.
+const MIN_SCREEN_LONG_SIDE = 64
+
+export function ensureVisibleLongSide(targetLongSide: number, worldScale: number): number {
+  const scale = Math.abs(worldScale) || 1
+  const minPaper = MIN_SCREEN_LONG_SIDE / scale
+  return targetLongSide >= minPaper ? targetLongSide : Math.round(minPaper)
+}
+
+// Where the pen touches down again after an image is "drawn" by the stroke:
+// the trailing edge of the left-to-right wipe, pulled slightly inside the image
+// so the resumed line overlaps the art instead of leaving a gap.
+export function brushResumePoint(center: Vec2, width: number): Vec2 {
+  const inset = Math.min(30, Math.max(8, width * 0.08))
+  return { x: center.x + Math.max(0, width * 0.5 - inset), y: center.y }
+}
+
+// The artist's PNGs for stroke-drawn figures carry ink-smudge zones meant to
+// fuse with the trace: the trace feeds INTO the entry smudge and grows back out
+// of the exit smudge. Coordinates are texture pixels (top-left origin), read
+// off each PNG's connection marks.
+export const BRUSH_DRAW_ANCHORS: Record<string, { entry: Vec2; exit: Vec2 }> = {
+  chica: { entry: { x: 20, y: 468 }, exit: { x: 812, y: 355 } },
+  labios: { entry: { x: 285, y: 635 }, exit: { x: 1062, y: 645 } },
+  Ogrande: { entry: { x: 175, y: 665 }, exit: { x: 1205, y: 665 } },
+}
+
+// How far the artwork's connection points tuck INTO the painted line (paper
+// px): the entry smudge overlaps the stroke tip and the pen resumes slightly
+// inside the exit smudge, so both joins read as one continuous trace.
+const BRUSH_DRAW_JOIN_OVERLAP = 14
+
+// Position an anchored stroke-drawn image so its entry smudge sits on the
+// stroke tip, and compute where the pen resumes (just inside its exit smudge).
+export function anchoredBrushDrawPlacement(
+  tip: Vec2,
+  anchor: { entry: Vec2; exit: Vec2 },
+  textureWidth: number,
+  textureHeight: number,
+  scale: number,
+): { origin: Vec2; resume: Vec2 } {
+  const halfW = textureWidth / 2
+  const halfH = textureHeight / 2
+  const origin = {
+    x: tip.x - (anchor.entry.x - halfW) * scale - BRUSH_DRAW_JOIN_OVERLAP,
+    y: tip.y - (anchor.entry.y - halfH) * scale,
+  }
+  return {
+    origin,
+    resume: {
+      x: origin.x + (anchor.exit.x - halfW) * scale - BRUSH_DRAW_JOIN_OVERLAP,
+      y: origin.y + (anchor.exit.y - halfH) * scale,
+    },
+  }
 }
 
 export function resolveCreaturePresentation(
@@ -281,9 +340,12 @@ export class Creatures {
     })
   }
 
-  spawn(name: string, at: Vec2, now: number, options: CreatureSpawnOptions = {}): void {
+  // Returns where (and toward where) the brush should resume painting when
+  // this creature is "drawn" by the stroke (brushDraw/drawLeftToRight reveals),
+  // or null when the stroke does not need to detour around it.
+  spawn(name: string, at: Vec2, now: number, options: CreatureSpawnOptions = {}): BrushResumeHint | null {
     const entry = this.entries.get(name)
-    if (!entry) return
+    if (!entry) return null
 
     const count = this.spawnCount.get(name) ?? 0
     this.spawnCount.set(name, count + 1)
@@ -294,6 +356,17 @@ export class Creatures {
     const firstTexture = useKoi ? (entry.koi as Texture) : entry.frames[0]
     const presentation = resolveCreaturePresentation(name, options)
     const initialReveal = options.reveal ?? "strokeBorn"
+    // The portal takeover uses screen scale, not paper scale: the PNG starts
+    // small inside the trace and grows past the viewport like the reference cut.
+    const isPortal = options.layer === "screenForeground" && options.reveal === "portalTakeover"
+    // Screen-space visibility floor: portal (screen-scaled) and stroke-embedded
+    // art (sized by the ribbon itself) keep their own sizing.
+    if (!isPortal && initialReveal !== "strokeEmbedded" && options.layer !== "screenForeground") {
+      presentation.targetLongSide = ensureVisibleLongSide(
+        presentation.targetLongSide,
+        this.stage.world.scale.x,
+      )
+    }
     const revealDuration = options.revealDuration
       ?? (initialReveal === "brushDraw" ? brushDrawRevealDuration(presentation.targetLongSide) : undefined)
     const strokeFit = options.strokeFit
@@ -306,11 +379,27 @@ export class Creatures {
     const node: DisplayNode = embedded?.node ?? new this.pixi.Sprite(firstTexture)
     const sprite = embedded ? null : (node as SpriteNode)
     sprite?.anchor.set(0.5)
-    const originBase = strokeFit?.midpoint ?? at
+    const maxSide = Math.max(firstTexture.width || 1, firstTexture.height || 1)
+    const screen = this.stage.app.screen
+    const portalBase = Math.max(
+      screen.width / (firstTexture.width || 1),
+      screen.height / (firstTexture.height || 1),
+    ) * 0.74
+    const baseScale = embedded ? 1 : isPortal ? portalBase : presentation.targetLongSide / maxSide
+    // Stroke-drawn art with smudge anchors fuses with the trace: the entry
+    // smudge sits on (slightly behind) the stroke tip and the pen later resumes
+    // from the exit smudge.
+    const anchor = !embedded && initialReveal === "brushDraw" ? BRUSH_DRAW_ANCHORS[name] : undefined
+    const anchoredPlacement = anchor
+      ? anchoredBrushDrawPlacement(at, anchor, firstTexture.width || 1, firstTexture.height || 1, baseScale)
+      : null
+    const originBase = anchoredPlacement?.origin ?? strokeFit?.midpoint ?? at
     const origin = { x: originBase.x + presentation.offset.x, y: originBase.y + presentation.offset.y }
     node.position.set(origin.x, origin.y)
     node.alpha = 1
-    const rotationBase = embedded
+    // Anchored art stays axis-aligned with its left-to-right wipe so the smudge
+    // joins land exactly on the trace (a rotation wobble would break the fuse).
+    const rotationBase = embedded || anchoredPlacement
       ? 0
       : strokeFit
       ? strokeFit.angle + (options.rotation ?? 0)
@@ -320,16 +409,6 @@ export class Creatures {
     // textured Sprites render invisibly — which is why no creatures ever appeared.
     // Black ink figures on transparent read correctly over the paper as normal.
     node.blendMode = "normal"
-    const maxSide = Math.max(firstTexture.width || 1, firstTexture.height || 1)
-    // The portal takeover uses screen scale, not paper scale: the PNG starts
-    // small inside the trace and grows past the viewport like the reference cut.
-    const isPortal = options.layer === "screenForeground" && options.reveal === "portalTakeover"
-    const screen = this.stage.app.screen
-    const portalBase = Math.max(
-      screen.width / (firstTexture.width || 1),
-      screen.height / (firstTexture.height || 1),
-    ) * 0.74
-    const baseScale = embedded ? 1 : isPortal ? portalBase : presentation.targetLongSide / maxSide
     const initialScale = isPortal
       ? creatureScaleMultiplier(initialReveal, 0, presentation.life, options.frameOffset ?? 0)
       : creatureEntranceScale(initialReveal, 0)
@@ -418,6 +497,17 @@ export class Creatures {
       fps: entry.fps,
       playback: entry.playback,
     })
+
+    if (initialReveal === "brushDraw" || initialReveal === "drawLeftToRight") {
+      const pos = anchoredPlacement
+        ? {
+            x: anchoredPlacement.resume.x + presentation.offset.x,
+            y: anchoredPlacement.resume.y + presentation.offset.y,
+          }
+        : brushResumePoint(origin, (firstTexture.width || 1) * baseScale)
+      return { pos, dir: { x: 1, y: 0 } }
+    }
+    return null
   }
 
   // Conveyor recycle: keep live creatures pinned to the world as it wraps.

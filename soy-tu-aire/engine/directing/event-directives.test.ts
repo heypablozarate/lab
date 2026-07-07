@@ -6,15 +6,15 @@ describe("EVENT_DIRECTIVES", () => {
   it("captures chica as a fast brush-drawn trace figure", () => {
     const directive = getEventDirective("chica")
 
-    expect(directive?.brushHold).toEqual({ startOffset: 1.34, duration: 0.58, pressure: 0, paint: false, freeze: false })
+    expect(directive?.brushHold).toEqual({ startOffset: 1.34, duration: 0.58, pressure: 0, paint: false })
     expect(directive?.creatures?.chica?.[0]).toMatchObject({
       at: 1.42,
       layer: "overInk",
       attachment: "brushHead",
       reveal: "brushDraw",
-      targetLongSide: 190,
+      targetLongSide: 340,
       fixed: true,
-      revealDuration: 0.36,
+      revealDuration: 0.44,
     })
   })
 
@@ -75,17 +75,18 @@ describe("EVENT_DIRECTIVES", () => {
   it("captures labios as a brush pause plus progressive reveal", () => {
     const directive = getEventDirective("labios")
 
-    expect(directive?.brushHold).toEqual({ startOffset: 1.58, duration: 1.25, pressure: 0.12, paint: true })
+    expect(directive?.brushHold).toEqual({ startOffset: 1.58, duration: 0.95, pressure: 0, paint: false })
     expect(directive?.creatures?.labios?.[0]).toMatchObject({
       at: 1.72,
       layer: "overInk",
       attachment: "brushHead",
       reveal: "brushDraw",
-      targetLongSide: 360,
+      targetLongSide: 480,
       life: 5.2,
+      fixed: true,
     })
-    expect(directive?.creatures?.labios?.[0].offset).toEqual({ x: 178, y: 12 })
-    expect(directive?.creatures?.labios?.[0].drift).toEqual({ x: -128, y: 6 })
+    expect(directive?.creatures?.labios?.[0].offset).toEqual({ x: 0, y: 0 })
+    expect(directive?.creatures?.labios?.[0].drift).toEqual({ x: 0, y: 0 })
   })
 
   it("captures birds as a late stroke-born flock", () => {
@@ -300,7 +301,7 @@ describe("EVENT_DIRECTIVES", () => {
     expect(getEventDirective("Ogrande")?.creatures?.Ogrande?.[0]).toMatchObject({
       attachment: "brushHead",
       reveal: "brushDraw",
-      targetLongSide: 330,
+      targetLongSide: 360,
       fixed: true,
       revealDuration: 0.61,
     })

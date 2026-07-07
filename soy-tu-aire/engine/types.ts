@@ -2,6 +2,10 @@ export type Vec2 = { x: number; y: number }
 export type Bands = { voz: number; instrumental: number; cascabeles: number; ritmo2: number }
 export type ViewRect = { x: number; y: number; w: number; h: number }
 export type BrushMod = { pressure: number; climax: number; ink?: number; hold?: boolean }
+// Where (and toward where) the pen should touch down again after an image was
+// "drawn" by the stroke: `pos` is just inside the image's exit edge, `dir` the
+// forward direction the resumed line should continue in.
+export type BrushResumeHint = { pos: Vec2; dir: Vec2 }
 export type RibbonSample = Vec2 & {
   width: number
   alpha: number

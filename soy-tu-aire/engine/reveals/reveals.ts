@@ -1,11 +1,14 @@
 import type { StrokeAnchor } from "../brush/stroke-history"
-import type { Vec2 } from "../types"
+import type { BrushResumeHint, Vec2 } from "../types"
 import type { PixiModule, PixiStage } from "../render/pixi-stage"
 
 const LIFE = 3
 // Target longest side of a PNG word-sprite in paper-space pixels.
 export const WORD_TARGET_LONG_SIDE = 360
 export const WORD_REVEAL_LEADING_OFFSET = WORD_TARGET_LONG_SIDE / 2
+// How far the word's leading edge tucks back INTO the painted stroke tip, so
+// the word grows out of the line instead of floating detached ahead of it.
+export const WORD_ENTRY_OVERLAP = 26
 const WORD_REVEAL_SPEED = 560
 // How long the word takes to "write" itself in. Derived from display size so the
 // reveal keeps pace with the moving brush instead of lingering as a separate fade.
@@ -58,6 +61,18 @@ export function hasRevealTexture(word: string): boolean {
   return REVEAL_TEXTURE_NAMES.has(word)
 }
 
+// Where the pen touches down again after a word writes itself in: just inside
+// the word's trailing edge along the trace (the word PNGs end in thin
+// calligraphic tails, so the resumed line grows out of the last letter).
+export function wordResumePoint(center: Vec2, rotation: number, longSide: number): Vec2 {
+  const inset = Math.min(16, Math.max(8, longSide * 0.03))
+  const reach = Math.max(0, longSide / 2 - inset)
+  return {
+    x: round(center.x + Math.cos(rotation) * reach),
+    y: round(center.y + Math.sin(rotation) * reach),
+  }
+}
+
 export class Reveals {
   private active: Active[] = []
   /** Per-word texture cache so repeat spawns skip the network round-trip. */
@@ -65,12 +80,14 @@ export class Reveals {
 
   constructor(private stage: PixiStage, private pixi: PixiModule) {}
 
-  spawn(word: string, at: Vec2, now: number, options: RevealSpawnOptions = {}): void {
+  // Returns where (and toward where) the brush should resume painting once the
+  // word has written itself in, or null when the word renders nothing.
+  spawn(word: string, at: Vec2, now: number, options: RevealSpawnOptions = {}): BrushResumeHint | null {
     const cached = this.textureCache.get(word)
-    if (cached === null) return // known to have no PNG -> render nothing
+    if (cached === null) return null // known to have no PNG -> render nothing
     if (!cached && !hasRevealTexture(word)) {
       this.textureCache.set(word, null)
-      return
+      return null
     }
 
     void now
@@ -90,9 +107,13 @@ export class Reveals {
     }
     this.active.push(active)
 
+    const resume: BrushResumeHint = {
+      pos: wordResumePoint(spawnAt, rotation, targetLongSide),
+      dir: { x: Math.cos(rotation), y: Math.sin(rotation) },
+    }
     if (cached) {
       this.attachSprite(active, cached, spawnAt, rotation)
-      return
+      return resume
     }
     // First time for this word — try to load its PNG. Show nothing meanwhile.
     this.pixi.Assets.load(`/lab/soy-tu-aire/creatures/${word}.png`)
@@ -103,6 +124,7 @@ export class Reveals {
       .catch(() => {
         this.textureCache.set(word, null) // no image for this word; never show
       })
+    return resume
   }
 
   private attachSprite(active: Active, texture: Texture, at: Vec2, rotation: number): void {

@@ -72,8 +72,8 @@ export const EVENT_DIRECTIVES: EventDirective[] = [
   {
     key: "chica",
     match: "chica",
-    notes: "The first figure opens a clean no-ink glide in the trace: the brush crosses the sprite area without stamping, then resumes beyond the figure instead of painting through it.",
-    brushHold: { startOffset: 1.34, duration: 0.58, pressure: 0, paint: false, freeze: false },
+    notes: "The first figure is drawn by the stroke itself: the pen lifts and waits while the girl wipes in at the tip, then touches down again at her far edge (engine brushResume) so the line grows out of the figure instead of crossing it.",
+    brushHold: { startOffset: 1.34, duration: 0.58, pressure: 0, paint: false },
     creatures: {
       chica: [
         {
@@ -82,12 +82,12 @@ export const EVENT_DIRECTIVES: EventDirective[] = [
           layer: "overInk",
           attachment: "brushHead",
           reveal: "brushDraw",
-          targetLongSide: 190,
+          targetLongSide: 340,
           life: 3.6,
-          offset: { x: 84, y: 10 },
+          offset: { x: 0, y: 0 },
           drift: { x: 0, y: 0 },
           fixed: true,
-          revealDuration: 0.36,
+          revealDuration: 0.44,
         },
       ],
     },
@@ -154,8 +154,8 @@ export const EVENT_DIRECTIVES: EventDirective[] = [
   {
     key: "labios",
     match: "labios",
-    notes: "Reference completes the loop, then pins the brush tip while the lips draw out from the left corner.",
-    brushHold: { startOffset: 1.58, duration: 1.25, pressure: 0.12, paint: true },
+    notes: "Reference completes the loop, then lifts the pen while the lips draw out from the left corner; the lips hold still while being drawn and the line resumes from their right corner (engine brushResume).",
+    brushHold: { startOffset: 1.58, duration: 0.95, pressure: 0, paint: false },
     creatures: {
       labios: [
         {
@@ -164,10 +164,12 @@ export const EVENT_DIRECTIVES: EventDirective[] = [
           layer: "overInk",
           attachment: "brushHead",
           reveal: "brushDraw",
-          targetLongSide: 360,
+          targetLongSide: 480,
           life: 5.2,
-          offset: { x: 178, y: 12 },
-          drift: { x: -128, y: 6 },
+          offset: { x: 0, y: 0 },
+          drift: { x: 0, y: 0 },
+          fixed: true,
+          revealDuration: 0.7,
         },
       ],
     },
@@ -408,9 +410,9 @@ export const EVENT_DIRECTIVES: EventDirective[] = [
           layer: "overInk",
           attachment: "brushHead",
           reveal: "brushDraw",
-          targetLongSide: 330,
+          targetLongSide: 360,
           life: 3.5,
-          offset: { x: 154, y: 0 },
+          offset: { x: 0, y: 0 },
           drift: { x: 0, y: 0 },
           fixed: true,
           revealDuration: 0.61,
