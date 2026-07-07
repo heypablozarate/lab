@@ -5,7 +5,7 @@
    El vidrio del sidebar y del panel es el motor propio de Synapsis
    (`LiquidGlass`: mapa de desplazamiento SDF + `feDisplacementMap` sobre el
    backdrop, aberración cromática y tint de papel), no el motor global de RAMS.
-   --brand-accent queda reservado a selección/hover. */
+   La constelación usa foco monocromo paper/ink; --brand-accent queda en UI. */
 
 .page {
   position: relative;
@@ -70,6 +70,58 @@
   inset: 0;
 }
 
+.canvasHost::before,
+.canvasHost::after {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  content: "";
+  pointer-events: none;
+}
+
+.canvasHost::before {
+  background-image:
+    linear-gradient(color-mix(in srgb, var(--ink) 4%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--ink) 4%, transparent) 1px, transparent 1px),
+    repeating-linear-gradient(
+      0deg,
+      transparent 0,
+      transparent 2px,
+      color-mix(in srgb, var(--ink) 2.5%, transparent) 3px
+    );
+  background-size: 80px 80px, 80px 80px, 100% 6px;
+  opacity: 0.55;
+}
+
+.canvasHost::after {
+  background:
+    radial-gradient(circle at 50% 50%, transparent 0 42%, color-mix(in srgb, var(--surface-raised) 72%, transparent) 100%),
+    linear-gradient(90deg, color-mix(in srgb, var(--surface-raised) 52%, transparent), transparent 24% 76%, color-mix(in srgb, var(--surface-raised) 52%, transparent));
+  opacity: 0.58;
+}
+
+.canvasHost canvas {
+  position: relative;
+  z-index: 0;
+}
+
+.stage[data-theme="dark"] .canvasHost::before {
+  background-image:
+    linear-gradient(color-mix(in srgb, var(--ink) 5.5%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--ink) 5.5%, transparent) 1px, transparent 1px),
+    repeating-linear-gradient(
+      0deg,
+      transparent 0,
+      transparent 2px,
+      color-mix(in srgb, var(--ink) 4%, transparent) 3px
+    );
+  opacity: 0.72;
+}
+
+.stage[data-theme="dark"] .canvasHost::after {
+  opacity: 0.66;
+}
+
 .loading {
   position: absolute;
   inset: 0;
@@ -101,20 +153,37 @@
   left: 0;
   max-width: 16rem;
   overflow: hidden;
-  color: var(--ink);
-  font-family: var(--font-body), Arial, sans-serif;
-  font-size: 0.875rem;
-  font-weight: 500;
-  letter-spacing: 0.01em;
+  color: color-mix(in srgb, var(--ink) 58%, var(--surface-raised));
+  font-family: "SFMono-Regular", "Roboto Mono", "IBM Plex Mono", ui-monospace, monospace;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: uppercase;
   white-space: nowrap;
   text-overflow: ellipsis;
   opacity: 0;
+  text-shadow: 0 1px 0 color-mix(in srgb, var(--surface-raised) 78%, transparent);
   will-change: transform, opacity;
 }
 
 .label[data-active="true"] {
-  color: var(--brand-accent);
+  color: var(--ink);
   font-weight: 700;
+  text-shadow:
+    0 0 14px color-mix(in srgb, var(--surface-raised) 78%, transparent),
+    0 0 1px var(--surface-raised);
+}
+
+.stage[data-theme="dark"] .label {
+  color: color-mix(in srgb, var(--ink) 52%, var(--surface-raised));
+  text-shadow: 0 1px 0 var(--surface-raised);
+}
+
+.stage[data-theme="dark"] .label[data-active="true"] {
+  color: color-mix(in srgb, var(--ink) 94%, var(--surface-raised));
+  text-shadow:
+    0 0 18px color-mix(in srgb, var(--ink) 18%, transparent),
+    0 1px 0 var(--surface-raised);
 }
 
 /* ---- HUD / sidebar ----

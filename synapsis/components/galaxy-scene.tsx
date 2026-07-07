@@ -81,15 +81,24 @@ type Palette = {
 function buildPalette(tokens: SceneTokens): Palette {
   const surface = new THREE.Color(tokens.surfaceRaised);
   const ink = new THREE.Color(tokens.ink);
-  // Lab home line rule (ink 16% over the background), resolved to a solid.
-  const line = surface.clone().lerp(ink, 0.16);
+  const surfaceBrightness = (surface.r + surface.g + surface.b) / 3;
+  const isDark = surfaceBrightness < 0.18;
+
+  // The dsaints-style graph field needs visible hairlines in dark mode while
+  // staying quiet on paper. Keep the same token source, but tune the resolved
+  // mix per theme because WebGL cannot parse CSS color-mix().
+  const edgeRest = isDark ? surface.clone().lerp(ink, 0.18) : surface.clone().lerp(ink, 0.075);
+  const edgeFaint = isDark ? surface.clone().lerp(ink, 0.065) : surface.clone().lerp(ink, 0.03);
+  const nodeRest = isDark ? surface.clone().lerp(ink, 0.68) : ink.clone().lerp(surface, 0.16);
+  const nodeDim = isDark ? surface.clone().lerp(ink, 0.15) : ink.clone().lerp(surface, 0.84);
+
   return {
     surface,
-    accent: new THREE.Color(tokens.accent),
-    nodeRest: ink.clone(),
-    nodeDim: ink.clone().lerp(surface, 0.82),
-    edgeRest: line.clone().lerp(surface, 0.4),
-    edgeFaint: surface.clone().lerp(ink, 0.045),
+    accent: isDark ? ink.clone() : ink.clone().lerp(surface, 0.02),
+    nodeRest,
+    nodeDim,
+    edgeRest,
+    edgeFaint,
   };
 }
 
@@ -445,12 +454,12 @@ function GalaxyContents(props: GalaxySceneProps) {
           onPointerOut={() => onHover(null)}
           onClick={handleClick}
         >
-          <icosahedronGeometry args={[1, 2]} />
+          <sphereGeometry args={[1, 16, 12]} />
           {/* default white base color: instance colors carry the RAMS tokens */}
           <meshBasicMaterial />
         </instancedMesh>
         <lineSegments ref={edgesRef} geometry={edgeGeometry}>
-          <lineBasicMaterial vertexColors />
+          <lineBasicMaterial vertexColors transparent opacity={0.96} />
         </lineSegments>
       </group>
     </group>
