@@ -46,8 +46,7 @@ export type GalaxySceneProps = {
   neighbors: Set<number>;
   /** 1 = node is filtered out (cluster filter / search miss). */
   dimMask: Uint8Array;
-  labelIndices: number[];
-  labelTexts: string[];
+  nodeTitles: string[];
   labelPool: React.RefObject<LabelPool>;
   fpsRef: React.RefObject<HTMLSpanElement | null>;
   reducedMotion: boolean;
@@ -62,10 +61,12 @@ export type GalaxySceneProps = {
 
 const AUTO_ROTATION = 0.0003; // rad per frame, kickoff value
 const TRANSITION_MS = 400;
-const DEFAULT_CAMERA = new THREE.Vector3(0, 9, 46);
-const FOG_NEAR = 30;
-const FOG_FAR = 82;
+const DEFAULT_CAMERA = new THREE.Vector3(0, 11.5, 74);
+const DESKTOP_OPTICAL_OFFSET_X = 12;
+const FOG_NEAR = 38;
+const FOG_FAR = 124;
 const FOCUS_DISTANCE = 14;
+const PULSE_STRENGTH = 0.075;
 
 const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
 
@@ -102,6 +103,67 @@ function buildPalette(tokens: SceneTokens): Palette {
   };
 }
 
+function relativeLuminance(color: THREE.Color) {
+  const channel = (value: number) =>
+    value <= 0.03928 ? value / 12.92 : Math.pow((value + 0.055) / 1.055, 2.4);
+  return 0.2126 * channel(color.r) + 0.7152 * channel(color.g) + 0.0722 * channel(color.b);
+}
+
+type NodeUniforms = {
+  uTime: { value: number };
+  uPulseStrength: { value: number };
+  uCoreLighten: { value: number };
+  uPulseInk: { value: THREE.Color };
+  uSurface: { value: THREE.Color };
+  uFogNear: { value: number };
+  uFogFar: { value: number };
+};
+
+function createNodeMaterial(): THREE.ShaderMaterial & { uniforms: NodeUniforms } {
+  return new THREE.ShaderMaterial({
+    uniforms: {
+      uTime: { value: 0 },
+      uPulseStrength: { value: PULSE_STRENGTH },
+      uCoreLighten: { value: 0 },
+      uPulseInk: { value: new THREE.Color() },
+      uSurface: { value: new THREE.Color() },
+      uFogNear: { value: FOG_NEAR },
+      uFogFar: { value: FOG_FAR },
+    },
+    vertexShader: nodeVertexShader,
+    fragmentShader: nodeFragmentShader,
+  }) as THREE.ShaderMaterial & { uniforms: NodeUniforms };
+}
+
+function createNodeGeometry(nodeCount: number) {
+  const geometry = new THREE.SphereGeometry(1, 32, 16);
+  const pulsePhase = new Float32Array(nodeCount);
+  const nodeColor = new Float32Array(nodeCount * 3);
+  for (let i = 0; i < nodeCount; i += 1) {
+    pulsePhase[i] = ((i * 0.61803398875) % 1) * Math.PI * 2;
+  }
+  geometry.setAttribute("pulsePhase", new THREE.InstancedBufferAttribute(pulsePhase, 1));
+  const colorAttribute = new THREE.InstancedBufferAttribute(nodeColor, 3);
+  colorAttribute.setUsage(THREE.DynamicDrawUsage);
+  geometry.setAttribute("nodeColor", colorAttribute);
+  return geometry;
+}
+
+function writeNodeTheme(material: THREE.ShaderMaterial & { uniforms: NodeUniforms }, palette: Palette) {
+  material.uniforms.uCoreLighten.value = relativeLuminance(palette.surface) < 0.2 ? 1 : 0;
+  material.uniforms.uPulseInk.value.copy(palette.nodeRest);
+  material.uniforms.uSurface.value.copy(palette.surface);
+}
+
+function writeNodeFrame(
+  material: THREE.ShaderMaterial & { uniforms: NodeUniforms },
+  elapsed: number,
+  reducedMotion: boolean,
+) {
+  material.uniforms.uTime.value = elapsed;
+  material.uniforms.uPulseStrength.value = reducedMotion ? 0 : PULSE_STRENGTH;
+}
+
 // ---- 400ms cubic color transition, held in a ref and mutated imperatively ----
 
 type TransitionState = {
@@ -133,7 +195,7 @@ type InteractionSnapshot = {
 
 function beginTransition(
   state: TransitionState,
-  inst: THREE.InstancedMesh,
+  nodeGeometry: THREE.BufferGeometry,
   edges: THREE.LineSegments,
   palette: Palette,
   edgeIndices: number[],
@@ -143,12 +205,9 @@ function beginTransition(
   const nodeCount = state.nodeFrom.length / 3;
   const edgeCount = edgeIndices.length / 2;
   const hasSelection = selected !== null;
+  const nodeColorAttr = nodeGeometry.getAttribute("nodeColor") as THREE.InstancedBufferAttribute;
 
-  if (inst.instanceColor) {
-    state.nodeFrom.set(inst.instanceColor.array as Float32Array);
-  } else {
-    for (let i = 0; i < nodeCount; i += 1) palette.nodeRest.toArray(state.nodeFrom, i * 3);
-  }
+  state.nodeFrom.set(nodeColorAttr.array as Float32Array);
   const edgeColorAttr = edges.geometry.getAttribute("color") as THREE.BufferAttribute;
   state.edgeFrom.set(edgeColorAttr.array as Float32Array);
 
@@ -185,17 +244,16 @@ function beginTransition(
   state.active = true;
 }
 
-function applyTransition(state: TransitionState, inst: THREE.InstancedMesh, edges: THREE.LineSegments) {
+function applyTransition(state: TransitionState, nodeGeometry: THREE.BufferGeometry, edges: THREE.LineSegments) {
   if (!state.active) return;
   const t = Math.min(1, (performance.now() - state.start) / TRANSITION_MS);
   const e = easeOutCubic(t);
-  if (inst.instanceColor) {
-    const arr = inst.instanceColor.array as Float32Array;
-    for (let i = 0; i < arr.length; i += 1) {
-      arr[i] = state.nodeFrom[i] + (state.nodeTarget[i] - state.nodeFrom[i]) * e;
-    }
-    inst.instanceColor.needsUpdate = true;
+  const nodeColorAttr = nodeGeometry.getAttribute("nodeColor") as THREE.InstancedBufferAttribute;
+  const nodeColorArr = nodeColorAttr.array as Float32Array;
+  for (let i = 0; i < nodeColorArr.length; i += 1) {
+    nodeColorArr[i] = state.nodeFrom[i] + (state.nodeTarget[i] - state.nodeFrom[i]) * e;
   }
+  nodeColorAttr.needsUpdate = true;
   const attr = edges.geometry.getAttribute("color") as THREE.BufferAttribute;
   const arr = attr.array as Float32Array;
   for (let i = 0; i < arr.length; i += 1) {
@@ -209,52 +267,100 @@ function applyTransition(state: TransitionState, inst: THREE.InstancedMesh, edge
 
 type LabelFrameArgs = {
   positions: number[];
-  labelIndices: number[];
-  labelTexts: string[];
+  nodeTitles: string[];
   matrixWorld: THREE.Matrix4;
   camera: THREE.Camera;
   snapshot: InteractionSnapshot;
+  panelEls: (HTMLElement | null)[];
   worldPos: THREE.Vector3;
   projected: THREE.Vector3;
 };
 
+type LabelCandidate = {
+  index: number;
+  text: string;
+  x: number;
+  y: number;
+  opacity: number;
+  active: boolean;
+  score: number;
+};
+
 function updateLabels(pool: LabelPool, args: LabelFrameArgs) {
   if (!pool.container) return;
-  const { positions, labelIndices, labelTexts, matrixWorld, camera, snapshot, worldPos, projected } = args;
+  const { positions, nodeTitles, matrixWorld, camera, snapshot, panelEls, worldPos, projected } = args;
   const { selected, hovered, neighbors, dimMask } = snapshot;
-  const { width, height } = pool.container.getBoundingClientRect();
+  const containerRect = pool.container.getBoundingClientRect();
+  const { width, height } = containerRect;
+  const panelRects = panelEls
+    .filter((el): el is HTMLElement => el !== null)
+    .map((el) => el.getBoundingClientRect());
+  const candidates: LabelCandidate[] = [];
+
+  for (let nodeIndex = 0; nodeIndex < nodeTitles.length; nodeIndex += 1) {
+    if (dimMask[nodeIndex] === 1 && nodeIndex !== selected && nodeIndex !== hovered) continue;
+    worldPos.fromArray(positions, nodeIndex * 3).applyMatrix4(matrixWorld);
+    const depth = worldPos.distanceTo(camera.position);
+    projected.copy(worldPos).project(camera);
+    if (projected.z > 1) continue;
+    const x = (projected.x * 0.5 + 0.5) * width;
+    const y = (-projected.y * 0.5 + 0.5) * height;
+    const onScreen = x > -80 && x < width + 80 && y > -60 && y < height + 60;
+    if (!onScreen && nodeIndex !== selected && nodeIndex !== hovered) continue;
+
+    const fogFade = THREE.MathUtils.clamp((FOG_FAR - 12 - depth) / (FOG_FAR - 12 - FOG_NEAR), 0, 1);
+    const active = nodeIndex === selected || nodeIndex === hovered;
+    const connected = selected !== null && neighbors.has(nodeIndex);
+    const centerPenalty = Math.abs(projected.x) * 6 + Math.abs(projected.y) * 3;
+    const priority = active ? -10000 : connected ? -5000 : 0;
+    candidates.push({
+      index: nodeIndex,
+      text: nodeTitles[nodeIndex],
+      x,
+      y,
+      opacity: (selected !== null && !active && !connected ? 0.24 : 0.92) * fogFade,
+      active,
+      score: priority + depth + centerPenalty,
+    });
+  }
+
+  candidates.sort((a, b) => a.score - b.score || a.index - b.index);
 
   for (let s = 0; s < pool.slots.length; s += 1) {
     const span = pool.slots[s];
     if (!span) continue;
-    const nodeIndex = s < labelIndices.length ? labelIndices[s] : -1;
+    const candidate = candidates[s];
+    const nodeIndex = candidate?.index ?? -1;
     if (pool.assignments[s] !== nodeIndex) {
       pool.assignments[s] = nodeIndex;
-      span.textContent = nodeIndex >= 0 ? labelTexts[s] : "";
+      span.textContent = candidate?.text ?? "";
     }
-    const isActive = nodeIndex >= 0 && (nodeIndex === selected || nodeIndex === hovered);
-    if ((span.dataset.active === "true") !== isActive) {
-      span.dataset.active = isActive ? "true" : "false";
+    if ((span.dataset.active === "true") !== Boolean(candidate?.active)) {
+      span.dataset.active = candidate?.active ? "true" : "false";
     }
-    if (nodeIndex < 0) {
+    if (!candidate) {
+      if (span.dataset.glass === "true") span.dataset.glass = "false";
       span.style.opacity = "0";
       continue;
     }
-    worldPos.fromArray(positions, nodeIndex * 3).applyMatrix4(matrixWorld);
-    const depth = worldPos.distanceTo(camera.position);
-    projected.copy(worldPos).project(camera);
-    if (projected.z > 1) {
-      span.style.opacity = "0";
-      continue;
+    const labelWidth = span.offsetWidth;
+    const labelHeight = span.offsetHeight;
+    const labelLeft = containerRect.left + candidate.x - labelWidth / 2;
+    const labelTop = containerRect.top + candidate.y - labelHeight * 1.4;
+    const labelRight = labelLeft + labelWidth;
+    const labelBottom = labelTop + labelHeight;
+    const underGlass = panelRects.some(
+      (rect) =>
+        labelRight >= rect.left &&
+        labelLeft <= rect.right &&
+        labelBottom >= rect.top &&
+        labelTop <= rect.bottom,
+    );
+    if ((span.dataset.glass === "true") !== underGlass) {
+      span.dataset.glass = underGlass ? "true" : "false";
     }
-    const x = (projected.x * 0.5 + 0.5) * width;
-    const y = (-projected.y * 0.5 + 0.5) * height;
-    const fogFade = THREE.MathUtils.clamp((FOG_FAR - 14 - depth) / (FOG_FAR - 14 - FOG_NEAR), 0, 1);
-    const dimmed = selected !== null
-      ? nodeIndex !== selected && !neighbors.has(nodeIndex)
-      : dimMask[nodeIndex] === 1;
-    span.style.opacity = String((dimmed ? 0.15 : 0.9) * fogFade);
-    span.style.transform = `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, 0) translate(-50%, -140%)`;
+    span.style.opacity = String(candidate.opacity * (underGlass ? 0.42 : 1));
+    span.style.transform = `translate3d(${candidate.x.toFixed(1)}px, ${candidate.y.toFixed(1)}px, 0) translate(-50%, -140%)`;
   }
 }
 
@@ -267,6 +373,76 @@ function updateFpsMeter(el: HTMLSpanElement, window: { frames: number; last: num
   }
 }
 
+const nodeVertexShader = /* glsl */ `
+attribute vec3 nodeColor;
+attribute float pulsePhase;
+
+uniform float uTime;
+uniform float uPulseStrength;
+
+varying vec3 vInstanceColor;
+varying vec3 vViewNormal;
+varying float vDepth;
+varying float vPulse;
+varying float vBreath;
+
+void main() {
+  vInstanceColor = nodeColor;
+  vViewNormal = normalize(normalMatrix * normal);
+
+  float pulse = 0.5 + 0.5 * sin(uTime * 2.45 + pulsePhase);
+  float breath = smoothstep(0.22, 1.0, pulse);
+  vPulse = pulse;
+  vBreath = breath;
+  vec3 pulsed = position * (1.0 + uPulseStrength * breath);
+
+  vec4 mvPosition = modelViewMatrix * instanceMatrix * vec4(pulsed, 1.0);
+  vDepth = -mvPosition.z;
+  gl_Position = projectionMatrix * mvPosition;
+}
+`;
+
+const nodeFragmentShader = /* glsl */ `
+precision highp float;
+
+uniform float uCoreLighten;
+uniform vec3 uPulseInk;
+uniform vec3 uSurface;
+uniform float uFogNear;
+uniform float uFogFar;
+
+varying vec3 vInstanceColor;
+varying vec3 vViewNormal;
+varying float vDepth;
+varying float vPulse;
+varying float vBreath;
+
+void main() {
+  float facing = clamp(vViewNormal.z, 0.0, 1.0);
+  float depthFade = smoothstep(uFogNear, uFogFar, vDepth);
+  float presence = 1.0 - depthFade;
+
+  float shellMask = smoothstep(0.04, 0.42, facing);
+  float ringMask = smoothstep(0.14, 0.38, facing) * (1.0 - smoothstep(0.64, 0.96, facing));
+  float centerMask = smoothstep(0.74, 0.95, facing);
+
+  float shellShade = mix(0.42, 1.18, presence) * mix(0.86, 1.08, facing);
+  vec3 shell = mix(uSurface, vInstanceColor * shellShade, shellMask);
+
+  vec3 pulseColor = mix(uSurface, uPulseInk, mix(0.36, 0.84, presence));
+  shell = mix(shell, pulseColor, ringMask * vBreath * mix(0.12, 0.62, presence));
+
+  vec3 coreDark = vInstanceColor * mix(0.28, 0.46, presence);
+  vec3 coreLight = mix(vInstanceColor, vec3(1.0), mix(0.36, 0.58, presence));
+  vec3 core = mix(coreDark, coreLight, uCoreLighten);
+  vec3 color = mix(shell, core, centerMask * mix(0.68, 0.94, presence));
+
+  color = mix(color, uSurface, depthFade * 0.88);
+
+  gl_FragColor = vec4(clamp(color, 0.0, 1.0), 1.0);
+}
+`;
+
 function GalaxyContents(props: GalaxySceneProps) {
   const {
     positions,
@@ -277,8 +453,7 @@ function GalaxyContents(props: GalaxySceneProps) {
     selected,
     neighbors,
     dimMask,
-    labelIndices,
-    labelTexts,
+    nodeTitles,
     labelPool,
     fpsRef,
     reducedMotion,
@@ -296,8 +471,18 @@ function GalaxyContents(props: GalaxySceneProps) {
   const draggingRef = useRef(false);
   const transitionRef = useRef<TransitionState | null>(null);
   const camera = useThree((s) => s.camera);
+  const size = useThree((s) => s.size);
 
   const palette = useMemo(() => buildPalette(tokens), [tokens]);
+  const nodeGeometry = useMemo(() => createNodeGeometry(nodeCount), [nodeCount]);
+  const nodeMaterial = useMemo(() => createNodeMaterial(), []);
+
+  useEffect(() => () => nodeGeometry.dispose(), [nodeGeometry]);
+  useEffect(() => () => nodeMaterial.dispose(), [nodeMaterial]);
+
+  useEffect(() => {
+    writeNodeTheme(nodeMaterial, palette);
+  }, [nodeMaterial, palette]);
 
   const edgeGeometry = useMemo(() => {
     const geometry = new THREE.BufferGeometry();
@@ -325,17 +510,19 @@ function GalaxyContents(props: GalaxySceneProps) {
       m.makeScale(r, r, r);
       m.setPosition(positions[i * 3], positions[i * 3 + 1], positions[i * 3 + 2]);
       inst.setMatrixAt(i, m);
-      inst.setColorAt(i, palette.nodeRest);
     }
     inst.instanceMatrix.needsUpdate = true;
-    if (inst.instanceColor) inst.instanceColor.needsUpdate = true;
     inst.computeBoundingSphere();
+    const nodeColorAttr = nodeGeometry.getAttribute("nodeColor") as THREE.InstancedBufferAttribute;
+    const nodeColorArr = nodeColorAttr.array as Float32Array;
+    for (let i = 0; i < nodeCount; i += 1) palette.nodeRest.toArray(nodeColorArr, i * 3);
+    nodeColorAttr.needsUpdate = true;
 
     const attr = edgeGeometry.getAttribute("color") as THREE.BufferAttribute;
     const arr = attr.array as Float32Array;
     for (let e = 0; e < edgeCount * 2; e += 1) palette.edgeRest.toArray(arr, e * 3);
     attr.needsUpdate = true;
-  }, [nodeCount, edgeCount, positions, radii, palette, edgeGeometry]);
+  }, [nodeCount, edgeCount, positions, radii, palette, edgeGeometry, nodeGeometry]);
 
   // Replay the color transition toward new targets whenever interaction
   // state changes.
@@ -346,13 +533,13 @@ function GalaxyContents(props: GalaxySceneProps) {
     if (!transitionRef.current) {
       transitionRef.current = createTransitionState(nodeCount, edgeCount);
     }
-    beginTransition(transitionRef.current, inst, edges, palette, edgeIndices, {
+    beginTransition(transitionRef.current, nodeGeometry, edges, palette, edgeIndices, {
       hovered,
       selected,
       neighbors,
       dimMask,
     });
-  }, [hovered, selected, neighbors, dimMask, palette, edgeIndices, nodeCount, edgeCount]);
+  }, [hovered, selected, neighbors, dimMask, palette, edgeIndices, nodeCount, edgeCount, nodeGeometry]);
 
   const focusTarget = useRef(new THREE.Vector3());
   const focusCamera = useRef(DEFAULT_CAMERA.clone());
@@ -366,6 +553,9 @@ function GalaxyContents(props: GalaxySceneProps) {
     const inst = instRef.current;
     const edges = edgesRef.current;
     if (!group || !controls || !inst || !edges) return;
+    const opticalOffsetX = size.width > 720 ? DESKTOP_OPTICAL_OFFSET_X : 0;
+    group.position.x = opticalOffsetX;
+    writeNodeFrame(nodeMaterial, state.clock.elapsedTime, reducedMotion);
 
     // Auto-rotation only at rest: no drag, no selection, no reduced motion.
     if (!reducedMotion && !draggingRef.current && selected === null) {
@@ -373,7 +563,7 @@ function GalaxyContents(props: GalaxySceneProps) {
     }
     group.updateMatrixWorld();
 
-    if (transitionRef.current) applyTransition(transitionRef.current, inst, edges);
+    if (transitionRef.current) applyTransition(transitionRef.current, nodeGeometry, edges);
 
     // Focus: ease the camera toward the selected node; back to the wide view
     // when nothing is selected.
@@ -386,10 +576,9 @@ function GalaxyContents(props: GalaxySceneProps) {
       focusCamera.current.copy(worldPos.current).add(away);
     } else {
       focusTarget.current.set(0, 0, 0);
-      const away = projected.current.copy(camera.position);
+      const away = projected.current.copy(camera.position).sub(focusTarget.current);
       if (away.lengthSq() < 1e-6) away.copy(DEFAULT_CAMERA);
-      away.setLength(DEFAULT_CAMERA.length());
-      focusCamera.current.copy(away);
+      focusCamera.current.copy(focusTarget.current).add(away);
     }
     if (!draggingRef.current) {
       const alpha = reducedMotion ? 1 : 1 - Math.exp(-5 * delta);
@@ -401,11 +590,11 @@ function GalaxyContents(props: GalaxySceneProps) {
     if (labelPool.current) {
       updateLabels(labelPool.current, {
         positions,
-        labelIndices,
-        labelTexts,
+        nodeTitles,
         matrixWorld: group.matrixWorld,
         camera,
         snapshot: { hovered, selected, neighbors, dimMask },
+        panelEls: props.panelEls.current ?? [],
         worldPos: worldPos.current,
         projected: projected.current,
       });
@@ -454,9 +643,8 @@ function GalaxyContents(props: GalaxySceneProps) {
           onPointerOut={() => onHover(null)}
           onClick={handleClick}
         >
-          <sphereGeometry args={[1, 16, 12]} />
-          {/* default white base color: instance colors carry the RAMS tokens */}
-          <meshBasicMaterial />
+          <primitive attach="geometry" object={nodeGeometry} />
+          <primitive attach="material" object={nodeMaterial} />
         </instancedMesh>
         <lineSegments ref={edgesRef} geometry={edgeGeometry}>
           <lineBasicMaterial vertexColors transparent opacity={0.96} />
@@ -471,6 +659,7 @@ export default function GalaxyScene(props: GalaxySceneProps) {
   return (
     <Canvas
       dpr={dpr}
+      frameloop="always"
       camera={{ position: DEFAULT_CAMERA.toArray(), fov: 45, near: 0.1, far: 200 }}
       gl={{ antialias: true, alpha: false, powerPreference: "high-performance" }}
       onPointerMissed={() => onSelect(null)}

@@ -20,7 +20,6 @@ const GalaxyScene = dynamic(() => import("./galaxy-scene"), {
 const LiquidGlassDials = dynamic(() => import("./liquid-glass-dials"), { ssr: false });
 
 const LABEL_POOL_SIZE = 25;
-const ALWAYS_LABELED = 20;
 const MAX_SEARCH_RESULTS = 6;
 
 type StageProps = {
@@ -201,24 +200,7 @@ export function GalaxyStage({ data, layout }: StageProps) {
     return mask;
   }, [nodes, activeClusters, normalizedQuery, searchMatches]);
 
-  // Fixed label budget: top nodes by relevance, plus hovered and selected.
-  const topByRelevance = useMemo(() => {
-    return nodes
-      .map((node, i) => ({ i, relevance: node.relevance }))
-      .sort((a, b) => b.relevance - a.relevance || a.i - b.i)
-      .slice(0, ALWAYS_LABELED)
-      .map((entry) => entry.i);
-  }, [nodes]);
-
-  const labelIndices = useMemo(() => {
-    const list = [...topByRelevance];
-    for (const extra of [selected, hovered]) {
-      if (extra !== null && !list.includes(extra) && list.length < LABEL_POOL_SIZE) list.push(extra);
-    }
-    return list;
-  }, [topByRelevance, selected, hovered]);
-
-  const labelTexts = useMemo(() => labelIndices.map((i) => nodes[i].title), [labelIndices, nodes]);
+  const nodeTitles = useMemo(() => nodes.map((node) => node.title), [nodes]);
 
   const selectedNode = selected !== null ? nodes[selected] : null;
   const selectedConnections = useMemo(() => {
@@ -278,8 +260,7 @@ export function GalaxyStage({ data, layout }: StageProps) {
             selected={selected}
             neighbors={neighbors}
             dimMask={dimMask}
-            labelIndices={labelIndices}
-            labelTexts={labelTexts}
+            nodeTitles={nodeTitles}
             labelPool={labelPool}
             fpsRef={fpsRef}
             reducedMotion={reducedMotion}

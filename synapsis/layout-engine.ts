@@ -65,16 +65,19 @@ export type GalaxyLayout = {
 
 // World-space distances: relevance 10 sits near DIST_MIN, relevance 1 near
 // DIST_MAX. The ellipsoid is flattened on Y so it reads as a galaxy, not a ball.
-const DIST_MIN = 6;
-const DIST_MAX = 26;
+// Keep the shell airy enough that real-data clusters do not visually clump.
+const DIST_MIN = 10;
+const DIST_MAX = 44;
 const FLATTEN_Y = 0.62;
-const CLUSTER_COHESION = 0.62;
-const JITTER = 0.12;
-const EDGE_PASS_ITERATIONS = 10;
-const EDGE_PASS_STEP = 0.022;
+const CLUSTER_COHESION = 0.48;
+const JITTER = 0.2;
+const EDGE_PASS_ITERATIONS = 6;
+const EDGE_PASS_STEP = 0.012;
+const SEPARATION_PASS_ITERATIONS = 5;
+const SEPARATION_STEP = 0.06;
 
-const NODE_RADIUS_BASE = 0.16;
-const NODE_RADIUS_K = 0.055;
+const NODE_RADIUS_BASE = 0.15;
+const NODE_RADIUS_K = 0.052;
 
 export function nodeVisualRadius(relevance: number): number {
   return NODE_RADIUS_BASE + NODE_RADIUS_K * relevance;
@@ -181,6 +184,40 @@ export function computeLayout(data: GalaxyData): GalaxyLayout {
       e += 2;
     }
     if (e === 0) break;
+  }
+
+  // Deterministic spacing pass: keep dense real-data clusters from reading as
+  // one pile while preserving the stable no-runtime-physics contract.
+  for (let iter = 0; iter < SEPARATION_PASS_ITERATIONS; iter += 1) {
+    for (let a = 0; a < nodes.length; a += 1) {
+      for (let b = a + 1; b < nodes.length; b += 1) {
+        const ax = positions[a * 3];
+        const ay = positions[a * 3 + 1];
+        const az = positions[a * 3 + 2];
+        const bx = positions[b * 3];
+        const by = positions[b * 3 + 1];
+        const bz = positions[b * 3 + 2];
+        let dx = bx - ax;
+        let dy = by - ay;
+        let dz = bz - az;
+        let dist = Math.hypot(dx, dy, dz);
+        if (dist < 1e-6) {
+          dx = hash01(`${nodes[a].id}:${nodes[b].id}`, 7) * 2 - 1;
+          dy = hash01(`${nodes[a].id}:${nodes[b].id}`, 8) * 2 - 1;
+          dz = hash01(`${nodes[a].id}:${nodes[b].id}`, 9) * 2 - 1;
+          dist = Math.hypot(dx, dy, dz) || 1;
+        }
+        const minDistance = 2.15 + radii[a] + radii[b];
+        if (dist >= minDistance) continue;
+        const push = ((minDistance - dist) / dist) * SEPARATION_STEP;
+        positions[a * 3] -= dx * push;
+        positions[a * 3 + 1] -= dy * push;
+        positions[a * 3 + 2] -= dz * push;
+        positions[b * 3] += dx * push;
+        positions[b * 3 + 1] += dy * push;
+        positions[b * 3 + 2] += dz * push;
+      }
+    }
   }
 
   return { positions, radii, edgeIndices, indexById };

@@ -34,12 +34,12 @@ export type LiquidGlassConfig = {
 export const LIGHT_LIQUID_GLASS: LiquidGlassConfig = {
   radius: 20,
   rimWidth: 0.08,
-  depth: 20,
-  chromaticAberration: 1,
+  depth: 16,
+  chromaticAberration: 0.28,
   blur: 4.5,
   contrast: 0.5,
-  brightness: 1.3,
-  saturate: 3,
+  brightness: 1.18,
+  saturate: 1.45,
   tint: 0.46,
   edgeHighlight: 0.18,
 };
@@ -47,12 +47,12 @@ export const LIGHT_LIQUID_GLASS: LiquidGlassConfig = {
 export const DARK_LIQUID_GLASS: LiquidGlassConfig = {
   radius: 20,
   rimWidth: 0.07,
-  depth: 28,
-  chromaticAberration: 1,
+  depth: 22,
+  chromaticAberration: 0.32,
   blur: 4.5,
   contrast: 0.5,
   brightness: 0.5,
-  saturate: 1.38,
+  saturate: 1.16,
   tint: 0.46,
   edgeHighlight: 0.18,
 };

@@ -3,8 +3,8 @@
    los nombres de token reales SOLO dentro del scope de la pieza, con la misma
    paleta que la home del Lab (lab.module.css) — no son hex nuevos de diseño.
    El vidrio del sidebar y del panel es el motor propio de Synapsis
-   (`LiquidGlass`: mapa de desplazamiento SDF + `feDisplacementMap` sobre el
-   backdrop, aberración cromática y tint de papel), no el motor global de RAMS.
+   (`GlassPass`: refraction SDF WebGL sobre el FBO de la constelación,
+   aberración cromática y tint de papel), no el motor global de RAMS.
    La constelación usa foco monocromo paper/ink; --brand-accent queda en UI. */
 
 .page {
@@ -12,6 +12,7 @@
   min-height: 100svh;
   overflow: hidden;
   background: var(--surface-raised);
+  background-image: none;
   color: var(--ink);
   color-scheme: light;
 }
@@ -29,6 +30,7 @@
   position: fixed;
   inset: 0;
   background: var(--surface-raised);
+  background-image: none;
   color: var(--ink);
   color-scheme: light;
 }
@@ -68,58 +70,17 @@
 .canvasHost {
   position: absolute;
   inset: 0;
+  background: var(--surface-raised);
+  background-image: none;
 }
 
-.canvasHost::before,
-.canvasHost::after {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  content: "";
-  pointer-events: none;
-}
-
-.canvasHost::before {
-  background-image:
-    linear-gradient(color-mix(in srgb, var(--ink) 4%, transparent) 1px, transparent 1px),
-    linear-gradient(90deg, color-mix(in srgb, var(--ink) 4%, transparent) 1px, transparent 1px),
-    repeating-linear-gradient(
-      0deg,
-      transparent 0,
-      transparent 2px,
-      color-mix(in srgb, var(--ink) 2.5%, transparent) 3px
-    );
-  background-size: 80px 80px, 80px 80px, 100% 6px;
-  opacity: 0.55;
-}
-
-.canvasHost::after {
-  background:
-    radial-gradient(circle at 50% 50%, transparent 0 42%, color-mix(in srgb, var(--surface-raised) 72%, transparent) 100%),
-    linear-gradient(90deg, color-mix(in srgb, var(--surface-raised) 52%, transparent), transparent 24% 76%, color-mix(in srgb, var(--surface-raised) 52%, transparent));
-  opacity: 0.58;
+.canvasHost canvas {
+  background-image: none;
 }
 
 .canvasHost canvas {
   position: relative;
   z-index: 0;
-}
-
-.stage[data-theme="dark"] .canvasHost::before {
-  background-image:
-    linear-gradient(color-mix(in srgb, var(--ink) 5.5%, transparent) 1px, transparent 1px),
-    linear-gradient(90deg, color-mix(in srgb, var(--ink) 5.5%, transparent) 1px, transparent 1px),
-    repeating-linear-gradient(
-      0deg,
-      transparent 0,
-      transparent 2px,
-      color-mix(in srgb, var(--ink) 4%, transparent) 3px
-    );
-  opacity: 0.72;
-}
-
-.stage[data-theme="dark"] .canvasHost::after {
-  opacity: 0.66;
 }
 
 .loading {
@@ -163,7 +124,7 @@
   text-overflow: ellipsis;
   opacity: 0;
   text-shadow: 0 1px 0 color-mix(in srgb, var(--surface-raised) 78%, transparent);
-  will-change: transform, opacity;
+  will-change: transform, opacity, filter;
 }
 
 .label[data-active="true"] {
@@ -184,6 +145,11 @@
   text-shadow:
     0 0 18px color-mix(in srgb, var(--ink) 18%, transparent),
     0 1px 0 var(--surface-raised);
+}
+
+.label[data-glass="true"] {
+  color: var(--muted);
+  filter: blur(1.1px) saturate(0.72) contrast(0.82);
 }
 
 /* ---- HUD / sidebar ----
