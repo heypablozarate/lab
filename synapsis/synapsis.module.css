@@ -5,7 +5,8 @@
    El vidrio del sidebar y del panel es el motor propio de Synapsis
    (`GlassPass`: refraction SDF WebGL sobre el FBO de la constelación,
    aberración cromática y tint de papel), no el motor global de RAMS.
-   La constelación usa foco monocromo paper/ink; --brand-accent queda en UI. */
+   La constelación usa foco monocromo paper/ink, con --brand-accent reservado
+   para el nodo activo/señalado y sus conexiones directas. */
 
 .page {
   position: relative;
@@ -115,11 +116,11 @@
   max-width: 16rem;
   overflow: hidden;
   color: color-mix(in srgb, var(--ink) 58%, var(--surface-raised));
-  font-family: "SFMono-Regular", "Roboto Mono", "IBM Plex Mono", ui-monospace, monospace;
-  font-size: 0.75rem;
+  font-family: var(--font-body), Arial, sans-serif;
+  font-size: 0.8125rem;
   font-weight: 600;
   letter-spacing: 0;
-  text-transform: uppercase;
+  text-transform: none;
   white-space: nowrap;
   text-overflow: ellipsis;
   opacity: 0;
@@ -371,7 +372,7 @@
   line-height: 1;
 }
 
-/* ---- FPS meter (dev / ?fps=1) ---- */
+/* ---- FPS meter (local ?fps=1 only) ---- */
 
 .fps {
   position: absolute;

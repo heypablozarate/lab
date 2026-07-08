@@ -97,8 +97,9 @@ const dprSnapshot = () => {
   return Math.min(window.devicePixelRatio || 1, coarse ? 1.5 : 2);
 };
 
+// Explicit opt-in locally; hard-off in production.
 const showFpsSnapshot = () =>
-  process.env.NODE_ENV === "development" || window.location.search.includes("fps=1");
+  process.env.NODE_ENV !== "production" && window.location.search.includes("fps=1");
 
 // Explicit opt-in (never auto-on in dev) and hard-off in production.
 const showDialsSnapshot = () =>

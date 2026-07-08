@@ -66,7 +66,7 @@ const DESKTOP_OPTICAL_OFFSET_X = 12;
 const FOG_NEAR = 38;
 const FOG_FAR = 124;
 const FOCUS_DISTANCE = 14;
-const PULSE_STRENGTH = 0.075;
+const PULSE_STRENGTH = 0.038;
 
 const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
 
@@ -95,7 +95,7 @@ function buildPalette(tokens: SceneTokens): Palette {
 
   return {
     surface,
-    accent: isDark ? ink.clone() : ink.clone().lerp(surface, 0.02),
+    accent: new THREE.Color(tokens.accent),
     nodeRest,
     nodeDim,
     edgeRest,
@@ -390,8 +390,8 @@ void main() {
   vInstanceColor = nodeColor;
   vViewNormal = normalize(normalMatrix * normal);
 
-  float pulse = 0.5 + 0.5 * sin(uTime * 2.45 + pulsePhase);
-  float breath = smoothstep(0.22, 1.0, pulse);
+  float pulse = 0.5 + 0.5 * sin(uTime * 1.55 + pulsePhase);
+  float breath = smoothstep(0.36, 1.0, pulse);
   vPulse = pulse;
   vBreath = breath;
   vec3 pulsed = position * (1.0 + uPulseStrength * breath);
@@ -419,25 +419,25 @@ varying float vBreath;
 
 void main() {
   float facing = clamp(vViewNormal.z, 0.0, 1.0);
-  float depthFade = smoothstep(uFogNear, uFogFar, vDepth);
-  float presence = 1.0 - depthFade;
+  float depthFade = smoothstep(uFogNear - 8.0, uFogFar - 10.0, vDepth);
+  float presence = pow(1.0 - depthFade, 1.42);
 
   float shellMask = smoothstep(0.04, 0.42, facing);
-  float ringMask = smoothstep(0.14, 0.38, facing) * (1.0 - smoothstep(0.64, 0.96, facing));
-  float centerMask = smoothstep(0.74, 0.95, facing);
+  float ringMask = smoothstep(0.18, 0.44, facing) * (1.0 - smoothstep(0.58, 0.9, facing));
+  float centerMask = smoothstep(0.91, 0.985, facing);
 
-  float shellShade = mix(0.42, 1.18, presence) * mix(0.86, 1.08, facing);
+  float shellShade = mix(0.24, 1.26, presence) * mix(0.88, 1.06, facing);
   vec3 shell = mix(uSurface, vInstanceColor * shellShade, shellMask);
 
-  vec3 pulseColor = mix(uSurface, uPulseInk, mix(0.36, 0.84, presence));
-  shell = mix(shell, pulseColor, ringMask * vBreath * mix(0.12, 0.62, presence));
+  vec3 pulseColor = mix(uSurface, uPulseInk, mix(0.18, 0.64, presence));
+  shell = mix(shell, pulseColor, ringMask * vBreath * mix(0.05, 0.24, presence));
 
-  vec3 coreDark = vInstanceColor * mix(0.28, 0.46, presence);
-  vec3 coreLight = mix(vInstanceColor, vec3(1.0), mix(0.36, 0.58, presence));
+  vec3 coreDark = vInstanceColor * mix(0.44, 0.62, presence);
+  vec3 coreLight = mix(vInstanceColor, vec3(1.0), mix(0.18, 0.32, presence));
   vec3 core = mix(coreDark, coreLight, uCoreLighten);
-  vec3 color = mix(shell, core, centerMask * mix(0.68, 0.94, presence));
+  vec3 color = mix(shell, core, centerMask * mix(0.36, 0.58, presence));
 
-  color = mix(color, uSurface, depthFade * 0.88);
+  color = mix(color, uSurface, depthFade * 0.93);
 
   gl_FragColor = vec4(clamp(color, 0.0, 1.0), 1.0);
 }
@@ -600,7 +600,7 @@ function GalaxyContents(props: GalaxySceneProps) {
       });
     }
 
-    // Dev FPS meter (kickoff: present from the first scene commit).
+    // Local FPS meter, mounted only by the non-production ?fps=1 switch.
     if (fpsRef.current) {
       updateFpsMeter(fpsRef.current, fpsWindow.current, state.clock.elapsedTime);
     }
