@@ -88,10 +88,10 @@ function buildPalette(tokens: SceneTokens): Palette {
   // The dsaints-style graph field needs visible hairlines in dark mode while
   // staying quiet on paper. Keep the same token source, but tune the resolved
   // mix per theme because WebGL cannot parse CSS color-mix().
-  const edgeRest = isDark ? surface.clone().lerp(ink, 0.18) : surface.clone().lerp(ink, 0.075);
-  const edgeFaint = isDark ? surface.clone().lerp(ink, 0.065) : surface.clone().lerp(ink, 0.03);
-  const nodeRest = isDark ? surface.clone().lerp(ink, 0.44) : ink.clone().lerp(surface, 0.58);
-  const nodeDim = isDark ? surface.clone().lerp(ink, 0.1) : ink.clone().lerp(surface, 0.9);
+  const edgeRest = isDark ? surface.clone().lerp(ink, 0.18) : surface.clone().lerp(ink, 0.105);
+  const edgeFaint = isDark ? surface.clone().lerp(ink, 0.065) : surface.clone().lerp(ink, 0.018);
+  const nodeRest = isDark ? surface.clone().lerp(ink, 0.44) : ink.clone().lerp(surface, 0.48);
+  const nodeDim = isDark ? surface.clone().lerp(ink, 0.1) : ink.clone().lerp(surface, 0.96);
 
   return {
     surface,
@@ -437,7 +437,8 @@ void main() {
   vec3 core = mix(coreDark, coreLight, uCoreLighten);
   vec3 color = mix(shell, core, centerMask * mix(0.36, 0.58, presence));
 
-  color = mix(color, uSurface, depthFade * 0.93);
+  float fogMix = mix(0.88, 0.93, uCoreLighten);
+  color = mix(color, uSurface, depthFade * fogMix);
 
   gl_FragColor = vec4(clamp(color, 0.0, 1.0), 1.0);
 }
