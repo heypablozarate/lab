@@ -1,12 +1,11 @@
 import type { CSSProperties, ReactNode } from "react";
 import Link from "next/link";
 
+import { labHome } from "@/lib/lab-content";
+
 import styles from "./lab.module.css";
 import type { LabProject } from "./projects";
 import { Wordmark } from "./wordmark";
-
-const LAB_INTRO_SUMMARY =
-  "Stuff I decided to exist. No brief. No goal but to learn and experiment. A prototype of ideas, WebGL studies, design systems, games, and more — Driven by curiosity. Built at the intersection of technology and the liberal arts.";
 
 /** First card — Pablo's Lab identity, presented as staggered clip-reveal lines. */
 export function IntroCard({
@@ -18,15 +17,16 @@ export function IntroCard({
 }) {
   const lineGroups: ReactNode[][] = [
     [
-      "This is the exploratory",
-      "playground of",
+      labHome.introLine1,
+      labHome.introLine2,
       <>
         <Wordmark />
       </>,
     ],
     [
       <>
-        Welcome to the Lab<span className={styles.dot}>.</span>
+        {labHome.welcomeLine}
+        <span className={styles.dot}>.</span>
       </>,
     ],
   ];
@@ -70,7 +70,7 @@ export function IntroCard({
             </span>
           ))}
         </h1>
-        <p className={styles.introSummary}>{LAB_INTRO_SUMMARY}</p>
+        <p className={styles.introSummary}>{labHome.summary}</p>
       </div>
     </section>
   );

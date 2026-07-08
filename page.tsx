@@ -1,17 +1,14 @@
 import type { Metadata } from "next";
 
+import {
+  LAB_URL,
+  getLabProjectUrl,
+  labHome,
+  labPositioning,
+  projects,
+} from "@/lib/lab-content";
+
 import { LabCanvas } from "./lab-canvas";
-import { projects } from "./projects";
-
-const LAB_URL = "https://lab.pablozarate.com";
-const LAB_TITLE =
-  "Design Engineering Lab — Product Experiments by PabloZarate™";
-const LAB_DESCRIPTION =
-  "PabloZarate™ Lab is a design engineering playground where WebGL studies, interaction prototypes, and experience design experiments turn personal curiosity into working interfaces.";
-
-function getProjectUrl(project: (typeof projects)[number]) {
-  return project.href ?? `${LAB_URL}/${project.slug}`;
-}
 
 function serializeJsonLd(data: Record<string, unknown>) {
   return JSON.stringify(data).replace(/</g, "\\u003c");
@@ -36,9 +33,9 @@ function LabStructuredData() {
       {
         "@type": "CollectionPage",
         "@id": `${LAB_URL}/#collection`,
-        name: LAB_TITLE,
-        headline: LAB_TITLE,
-        description: LAB_DESCRIPTION,
+        name: labHome.metadataTitle,
+        headline: labHome.metadataTitle,
+        description: labHome.description,
         url: LAB_URL,
         inLanguage: "en",
         isPartOf: {
@@ -48,19 +45,7 @@ function LabStructuredData() {
           url: "https://pablozarate.com",
         },
         author: { "@id": "https://pablozarate.com/#person" },
-        about: [
-          "Product design",
-          "Design Engineering",
-          "AI Design",
-          "Experience Design",
-          "Product Specialist",
-          "Digital experimentation",
-          "Digital experiences",
-          "Technology prototypes",
-          "One man army product craft",
-          "Design systems",
-          "WebGL interfaces",
-        ],
+        about: labPositioning.topics,
         mainEntity: { "@id": `${LAB_URL}/#experiments` },
       },
       {
@@ -71,11 +56,11 @@ function LabStructuredData() {
           "@type": "ListItem",
           position: index + 1,
           name: project.title,
-          url: getProjectUrl(project),
+          url: getLabProjectUrl(project),
           item: {
             "@type": "CreativeWork",
             name: project.title,
-            url: getProjectUrl(project),
+            url: getLabProjectUrl(project),
             description: project.description,
             dateCreated: String(project.year),
             creator: { "@id": "https://pablozarate.com/#person" },
@@ -96,40 +81,23 @@ function LabStructuredData() {
 
 export const metadata: Metadata = {
   metadataBase: new URL(LAB_URL),
-  title: LAB_TITLE,
-  description: LAB_DESCRIPTION,
-  keywords: [
-    "Pablo Zarate",
-    "PabloZarate™ Lab",
-    "Design Engineering",
-    "AI Design",
-    "Product Specialist",
-    "Experience Design",
-    "product design experiments",
-    "digital experience design",
-    "one man army design",
-    "one-person product design",
-    "technology prototypes",
-    "WebGL experiments",
-    "design systems",
-    "diseño de productos",
-    "experiencias digitales",
-    "experimentacion digital",
-  ],
+  title: labHome.metadataTitle,
+  description: labHome.description,
+  keywords: labHome.keywords,
   alternates: {
     canonical: LAB_URL,
   },
   openGraph: {
-    title: LAB_TITLE,
-    description: LAB_DESCRIPTION,
+    title: labHome.metadataTitle,
+    description: labHome.description,
     url: LAB_URL,
     siteName: "Lab by PabloZarate™",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: LAB_TITLE,
-    description: LAB_DESCRIPTION,
+    title: labHome.metadataTitle,
+    description: labHome.description,
   },
 };
 

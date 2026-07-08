@@ -3,15 +3,16 @@
 import Link from "next/link"
 import { useEffect, useRef, useState, type MouseEvent, type ReactNode } from "react"
 
+import type { SoyTuAireExperimentContent } from "@/lib/lab-content"
+
 import { Wordmark } from "../../wordmark"
 import { AudioEngine } from "../engine/audio/audio-engine"
-import credits from "../data/credits.json"
 import styles from "../soy-tu-aire.module.css"
 
 const AUDIO_URL = "/lab/soy-tu-aire/mix.mp3"
-const APPLE_MUSIC_URL = "https://music.apple.com/ar/album/soy-tu-air%C3%A9/305730297?i=305730572&l=en-GB"
 const BRAND_TEXT = "PabloZarate™"
-const BRAND_URL = "https://pablozarate.com"
+const APPLE_MUSIC_LABEL = "Virginia Maestro (aka Labuat)"
+const ORIGINAL_AGENCY_LABEL = "Herraiz Soto & Co."
 
 function formatClock(seconds: number): string {
   const total = Math.max(0, Math.floor(seconds))
@@ -20,7 +21,12 @@ function formatClock(seconds: number): string {
   return `${mm}:${ss}`
 }
 
-function renderRichText(text: string, linkClassName: string, wordmarkClassName: string): ReactNode[] {
+function renderRichText(
+  text: string,
+  brandUrl: string,
+  linkClassName: string,
+  wordmarkClassName: string,
+): ReactNode[] {
   if (!text.includes(BRAND_TEXT)) return [text]
   const parts = text.split(BRAND_TEXT)
   return parts.flatMap((part, index) => {
@@ -28,7 +34,7 @@ function renderRichText(text: string, linkClassName: string, wordmarkClassName: 
     if (part) nodes.push(part)
     if (index < parts.length - 1) {
       nodes.push(
-        <a className={linkClassName} href={BRAND_URL} target="_blank" rel="noopener noreferrer" key={`brand-${index}`}>
+        <a className={linkClassName} href={brandUrl} target="_blank" rel="noopener noreferrer" key={`brand-${index}`}>
           <Wordmark className={wordmarkClassName} />
         </a>,
       )
@@ -37,10 +43,35 @@ function renderRichText(text: string, linkClassName: string, wordmarkClassName: 
   })
 }
 
+function renderIntroParagraph(text: string, appleMusicUrl: string): ReactNode[] {
+  const renderAppleMusic = (part: string, keyPrefix: string): ReactNode[] => {
+    if (!part.includes(APPLE_MUSIC_LABEL)) return [part]
+    const [before, after] = part.split(APPLE_MUSIC_LABEL)
+
+    return [
+      before,
+      <a href={appleMusicUrl} target="_blank" rel="noopener noreferrer" key={`${keyPrefix}-apple-music`}>
+        {APPLE_MUSIC_LABEL}
+      </a>,
+      after,
+    ]
+  }
+
+  if (!text.includes(ORIGINAL_AGENCY_LABEL)) return renderAppleMusic(text, "intro")
+
+  const [beforeAgency, afterAgency] = text.split(ORIGINAL_AGENCY_LABEL)
+  return [
+    ...renderAppleMusic(beforeAgency, "before-agency"),
+    <strong key="original-agency">{ORIGINAL_AGENCY_LABEL}</strong>,
+    ...renderAppleMusic(afterAgency, "after-agency"),
+  ]
+}
+
 type Phase = "intro" | "loading" | "playing" | "credits"
 type CreditsMode = "final" | "paused"
 
-export function Stage() {
+export function Stage({ content }: { content: SoyTuAireExperimentContent }) {
+  const { credits } = content
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
   const audioRef = useRef<AudioEngine | null>(null)
   const endedCleanupRef = useRef<(() => void) | null>(null)
@@ -121,7 +152,7 @@ export function Stage() {
       audio.destroy()
       audioRef.current = null
       setPhase("intro")
-      setError("No se pudo cargar el audio. Probá de nuevo.")
+      setError(content.audioErrorMessage)
     }
   }
 
@@ -201,21 +232,21 @@ export function Stage() {
       <canvas
         ref={canvasRef}
         className={styles.canvas}
-        aria-label="Lienzo de tinta"
+        aria-label={content.canvasLabel}
         onClick={handleCanvasClick}
       />
 
       {paused && phase === "playing" && (
-        <div className={styles.pauseBadge} role="group" aria-label={`Pausa en ${formatClock(pauseTime)}`}>
-          <span className={styles.pauseLabel}>Pausa</span>
+        <div className={styles.pauseBadge} role="group" aria-label={`${content.pauseLabel} en ${formatClock(pauseTime)}`}>
+          <span className={styles.pauseLabel}>{content.pauseLabel}</span>
           <time className={styles.pauseTime} dateTime={`PT${Math.floor(Math.max(0, pauseTime))}S`}>
             {formatClock(pauseTime)}
           </time>
           <button className={styles.pauseButton} type="button" onClick={handleResume}>
-            Reanudar
+            {content.resumeLabel}
           </button>
           <button className={styles.pauseLink} type="button" onClick={handleShowCredits}>
-            Ver créditos
+            {content.showCreditsLabel}
           </button>
         </div>
       )}
@@ -233,7 +264,7 @@ export function Stage() {
 
       {unsupported && (
         <div className={styles.overlay}>
-          <p className={styles.credit}>Tu navegador no soporta WebGL2. Probá Chrome/Safari/Firefox actualizados.</p>
+          <p className={styles.credit}>{content.unsupportedMessage}</p>
         </div>
       )}
 
@@ -241,21 +272,21 @@ export function Stage() {
         <div className={styles.overlay}>
           <section className={styles.introPanel} aria-labelledby="soy-tu-aire-title">
             <Link className={styles.backLink} href="/">
-              Back to the Lab
+              {content.introBackLabel}
             </Link>
             <h1 id="soy-tu-aire-title" className={styles.title}>
-              Pintando una canción
+              {content.introTitle}
             </h1>
             {phase === "intro" ? (
               <>
                 {error && <p className={styles.credit}>{error}</p>}
                 <button className={styles.playButton} onClick={(e) => handlePlay(e.clientX, e.clientY)}>
-                  Empezar
+                  {content.playLabel}
                 </button>
               </>
             ) : (
               <div className={styles.loader} role="status" aria-live="polite">
-                <span>Preparando la canción</span>
+                <span>{content.loadingLabel}</span>
                 <span className={styles.loaderPercent}>{loadingPercent}%</span>
                 <span className={styles.loaderTrack} aria-hidden="true">
                   <span style={{ transform: `scaleX(${loadingPercent / 100})` }} />
@@ -263,28 +294,14 @@ export function Stage() {
               </div>
             )}
             <div className={styles.credit}>
-              <p>
-                En 2009 me encontré con una web en Flash diseñada por la agencia{" "}
-                <strong>Herraiz Soto &amp; Co.</strong> para promocionar el álbum de{" "}
-                <a href={APPLE_MUSIC_URL} target="_blank" rel="noopener noreferrer">
-                  Virginia Maestro (aka Labuat)
-                </a>
-                .
-              </p>
-              <p>
-                No existen registros, o al menos no encontré, de ese sitio más que una filmación en YouTube.
-              </p>
-              <p>
-                Así que, 17 años después, decidí recrearlo/homenajearlo pero con tecnologías web actuales.
-              </p>
-              <p>
-                Espero que los autores originales disfruten de este homenaje a su obra.
-              </p>
+              {content.introParagraphs.map((paragraph) => (
+                <p key={paragraph}>{renderIntroParagraph(paragraph, content.appleMusicUrl)}</p>
+              ))}
             </div>
           </section>
           <p className={styles.homageLine}>
-            <span>An homage by</span>
-            <a className={styles.homageLink} href={BRAND_URL} target="_blank" rel="noopener noreferrer">
+            <span>{content.homagePrefix}</span>
+            <a className={styles.homageLink} href={content.brandUrl} target="_blank" rel="noopener noreferrer">
               <Wordmark className={styles.homageWordmark} />
             </a>
           </p>
@@ -296,7 +313,7 @@ export function Stage() {
           <section className={styles.creditsPanel}>
             <header className={styles.creditsHeader}>
               <h2 id="soy-tu-aire-credits-title" className={styles.creditsTitle}>{credits.title}</h2>
-              <p className={styles.creditsLede}>{renderRichText(credits.lede, styles.inlineWordmarkLink, styles.inlineWordmark)}</p>
+              <p className={styles.creditsLede}>{renderRichText(credits.lede, content.brandUrl, styles.inlineWordmarkLink, styles.inlineWordmark)}</p>
             </header>
             <div className={styles.creditsGrid}>
               <div className={styles.creditsSections}>
@@ -306,7 +323,7 @@ export function Stage() {
                     <h3>{section.title}</h3>
                     <div className={styles.creditsBody}>
                       {section.body.map((paragraph) => (
-                        <p key={paragraph}>{renderRichText(paragraph, styles.inlineWordmarkLink, styles.inlineWordmark)}</p>
+                        <p key={paragraph}>{renderRichText(paragraph, content.brandUrl, styles.inlineWordmarkLink, styles.inlineWordmark)}</p>
                       ))}
                     </div>
                     <a className={styles.creditsSource} href={section.sourceUrl} target="_blank" rel="noopener noreferrer">

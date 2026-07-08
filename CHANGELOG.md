@@ -4,6 +4,8 @@
 
 ### Changed
 
+- 2026-07-08 / Codex: Moved the Lab landing manifest, experiment metadata, and Soy tu aire credits/copy to the parent web content source so the private admin can edit them while the public Lab repo keeps only the route implementation and thin parent-content adapter.
+
 - 2026-07-07 / Codex: Tuned the Synapsis resting node tone after visual QA so unfocused nodes sit back as quieter paper/ink points while hover/selected nodes keep the high-contrast monochrome focus state and dark-mode connector lines remain legible.
 
 - 2026-07-07 / Codex: Refined the Synapsis graph look and feel toward the dsaints-style monochrome constellation: scene focus states now resolve to high-contrast paper/ink instead of the brand accent, dark-mode edge colors are mixed much brighter so connections remain visible, nodes render as smoother round points, labels switch to compact uppercase mono styling, and a subtle field grid/vignette overlays the canvas without changing interaction or data.

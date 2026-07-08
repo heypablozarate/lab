@@ -1,59 +1,49 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import {
+  LAB_URL,
+  getLabExperiment,
+  labSocialImages,
+} from "@/lib/lab-content";
+
 import { WordmarkStage } from "./components/wordmark-stage";
 import styles from "./shader-experiment.module.css";
 
-const PAGE_URL = "https://lab.pablozarate.com/shader-experiment-01";
-// Reuse the Lab brand social cards (served from the /lab route group) so the
-// experiment has a valid og:image / twitter:image instead of falling back to none.
-const SOCIAL_IMAGE_URL = "https://lab.pablozarate.com/lab/opengraph-image.jpg";
-const TWITTER_IMAGE_URL = "https://lab.pablozarate.com/lab/twitter-image.jpg";
-const PAGE_TITLE =
-  "Shader Experiment 01 — Design Engineering WebGL Typography Lab by PabloZarate™";
-const PAGE_DESCRIPTION =
-  "Interactive WebGL wordmark experiment by Pablo Zarate exploring shader motion, typography, interface craft, design engineering, creative coding, and technology-led digital experience design.";
-const SERVER_CONTEXT =
-  "Shader Experiment 01 is a small WebGL typography lab built around the PabloZarate™ wordmark. It explores how a static identity can behave like a living interface: shader motion, pointer input, distortion, and control states turn letterforms into a tactile surface. The experiment is built with a custom fragment shader, React controls, and RAMS tokens, keeping the WebGL canvas expressive while the surrounding page stays legible to people, crawlers, and LLMs.";
+const PAGE_URL = `${LAB_URL}/shader-experiment-01`;
+const content = getLabExperiment("shader-experiment-01");
 
 function serializeJsonLd(data: Record<string, unknown>) {
   return JSON.stringify(data).replace(/</g, "\\u003c");
 }
 
 export const metadata: Metadata = {
-  title: PAGE_TITLE,
-  description: PAGE_DESCRIPTION,
-  keywords: [
-    "WebGL typography",
-    "shader experiment",
-    "digital experience design",
-    "interface craft",
-    "Pablo Zarate",
-    "PabloZarate™ Lab",
-  ],
+  title: content.metadataTitle,
+  description: content.description,
+  keywords: content.keywords,
   alternates: {
     canonical: PAGE_URL,
   },
   openGraph: {
-    title: PAGE_TITLE,
-    description: PAGE_DESCRIPTION,
+    title: content.metadataTitle,
+    description: content.description,
     url: PAGE_URL,
     siteName: "Lab by PabloZarate™",
     type: "website",
     images: [
       {
-        url: SOCIAL_IMAGE_URL,
+        url: labSocialImages.openGraph,
         width: 1280,
         height: 746,
-        alt: "PabloZarate Lab intro card, dark interface preview with large white welcome text and an orange accent shape.",
+        alt: labSocialImages.alt,
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: PAGE_TITLE,
-    description: PAGE_DESCRIPTION,
-    images: [TWITTER_IMAGE_URL],
+    title: content.metadataTitle,
+    description: content.description,
+    images: [labSocialImages.twitter],
   },
 };
 
@@ -61,9 +51,9 @@ export default function ShaderExperimentPage() {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "CreativeWork",
-    name: PAGE_TITLE,
-    headline: PAGE_TITLE,
-    description: PAGE_DESCRIPTION,
+    name: content.metadataTitle,
+    headline: content.metadataTitle,
+    description: content.description,
     url: PAGE_URL,
     inLanguage: "en",
     creator: {
@@ -96,9 +86,9 @@ export default function ShaderExperimentPage() {
       {"\n"}
       <section className={styles.intro} aria-labelledby="shader-experiment-title">
         <h1 id="shader-experiment-title" className={styles.title}>
-          Shader Experiment 01
+          {content.title}
         </h1>
-        <p>{SERVER_CONTEXT}</p>
+        <p>{content.serverContext}</p>
       </section>
       {"\n"}
 
@@ -106,7 +96,7 @@ export default function ShaderExperimentPage() {
 
       <footer className={styles.footer}>
         <span className={styles.footerCredit}>
-          Designed by{" "}
+          {content.footerCreditPrefix}{" "}
           <span className={styles.footerWordmark}>
             <span className={styles.footerWordmarkName}>PabloZarate</span>
             <span className={styles.footerWordmarkMark} aria-hidden="true">
@@ -115,7 +105,7 @@ export default function ShaderExperimentPage() {
           </span>
         </span>
         <Link className={styles.backLink} href="/">
-          Back to the Lab
+          {content.backLabel}
         </Link>
       </footer>
     </main>

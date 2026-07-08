@@ -1,53 +1,39 @@
 import type { Metadata } from "next"
 
+import {
+  LAB_URL,
+  getLabExperiment,
+  labSocialImages,
+} from "@/lib/lab-content"
+
 import { Stage } from "./components/stage"
 import styles from "./soy-tu-aire.module.css"
 
-const PAGE_URL = "https://lab.pablozarate.com/soy-tu-aire"
-const SOCIAL_IMAGE_URL = "https://lab.pablozarate.com/lab/opengraph-image.jpg"
-const TWITTER_IMAGE_URL = "https://lab.pablozarate.com/lab/twitter-image.jpg"
-const PAGE_TITLE = "Soy tu aire — Interactive Design Engineering Homage by PabloZarate™"
-const PAGE_DESCRIPTION =
-  "An interactive Experience Design and Design Engineering homage to Labuat's Soy tu aire by Pablo Zarate, using PixiJS, Web Audio, and generative ink to paint music in the browser."
-const SERVER_CONTEXT =
-  "Soy tu aire is an interactive homage to the 2009 Labuat web piece: a song painted in ink rather than a canvas demo. It explores how memory, cursor movement, and music can become one generative interface. The experience is built with PixiJS, Web Audio, a choreography timeline recovered from archival material, and a custom ink engine that reacts to the track while the browser draws a unique performance on every play."
+const PAGE_URL = `${LAB_URL}/soy-tu-aire`
+const content = getLabExperiment("soy-tu-aire")
 
 function serializeJsonLd(data: Record<string, unknown>) {
   return JSON.stringify(data).replace(/</g, "\\u003c")
 }
 
 export const metadata: Metadata = {
-  title: PAGE_TITLE,
-  description: PAGE_DESCRIPTION,
-  keywords: [
-    "Labuat",
-    "Soy tu aire",
-    "PixiJS",
-    "audio reactive",
-    "generative ink",
-    "Design Engineering",
-    "Experience Design",
-    "AI Design",
-    "Product Specialist",
-    "creative coding",
-    "interactive web experience",
-    "Pablo Zarate",
-    "PabloZarate™ Lab",
-  ],
+  title: content.metadataTitle,
+  description: content.description,
+  keywords: content.keywords,
   alternates: { canonical: PAGE_URL },
   openGraph: {
-    title: PAGE_TITLE,
-    description: PAGE_DESCRIPTION,
+    title: content.metadataTitle,
+    description: content.description,
     url: PAGE_URL,
     siteName: "Lab by PabloZarate™",
     type: "website",
-    images: [{ url: SOCIAL_IMAGE_URL, width: 1280, height: 746, alt: "PabloZarate Lab intro card." }],
+    images: [{ url: labSocialImages.openGraph, width: 1280, height: 746, alt: labSocialImages.alt }],
   },
   twitter: {
     card: "summary_large_image",
-    title: PAGE_TITLE,
-    description: PAGE_DESCRIPTION,
-    images: [TWITTER_IMAGE_URL],
+    title: content.metadataTitle,
+    description: content.description,
+    images: [labSocialImages.twitter],
   },
 }
 
@@ -55,9 +41,9 @@ export default function SoyTuAirePage() {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "CreativeWork",
-    name: PAGE_TITLE,
-    headline: PAGE_TITLE,
-    description: PAGE_DESCRIPTION,
+    name: content.metadataTitle,
+    headline: content.metadataTitle,
+    description: content.description,
     url: PAGE_URL,
     inLanguage: "es",
     creator: {
@@ -81,12 +67,12 @@ export default function SoyTuAirePage() {
 
       {"\n"}
       <section className={styles.serverContext} aria-labelledby="soy-tu-aire-server-title">
-        <h1 id="soy-tu-aire-server-title">Soy tu aire</h1>
-        <p>{SERVER_CONTEXT}</p>
+        <h1 id="soy-tu-aire-server-title">{content.title}</h1>
+        <p>{content.serverContext}</p>
       </section>
       {"\n"}
 
-      <Stage />
+      <Stage content={content} />
     </main>
   )
 }
