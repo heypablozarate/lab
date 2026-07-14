@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Added
+
+- 2026-07-14 / Claude: Added the Amélie (2004) experiment route at `/amelie`: server metadata, JSON-LD, and hidden server context read from the parent admin data (`getLabExperiment("amelie")`), with the interactive experience served as a full-viewport iframe of the static recreation bundle under the parent's `public/lab/amelie/`.
+
 ### Changed
 
 - 2026-07-08 / Codex: Moved the Lab landing manifest, experiment metadata, and Soy tu aire credits/copy to the parent web content source so the private admin can edit them while the public Lab repo keeps only the route implementation and thin parent-content adapter.
