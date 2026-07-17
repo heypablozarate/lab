@@ -1,0 +1,106 @@
+body{
+	background-color:#000000;
+	background-attachment:fixed;
+	background-repeat:no-repeat;
+	background-image: url(../img/fondo_azul.jpg);
+	background-position: left top;
+}
+.pieza{
+cursor:move;
+}
+
+.alt{
+padding:0px;
+}
+.text{
+font-family:Arial, Helvetica, sans-serif;
+font-size:11px;
+color:#FFFFFF;
+text-align:justify;
+}
+
+.text a{
+font-family:Arial, Helvetica, sans-serif;
+font-size:11px;
+color:#FFFFFF;
+text-align:justify;
+font-style:italic;
+font-weight:bold;
+text-decoration:none;
+}
+
+.text a:hover{
+font-family:Arial, Helvetica, sans-serif;
+font-size:11px;
+color:#FFFFFF;
+text-align:justify;
+font-style:italic;
+font-weight:bold;
+text-decoration:underline;
+}
+
+.text-normal{
+font-family:Arial, Helvetica, sans-serif;
+font-size:11px;
+color:#FFFFFF;
+text-align:left;
+}
+
+.storyboard td{
+font-family:Arial, Helvetica, sans-serif;
+font-size:11px;
+color:#FFFFFF;
+vertical-align:top;
+padding:5px;
+border: solid 0px white;
+}
+
+.director {
+font-family:Arial, Helvetica, sans-serif;
+font-size:10px;
+color:#FFFFFF;
+vertical-align:bottom;
+text-align:left;
+}
+.cinematografo{
+font-family:Arial, Helvetica, sans-serif;
+font-size:10px;
+color:#FFFFFF;
+vertical-align:bottom;
+text-align:right;
+}
+
+.film{
+font-family:Arial, Helvetica, sans-serif;
+font-size:11px;
+color:#FFFFFF;
+vertical-align:middle;
+text-align:center;
+}
+
+.film a{
+font-family:Arial, Helvetica, sans-serif;
+font-size:11px;
+color:#FFFFFF;
+vertical-align:middle;
+text-align:center;
+text-decoration:none;
+}
+
+.film a:hover{
+font-family:Arial, Helvetica, sans-serif;
+font-size:11px;
+color:#FFFFFF;
+vertical-align:middle;
+text-align:center;
+text-decoration:underline;
+}
+
+.sinopsis-j{
+font-family:Arial, Helvetica, sans-serif;
+font-size:15px;
+color:#FFFFFF;
+text-align:justify;
+}
+/* fix 2026: assets @2x, tamaño lógico original */
+body{ background-size: 771px 419px; }

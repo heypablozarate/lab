@@ -8,6 +8,8 @@
 
 ### Changed
 
+- 2026-07-17 / Codex: Consolidated the Amélie 2004 working source under `amelie/source/` beside the experiment route, with project-relative build/upscale tooling; the parent's production static bundle remains unchanged.
+
 - 2026-07-08 / Codex: Moved the Lab landing manifest, experiment metadata, and Soy tu aire credits/copy to the parent web content source so the private admin can edit them while the public Lab repo keeps only the route implementation and thin parent-content adapter.
 
 - 2026-07-07 / Codex: Tuned the Synapsis resting node tone after visual QA so unfocused nodes sit back as quieter paper/ink points while hover/selected nodes keep the high-contrast monochrome focus state and dark-mode connector lines remain legible.

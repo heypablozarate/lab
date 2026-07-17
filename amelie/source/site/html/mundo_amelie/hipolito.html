@@ -1,0 +1,258 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>Hipolito - Am&eacute;lie</title>
+<meta http-equiv="Content-Style-Type" content="text/css">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<script language="JavaScript" type="text/JavaScript">
+<!--
+
+
+function MM_preloadImages() { //v3.0
+  var d=document; if(d.images){ if(!d.MM_p) d.MM_p=new Array();
+    var i,j=d.MM_p.length,a=MM_preloadImages.arguments; for(i=0; i<a.length; i++)
+    if (a[i].indexOf("#")!=0){ d.MM_p[j]=new Image; d.MM_p[j++].src=a[i];}}
+}
+
+function MM_findObj(n, d) { //v4.01
+  var p,i,x;  if(!d) d=document; if((p=n.indexOf("?"))>0&&parent.frames.length) {
+    d=parent.frames[n.substring(p+1)].document; n=n.substring(0,p);}
+  if(!(x=d[n])&&d.all) x=d.all[n]; for (i=0;!x&&i<d.forms.length;i++) x=d.forms[i][n];
+  for(i=0;!x&&d.layers&&i<d.layers.length;i++) x=MM_findObj(n,d.layers[i].document);
+  if(!x && d.getElementById) x=d.getElementById(n); return x;
+}
+//-->
+</script>
+<script language="JavaScript" type="text/JavaScript">
+<!--
+function MM_reloadPage(init) {  //reloads the window if Nav4 resized
+  if (init==true) with (navigator) {if ((appName=="Netscape")&&(parseInt(appVersion)==4)) {
+    document.MM_pgW=innerWidth; document.MM_pgH=innerHeight; onresize=MM_reloadPage; }}
+  else if (innerWidth!=document.MM_pgW || innerHeight!=document.MM_pgH) location.reload();
+}
+MM_reloadPage(true);
+
+function MM_dragLayer(objName,x,hL,hT,hW,hH,toFront,dropBack,cU,cD,cL,cR,targL,targT,tol,dropJS,et,dragJS) { //v4.01
+  //Copyright 1998 Macromedia, Inc. All rights reserved.
+  var i,j,aLayer,retVal,curDrag=null,curLeft,curTop,IE=document.all,NS4=document.layers;
+  var NS6=(!IE&&document.getElementById), NS=(NS4||NS6); if (!IE && !NS) return false;
+  retVal = true; if(IE && event) event.returnValue = true;
+  if (MM_dragLayer.arguments.length > 1) {
+    curDrag = MM_findObj(objName); if (!curDrag) return false;
+    if (!document.allLayers) { document.allLayers = new Array();
+      with (document) if (NS4) { for (i=0; i<layers.length; i++) allLayers[i]=layers[i];
+        for (i=0; i<allLayers.length; i++) if (allLayers[i].document && allLayers[i].document.layers)
+          with (allLayers[i].document) for (j=0; j<layers.length; j++) allLayers[allLayers.length]=layers[j];
+      } else {
+        if (NS6) { var spns = getElementsByTagName("span"); var all = getElementsByTagName("div");
+          for (i=0;i<spns.length;i++) if (spns[i].style&&spns[i].style.position) allLayers[allLayers.length]=spns[i];}
+        for (i=0;i<all.length;i++) if (all[i].style&&all[i].style.position) allLayers[allLayers.length]=all[i];
+    } }
+    curDrag.MM_dragOk=true; curDrag.MM_targL=targL; curDrag.MM_targT=targT;
+    curDrag.MM_tol=Math.pow(tol,2); curDrag.MM_hLeft=hL; curDrag.MM_hTop=hT;
+    curDrag.MM_hWidth=hW; curDrag.MM_hHeight=hH; curDrag.MM_toFront=toFront;
+    curDrag.MM_dropBack=dropBack; curDrag.MM_dropJS=dropJS;
+    curDrag.MM_everyTime=et; curDrag.MM_dragJS=dragJS;
+    curDrag.MM_oldZ = (NS4)?curDrag.zIndex:curDrag.style.zIndex;
+    curLeft= (NS4)?curDrag.left:(NS6)?parseInt(curDrag.style.left):curDrag.style.pixelLeft;
+    if (String(curLeft)=="NaN") curLeft=0; curDrag.MM_startL = curLeft;
+    curTop = (NS4)?curDrag.top:(NS6)?parseInt(curDrag.style.top):curDrag.style.pixelTop;
+    if (String(curTop)=="NaN") curTop=0; curDrag.MM_startT = curTop;
+    curDrag.MM_bL=(cL<0)?null:curLeft-cL; curDrag.MM_bT=(cU<0)?null:curTop-cU;
+    curDrag.MM_bR=(cR<0)?null:curLeft+cR; curDrag.MM_bB=(cD<0)?null:curTop+cD;
+    curDrag.MM_LEFTRIGHT=0; curDrag.MM_UPDOWN=0; curDrag.MM_SNAPPED=false; //use in your JS!
+    document.onmousedown = MM_dragLayer; document.onmouseup = MM_dragLayer;
+    if (NS) document.captureEvents(Event.MOUSEDOWN|Event.MOUSEUP);
+  } else {
+    var theEvent = ((NS)?objName.type:event.type);
+    if (theEvent == 'mousedown') {
+      var mouseX = (NS)?objName.pageX : event.clientX + document.body.scrollLeft;
+      var mouseY = (NS)?objName.pageY : event.clientY + document.body.scrollTop;
+      var maxDragZ=null; document.MM_maxZ = 0;
+      for (i=0; i<document.allLayers.length; i++) { aLayer = document.allLayers[i];
+        var aLayerZ = (NS4)?aLayer.zIndex:parseInt(aLayer.style.zIndex);
+        if (aLayerZ > document.MM_maxZ) document.MM_maxZ = aLayerZ;
+        var isVisible = (((NS4)?aLayer.visibility:aLayer.style.visibility).indexOf('hid') == -1);
+        if (aLayer.MM_dragOk != null && isVisible) with (aLayer) {
+          var parentL=0; var parentT=0;
+          if (NS6) { parentLayer = aLayer.parentNode;
+            while (parentLayer != null && parentLayer.style.position) {
+              parentL += parseInt(parentLayer.offsetLeft); parentT += parseInt(parentLayer.offsetTop);
+              parentLayer = parentLayer.parentNode;
+          } } else if (IE) { parentLayer = aLayer.parentElement;
+            while (parentLayer != null && parentLayer.style.position) {
+              parentL += parentLayer.offsetLeft; parentT += parentLayer.offsetTop;
+              parentLayer = parentLayer.parentElement; } }
+          var tmpX=mouseX-(((NS4)?pageX:((NS6)?parseInt(style.left):style.pixelLeft)+parentL)+MM_hLeft);
+          var tmpY=mouseY-(((NS4)?pageY:((NS6)?parseInt(style.top):style.pixelTop) +parentT)+MM_hTop);
+          if (String(tmpX)=="NaN") tmpX=0; if (String(tmpY)=="NaN") tmpY=0;
+          var tmpW = MM_hWidth;  if (tmpW <= 0) tmpW += ((NS4)?clip.width :offsetWidth);
+          var tmpH = MM_hHeight; if (tmpH <= 0) tmpH += ((NS4)?clip.height:offsetHeight);
+          if ((0 <= tmpX && tmpX < tmpW && 0 <= tmpY && tmpY < tmpH) && (maxDragZ == null
+              || maxDragZ <= aLayerZ)) { curDrag = aLayer; maxDragZ = aLayerZ; } } }
+      if (curDrag) {
+        document.onmousemove = MM_dragLayer; if (NS4) document.captureEvents(Event.MOUSEMOVE);
+        curLeft = (NS4)?curDrag.left:(NS6)?parseInt(curDrag.style.left):curDrag.style.pixelLeft;
+        curTop = (NS4)?curDrag.top:(NS6)?parseInt(curDrag.style.top):curDrag.style.pixelTop;
+        if (String(curLeft)=="NaN") curLeft=0; if (String(curTop)=="NaN") curTop=0;
+        MM_oldX = mouseX - curLeft; MM_oldY = mouseY - curTop;
+        document.MM_curDrag = curDrag;  curDrag.MM_SNAPPED=false;
+        if(curDrag.MM_toFront) {
+          eval('curDrag.'+((NS4)?'':'style.')+'zIndex=document.MM_maxZ+1');
+          if (!curDrag.MM_dropBack) document.MM_maxZ++; }
+        retVal = false; if(!NS4&&!NS6) event.returnValue = false;
+    } } else if (theEvent == 'mousemove') {
+      if (document.MM_curDrag) with (document.MM_curDrag) {
+        var mouseX = (NS)?objName.pageX : event.clientX + document.body.scrollLeft;
+        var mouseY = (NS)?objName.pageY : event.clientY + document.body.scrollTop;
+        newLeft = mouseX-MM_oldX; newTop  = mouseY-MM_oldY;
+        if (MM_bL!=null) newLeft = Math.max(newLeft,MM_bL);
+        if (MM_bR!=null) newLeft = Math.min(newLeft,MM_bR);
+        if (MM_bT!=null) newTop  = Math.max(newTop ,MM_bT);
+        if (MM_bB!=null) newTop  = Math.min(newTop ,MM_bB);
+        MM_LEFTRIGHT = newLeft-MM_startL; MM_UPDOWN = newTop-MM_startT;
+        if (NS4) {left = newLeft; top = newTop;}
+        else if (NS6){style.left = newLeft; style.top = newTop;}
+        else {style.pixelLeft = newLeft; style.pixelTop = newTop;}
+        if (MM_dragJS) eval(MM_dragJS);
+        retVal = false; if(!NS) event.returnValue = false;
+    } } else if (theEvent == 'mouseup') {
+      document.onmousemove = null;
+      if (NS) document.releaseEvents(Event.MOUSEMOVE);
+      if (NS) document.captureEvents(Event.MOUSEDOWN); //for mac NS
+      if (document.MM_curDrag) with (document.MM_curDrag) {
+        if (typeof MM_targL =='number' && typeof MM_targT == 'number' &&
+            (Math.pow(MM_targL-((NS4)?left:(NS6)?parseInt(style.left):style.pixelLeft),2)+
+             Math.pow(MM_targT-((NS4)?top:(NS6)?parseInt(style.top):style.pixelTop),2))<=MM_tol) {
+          if (NS4) {left = MM_targL; top = MM_targT;}
+          else if (NS6) {style.left = MM_targL; style.top = MM_targT;}
+          else {style.pixelLeft = MM_targL; style.pixelTop = MM_targT;}
+          MM_SNAPPED = true; MM_LEFTRIGHT = MM_startL-MM_targL; MM_UPDOWN = MM_startT-MM_targT; }
+        if (MM_everyTime || MM_SNAPPED) eval(MM_dropJS);
+        if(MM_dropBack) {if (NS4) zIndex = MM_oldZ; else style.zIndex = MM_oldZ;}
+        retVal = false; if(!NS) event.returnValue = false; }
+      document.MM_curDrag = null;
+    }
+    if (NS) document.routeEvent(objName);
+  } return retVal;
+}
+
+function MM_goToURL() { //v3.0
+  var i, args=MM_goToURL.arguments; document.MM_returnValue = false;
+  for (i=0; i<(args.length-1); i+=2) eval(args[i]+".location='"+args[i+1]+"'");
+}
+
+function MM_swapImgRestore() { //v3.0
+  var i,x,a=document.MM_sr; for(i=0;a&&i<a.length&&(x=a[i])&&x.oSrc;i++) x.src=x.oSrc;
+}
+
+function MM_swapImage() { //v3.0
+  var i,j=0,x,a=MM_swapImage.arguments; document.MM_sr=new Array; for(i=0;i<(a.length-2);i+=3)
+   if ((x=MM_findObj(a[i]))!=null){document.MM_sr[j++]=x; if(!x.oSrc) x.oSrc=x.src; x.src=a[i+2];}
+}
+
+function MM_showHideLayers() { //v6.0
+  var i,p,v,obj,args=MM_showHideLayers.arguments;
+  for (i=0; i<(args.length-2); i+=3) if ((obj=MM_findObj(args[i]))!=null) { v=args[i+2];
+    if (obj.style) { obj=obj.style; v=(v=='show')?'visible':(v=='hide')?'hidden':v; }
+    obj.visibility=v; }
+}
+
+function MM_controlSound(x, _sndObj, sndFile) { //v3.0
+  var i, method = "", sndObj = eval(_sndObj);
+  if (sndObj != null) {
+    if (navigator.appName == 'Netscape') method = "play";
+    else {
+      if (window.MM_WMP == null) {
+        window.MM_WMP = false;
+        for(i in sndObj) if (i == "ActiveMovie") {
+          window.MM_WMP = true; break;
+      } }
+      if (window.MM_WMP) method = "play";
+      else if (sndObj.FileName) method = "run";
+  } }
+  if (method) eval(_sndObj+"."+method+"()");
+  else window.location = sndFile;
+}
+//-->
+</script>
+<link href="../../css/css_verde.css" rel="stylesheet" type="text/css">
+</head>
+<body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0" onLoad="MM_preloadImages('../../img/nav_verde/receta_over.gif','../../img/nav_verde/postales_over.gif','../../img/nav_verde/wallpapers_over.gif','../../img/nav_verde/director_over.gif','../../img/nav_verde/reparto_over.gif','../../img/nav_verde/storyboard_over.gif','../../img/nav_verde/trailers_over.gif','../../img/nav_verde/compra_over.gif','../../img/nav_verde/esencia_over.gif','../../img/nav_verde/personajes_over.gif')">
+<div class="alt" id="alt-esencia" style="position:absolute; left:93px; top:53px; width:98px; height:32px; z-index:100; visibility: hidden;"><img src="../../img/esencia_alt.gif" alt="" width="116" height="48"></div>
+<div class="alt" id="alt-personajes" style="position:absolute; left:273px; top:55px; width:167px; height:34px; z-index:100; visibility: hidden;"><img src="../../img/personajes_alt.gif" alt="" width="169" height="55"></div>
+<div class="alt" id="alt-receta" style="position:absolute; left:379px; top:54px; width:61px; height:39px; z-index:100; visibility: hidden;"><img src="../../img/receta_alt.gif" alt="" width="104" height="57"></div>
+<div class="alt" id="alt-postales" style="position:absolute; left:426px; top:53px; width:217px; height:37px; z-index:100; visibility: hidden;"><img src="../../img/postales_alt.gif" alt="" width="207" height="55"></div>
+<div class="alt" id="alt-wallpaper" style="position:absolute; left:585px; top:54px; width:120px; height:42px; z-index:100; visibility: hidden;"><img src="../../img/wallpapers_alt.gif" alt="" width="156" height="49"></div>
+<div class="alt" id="alt-director" style="position:absolute; left:108px; top:325px; width:52px; height:24px; z-index:100; visibility: hidden;"><img src="../../img/director_alt.gif" alt="" width="77" height="48"></div>
+<div class="alt" id="alt-reparto" style="position:absolute; left:209px; top:320px; width:60px; height:30px; z-index:100; visibility: hidden;"><img src="../../img/reparto_alt.gif" alt="" width="83" height="58"></div>
+<div class="alt" id="alt-storyboard" style="position:absolute; left:339px; top:311px; width:117px; height:37px; z-index:100; visibility: hidden;"><img src="../../img/storyboard_alt.gif" alt="" width="163" height="62"></div>
+<div class="alt" id="alt-trailers" style="position:absolute; left:401px; top:318px; width:41px; height:33px; z-index:100; visibility: hidden;"><img src="../../img/trailers_alt.gif" alt="" width="124" height="56"></div>
+<div class="alt" id="alt-compra" style="position:absolute; left:575px; top:321px; width:40px; height:41px; z-index:100; visibility: hidden;"><img src="../../img/compra_alt.gif" alt="" width="86" height="54"></div>
+<div id="text-personaje" style="position:absolute; left:47px; top:114px; width:233px; height:204px; z-index:2" class="text">
+  <p>Es un escritor fracasado. <br>
+  Le gusta ver toreadores corneados en la TV. </p>
+</div>
+<div id="text-actor" style="position:absolute; left:466px; top:114px; width:250px; height:146px; z-index:1" class="text">
+  <p> Nace en Neuilly-sur-Seine el 13 de Marzo de 1957 <strong><br>
+        <br>
+    Filmograf&iacute;a selecta: <br>
+    </strong>L'Odeur du melon dans la poubelle, 2002 <strong><br>
+    </strong>Le fabuleux destin d'Am&eacute;lie Poulain, 2001 <br>
+    Belle maman, 1999 <br>
+    Gratin, 1998 <br>
+    Ouvrez le chien, 1997 <br>
+    Portraits chinois, 1996 <strong></strong></p>
+</div>
+<div id="nombre-personaje" style="position:absolute; left:219px; top:80px; width:57px; height:16px; z-index:1"><img alt="" src="../../img/hipolito/hipolito.jpg" width="61" height="24"></div>
+<div id="nombre-actor" style="position:absolute; left:466px; top:80px; width:195px; height:14px; z-index:1"><img alt="" src="../../img/hipolito/artus.jpg" width="190" height="25"></div>
+<div id="cara" style="position:absolute; left:285px; top:53px; width:132px; height:180px; z-index:-1"><img alt="" src="../../img/hipolito/cara.jpg" width="201" height="254"></div>
+<div id="frase" style="position:absolute; left:27px; top:143px; width:103px; height:46px; z-index:1"><img alt="" src="../../img/hipolito/frase.jpg" width="237" height="209" onMouseOver="MM_controlSound('play','document.CS1091052428375','../../sound/son_toi_mas_volumen.mp3')" galleryimg="no"></div>
+<table width="741" height="419" border="0" cellpadding="0" cellspacing="0">
+  <tr>
+    <td width="768" height="57"><table width=737 height="57" border=0 cellpadding=0 cellspacing=0>
+        <tr>
+          <td width="119" rowspan=2> <a target="_parent" href="../../index.html"><img src="../../img/amelie_logo.gif" alt="Am&eacute;lie" title="" width=119 height=56 border="0"></a></td>
+          <td height="25" colspan=7> <img src="../../img/dot.gif" width=620 height=25 alt=""></td>
+        </tr>
+        <tr>
+          <td width="34"> <img src="../../img/dot.gif" width=34 height=31 alt=""></td>
+          <td width="102"> <a onClick="parent.rightFrame.location.href = 'sound_rojo.html';" href="esencia.html"><img src="../../img/nav_verde/esencia_off.gif" alt="Esencia" title="" name="esencia" width=102 height=31 border="0" id="esencia" onMouseOver="MM_swapImage('esencia','','../../img/nav_verde/esencia_over.gif',1);MM_showHideLayers('alt-esencia','','show')" onMouseOut="MM_swapImgRestore();MM_showHideLayers('alt-esencia','','hide')"></a></td>
+          <td width="115"> <a onClick="parent.rightFrame.location.href = 'sound_rojo.html';" href="personajes.html"><img src="../../img/nav_verde/personajes_off.gif" alt="Personajes" title="" name="personaje" width=115 height=31 border="0" id="personaje" onMouseOver="MM_swapImage('personaje','','../../img/nav_verde/personajes_over.gif',1);MM_showHideLayers('alt-personajes','','show')" onMouseOut="MM_swapImgRestore();MM_showHideLayers('alt-personajes','','hide')"></a></td>
+          <td width="106"> <a onClick="parent.rightFrame.location.href = 'sound_rojo.html';" href="receta.html"><img src="../../img/nav_verde/receta_off.gif" alt="La Receta" title="" name="receta" width=106 height=31 border="0" id="receta" onMouseOver="MM_swapImage('receta','','../../img/nav_verde/receta_over.gif',1);MM_showHideLayers('alt-receta','','show')" onMouseOut="MM_swapImgRestore();MM_showHideLayers('alt-receta','','hide')"></a></td>
+          <td width="98"> <a onClick="parent.rightFrame.location.href = 'sound_rojo.html';" href="postales.html"><img src="../../img/nav_verde/postales_off.gif" alt="Postales" title="" name="postales" width=98 height=31 border="0" id="postales" onMouseOver="MM_swapImage('postales','','../../img/nav_verde/postales_over.gif',1);MM_showHideLayers('alt-postales','','show')" onMouseOut="MM_swapImgRestore();MM_showHideLayers('alt-postales','','hide')"></a></td>
+          <td width="102"> <a onClick="parent.rightFrame.location.href = 'sound_rojo.html';" href="wallpapers.html"><img src="../../img/nav_verde/wallpapers_off.gif" alt="Wallpapers" title="" name="wallpapers" width=102 height=31 border="0" id="wallpapers" onMouseOver="MM_swapImage('wallpapers','','../../img/nav_verde/wallpapers_over.gif',1);MM_showHideLayers('alt-wallpaper','','show')" onMouseOut="MM_swapImgRestore();MM_showHideLayers('alt-wallpaper','','hide')"></a></td>
+          <td width="91"> <img src="../../img/dot.gif" width=61 height=31 alt=""></td>
+        </tr>
+    </table></td>
+    <td width="4"></td>
+  </tr>
+  <tr>
+    <td height="316"><p>&nbsp;</p>
+        <p>
+          <embed name='CS1091052428375' src='../../sound/son_toi_mas_volumen.mp3' loop=false
+autostart=false mastersound hidden=true width=0 height=0></embed>
+        </p></td>
+    <td><img alt="" src="../../img/dot.gif" width="1" height="316"></td>
+  </tr>
+  <tr>
+    <td height="46"><table width=737 height="46" border=0 cellpadding=0 cellspacing=0>
+        <tr>
+          <td width="68" height="31"> <img src="../../img/dot.gif" width=68 height=31 alt=""></td>
+          <td width="116"> <a onClick="parent.rightFrame.location.href = 'sound_azul.html';" href="director.html"><img src="../../img/nav_verde/director_off.gif" alt="El Director" title="" name="director" width=116 height=31 border="0" id="director" onMouseOver="MM_swapImage('director','','../../img/nav_verde/director_over.gif',1);MM_showHideLayers('alt-director','','show')" onMouseOut="MM_swapImgRestore();MM_showHideLayers('alt-director','','hide')"></a></td>
+          <td width="113"> <a onClick="parent.rightFrame.location.href = 'sound_azul.html';" href="reparto.html"><img src="../../img/nav_verde/reparto_off.gif" alt="Reparto" title="" name="reparto" width=113 height=31 border="0" id="reparto" onMouseOver="MM_swapImage('reparto','','../../img/nav_verde/reparto_over.gif',1);MM_showHideLayers('alt-reparto','','show')" onMouseOut="MM_swapImgRestore();MM_showHideLayers('alt-reparto','','hide')"></a></td>
+          <td width="135"> <a onClick="parent.rightFrame.location.href = 'sound_azul.html';" href="storyboard.html"><img src="../../img/nav_verde/storyboard_off.gif" alt="Storyboard" title="" name="storyboard" width=135 height=31 border="0" id="storyboard" onMouseOver="MM_swapImage('storyboard','','../../img/nav_verde/storyboard_over.gif',1);MM_showHideLayers('alt-storyboard','','show')" onMouseOut="MM_swapImgRestore();MM_showHideLayers('alt-storyboard','','hide')"></a></td>
+          <td width="110"> <a onClick="parent.rightFrame.location.href = 'sound_azul.html';" href="trailers.html"><img src="../../img/nav_verde/trailers_off.gif" alt="Trailers" title="" name="trailers" width=110 height=31 border="0" id="trailers" onMouseOver="MM_swapImage('trailers','','../../img/nav_verde/trailers_over.gif',1);MM_showHideLayers('alt-trailers','','show')" onMouseOut="MM_swapImgRestore();MM_showHideLayers('alt-trailers','','hide')"></a></td>
+          <td width="169"> <a onClick="parent.rightFrame.location.href = 'sound_azul.html';" href="compra.html"><img src="../../img/nav_verde/compra_off.gif" alt="Compr&aacute; Am&eacute;lie" title="" name="compra" width=169 height=31 border="0" id="compra" onMouseOver="MM_swapImage('compra','','../../img/nav_verde/compra_over.gif',1);MM_showHideLayers('alt-compra','','show')" onMouseOut="MM_swapImgRestore();MM_showHideLayers('alt-compra','','hide')"></a></td>
+          <td width="57" rowspan=2 valign="top">&nbsp; </td>
+        </tr>
+        <tr>
+          <td height="15" colspan=6> <img src="../../img/dot.gif" width=712 height=15 alt=""></td>
+        </tr>
+    </table></td>
+    <td></td>
+  </tr>
+</table>
+<script src="../../js/amelie-modern.js"></script>
+</body>
+</html>

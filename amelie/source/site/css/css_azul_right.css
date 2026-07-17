@@ -1,0 +1,9 @@
+body{
+	background-color:#000000;
+	background-attachment:fixed;
+	background-repeat:no-repeat;
+	background-image: url(../img/fondo_azul_right.jpg);
+	background-position: left top;
+}
+/* fix 2026: assets @2x, tamaño lógico original */
+body{ background-size: 30px 419px; }
