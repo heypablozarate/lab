@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<title>Amelie Poulain - Jean-Pierre Jeunet</title>
+<meta charset="utf-8">
+<meta name="robots" content="all">
+<meta name="title" lang="es" content="Sitio de la Pelicula 'Le Fabuleux destin d'Amélie Poulain'">
+<meta name="description" lang="es" content="Le Fabuleux destin d'Amélie Poulain, sitio web dedicado a esta mágica película. Informacion sobre la película y su realización.">
+<meta name="keywords" lang="es" content="Amélie, Amélie Poulain, Audrey Tautou, Le Fabuleux destin d'Amélie Poulain, Nino Quincampoix, Mathieu Kassovitz, Raymond Dufayel, Lucien, Renoir, Jean-Pierre Jeunet, Les Deux Moulins">
+<script type="text/javascript">
+function MM_preloadImages() { //v3.0
+  var d=document; if(d.images){ if(!d.MM_p) d.MM_p=new Array();
+    var i,j=d.MM_p.length,a=MM_preloadImages.arguments; for(i=0; i<a.length; i++)
+    if (a[i].indexOf("#")!=0){ d.MM_p[j]=new Image; d.MM_p[j++].src=a[i];}}
+}
+function MM_swapImgRestore() { //v3.0
+  var i,x,a=document.MM_sr; for(i=0;a&&i<a.length&&(x=a[i])&&x.oSrc;i++) x.src=x.oSrc;
+}
+function MM_findObj(n, d) { //v4.01
+  var p,i,x;  if(!d) d=document; if((p=n.indexOf("?"))>0&&parent.frames.length) {
+    d=parent.frames[n.substring(p+1)].document; n=n.substring(0,p);}
+  if(!(x=d[n])&&d.all) x=d.all[n]; for (i=0;!x&&i<d.forms.length;i++) x=d.forms[i][n];
+  for(i=0;!x&&d.layers&&i<d.layers.length;i++) x=MM_findObj(n,d.layers[i].document);
+  if(!x && d.getElementById) x=d.getElementById(n); return x;
+}
+function MM_swapImage() { //v3.0
+  var i,j=0,x,a=MM_swapImage.arguments; document.MM_sr=new Array; for(i=0;i<(a.length-2);i+=3)
+   if ((x=MM_findObj(a[i]))!=null){document.MM_sr[j++]=x; if(!x.oSrc) x.oSrc=x.src; x.src=a[i+2];}
+}
+
+/* 2026: el texto que en 2004 generaba PHP+GD (index.php) ahora vive acá,
+   con la misma Mistral, el mismo ángulo y el reloj en vivo. */
+function amelieClock() {
+  var d = new Date();
+  function p(n){ return (n < 10 ? '0' : '') + n; }
+  var fecha = p(d.getDate()) + '. ' + p(d.getMonth() + 1) + '. ' + d.getFullYear();
+  var hora = p(d.getHours()) + ':' + p(d.getMinutes()) + ':' + p(d.getSeconds());
+  var s = (d.getHours() === 1) ? '' : 's';
+  document.getElementById('linea1').textContent =
+    'El ' + fecha + ', exactamente a la' + s + ' ' + hora;
+}
+setInterval(amelieClock, 1000);
+</script>
+<style>
+@font-face {
+  font-family: 'Mistral2004';
+  src: url('font/MISTRAL.TTF') format('truetype');
+  font-display: block;
+}
+body { background-color: #B5B9C7; margin: 0; }
+/* fix 2026: los browsers modernos agregan gaps en tablas cortadas */
+table td { font-size: 0; line-height: 0; }
+td img { display: block; }
+#frase-box {
+  position: relative;
+  width: 409px; height: 128px;
+  background: url('img/splash/texto_original.jpg') no-repeat;
+  background-size: 409px 128px; /* asset @2x, tamaño lógico original */
+  overflow: hidden;
+}
+#frase {
+  position: absolute;
+  left: 7px; top: 50px;
+  transform: rotate(-3deg);
+  transform-origin: 0 0;
+  font-family: 'Mistral2004', 'Brush Script MT', cursive;
+  font-size: 20px;
+  line-height: 28px;
+  color: rgb(5, 70, 128);
+  white-space: nowrap;
+}
+</style>
+</head>
+<body onLoad="MM_preloadImages('img/splash/mundo_amelie_over.gif','img/splash/mundo_jeunet_over.gif');amelieClock()">
+<div align="center"> <br>
+  <table width=583 border=0 cellpadding=0 cellspacing=0>
+    <tr>
+      <td> <img src="img/splash/splash2_01.jpg" width=76 height=105 alt=""></td>
+      <td colspan=2> <img src="img/splash/splash2_02.jpg" width=160 height=105 alt=""></td>
+      <td colspan=2> <img src="img/splash/splash2_03.jpg" width=84 height=105 alt=""></td>
+      <td colspan=2> <img src="img/splash/splash2_04.jpg" width=125 height=105 alt=""></td>
+      <td colspan=2> <img src="img/splash/splash2_05.jpg" width=138 height=105 alt=""></td>
+    </tr>
+    <tr>
+      <td> <img src="img/splash/splash2_06.jpg" width=76 height=128 alt=""></td>
+      <td colspan=7>
+        <div id="frase-box">
+          <div id="frase">
+            <span id="linea1"></span><br>
+            un usuario desde una PC con conexión,<br>
+            deberá decidirse entre dos mundos:
+          </div>
+        </div>
+      </td>
+      <td> <img src="img/splash/splash2_08.jpg" width=98 height=128 alt=""></td>
+    </tr>
+    <tr>
+      <td colspan=2> <img src="img/splash/splash2_09.jpg" width=108 height=80 alt=""></td>
+      <td> <a onClick="this.blur();" href="html/mundo_amelie/index.html"><img src="img/splash/mundo_amelie.gif" alt="Mundo Amélie" name="mundoamelie" width=128 height=80 border="0" id="mundoamelie" onMouseOver="MM_swapImage('mundoamelie','','img/splash/mundo_amelie_over.gif',1)" onMouseOut="MM_swapImgRestore()"></a></td>
+      <td> <img src="img/splash/splash2_11.jpg" width=76 height=80 alt=""></td>
+      <td colspan=2><a onClick="this.blur();" href="html/mundo_jeunet/index.html"><img src="img/splash/mundo_jeunet.gif" alt="Mundo Jeunet" name="mundojeunet" width=122 height=80 border="0" id="mundojeunet" onMouseOver="MM_swapImage('mundojeunet','','img/splash/mundo_jeunet_over.gif',1)" onMouseOut="MM_swapImgRestore()"></a></td>
+      <td colspan=3> <img src="img/splash/splash2_13.jpg" width=149 height=80 alt=""></td>
+    </tr>
+    <tr>
+      <td colspan=2> <img src="img/splash/splash2_14.jpg" width=108 height=87 alt=""></td>
+      <td> <img src="img/splash/splash2_15.jpg" width=128 height=87 alt=""></td>
+      <td> <img src="img/splash/splash2_16.jpg" width=76 height=87 alt=""></td>
+      <td colspan=2> <img src="img/splash/splash2_17.jpg" width=122 height=87 alt=""></td>
+      <td colspan=3> <img src="img/splash/splash2_18.jpg" width=149 height=87 alt=""></td>
+    </tr>
+    <tr>
+      <td> <img src="img/splash/spacer.gif" width=76 height=1 alt=""></td>
+      <td> <img src="img/splash/spacer.gif" width=32 height=1 alt=""></td>
+      <td> <img src="img/splash/spacer.gif" width=128 height=1 alt=""></td>
+      <td> <img src="img/splash/spacer.gif" width=76 height=1 alt=""></td>
+      <td> <img src="img/splash/spacer.gif" width=8 height=1 alt=""></td>
+      <td> <img src="img/splash/spacer.gif" width=114 height=1 alt=""></td>
+      <td> <img src="img/splash/spacer.gif" width=11 height=1 alt=""></td>
+      <td> <img src="img/splash/spacer.gif" width=40 height=1 alt=""></td>
+      <td> <img src="img/splash/spacer.gif" width=98 height=1 alt=""></td>
+    </tr>
+  </table>
+</div>
+</body>
+</html>

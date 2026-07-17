@@ -1,0 +1,2 @@
+# Preserve the recovered 2004 static source byte-for-byte.
+amelie/source/site/** -whitespace

@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Amélie — 2004</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Recreación del sitio de Amélie (proyecto de estudio, Escuela Da Vinci, 2004), montado en la pantalla de un iMac G4.">
+<meta property="og:title" content="Amélie — 2004">
+<meta property="og:description" content="Un sitio de 2004, revivido tal cual era: puzzle DHTML, música por sección y dos mundos para elegir.">
+<meta property="og:image" content="https://lab.pablozarate.com/amelie/assets/og.jpg">
+<meta property="og:type" content="website">
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; background: #0d0906; overflow: hidden; }
+
+  /* ---------- la foto ---------- */
+  #photoWrap {
+    position: absolute; inset: 0;
+    transition: transform .9s cubic-bezier(.4,.05,.25,1);
+    will-change: transform;
+  }
+  #photo { position: absolute; user-select: none; -webkit-user-drag: none; }
+  #hotspot { position: absolute; cursor: pointer; }
+  #postit { position: absolute; cursor: pointer; }
+  body.zoomed #postit { display: none; }
+
+  /* caption discreto de contexto */
+  #caption {
+    position: absolute; left: 16px; bottom: 12px; z-index: 10;
+    color: rgba(255,255,255,.55); font: 11px 'Lucida Grande', Verdana, sans-serif;
+    background: rgba(0,0,0,.3); padding: 4px 10px; border-radius: 10px;
+    pointer-events: none;
+  }
+  body.zoomed #caption, body.zooming #caption { display: none; }
+  #hint {
+    position: absolute; transform: translate(-50%,-50%); /* centrado en la pantalla de la foto, ver layout() */
+    color: rgba(255,255,255,.85); font: 13px/1.4 'Lucida Grande', Verdana, sans-serif;
+    background: rgba(0,0,0,.45); padding: 8px 14px; border-radius: 20px;
+    pointer-events: none; white-space: nowrap;
+    opacity: 0; animation: hintIn 1s ease 1.4s forwards; z-index: 10;
+  }
+  @keyframes hintIn { to { opacity: 1; } }
+  body.zoomed #hint, body.zooming #hint { display: none; }
+
+  /* ---------- ventana Safari 1.x sobre la pantalla de la foto ---------- */
+  #browser {
+    position: absolute; left: 50%; top: 50%;
+    width: 809px; height: 547px;
+    margin: -273px 0 0 -404px; /* centrado */
+    border-radius: 8px 8px 0 0;
+    box-shadow: 0 18px 50px rgba(0,0,0,.6);
+    transform: translateY(55vh) scale(.04); transform-origin: 50% 50%;
+    opacity: 0;
+    transition: transform .5s cubic-bezier(.2,.8,.3,1.08), opacity .3s ease;
+    z-index: 20;
+  }
+  #browser.open { opacity: 1; }
+  /* integración al vidrio: reflejo diagonal + luz cálida del ambiente */
+  #browser::after {
+    content: ''; position: absolute; inset: 0; pointer-events: none;
+    border-radius: 8px 8px 0 0;
+    background: linear-gradient(115deg,
+      rgba(255,245,230,.10) 0%, rgba(255,245,230,.05) 28%,
+      rgba(255,255,255,0) 45%, rgba(255,240,220,.04) 78%, rgba(255,235,210,.07) 100%);
+  }
+  #browser:not(.maxi) { filter: sepia(.06) brightness(.985); }
+
+  /* gema verde = zoom de OS X: la ventana escala hasta llenar el viewport */
+  #browser.maxi { filter: none; }
+  #browser.maxi::after { display: none; }
+  #chrome {
+    height: 58px; border-radius: 8px 8px 0 0;
+    background:
+      repeating-linear-gradient(0deg, rgba(255,255,255,.05) 0 1px, rgba(0,0,0,.04) 1px 2px),
+      linear-gradient(#cfcfcf, #a8a8a8);
+    border: 1px solid #6f6f6f; border-bottom: 1px solid #7a7a7a;
+    position: relative; padding: 5px 8px 0;
+    font: 11px 'Lucida Grande', Verdana, sans-serif;
+  }
+  #chrome .title {
+    text-align: center; color: #222; font-size: 12px; line-height: 16px;
+    text-shadow: 0 1px 0 rgba(255,255,255,.5);
+  }
+  .gems { position: absolute; left: 9px; top: 5px; display: flex; gap: 7px; }
+  .gem { width: 13px; height: 13px; border-radius: 50%; cursor: pointer; border: 1px solid rgba(0,0,0,.3); }
+  .gem.r { background: radial-gradient(circle at 35% 30%, #ffb3ad, #e2453d 60%, #a71c14); }
+  .gem.y { background: radial-gradient(circle at 35% 30%, #ffe9a8, #f0b433 60%, #b07b0e); }
+  .gem.g { background: radial-gradient(circle at 35% 30%, #c4f2b6, #57b33e 60%, #2c7714); }
+  .toolrow { display: flex; align-items: center; gap: 7px; margin-top: 4px; }
+  .navbtn {
+    width: 26px; height: 20px; border-radius: 10px;
+    background: linear-gradient(#fefefe, #c9c9c9);
+    border: 1px solid #888; color: #444;
+    font-size: 12px; line-height: 18px; text-align: center;
+  }
+  .addr {
+    flex: 1; height: 20px; border-radius: 10px;
+    background: #fff; border: 1px solid #999;
+    padding: 0 10px; color: #333; font-size: 11px; line-height: 20px;
+    overflow: hidden; white-space: nowrap;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,.2);
+  }
+  #viewport-site {
+    width: 100%; height: calc(100% - 58px - 16px);
+    border: 1px solid #6f6f6f; border-top: 0; background: #B5B9C7;
+  }
+  #viewport-site iframe { width: 100%; height: 100%; border: 0; display: block; }
+  #statusbar {
+    height: 16px; background: linear-gradient(#d8d8d8, #b8b8b8);
+    border: 1px solid #6f6f6f; border-top: 0;
+    font: 9px/16px 'Lucida Grande', Verdana, sans-serif; color: #444; padding: 0 8px;
+  }
+
+  /* ---------- ventana QuickTime para el trailer ---------- */
+  #qtwin {
+    position: absolute; left: 50%; top: 50%;
+    width: 576px; /* video 560 + bordes */
+    border-radius: 7px 7px 0 0;
+    box-shadow: 0 16px 44px rgba(0,0,0,.6);
+    transform: translate(-50%,-50%) scale(.05); transform-origin: 50% 50%;
+    opacity: 0; display: none;
+    transition: transform .4s cubic-bezier(.2,.8,.3,1.08), opacity .25s ease;
+    z-index: 50;
+  }
+  #qtwin.open { opacity: 1; }
+  #qtbar {
+    height: 22px; border-radius: 7px 7px 0 0; position: relative;
+    background:
+      repeating-linear-gradient(0deg, rgba(255,255,255,.05) 0 1px, rgba(0,0,0,.04) 1px 2px),
+      linear-gradient(#d2d2d2, #a4a4a4);
+    border: 1px solid #6f6f6f; border-bottom: 1px solid #7d7d7d;
+    font: 11px/22px 'Lucida Grande', Verdana, sans-serif; color: #222;
+    text-align: center; cursor: grab;
+    text-shadow: 0 1px 0 rgba(255,255,255,.5);
+  }
+  #qtbar .gems { top: 4px; }
+  #qtbody {
+    background: #1a1a1a; border: 1px solid #6f6f6f; border-top: 0; padding: 8px;
+  }
+  #qtbody video { display: block; width: 100%; background: #000; }
+  @media (prefers-reduced-motion: reduce) { #qtwin { transition: none !important; } }
+
+  #backBtn {
+    position: absolute; right: 14px; bottom: 12px; z-index: 30;
+    color: rgba(255,255,255,.75); font: 11px 'Lucida Grande', Verdana, sans-serif;
+    background: rgba(0,0,0,.35); padding: 5px 12px; border-radius: 12px; cursor: pointer;
+    display: none;
+  }
+  body.zoomed #backBtn { display: block; }
+  #backBtn:hover { background: rgba(0,0,0,.55); }
+
+  @media (prefers-reduced-motion: reduce) {
+    #photoWrap, #browser { transition: none !important; }
+    #hint { animation: none; opacity: 1; }
+  }
+</style>
+</head>
+<body>
+
+<div id="photoWrap">
+  <img id="photo" src="assets/imac_close_2x.jpg" alt="Un iMac G4 con un post-it: Amelie 7:30 Hoyts" draggable="false">
+  <div id="hotspot" title="Acercarse"></div>
+  <div id="postit" title="Amelie · 7:30 · Hoyts"></div>
+</div>
+
+<div id="caption">Proyecto de estudio · Escuela Da Vinci · 2004</div>
+
+<div id="hint">La función empieza acá — click en la pantalla</div>
+
+<!-- la ventana del browser, sobre la pantalla de la foto -->
+<div id="browser">
+  <div id="chrome">
+    <div class="gems">
+      <div class="gem r" id="gemClose" title="Cerrar"></div>
+      <div class="gem y"></div>
+      <div class="gem g"></div>
+    </div>
+    <div class="title">Amelie Poulain &mdash; Jean-Pierre Jeunet</div>
+    <div class="toolrow">
+      <div class="navbtn">&#9664;</div>
+      <div class="navbtn">&#9654;</div>
+      <div class="navbtn" style="width:20px">&#10227;</div>
+      <div class="addr">http://www.davinci.edu.ar/alumnos/pzarate/amelie/</div>
+    </div>
+  </div>
+  <div id="viewport-site"><iframe id="siteFrame" title="Sitio Amélie 2004"></iframe></div>
+  <div id="statusbar">Done. 55 items.</div>
+</div>
+
+<!-- ventana QuickTime del trailer -->
+<div id="qtwin">
+  <div id="qtbar">
+    <div class="gems"><div class="gem r" id="qtClose" title="Cerrar"></div></div>
+    Am&eacute;lie &mdash; Trailer
+  </div>
+  <div id="qtbody">
+    <video id="qtvideo" playsinline controls>
+      <source src="../site/video/amelie_trailer.mp4" type="video/mp4">
+      <source src="../site/video/amelie_trailer.webm" type="video/webm">
+    </video>
+  </div>
+</div>
+
+<div id="backBtn" title="Alejarse (Esc)">&larr; alejarse</div>
+
+<script>
+/* ====== CONFIG ======
+   Pantalla del iMac en píxeles LÓGICOS de la foto (la foto se sirve @2x). */
+var NAT = { w: 1672, h: 941 };
+var SCREEN_RECT = { x: 406, y: 104, w: 858, h: 618 };
+var POSTIT_RECT = { x: 760, y: 744, w: 176, h: 197 };
+var FAKE_BASE = 'http://www.davinci.edu.ar/alumnos/pzarate/amelie/';
+
+var wrap = document.getElementById('photoWrap');
+var photo = document.getElementById('photo');
+var hotspot = document.getElementById('hotspot');
+var browser = document.getElementById('browser');
+var frame = document.getElementById('siteFrame');
+var disp = {};
+var zoomed = false;
+var reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+function layout() {
+  var vw = innerWidth, vh = innerHeight;
+  var s = Math.max(vw / NAT.w, vh / NAT.h); /* cover */
+  disp = { s: s, w: NAT.w * s, h: NAT.h * s };
+  disp.x = (vw - disp.w) / 2; disp.y = (vh - disp.h) / 2;
+  photo.style.width = disp.w + 'px'; photo.style.height = disp.h + 'px';
+  photo.style.left = disp.x + 'px'; photo.style.top = disp.y + 'px';
+  hotspot.style.left = (disp.x + SCREEN_RECT.x * disp.s) + 'px';
+  hotspot.style.top = (disp.y + SCREEN_RECT.y * disp.s) + 'px';
+  hotspot.style.width = (SCREEN_RECT.w * disp.s) + 'px';
+  hotspot.style.height = (SCREEN_RECT.h * disp.s) + 'px';
+  var hint = document.getElementById('hint');
+  if (hint) {
+    hint.style.left = (disp.x + (SCREEN_RECT.x + SCREEN_RECT.w / 2) * disp.s) + 'px';
+    hint.style.top = (disp.y + (SCREEN_RECT.y + SCREEN_RECT.h / 2) * disp.s) + 'px';
+  }
+  var pit = document.getElementById('postit');
+  pit.style.left = (disp.x + POSTIT_RECT.x * disp.s) + 'px';
+  pit.style.top = (disp.y + POSTIT_RECT.y * disp.s) + 'px';
+  pit.style.width = (POSTIT_RECT.w * disp.s) + 'px';
+  pit.style.height = (POSTIT_RECT.h * disp.s) + 'px';
+  fitBrowser();
+  if (zoomed) applyZoom(true);
+}
+addEventListener('resize', layout);
+
+/* zoom sutil: la pantalla crece hasta ~70% del ancho, la iMac sigue en cuadro */
+function zoomK() {
+  var k = Math.min(innerWidth * 0.70 / (SCREEN_RECT.w * disp.s),
+                   innerHeight * 0.86 / (SCREEN_RECT.h * disp.s));
+  return Math.min(Math.max(k, 1.08), 1.45);
+}
+
+/* la ventana se ajusta DENTRO de la pantalla de la foto ya zoomeada;
+   en modo maxi (gema verde) escala hasta llenar el viewport */
+function fitBrowser() {
+  var kb;
+  if (browser.classList.contains('maxi')) {
+    kb = Math.min(innerWidth * 0.995 / 809, innerHeight * 0.995 / 547);
+  } else {
+    var k = zoomK();
+    var sw = SCREEN_RECT.w * disp.s * k, sh = SCREEN_RECT.h * disp.s * k;
+    kb = Math.min(sw * 0.90 / 809, sh * 0.84 / 547);
+  }
+  browser.style.transform = browser.classList.contains('open')
+    ? 'scale(' + kb + ')' : '';
+  browser.dataset.k = kb;
+}
+
+function applyZoom(instant) {
+  var vw = innerWidth, vh = innerHeight;
+  var cx = disp.x + (SCREEN_RECT.x + SCREEN_RECT.w / 2) * disp.s;
+  var cy = disp.y + (SCREEN_RECT.y + SCREEN_RECT.h / 2) * disp.s;
+  var k = zoomK();
+  if (instant) wrap.style.transition = 'none';
+  wrap.style.transformOrigin = cx + 'px ' + cy + 'px';
+  wrap.style.transform = 'translate(' + (vw / 2 - cx) + 'px,' + (vh / 2 - cy) + 'px) scale(' + k + ')';
+  if (instant) { void wrap.offsetHeight; wrap.style.transition = ''; }
+}
+
+function zoomIn(url) {
+  if (zoomed) { openBrowser(url); return; } /* ya zoomeado: reabrir la ventana */
+  var hint = document.getElementById('hint');
+  if (hint) hint.remove(); /* el hint se muestra una sola vez */
+  zoomed = true;
+  valseFade(0);
+  document.body.classList.add('zooming');
+  applyZoom(reduced);
+  setTimeout(function () {
+    document.body.classList.remove('zooming');
+    document.body.classList.add('zoomed');
+    openBrowser(url);
+  }, reduced ? 0 : 950);
+}
+
+function openBrowser(url) {
+  if (url) frame.src = url;
+  else if (!frame.src) frame.src = '../site/index.html';
+  browser.classList.add('open');
+  browser.style.transform = 'scale(' + browser.dataset.k + ')';
+}
+
+function closeBrowser() {
+  browser.classList.remove('open');
+  browser.style.transform = '';
+}
+
+function goBack() {
+  closeBrowser();
+  browser.classList.remove('maxi');
+  zoomed = false;
+  document.body.classList.remove('zoomed');
+  wrap.style.transform = 'none';
+  valseFade(VALSE_VOL);
+}
+
+hotspot.addEventListener('click', function () { zoomIn(); });
+document.getElementById('postit').addEventListener('click', function () {
+  /* easter egg: la función empieza — directo a Trailers */
+  zoomIn('../site/html/mundo_amelie/index.html?p=trailers.html&s=sound_azul.html');
+});
+document.getElementById('gemClose').addEventListener('click', function (e) {
+  e.stopPropagation(); browser.classList.remove('maxi'); closeBrowser();
+});
+document.querySelector('.gem.g').addEventListener('click', function (e) {
+  /* gema verde = zoom de OS X: la ventana llena la pantalla */
+  e.stopPropagation();
+  browser.classList.toggle('maxi');
+  fitBrowser();
+});
+document.getElementById('backBtn').addEventListener('click', goBack);
+addEventListener('keydown', function (e) {
+  if (e.key !== 'Escape') return;
+  if (qtwin.classList.contains('open')) { closeQT(); }
+  else if (browser.classList.contains('maxi')) { browser.classList.remove('maxi'); fitBrowser(); }
+  else if (zoomed) goBack();
+});
+
+/* ---- La Valse d'Amélie, muy baja, desde los parlantes de la foto ---- */
+var VALSE_VOL = 0.14;
+var valse = new Audio('assets/valse.mp3');
+valse.loop = true; valse.volume = 0;
+var valseTimer = null;
+function valseFade(target) {
+  clearInterval(valseTimer);
+  if (target > 0 && valse.paused) valse.play().catch(function () {});
+  valseTimer = setInterval(function () {
+    var v = valse.volume + (target > valse.volume ? 0.01 : -0.01);
+    v = Math.max(0, Math.min(VALSE_VOL, v));
+    valse.volume = v;
+    if (Math.abs(v - target) < 0.011) {
+      valse.volume = target; clearInterval(valseTimer);
+      if (target === 0) valse.pause();
+    }
+  }, 60);
+}
+function valseStart() {
+  removeEventListener('pointerdown', valseStart);
+  removeEventListener('pointermove', valseStart);
+  if (!zoomed) valseFade(VALSE_VOL);
+}
+valse.play().then(function () { valseFade(VALSE_VOL); }).catch(function () {
+  /* autoplay bloqueado: arranca con el primer gesto */
+  addEventListener('pointerdown', valseStart);
+  addEventListener('pointermove', valseStart);
+});
+
+/* ---- ventana QuickTime del trailer (la pide trailers.html vía postMessage) ---- */
+var qtwin = document.getElementById('qtwin');
+var qtvideo = document.getElementById('qtvideo');
+
+function openQT() {
+  /* más grande que la tele: ~55% del viewport, con tope */
+  var w = Math.min(innerWidth * 0.55, 760);
+  qtwin.style.width = w + 'px';
+  qtwin.style.display = 'block';
+  qtwin.style.left = '50%'; qtwin.style.top = '50%';
+  requestAnimationFrame(function () {
+    qtwin.classList.add('open');
+    qtwin.style.transform = 'translate(-50%,-50%) scale(1)';
+    qtvideo.play().catch(function () {});
+    /* traer el foco a la escena para que ESC cierre la ventana */
+    window.focus();
+    qtvideo.focus();
+  });
+}
+
+function closeQT() {
+  qtvideo.pause();
+  qtwin.classList.remove('open');
+  qtwin.style.transform = 'translate(-50%,-50%) scale(.05)';
+  setTimeout(function () { qtwin.style.display = 'none'; }, 260);
+}
+
+addEventListener('message', function (ev) {
+  if (ev.data && ev.data.type === 'amelie-trailer') {
+    try { ev.source.postMessage({ type: 'amelie-trailer-ack' }, '*'); } catch (e) {}
+    openQT();
+  }
+});
+document.getElementById('qtClose').addEventListener('click', closeQT);
+
+/* arrastrable por la barra de título */
+(function () {
+  var bar = document.getElementById('qtbar');
+  bar.addEventListener('pointerdown', function (e) {
+    if (e.target.classList.contains('gem')) return;
+    e.preventDefault();
+    bar.setPointerCapture(e.pointerId);
+    var r = qtwin.getBoundingClientRect();
+    qtwin.style.transform = 'none';
+    qtwin.style.left = r.left + 'px'; qtwin.style.top = r.top + 'px';
+    var ox = e.clientX - r.left, oy = e.clientY - r.top;
+    function mv(ev) {
+      qtwin.style.left = (ev.clientX - ox) + 'px';
+      qtwin.style.top = (ev.clientY - oy) + 'px';
+    }
+    function up(ev) {
+      bar.removeEventListener('pointermove', mv);
+      bar.removeEventListener('pointerup', up);
+      try { bar.releasePointerCapture(ev.pointerId); } catch (err) {}
+    }
+    bar.addEventListener('pointermove', mv);
+    bar.addEventListener('pointerup', up);
+  });
+})();
+
+/* ---- URL y título vivos (funciona same-origin; en file:// se omite) ---- */
+var addrEl = document.querySelector('.addr');
+var titleEl = document.querySelector('#chrome .title');
+setInterval(function () {
+  try {
+    var w = frame.contentWindow;
+    var inner = (w.frames && w.frames['mainFrame']) ? w.frames['mainFrame'] : w;
+    var path = inner.location.pathname;
+    var rel = path.split('/site/')[1] || '';
+    rel = rel.replace(/^html\//, '').replace(/^index\.html$/, '');
+    addrEl.textContent = FAKE_BASE + rel;
+    var t = inner.document.title || w.document.title;
+    if (t) titleEl.textContent = t;
+  } catch (e) { /* file:// o frame cargando */ }
+}, 600);
+
+layout();
+</script>
+</body>
+</html>

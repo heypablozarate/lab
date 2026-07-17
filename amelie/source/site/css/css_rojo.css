@@ -1,0 +1,71 @@
+body{
+	background-color:#000000;
+	background-attachment:fixed;
+	background-repeat:no-repeat;
+	background-image: url(../img/fondo_rojo_left.jpg);
+	background-position: left top;
+}
+.pieza{
+cursor:move;
+}
+.alt{
+padding:0px;
+}
+.text{
+font-family:Arial, Helvetica, sans-serif;
+font-size:11px;
+color:#FFEB99;
+text-align:justify;
+}
+.text-normal{
+font-family:Arial, Helvetica, sans-serif;
+font-size:11px;
+color:#FFEB99;
+text-align:left;
+}
+
+input {
+width:190px;
+font-family:Arial, Helvetica, sans-serif;
+font-size:11px;
+background-color:#FFEB99;
+color:black;
+}
+
+textarea {
+width:190px;
+height:90px;
+font-family:Arial, Helvetica, sans-serif;
+font-size:11px;
+background-color:#FFEB99;
+color:black;
+}
+
+.wallpaper{
+font-family:Arial, Helvetica, sans-serif;
+font-size:11px;
+color:#FFEB99;
+padding:0px;
+text-align:center;
+
+}
+
+.wallpaper a{
+font-family:Arial, Helvetica, sans-serif;
+font-size:11px;
+color:#FFEB99;
+padding:3px;
+text-align:center;
+text-decoration:none;
+}
+.wallpaper a:hover{
+font-family:Arial, Helvetica, sans-serif;
+font-size:11px;
+color:#FFEB99;
+padding:3px;
+text-align:center;
+text-decoration:underline;
+}
+
+/* fix 2026: assets @2x, tamaño lógico original */
+body{ background-size: 741px 419px; }

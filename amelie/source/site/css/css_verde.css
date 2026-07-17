@@ -1,0 +1,25 @@
+body{
+	background-color:#000000;
+	background-attachment:fixed;
+	background-repeat:no-repeat;
+	background-image: url(../img/fondo_verde.jpg);
+	background-position: left top;
+}
+.pieza{
+cursor:move;
+}
+
+.alt{
+padding:0px;
+}
+.text{
+font-family:Arial, Helvetica, sans-serif;
+font-size:11px;
+color:#F8E8AA;
+text-align:justify;
+}
+
+
+
+/* fix 2026: assets @2x, tamaño lógico original */
+body{ background-size: 771px 419px; }
