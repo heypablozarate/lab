@@ -427,7 +427,7 @@ export function GalaxyStage({ data, layout }: StageProps) {
                       <button type="button" onClick={() => setSelected(otherIndex)}>
                         {otherTitle}
                       </button>
-                      <p>{edge.rationale}</p>
+                      {edge.rationale?.trim() ? <p>{edge.rationale}</p> : null}
                       <span className={styles.panelProvenance}>
                         {edge.provenance === "ai-approved" ? "propuesta por AI, aprobada" : "curada a mano"}
                       </span>

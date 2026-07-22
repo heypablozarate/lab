@@ -26,7 +26,7 @@ export type GalaxyEdge = {
   source: string;
   target: string;
   provenance: string;
-  rationale: string;
+  rationale?: string;
   weight: number;
 };
 
