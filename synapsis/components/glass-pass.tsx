@@ -19,6 +19,7 @@ import { useEffect, useMemo } from "react";
 import * as THREE from "three";
 
 import type { LiquidGlassConfig } from "./liquid-glass";
+import type { SynapsisThemeAppearance } from "./synapsis-appearance";
 
 // Uniform bag for the glass shader. Mutated only through the module-level
 // writers below (never assigned as a tracked property of a hook result), which
@@ -43,6 +44,8 @@ type GlassUniforms = {
   uTint: { value: number };
   uEdge: { value: number };
   uPaper: { value: THREE.Color };
+  uNoise: { value: number };
+  uVignette: { value: number };
 };
 
 type GlassObjects = {
@@ -73,6 +76,8 @@ function createGlassObjects(): GlassObjects {
     uTint: { value: 0.5 },
     uEdge: { value: 0.5 },
     uPaper: { value: new THREE.Color() },
+    uNoise: { value: 0 },
+    uVignette: { value: 0 },
   };
   const material = new THREE.ShaderMaterial({
     vertexShader,
@@ -99,6 +104,11 @@ function writeConfig(u: GlassUniforms, glass: LiquidGlassConfig, dpr: number) {
   u.uSaturate.value = glass.saturate;
   u.uTint.value = glass.tint;
   u.uEdge.value = glass.edgeHighlight;
+}
+
+function writeUniverse(u: GlassUniforms, universe: SynapsisThemeAppearance["universe"]) {
+  u.uNoise.value = universe.noise;
+  u.uVignette.value = universe.vignette;
 }
 
 // Per-frame writes: bind the FBO texture, the drawing-buffer resolution, and the
@@ -163,6 +173,8 @@ uniform float uSaturate;
 uniform float uTint;
 uniform float uEdge;
 uniform vec3 uPaper;
+uniform float uNoise;
+uniform float uVignette;
 
 // Signed distance to a rounded rectangle centred at the origin.
 float sdRoundBox(vec2 p, vec2 b, float r) {
@@ -198,6 +210,21 @@ vec3 blurAt(vec2 uv) {
   return c;
 }
 
+float grain(vec2 p) {
+  return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453);
+}
+
+vec3 applyUniverseEffects(vec3 color, vec2 uv) {
+  float noise = (grain(gl_FragCoord.xy) - 0.5) * uNoise * 0.16;
+  vec2 centered = uv * 2.0 - 1.0;
+  float aspect = uResolution.x / max(uResolution.y, 1.0);
+  centered.x *= aspect;
+  float edge = smoothstep(0.34, 1.35, length(centered));
+  color += noise;
+  color *= 1.0 - edge * uVignette * 0.62;
+  return clamp(color, 0.0, 1.0);
+}
+
 void main() {
   vec2 fragPx = gl_FragCoord.xy;
   vec2 uv = fragPx / uResolution;
@@ -211,7 +238,8 @@ void main() {
 
   // Outside every panel: cheap pass-through of the constellation.
   if (inside < 0.5) {
-    gl_FragColor = vec4(texture2D(uScene, uv).rgb, 1.0);
+    vec3 source = applyUniverseEffects(texture2D(uScene, uv).rgb, uv);
+    gl_FragColor = vec4(source, 1.0);
     return;
   }
 
@@ -233,6 +261,7 @@ void main() {
   // Specular rim highlight near the very edge.
   float rimLine = smoothstep(0.7, 1.0, rimT);
   col += uEdge * 0.5 * rimLine * (1.0 - col);
+  col = applyUniverseEffects(col, uv);
 
   // Same colour space as the pass-through above (the FBO is already display
   // sRGB), so the glass region matches the surrounding scene — no extra encode.
@@ -244,10 +273,12 @@ export function GlassPass({
   glass,
   panelEls,
   paper,
+  universe,
 }: {
   glass: LiquidGlassConfig;
   panelEls: React.RefObject<(HTMLElement | null)[]>;
   paper: string;
+  universe: SynapsisThemeAppearance["universe"];
 }) {
   const gl = useThree((s) => s.gl);
   const scene = useThree((s) => s.scene);
@@ -275,6 +306,10 @@ export function GlassPass({
   useEffect(() => {
     objects.uniforms.uPaper.value.set(paper);
   }, [paper, objects]);
+
+  useEffect(() => {
+    writeUniverse(objects.uniforms, universe);
+  }, [universe, objects]);
 
   useFrame(() => {
     writeFrame(objects.uniforms, fbo.texture, panelEls.current ?? [], size.width, size.height, dpr);

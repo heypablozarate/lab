@@ -16,18 +16,17 @@ import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
 
 import { GlassPass } from "./glass-pass";
 import type { LiquidGlassConfig } from "./liquid-glass";
+import type {
+  NodeStateAppearance,
+  SynapsisAppearanceTokens,
+  SynapsisThemeAppearance,
+} from "./synapsis-appearance";
 
 // Resolved per-theme colors. Only literal-valued tokens are read here —
 // THREE.Color cannot parse color-mix() — so the edge/line color is derived in
 // buildPalette with the same rule the Lab home uses (ink at ~16% over the
 // background).
-export type SceneTokens = {
-  surfaceRaised: string;
-  ink: string;
-  accent: string;
-  /** Panel tint colour for the liquid glass (usually --paper). */
-  paper: string;
-};
+export type SceneTokens = SynapsisAppearanceTokens;
 
 export type LabelPool = {
   container: HTMLDivElement | null;
@@ -53,6 +52,8 @@ export type GalaxySceneProps = {
   dpr: number;
   /** Tunable liquid-glass parameters, rendered by the WebGL GlassPass. */
   glass: LiquidGlassConfig;
+  /** Per-theme node states and universe background/effects. */
+  appearance: SynapsisThemeAppearance;
   /** Live DOM refs of the glass panels (sidebar, detail panel). */
   panelEls: React.RefObject<(HTMLElement | null)[]>;
   onHover: (index: number | null) => void;
@@ -73,14 +74,40 @@ const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
 type Palette = {
   surface: THREE.Color;
   accent: THREE.Color;
-  nodeRest: THREE.Color;
-  nodeDim: THREE.Color;
+  nodes: {
+    default: ResolvedNodeAppearance;
+    filtered: ResolvedNodeAppearance;
+    focused: ResolvedNodeAppearance;
+  };
   edgeRest: THREE.Color;
   edgeFaint: THREE.Color;
 };
 
-function buildPalette(tokens: SceneTokens): Palette {
-  const surface = new THREE.Color(tokens.surfaceRaised);
+type ResolvedNodeAppearance = {
+  background: THREE.Color;
+  core: THREE.Color;
+  glow: THREE.Color;
+};
+
+function resolveNodeAppearance(
+  surface: THREE.Color,
+  appearance: NodeStateAppearance,
+): ResolvedNodeAppearance {
+  const background = surface
+    .clone()
+    .lerp(new THREE.Color(appearance.backgroundColor), appearance.backgroundOpacity);
+  return {
+    background,
+    core: background.clone().lerp(new THREE.Color(appearance.coreColor), appearance.coreOpacity),
+    // Glow opacity must resolve from the universe surface, not the node body.
+    // The body and glow intentionally share a default hue, so mixing from the
+    // body made the opacity dial a no-op whenever those hues matched.
+    glow: surface.clone().lerp(new THREE.Color(appearance.glowColor), appearance.glowOpacity),
+  };
+}
+
+function buildPalette(tokens: SceneTokens, appearance: SynapsisThemeAppearance): Palette {
+  const surface = new THREE.Color(appearance.universe.backgroundColor);
   const ink = new THREE.Color(tokens.ink);
   const surfaceBrightness = (surface.r + surface.g + surface.b) / 3;
   const isDark = surfaceBrightness < 0.18;
@@ -90,30 +117,24 @@ function buildPalette(tokens: SceneTokens): Palette {
   // mix per theme because WebGL cannot parse CSS color-mix().
   const edgeRest = isDark ? surface.clone().lerp(ink, 0.18) : surface.clone().lerp(ink, 0.105);
   const edgeFaint = isDark ? surface.clone().lerp(ink, 0.065) : surface.clone().lerp(ink, 0.018);
-  const nodeRest = isDark ? surface.clone().lerp(ink, 0.44) : ink.clone().lerp(surface, 0.48);
-  const nodeDim = isDark ? surface.clone().lerp(ink, 0.1) : ink.clone().lerp(surface, 0.96);
 
   return {
     surface,
     accent: new THREE.Color(tokens.accent),
-    nodeRest,
-    nodeDim,
+    nodes: {
+      default: resolveNodeAppearance(surface, appearance.nodes.default),
+      filtered: resolveNodeAppearance(surface, appearance.nodes.filtered),
+      focused: resolveNodeAppearance(surface, appearance.nodes.focused),
+    },
     edgeRest,
     edgeFaint,
   };
 }
 
-function relativeLuminance(color: THREE.Color) {
-  const channel = (value: number) =>
-    value <= 0.03928 ? value / 12.92 : Math.pow((value + 0.055) / 1.055, 2.4);
-  return 0.2126 * channel(color.r) + 0.7152 * channel(color.g) + 0.0722 * channel(color.b);
-}
-
 type NodeUniforms = {
   uTime: { value: number };
   uPulseStrength: { value: number };
-  uCoreLighten: { value: number };
-  uPulseInk: { value: THREE.Color };
+  uMotionEnabled: { value: number };
   uSurface: { value: THREE.Color };
   uFogNear: { value: number };
   uFogFar: { value: number };
@@ -124,8 +145,7 @@ function createNodeMaterial(): THREE.ShaderMaterial & { uniforms: NodeUniforms }
     uniforms: {
       uTime: { value: 0 },
       uPulseStrength: { value: PULSE_STRENGTH },
-      uCoreLighten: { value: 0 },
-      uPulseInk: { value: new THREE.Color() },
+      uMotionEnabled: { value: 1 },
       uSurface: { value: new THREE.Color() },
       uFogNear: { value: FOG_NEAR },
       uFogFar: { value: FOG_FAR },
@@ -138,20 +158,19 @@ function createNodeMaterial(): THREE.ShaderMaterial & { uniforms: NodeUniforms }
 function createNodeGeometry(nodeCount: number) {
   const geometry = new THREE.SphereGeometry(1, 32, 16);
   const pulsePhase = new Float32Array(nodeCount);
-  const nodeColor = new Float32Array(nodeCount * 3);
   for (let i = 0; i < nodeCount; i += 1) {
     pulsePhase[i] = ((i * 0.61803398875) % 1) * Math.PI * 2;
   }
   geometry.setAttribute("pulsePhase", new THREE.InstancedBufferAttribute(pulsePhase, 1));
-  const colorAttribute = new THREE.InstancedBufferAttribute(nodeColor, 3);
-  colorAttribute.setUsage(THREE.DynamicDrawUsage);
-  geometry.setAttribute("nodeColor", colorAttribute);
+  for (const name of ["nodeBackground", "nodeCore", "nodeGlow"]) {
+    const colorAttribute = new THREE.InstancedBufferAttribute(new Float32Array(nodeCount * 3), 3);
+    colorAttribute.setUsage(THREE.DynamicDrawUsage);
+    geometry.setAttribute(name, colorAttribute);
+  }
   return geometry;
 }
 
 function writeNodeTheme(material: THREE.ShaderMaterial & { uniforms: NodeUniforms }, palette: Palette) {
-  material.uniforms.uCoreLighten.value = relativeLuminance(palette.surface) < 0.2 ? 1 : 0;
-  material.uniforms.uPulseInk.value.copy(palette.nodeRest);
   material.uniforms.uSurface.value.copy(palette.surface);
 }
 
@@ -162,13 +181,18 @@ function writeNodeFrame(
 ) {
   material.uniforms.uTime.value = elapsed;
   material.uniforms.uPulseStrength.value = reducedMotion ? 0 : PULSE_STRENGTH;
+  material.uniforms.uMotionEnabled.value = reducedMotion ? 0 : 1;
 }
 
 // ---- 400ms cubic color transition, held in a ref and mutated imperatively ----
 
 type TransitionState = {
-  nodeFrom: Float32Array;
-  nodeTarget: Float32Array;
+  backgroundFrom: Float32Array;
+  backgroundTarget: Float32Array;
+  coreFrom: Float32Array;
+  coreTarget: Float32Array;
+  glowFrom: Float32Array;
+  glowTarget: Float32Array;
   edgeFrom: Float32Array;
   edgeTarget: Float32Array;
   start: number;
@@ -177,8 +201,12 @@ type TransitionState = {
 
 function createTransitionState(nodeCount: number, edgeCount: number): TransitionState {
   return {
-    nodeFrom: new Float32Array(nodeCount * 3),
-    nodeTarget: new Float32Array(nodeCount * 3),
+    backgroundFrom: new Float32Array(nodeCount * 3),
+    backgroundTarget: new Float32Array(nodeCount * 3),
+    coreFrom: new Float32Array(nodeCount * 3),
+    coreTarget: new Float32Array(nodeCount * 3),
+    glowFrom: new Float32Array(nodeCount * 3),
+    glowTarget: new Float32Array(nodeCount * 3),
     edgeFrom: new Float32Array(edgeCount * 2 * 3),
     edgeTarget: new Float32Array(edgeCount * 2 * 3),
     start: 0,
@@ -202,27 +230,33 @@ function beginTransition(
   snapshot: InteractionSnapshot,
 ) {
   const { hovered, selected, neighbors, dimMask } = snapshot;
-  const nodeCount = state.nodeFrom.length / 3;
+  const nodeCount = state.backgroundFrom.length / 3;
   const edgeCount = edgeIndices.length / 2;
   const hasSelection = selected !== null;
-  const nodeColorAttr = nodeGeometry.getAttribute("nodeColor") as THREE.InstancedBufferAttribute;
+  const backgroundAttr = nodeGeometry.getAttribute("nodeBackground") as THREE.InstancedBufferAttribute;
+  const coreAttr = nodeGeometry.getAttribute("nodeCore") as THREE.InstancedBufferAttribute;
+  const glowAttr = nodeGeometry.getAttribute("nodeGlow") as THREE.InstancedBufferAttribute;
 
-  state.nodeFrom.set(nodeColorAttr.array as Float32Array);
+  state.backgroundFrom.set(backgroundAttr.array as Float32Array);
+  state.coreFrom.set(coreAttr.array as Float32Array);
+  state.glowFrom.set(glowAttr.array as Float32Array);
   const edgeColorAttr = edges.geometry.getAttribute("color") as THREE.BufferAttribute;
   state.edgeFrom.set(edgeColorAttr.array as Float32Array);
 
   for (let i = 0; i < nodeCount; i += 1) {
-    let color: THREE.Color;
+    let node: ResolvedNodeAppearance;
     if (hasSelection) {
-      color = i === selected || neighbors.has(i) ? palette.accent : palette.nodeDim;
+      node = i === selected || neighbors.has(i) ? palette.nodes.focused : palette.nodes.filtered;
     } else if (hovered === i) {
-      color = palette.accent;
+      node = palette.nodes.focused;
     } else if (dimMask[i]) {
-      color = palette.nodeDim;
+      node = palette.nodes.filtered;
     } else {
-      color = palette.nodeRest;
+      node = palette.nodes.default;
     }
-    color.toArray(state.nodeTarget, i * 3);
+    node.background.toArray(state.backgroundTarget, i * 3);
+    node.core.toArray(state.coreTarget, i * 3);
+    node.glow.toArray(state.glowTarget, i * 3);
   }
 
   for (let e = 0; e < edgeCount; e += 1) {
@@ -248,12 +282,19 @@ function applyTransition(state: TransitionState, nodeGeometry: THREE.BufferGeome
   if (!state.active) return;
   const t = Math.min(1, (performance.now() - state.start) / TRANSITION_MS);
   const e = easeOutCubic(t);
-  const nodeColorAttr = nodeGeometry.getAttribute("nodeColor") as THREE.InstancedBufferAttribute;
-  const nodeColorArr = nodeColorAttr.array as Float32Array;
-  for (let i = 0; i < nodeColorArr.length; i += 1) {
-    nodeColorArr[i] = state.nodeFrom[i] + (state.nodeTarget[i] - state.nodeFrom[i]) * e;
+  const nodeTransitions = [
+    ["nodeBackground", state.backgroundFrom, state.backgroundTarget],
+    ["nodeCore", state.coreFrom, state.coreTarget],
+    ["nodeGlow", state.glowFrom, state.glowTarget],
+  ] as const;
+  for (const [name, from, target] of nodeTransitions) {
+    const attribute = nodeGeometry.getAttribute(name) as THREE.InstancedBufferAttribute;
+    const values = attribute.array as Float32Array;
+    for (let i = 0; i < values.length; i += 1) {
+      values[i] = from[i] + (target[i] - from[i]) * e;
+    }
+    attribute.needsUpdate = true;
   }
-  nodeColorAttr.needsUpdate = true;
   const attr = edges.geometry.getAttribute("color") as THREE.BufferAttribute;
   const arr = attr.array as Float32Array;
   for (let i = 0; i < arr.length; i += 1) {
@@ -374,27 +415,34 @@ function updateFpsMeter(el: HTMLSpanElement, window: { frames: number; last: num
 }
 
 const nodeVertexShader = /* glsl */ `
-attribute vec3 nodeColor;
+attribute vec3 nodeBackground;
+attribute vec3 nodeCore;
+attribute vec3 nodeGlow;
 attribute float pulsePhase;
 
 uniform float uTime;
 uniform float uPulseStrength;
+uniform float uMotionEnabled;
 
-varying vec3 vInstanceColor;
+varying vec3 vBackground;
+varying vec3 vCore;
+varying vec3 vGlow;
 varying vec3 vViewNormal;
 varying float vDepth;
-varying float vPulse;
 varying float vBreath;
 
 void main() {
-  vInstanceColor = nodeColor;
+  vBackground = nodeBackground;
+  vCore = nodeCore;
+  vGlow = nodeGlow;
   vViewNormal = normalize(normalMatrix * normal);
 
   float pulse = 0.5 + 0.5 * sin(uTime * 1.55 + pulsePhase);
-  float breath = smoothstep(0.36, 1.0, pulse);
-  vPulse = pulse;
+  float breath = mix(0.5, smoothstep(0.36, 1.0, pulse), uMotionEnabled);
   vBreath = breath;
-  vec3 pulsed = position * (1.0 + uPulseStrength * breath);
+  // Reserve the outer 12% of the instanced sphere for a visible halo while the
+  // perceived node body remains at roughly its original radius.
+  vec3 pulsed = position * (1.12 + uPulseStrength * breath);
 
   vec4 mvPosition = modelViewMatrix * instanceMatrix * vec4(pulsed, 1.0);
   vDepth = -mvPosition.z;
@@ -405,16 +453,15 @@ void main() {
 const nodeFragmentShader = /* glsl */ `
 precision highp float;
 
-uniform float uCoreLighten;
-uniform vec3 uPulseInk;
 uniform vec3 uSurface;
 uniform float uFogNear;
 uniform float uFogFar;
 
-varying vec3 vInstanceColor;
+varying vec3 vBackground;
+varying vec3 vCore;
+varying vec3 vGlow;
 varying vec3 vViewNormal;
 varying float vDepth;
-varying float vPulse;
 varying float vBreath;
 
 void main() {
@@ -422,23 +469,18 @@ void main() {
   float depthFade = smoothstep(uFogNear - 8.0, uFogFar - 10.0, vDepth);
   float presence = pow(1.0 - depthFade, 1.42);
 
-  float shellMask = smoothstep(0.04, 0.42, facing);
-  float ringMask = smoothstep(0.18, 0.44, facing) * (1.0 - smoothstep(0.58, 0.9, facing));
+  float glowMask = smoothstep(0.015, 0.12, facing) * (1.0 - smoothstep(0.46, 0.74, facing));
+  float shellMask = smoothstep(0.38, 0.58, facing);
+  float ringMask = smoothstep(0.48, 0.62, facing) * (1.0 - smoothstep(0.72, 0.9, facing));
   float centerMask = smoothstep(0.91, 0.985, facing);
 
   float shellShade = mix(0.24, 1.26, presence) * mix(0.88, 1.06, facing);
-  vec3 shell = mix(uSurface, vInstanceColor * shellShade, shellMask);
-
-  vec3 pulseColor = mix(uSurface, uPulseInk, mix(0.18, 0.64, presence));
-  shell = mix(shell, pulseColor, ringMask * vBreath * mix(0.05, 0.24, presence));
-
-  vec3 coreDark = vInstanceColor * mix(0.44, 0.62, presence);
-  vec3 coreLight = mix(vInstanceColor, vec3(1.0), mix(0.18, 0.32, presence));
-  vec3 core = mix(coreDark, coreLight, uCoreLighten);
-  vec3 color = mix(shell, core, centerMask * mix(0.36, 0.58, presence));
-
-  float fogMix = mix(0.88, 0.93, uCoreLighten);
-  color = mix(color, uSurface, depthFade * fogMix);
+  vec3 shadedBackground = clamp(vBackground * shellShade, 0.0, 1.0);
+  vec3 halo = mix(uSurface, vGlow, glowMask * mix(0.62, 1.0, presence));
+  vec3 shell = mix(halo, shadedBackground, shellMask);
+  shell = mix(shell, vGlow, ringMask * vBreath * mix(0.18, 0.78, presence));
+  vec3 color = mix(shell, vCore, centerMask * mix(0.58, 1.0, presence));
+  color = mix(color, uSurface, depthFade * 0.9);
 
   gl_FragColor = vec4(clamp(color, 0.0, 1.0), 1.0);
 }
@@ -450,6 +492,7 @@ function GalaxyContents(props: GalaxySceneProps) {
     radii,
     edgeIndices,
     tokens,
+    appearance,
     hovered,
     selected,
     neighbors,
@@ -474,7 +517,7 @@ function GalaxyContents(props: GalaxySceneProps) {
   const camera = useThree((s) => s.camera);
   const size = useThree((s) => s.size);
 
-  const palette = useMemo(() => buildPalette(tokens), [tokens]);
+  const palette = useMemo(() => buildPalette(tokens, appearance), [tokens, appearance]);
   const nodeGeometry = useMemo(() => createNodeGeometry(nodeCount), [nodeCount]);
   const nodeMaterial = useMemo(() => createNodeMaterial(), []);
 
@@ -514,10 +557,17 @@ function GalaxyContents(props: GalaxySceneProps) {
     }
     inst.instanceMatrix.needsUpdate = true;
     inst.computeBoundingSphere();
-    const nodeColorAttr = nodeGeometry.getAttribute("nodeColor") as THREE.InstancedBufferAttribute;
-    const nodeColorArr = nodeColorAttr.array as Float32Array;
-    for (let i = 0; i < nodeCount; i += 1) palette.nodeRest.toArray(nodeColorArr, i * 3);
-    nodeColorAttr.needsUpdate = true;
+    const initialNodeAttributes = [
+      ["nodeBackground", palette.nodes.default.background],
+      ["nodeCore", palette.nodes.default.core],
+      ["nodeGlow", palette.nodes.default.glow],
+    ] as const;
+    for (const [name, color] of initialNodeAttributes) {
+      const attribute = nodeGeometry.getAttribute(name) as THREE.InstancedBufferAttribute;
+      const values = attribute.array as Float32Array;
+      for (let i = 0; i < nodeCount; i += 1) color.toArray(values, i * 3);
+      attribute.needsUpdate = true;
+    }
 
     const attr = edgeGeometry.getAttribute("color") as THREE.BufferAttribute;
     const arr = attr.array as Float32Array;
@@ -656,7 +706,8 @@ function GalaxyContents(props: GalaxySceneProps) {
 }
 
 export default function GalaxyScene(props: GalaxySceneProps) {
-  const { tokens, dpr, glass, panelEls, onSelect } = props;
+  const { dpr, glass, appearance, panelEls, onSelect } = props;
+  const background = appearance.universe.backgroundColor;
   return (
     <Canvas
       dpr={dpr}
@@ -665,10 +716,15 @@ export default function GalaxyScene(props: GalaxySceneProps) {
       gl={{ antialias: true, alpha: false, powerPreference: "high-performance" }}
       onPointerMissed={() => onSelect(null)}
     >
-      <color attach="background" args={[tokens.surfaceRaised]} />
-      <fog attach="fog" args={[tokens.surfaceRaised, FOG_NEAR, FOG_FAR]} />
+      <color attach="background" args={[background]} />
+      <fog attach="fog" args={[background, FOG_NEAR, FOG_FAR]} />
       <GalaxyContents {...props} />
-      <GlassPass glass={glass} panelEls={panelEls} paper={tokens.paper} />
+      <GlassPass
+        glass={glass}
+        panelEls={panelEls}
+        paper={props.tokens.paper}
+        universe={appearance.universe}
+      />
     </Canvas>
   );
 }

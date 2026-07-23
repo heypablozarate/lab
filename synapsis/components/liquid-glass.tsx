@@ -7,7 +7,7 @@
    same "real glass" look in Chrome, Safari and Firefox from one code path.
 
    This module is just the tunable shape shared by the WebGL pass and the
-   dev-only dialkit (`liquid-glass-dials.tsx`). */
+   dev-only Interface Craft panel (`synapsis-dials.tsx`). */
 
 export type LiquidGlassConfig = {
   /** Corner radius (px) of the refraction lens — also drives the DOM clip. */
@@ -29,30 +29,30 @@ export type LiquidGlassConfig = {
   edgeHighlight: number;
 };
 
-// Tuned by Pablo (2026-07-05), one set per theme. Picked by effectiveTheme in
-// galaxy-stage; the dev dialkit still overrides both while tuning.
+// Tuned by Pablo (2026-07-23). Picked by effectiveTheme in galaxy-stage; the
+// dev DialKit still overrides the active theme while tuning.
 export const LIGHT_LIQUID_GLASS: LiquidGlassConfig = {
   radius: 20,
-  rimWidth: 0.08,
+  rimWidth: 0.1,
   depth: 16,
-  chromaticAberration: 0.28,
-  blur: 4.5,
-  contrast: 0.5,
-  brightness: 1.18,
+  chromaticAberration: 0.39,
+  blur: 6,
+  contrast: 1.39,
+  brightness: 0.91,
   saturate: 1.45,
-  tint: 0.46,
-  edgeHighlight: 0.18,
+  tint: 0.53,
+  edgeHighlight: 0.43,
 };
 
 export const DARK_LIQUID_GLASS: LiquidGlassConfig = {
   radius: 20,
-  rimWidth: 0.07,
-  depth: 22,
-  chromaticAberration: 0.32,
-  blur: 4.5,
-  contrast: 0.5,
-  brightness: 0.5,
-  saturate: 1.16,
-  tint: 0.46,
-  edgeHighlight: 0.18,
+  rimWidth: 0.1,
+  depth: 16,
+  chromaticAberration: 0.39,
+  blur: 6,
+  contrast: 1.39,
+  brightness: 0.91,
+  saturate: 1.45,
+  tint: 0.53,
+  edgeHighlight: 0.43,
 };
