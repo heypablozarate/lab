@@ -5,6 +5,10 @@ import Link from "next/link";
 import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 
 import { DARK_LIQUID_GLASS, LIGHT_LIQUID_GLASS, type LiquidGlassConfig } from "./liquid-glass";
+import {
+  createDefaultSynapsisAppearance,
+  type SynapsisAppearanceByTheme,
+} from "./synapsis-appearance";
 
 import type { GalaxyData, GalaxyLayout } from "../layout-engine";
 import type { LabelPool, SceneTokens } from "./galaxy-scene";
@@ -15,9 +19,9 @@ const GalaxyScene = dynamic(() => import("./galaxy-scene"), {
   loading: () => <p className={styles.loading}>Cargando Synapsis…</p>,
 });
 
-// Dev-only glass tuning panel. Loaded only when `?dialkit=1` is present outside
-// production, so the dialkit bundle never reaches the public lab surface.
-const LiquidGlassDials = dynamic(() => import("./liquid-glass-dials"), { ssr: false });
+// Dev-only Interface Craft panel. Loaded only when `?dialkit=1` is present
+// outside production, so the dialkit bundle never reaches the public surface.
+const SynapsisDials = dynamic(() => import("./synapsis-dials"), { ssr: false });
 
 const LABEL_POOL_SIZE = 25;
 const MAX_SEARCH_RESULTS = 6;
@@ -128,9 +132,18 @@ export function GalaxyStage({ data, layout }: StageProps) {
   const showFps = useSyncExternalStore(subscribeNever, showFpsSnapshot, () => false);
   const showDials = useSyncExternalStore(subscribeNever, showDialsSnapshot, () => false);
   const [glassConfig, setGlassConfig] = useState<LiquidGlassConfig | null>(null);
+  const [appearanceConfig, setAppearanceConfig] = useState<SynapsisAppearanceByTheme | null>(null);
   // Per-theme tuned glass; the dev dialkit overrides both while tuning.
   const themeGlass = effectiveTheme === "dark" ? DARK_LIQUID_GLASS : LIGHT_LIQUID_GLASS;
   const glass = glassConfig ?? themeGlass;
+  const defaultAppearance = useMemo<SynapsisAppearanceByTheme | null>(() => {
+    if (!lightTokens || !darkTokens) return null;
+    return {
+      light: createDefaultSynapsisAppearance(lightTokens, "light"),
+      dark: createDefaultSynapsisAppearance(darkTokens, "dark"),
+    };
+  }, [lightTokens, darkTokens]);
+  const appearance = appearanceConfig?.[effectiveTheme] ?? defaultAppearance?.[effectiveTheme] ?? null;
   // Live DOM refs of the glass panels (sidebar, detail panel), read every frame
   // by the WebGL GlassPass to place the refraction under them.
   const panelEls = useRef<(HTMLElement | null)[]>([null, null]);
@@ -251,7 +264,7 @@ export function GalaxyStage({ data, layout }: StageProps) {
       data-hovering={hovered !== null ? "true" : "false"}
     >
       <div className={styles.canvasHost}>
-        {tokens && (
+        {tokens && appearance && (
           <GalaxyScene
             positions={layout.positions}
             radii={layout.radii}
@@ -267,6 +280,7 @@ export function GalaxyStage({ data, layout }: StageProps) {
             reducedMotion={reducedMotion}
             dpr={dpr}
             glass={glass}
+            appearance={appearance}
             panelEls={panelEls}
             onHover={setHovered}
             onSelect={setSelected}
@@ -388,7 +402,14 @@ export function GalaxyStage({ data, layout }: StageProps) {
         </p>
       )}
 
-      {showDials && <LiquidGlassDials seed={themeGlass} onChange={setGlassConfig} />}
+      {showDials && defaultAppearance && (
+        <SynapsisDials
+          glassSeed={themeGlass}
+          appearanceSeed={defaultAppearance}
+          onGlassChange={setGlassConfig}
+          onAppearanceChange={setAppearanceConfig}
+        />
+      )}
 
       {selectedNode && (
         <aside
