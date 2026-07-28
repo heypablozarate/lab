@@ -35,6 +35,9 @@
   left: 0;
   height: 100svh;
   height: 100dvh;
+  /* Keep the field continuous behind Safari's bottom browser chrome instead
+     of ending at the smaller, currently visible viewport. */
+  height: 100lvh;
   background: var(--surface-raised);
   background-image: none;
   color: var(--ink);
