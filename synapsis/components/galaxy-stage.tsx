@@ -154,6 +154,7 @@ export function GalaxyStage({ data, layout }: StageProps) {
 
   const labelPool = useRef<LabelPool>({ container: null, slots: [], assignments: [] });
   const fpsRef = useRef<HTMLSpanElement | null>(null);
+  const panelCloseRef = useRef<HTMLButtonElement | null>(null);
 
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
@@ -162,6 +163,12 @@ export function GalaxyStage({ data, layout }: StageProps) {
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, []);
+
+  // A search result can open the mobile detail while focus is still in the
+  // compact HUD. Move it into the newly opened reading surface instead.
+  useEffect(() => {
+    if (selected !== null) panelCloseRef.current?.focus();
+  }, [selected]);
 
   // Adjacency: node index → connected edges, for the detail panel and the
   // accent treatment of direct neighbors.
@@ -262,6 +269,7 @@ export function GalaxyStage({ data, layout }: StageProps) {
       className={styles.stage}
       data-theme={effectiveTheme}
       data-hovering={hovered !== null ? "true" : "false"}
+      data-detail-open={selectedNode ? "true" : "false"}
     >
       <div className={styles.canvasHost}>
         {tokens && appearance && (
@@ -324,8 +332,8 @@ export function GalaxyStage({ data, layout }: StageProps) {
           </p>
 
           <div className={styles.search}>
-            <label className={styles.srOnly} htmlFor="synapsis-search">
-              Buscar nodos
+            <label className={styles.searchLabel} htmlFor="synapsis-search">
+              Buscador
             </label>
             <input
               id="synapsis-search"
@@ -421,7 +429,12 @@ export function GalaxyStage({ data, layout }: StageProps) {
           style={{ "--lg-radius": `${glass.radius}px` } as React.CSSProperties}
         >
           <div className={styles.panelContent}>
-            <button type="button" className={styles.panelClose} onClick={() => setSelected(null)}>
+            <button
+              ref={panelCloseRef}
+              type="button"
+              className={styles.panelClose}
+              onClick={() => setSelected(null)}
+            >
               Cerrar
             </button>
             <p className={styles.panelMeta}>
