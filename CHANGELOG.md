@@ -8,6 +8,8 @@
 
 ### Changed
 
+- 2026-07-28 / Codex: Made the Synapsis mobile stage follow Safari's dynamic viewport, so the constellation extends through the available screen as browser chrome expands or collapses. Selecting a node now opens a safe-area-aware full-screen reading surface that replaces the compact HUD, with focus moved to its close control.
+
 - 2026-07-17 / Codex: Consolidated the Amélie 2004 working source under `amelie/source/` beside the experiment route, with project-relative build/upscale tooling; the parent's production static bundle remains unchanged.
 
 - 2026-07-08 / Codex: Moved the Lab landing manifest, experiment metadata, and Soy tu aire credits/copy to the parent web content source so the private admin can edit them while the public Lab repo keeps only the route implementation and thin parent-content adapter.

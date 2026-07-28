@@ -11,6 +11,7 @@
 .page {
   position: relative;
   min-height: 100svh;
+  min-height: 100dvh;
   overflow: hidden;
   background: var(--surface-raised);
   background-image: none;
@@ -29,7 +30,11 @@
 
 .stage {
   position: fixed;
-  inset: 0;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 100svh;
+  height: 100dvh;
   background: var(--surface-raised);
   background-image: none;
   color: var(--ink);
@@ -415,7 +420,11 @@
 .panelClose {
   float: right;
   margin-left: 0.75rem;
-  padding: 0.2rem 0;
+  display: grid;
+  place-items: center;
+  min-width: 2.75rem;
+  min-height: 2.75rem;
+  padding: 0;
   background: transparent;
   border: 0;
   border-bottom: 1px solid var(--line);
@@ -559,6 +568,31 @@
     max-height: min(70svh, 34rem);
     border-bottom-right-radius: 0;
     border-bottom-left-radius: 0;
+  }
+
+  /* A selected node is a reading task. Its detail replaces the compact HUD
+     instead of competing with it for the same mobile viewport. */
+  .stage[data-detail-open="true"] .hud {
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  .stage[data-detail-open="true"] .panel {
+    inset: 0;
+    width: auto;
+    max-height: none;
+    border-radius: 0;
+  }
+
+  .stage[data-detail-open="true"] .panel::before {
+    display: none;
+  }
+
+  .stage[data-detail-open="true"] .panelContent {
+    padding:
+      calc(1rem + env(safe-area-inset-top))
+      1rem
+      calc(1.2rem + env(safe-area-inset-bottom));
   }
 
   .panel::before {
