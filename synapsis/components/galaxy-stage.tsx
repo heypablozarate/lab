@@ -332,8 +332,8 @@ export function GalaxyStage({ data, layout }: StageProps) {
           </p>
 
           <div className={styles.search}>
-            <label className={styles.srOnly} htmlFor="synapsis-search">
-              Buscar nodos
+            <label className={styles.searchLabel} htmlFor="synapsis-search">
+              Buscador
             </label>
             <input
               id="synapsis-search"

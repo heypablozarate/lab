@@ -232,6 +232,16 @@
   position: relative;
 }
 
+.searchLabel {
+  display: block;
+  margin-bottom: 0.2rem;
+  color: var(--muted);
+  font-family: var(--font-body), Arial, sans-serif;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
 .searchInput {
   width: 100%;
   padding: 0.5rem 0;
@@ -663,6 +673,10 @@
   .searchInput {
     padding: 0.38rem 0;
     font-size: 0.875rem;
+  }
+
+  .searchLabel {
+    font-size: 0.75rem;
   }
 
   .searchResults {
