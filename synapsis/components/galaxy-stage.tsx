@@ -332,14 +332,12 @@ export function GalaxyStage({ data, layout }: StageProps) {
           </p>
 
           <div className={styles.search}>
-            <label className={styles.searchLabel} htmlFor="synapsis-search">
-              Buscador
-            </label>
             <input
               id="synapsis-search"
               className={styles.searchInput}
               type="search"
-              placeholder="Buscar"
+              aria-label="Search"
+              placeholder="Search"
               autoComplete="off"
               value={query}
               onChange={(event) => setQuery(event.target.value)}
