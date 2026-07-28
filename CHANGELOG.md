@@ -8,6 +8,7 @@
 
 ### Changed
 
+- 2026-07-28 / Codex: Let a vertical swipe on mobile Synapsis retract Safari's browser chrome while the constellation stays pinned; horizontal drags still navigate the field.
 - 2026-07-28 / Codex: Extended the Synapsis mobile field to the largest Safari viewport (`100lvh`), so the constellation remains continuous behind the bottom browser chrome instead of ending above it.
 
 - 2026-07-28 / Codex: Made the Synapsis mobile stage follow Safari's dynamic viewport, so the constellation extends through the available screen as browser chrome expands or collapses. Selecting a node now opens a safe-area-aware full-screen reading surface that replaces the compact HUD, with focus moved to its close control. The visible search label is now the Spanish `Buscador` at every breakpoint.
