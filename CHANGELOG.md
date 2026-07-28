@@ -8,6 +8,7 @@
 
 ### Changed
 
+- 2026-07-28 / Codex: Removed the redundant visible Synapsis search label; the control now uses the `Search` placeholder and retains an accessible name.
 - 2026-07-28 / Codex: Let a vertical swipe on mobile Synapsis retract Safari's browser chrome while the constellation stays pinned; horizontal drags still navigate the field.
 - 2026-07-28 / Codex: Extended the Synapsis mobile field to the largest Safari viewport (`100lvh`), so the constellation remains continuous behind the bottom browser chrome instead of ending above it.
 
