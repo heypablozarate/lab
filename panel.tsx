@@ -9,9 +9,11 @@ import { Wordmark } from "./wordmark";
 
 /** First card — Pablo's Lab identity, presented as staggered clip-reveal lines. */
 export function IntroCard({
+  brandName,
   top,
   onFocusCard,
 }: {
+  brandName: string;
   top: CSSProperties["top"];
   onFocusCard: () => void;
 }) {
@@ -20,7 +22,7 @@ export function IntroCard({
       labHome.introLine1,
       labHome.introLine2,
       <>
-        <Wordmark />
+        <Wordmark brandName={brandName} />
       </>,
     ],
     [

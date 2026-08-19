@@ -10,9 +10,6 @@ import { AudioEngine } from "../engine/audio/audio-engine"
 import styles from "../soy-tu-aire.module.css"
 
 const AUDIO_URL = "/lab/soy-tu-aire/mix.mp3"
-const BRAND_TEXT = "PabloZarate™"
-const APPLE_MUSIC_LABEL = "Virginia Maestro (aka Labuat)"
-const ORIGINAL_AGENCY_LABEL = "Herraiz Soto & Co."
 
 function formatClock(seconds: number): string {
   const total = Math.max(0, Math.floor(seconds))
@@ -23,19 +20,20 @@ function formatClock(seconds: number): string {
 
 function renderRichText(
   text: string,
+  brandName: string,
   brandUrl: string,
   linkClassName: string,
   wordmarkClassName: string,
 ): ReactNode[] {
-  if (!text.includes(BRAND_TEXT)) return [text]
-  const parts = text.split(BRAND_TEXT)
+  if (!text.includes(brandName)) return [text]
+  const parts = text.split(brandName)
   return parts.flatMap((part, index) => {
     const nodes: ReactNode[] = []
     if (part) nodes.push(part)
     if (index < parts.length - 1) {
       nodes.push(
         <a className={linkClassName} href={brandUrl} target="_blank" rel="noopener noreferrer" key={`brand-${index}`}>
-          <Wordmark className={wordmarkClassName} />
+          <Wordmark brandName={brandName} className={wordmarkClassName} />
         </a>,
       )
     }
@@ -43,34 +41,51 @@ function renderRichText(
   })
 }
 
-function renderIntroParagraph(text: string, appleMusicUrl: string): ReactNode[] {
-  const renderAppleMusic = (part: string, keyPrefix: string): ReactNode[] => {
-    if (!part.includes(APPLE_MUSIC_LABEL)) return [part]
-    const [before, after] = part.split(APPLE_MUSIC_LABEL)
+function renderIntroParagraph(
+  text: string,
+  content: SoyTuAireExperimentContent,
+): ReactNode[] {
+  const escapePattern = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/gu, "\\$&")
+  const labelPattern = new RegExp(
+    `(${escapePattern(content.appleMusicLabel)}|${escapePattern(content.originalAgencyLabel)})`,
+    "gu",
+  )
 
-    return [
-      before,
-      <a href={appleMusicUrl} target="_blank" rel="noopener noreferrer" key={`${keyPrefix}-apple-music`}>
-        {APPLE_MUSIC_LABEL}
-      </a>,
-      after,
-    ]
-  }
+  return text
+    .split(labelPattern)
+    .filter(Boolean)
+    .map((part, index) => {
+      if (part === content.appleMusicLabel) {
+        return (
+          <a
+            href={content.appleMusicUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            key={`apple-music-${index}`}
+          >
+            {content.appleMusicLabel}
+          </a>
+        )
+      }
 
-  if (!text.includes(ORIGINAL_AGENCY_LABEL)) return renderAppleMusic(text, "intro")
+      if (part === content.originalAgencyLabel) {
+        return <strong key={`original-agency-${index}`}>{content.originalAgencyLabel}</strong>
+      }
 
-  const [beforeAgency, afterAgency] = text.split(ORIGINAL_AGENCY_LABEL)
-  return [
-    ...renderAppleMusic(beforeAgency, "before-agency"),
-    <strong key="original-agency">{ORIGINAL_AGENCY_LABEL}</strong>,
-    ...renderAppleMusic(afterAgency, "after-agency"),
-  ]
+      return part
+    })
 }
 
 type Phase = "intro" | "loading" | "playing" | "credits"
 type CreditsMode = "final" | "paused"
 
-export function Stage({ content }: { content: SoyTuAireExperimentContent }) {
+export function Stage({
+  brandName,
+  content,
+}: {
+  brandName: string
+  content: SoyTuAireExperimentContent
+}) {
   const { credits } = content
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
   const audioRef = useRef<AudioEngine | null>(null)
@@ -295,14 +310,14 @@ export function Stage({ content }: { content: SoyTuAireExperimentContent }) {
             )}
             <div className={styles.credit}>
               {content.introParagraphs.map((paragraph) => (
-                <p key={paragraph}>{renderIntroParagraph(paragraph, content.appleMusicUrl)}</p>
+                <p key={paragraph}>{renderIntroParagraph(paragraph, content)}</p>
               ))}
             </div>
           </section>
           <p className={styles.homageLine}>
             <span>{content.homagePrefix}</span>
             <a className={styles.homageLink} href={content.brandUrl} target="_blank" rel="noopener noreferrer">
-              <Wordmark className={styles.homageWordmark} />
+              <Wordmark brandName={brandName} className={styles.homageWordmark} />
             </a>
           </p>
         </div>
@@ -313,7 +328,7 @@ export function Stage({ content }: { content: SoyTuAireExperimentContent }) {
           <section className={styles.creditsPanel}>
             <header className={styles.creditsHeader}>
               <h2 id="soy-tu-aire-credits-title" className={styles.creditsTitle}>{credits.title}</h2>
-              <p className={styles.creditsLede}>{renderRichText(credits.lede, content.brandUrl, styles.inlineWordmarkLink, styles.inlineWordmark)}</p>
+              <p className={styles.creditsLede}>{renderRichText(credits.lede, brandName, content.brandUrl, styles.inlineWordmarkLink, styles.inlineWordmark)}</p>
             </header>
             <div className={styles.creditsGrid}>
               <div className={styles.creditsSections}>
@@ -323,7 +338,7 @@ export function Stage({ content }: { content: SoyTuAireExperimentContent }) {
                     <h3>{section.title}</h3>
                     <div className={styles.creditsBody}>
                       {section.body.map((paragraph) => (
-                        <p key={paragraph}>{renderRichText(paragraph, content.brandUrl, styles.inlineWordmarkLink, styles.inlineWordmark)}</p>
+                        <p key={paragraph}>{renderRichText(paragraph, brandName, content.brandUrl, styles.inlineWordmarkLink, styles.inlineWordmark)}</p>
                       ))}
                     </div>
                     <a className={styles.creditsSource} href={section.sourceUrl} target="_blank" rel="noopener noreferrer">

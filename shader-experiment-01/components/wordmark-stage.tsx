@@ -6,7 +6,7 @@ import styles from "../shader-experiment.module.css"
 import { ControlPanel } from "./control-panel"
 import { WordmarkShader } from "./wordmark-shader"
 
-export function WordmarkStage() {
+export function WordmarkStage({ brandName }: { brandName: string }) {
   const [effect, setEffect] = useState(0)
   const [intensity, setIntensity] = useState(1)
 
@@ -14,6 +14,7 @@ export function WordmarkStage() {
     <div className={styles.stage}>
       <div className={styles.shaderFrame}>
         <WordmarkShader
+          brandName={brandName}
           effect={effect}
           intensity={intensity}
           className={styles.shaderCanvas}

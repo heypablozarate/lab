@@ -2,11 +2,14 @@ import type { Metadata } from "next";
 
 import {
   LAB_URL,
-  getLabProjectUrl,
   labHome,
-  labPositioning,
-  projects,
+  labSocialImages,
 } from "@/lib/lab-content";
+import {
+  buildLabLandingStructuredData,
+  buildLabSiteName,
+  getCanonicalIdentityLabels,
+} from "@/lib/lab-seo";
 
 import { LabCanvas } from "./lab-canvas";
 
@@ -15,61 +18,7 @@ function serializeJsonLd(data: Record<string, unknown>) {
 }
 
 function LabStructuredData() {
-  const data = {
-    "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "Person",
-        "@id": "https://pablozarate.com/#person",
-        name: "Pablo Zarate",
-        alternateName: "PabloZarate™",
-        url: "https://pablozarate.com",
-        sameAs: [
-          "https://twitter.com/heyPabloZarate",
-          "https://ar.linkedin.com/in/pablozarate",
-          "https://instagram.com/heyPabloZarate",
-        ],
-      },
-      {
-        "@type": "CollectionPage",
-        "@id": `${LAB_URL}/#collection`,
-        name: labHome.metadataTitle,
-        headline: labHome.metadataTitle,
-        description: labHome.description,
-        url: LAB_URL,
-        inLanguage: "en",
-        isPartOf: {
-          "@type": "WebSite",
-          "@id": "https://pablozarate.com/#website",
-          name: "Designed by PabloZarate™",
-          url: "https://pablozarate.com",
-        },
-        author: { "@id": "https://pablozarate.com/#person" },
-        about: labPositioning.topics,
-        mainEntity: { "@id": `${LAB_URL}/#experiments` },
-      },
-      {
-        "@type": "ItemList",
-        "@id": `${LAB_URL}/#experiments`,
-        name: "Lab experiments by PabloZarate™",
-        itemListElement: projects.map((project, index) => ({
-          "@type": "ListItem",
-          position: index + 1,
-          name: project.title,
-          url: getLabProjectUrl(project),
-          item: {
-            "@type": "CreativeWork",
-            name: project.title,
-            url: getLabProjectUrl(project),
-            description: project.description,
-            dateCreated: String(project.year),
-            creator: { "@id": "https://pablozarate.com/#person" },
-            keywords: project.tags,
-          },
-        })),
-      },
-    ],
-  };
+  const data = buildLabLandingStructuredData();
 
   return (
     <script
@@ -91,21 +40,34 @@ export const metadata: Metadata = {
     title: labHome.metadataTitle,
     description: labHome.description,
     url: LAB_URL,
-    siteName: "Lab by PabloZarate™",
+    siteName: buildLabSiteName(),
     type: "website",
+    images: [{
+      url: labSocialImages.openGraph,
+      width: 1280,
+      height: 746,
+      alt: labSocialImages.alt,
+    }],
   },
   twitter: {
     card: "summary_large_image",
     title: labHome.metadataTitle,
     description: labHome.description,
+    images: [{ url: labSocialImages.twitter, alt: labSocialImages.alt }],
   },
 };
 
 export default function LabLandingPage() {
+  const { brandName, homeUrl, siteTitle } = getCanonicalIdentityLabels();
+
   return (
     <>
       <LabStructuredData />
-      <LabCanvas />
+      <LabCanvas
+        brandName={brandName}
+        canonicalHomeUrl={homeUrl}
+        creditLabel={siteTitle}
+      />
     </>
   );
 }

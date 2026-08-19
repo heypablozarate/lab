@@ -4,10 +4,15 @@ import {
   LAB_URL,
   getLabExperiment,
 } from "@/lib/lab-content"
+import {
+  buildLabCreativeWorkStructuredData,
+  buildLabSiteName,
+} from "@/lib/lab-seo"
 
 import styles from "./amelie.module.css"
 
 const PAGE_URL = `${LAB_URL}/amelie`
+const SOCIAL_IMAGE_URL = `${PAGE_URL}/assets/og.jpg`
 const content = getLabExperiment("amelie")
 
 function serializeJsonLd(data: Record<string, unknown>) {
@@ -23,39 +28,27 @@ export const metadata: Metadata = {
     title: content.metadataTitle,
     description: content.description,
     url: PAGE_URL,
-    siteName: "Lab by PabloZarate™",
+    siteName: buildLabSiteName(),
     type: "website",
-    images: [{ url: "/lab/amelie/assets/og.jpg", width: 1200, height: 630, alt: content.title }],
+    images: [{ url: SOCIAL_IMAGE_URL, width: 1200, height: 630, alt: content.title }],
   },
   twitter: {
     card: "summary_large_image",
     title: content.metadataTitle,
     description: content.description,
-    images: ["/lab/amelie/assets/og.jpg"],
+    images: [{ url: SOCIAL_IMAGE_URL, alt: content.title }],
   },
 }
 
 export default function AmeliePage() {
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "CreativeWork",
+  const jsonLd = buildLabCreativeWorkStructuredData({
     name: content.metadataTitle,
-    headline: content.metadataTitle,
     description: content.description,
     url: PAGE_URL,
-    inLanguage: "es",
-    dateCreated: "2004",
-    creator: {
-      "@type": "Person",
-      name: "Pablo Zarate",
-      alternateName: "PabloZarate™",
-      url: "https://pablozarate.com",
-      jobTitle: "Design Manager, Product Specialist",
-      knowsAbout: ["Design Engineering", "AI Design", "Product Design", "Experience Design"],
-    },
-    isBasedOn: "Mundo Amélie — student project, Escuela Da Vinci (2004)",
-    isPartOf: { "@type": "CollectionPage", name: "PabloZarate™ Lab", url: "https://lab.pablozarate.com" },
-  }
+    inLanguage: content.inLanguage,
+    dateCreated: content.dateCreated,
+    isBasedOn: content.isBasedOn,
+  })
 
   return (
     <main className={styles.page} data-theme="dark">
