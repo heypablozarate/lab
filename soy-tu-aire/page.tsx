@@ -5,12 +5,25 @@ import {
   getLabExperiment,
   labSocialImages,
 } from "@/lib/lab-content"
+import {
+  buildLabCreativeWorkStructuredData,
+  buildLabSiteName,
+  getCanonicalIdentityLabels,
+} from "@/lib/lab-seo"
 
 import { Stage } from "./components/stage"
 import styles from "./soy-tu-aire.module.css"
 
 const PAGE_URL = `${LAB_URL}/soy-tu-aire`
 const content = getLabExperiment("soy-tu-aire")
+const publicContent = {
+  ...content,
+  introParagraphs: content.introParagraphs.map((paragraph) =>
+    paragraph
+      .replaceAll("{appleMusicLabel}", content.appleMusicLabel)
+      .replaceAll("{originalAgencyLabel}", content.originalAgencyLabel),
+  ),
+}
 
 function serializeJsonLd(data: Record<string, unknown>) {
   return JSON.stringify(data).replace(/</g, "\\u003c")
@@ -25,7 +38,7 @@ export const metadata: Metadata = {
     title: content.metadataTitle,
     description: content.description,
     url: PAGE_URL,
-    siteName: "Lab by PabloZarate™",
+    siteName: buildLabSiteName(),
     type: "website",
     images: [{ url: labSocialImages.openGraph, width: 1280, height: 746, alt: labSocialImages.alt }],
   },
@@ -33,30 +46,20 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: content.metadataTitle,
     description: content.description,
-    images: [labSocialImages.twitter],
+    images: [{ url: labSocialImages.twitter, alt: labSocialImages.alt }],
   },
 }
 
 export default function SoyTuAirePage() {
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "CreativeWork",
+  const { brandName } = getCanonicalIdentityLabels()
+  const jsonLd = buildLabCreativeWorkStructuredData({
     name: content.metadataTitle,
-    headline: content.metadataTitle,
     description: content.description,
     url: PAGE_URL,
-    inLanguage: "es",
-    creator: {
-      "@type": "Person",
-      name: "Pablo Zarate",
-      alternateName: "PabloZarate™",
-      url: "https://pablozarate.com",
-      jobTitle: "Design Manager, Product Specialist",
-      knowsAbout: ["Design Engineering", "AI Design", "Product Design", "Experience Design"],
-    },
-    isBasedOn: "Soy tu aire — Labuat (Herraiz Soto & Co.)",
-    isPartOf: { "@type": "CollectionPage", name: "PabloZarate™ Lab", url: "https://lab.pablozarate.com" },
-  }
+    inLanguage: content.inLanguage,
+    dateCreated: content.dateCreated,
+    isBasedOn: content.isBasedOn,
+  })
 
   return (
     <main className={styles.page} data-theme="light">
@@ -72,7 +75,7 @@ export default function SoyTuAirePage() {
       </section>
       {"\n"}
 
-      <Stage content={content} />
+      <Stage brandName={brandName} content={publicContent} />
     </main>
   )
 }

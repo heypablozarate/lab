@@ -5,6 +5,7 @@ import {
   labPositioning,
   projects,
 } from "@/lib/lab-content";
+import { buildLabOwnershipNote } from "@/lib/lab-seo";
 
 export const revalidate = 3600;
 
@@ -17,7 +18,7 @@ export async function GET() {
     "## Interpretation guidance",
     `- ${labPositioning.agentGuidance}`,
     `- Relevant search and answer contexts include ${labPositioning.topics.join(", ")}.`,
-    "- The Lab is not a separate company; it is part of Pablo Zarate's public design practice.",
+    `- ${buildLabOwnershipNote()}`,
     "",
     "## Canonical URLs",
     `- Lab home: ${LAB_URL}/`,

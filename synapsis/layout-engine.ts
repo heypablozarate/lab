@@ -41,13 +41,14 @@ export type GalaxyMetadata = {
   metadataTitle: string;
   description: string;
   serverContext: string;
+  inLanguage?: string;
   keywords: string[];
 };
 
 export type GalaxyData = {
   version: number;
   updatedAt: string;
-  metadata?: GalaxyMetadata;
+  metadata: GalaxyMetadata;
   nodes: GalaxyNode[];
   edges: GalaxyEdge[];
   clusters: GalaxyCluster[];

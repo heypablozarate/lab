@@ -297,10 +297,12 @@ function compile(gl: WebGLRenderingContext, type: number, src: string) {
 }
 
 export function WordmarkShader({
+  brandName,
   effect = 0,
   intensity = 1,
   className,
 }: {
+  brandName: string
   effect?: number
   intensity?: number
   className?: string
@@ -386,8 +388,8 @@ export function WordmarkShader({
       textCanvas.height = h
       tctx.clearRect(0, 0, w, h)
 
-      const word = "PabloZarate"
-      const tm = "™"
+      const tm = brandName.endsWith("™") ? "™" : ""
+      const word = tm ? brandName.slice(0, -tm.length) : brandName
 
       // Fit the word to ~84% of the width.
       let fontSize = Math.floor(h * 0.5)
@@ -536,14 +538,14 @@ export function WordmarkShader({
       if (ro) ro.disconnect()
       else window.removeEventListener("resize", resize)
     }
-  }, [])
+  }, [brandName])
 
   return (
     <canvas
       ref={canvasRef}
       className={className}
       role="img"
-      aria-label="PabloZarate trademark wordmark"
+      aria-label={brandName}
     />
   )
 }

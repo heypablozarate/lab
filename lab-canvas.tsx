@@ -84,7 +84,15 @@ function cardSize(vw: number) {
   return { w: Math.round(h * ar), h: Math.round(h) };
 }
 
-export function LabCanvas() {
+export function LabCanvas({
+  brandName,
+  canonicalHomeUrl,
+  creditLabel,
+}: {
+  brandName: string;
+  canonicalHomeUrl: string;
+  creditLabel: string;
+}) {
   const pageRef = useRef<HTMLElement>(null);
   const viewportRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
@@ -452,7 +460,7 @@ export function LabCanvas() {
         onKeyDown={onKeyDown}
       >
         <div ref={stageRef} className={styles.stage}>
-          <IntroCard top={0} onFocusCard={() => goTo(0)} />
+          <IntroCard brandName={brandName} top={0} onFocusCard={() => goTo(0)} />
           {projects.map((project, i) => (
             <ProjectCard
               key={project.slug}
@@ -511,10 +519,10 @@ export function LabCanvas() {
 
       <a
         className={styles.credit}
-        href="https://pablozarate.com"
-        aria-label="Designed by PabloZarate — pablozarate.com"
+        href={canonicalHomeUrl}
+        aria-label={`${creditLabel} — ${new URL(canonicalHomeUrl).hostname}`}
       >
-        <Wordmark />
+        <Wordmark brandName={brandName} />
       </a>
     </main>
   );

@@ -6,6 +6,11 @@ import {
   getLabExperiment,
   labSocialImages,
 } from "@/lib/lab-content";
+import {
+  buildCanonicalBrandWordmark,
+  buildLabCreativeWorkStructuredData,
+  buildLabSiteName,
+} from "@/lib/lab-seo";
 
 import { WordmarkStage } from "./components/wordmark-stage";
 import styles from "./shader-experiment.module.css";
@@ -28,7 +33,7 @@ export const metadata: Metadata = {
     title: content.metadataTitle,
     description: content.description,
     url: PAGE_URL,
-    siteName: "Lab by PabloZarate™",
+    siteName: buildLabSiteName(),
     type: "website",
     images: [
       {
@@ -43,38 +48,19 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: content.metadataTitle,
     description: content.description,
-    images: [labSocialImages.twitter],
+    images: [{ url: labSocialImages.twitter, alt: labSocialImages.alt }],
   },
 };
 
 export default function ShaderExperimentPage() {
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "CreativeWork",
+  const jsonLd = buildLabCreativeWorkStructuredData({
     name: content.metadataTitle,
-    headline: content.metadataTitle,
     description: content.description,
     url: PAGE_URL,
-    inLanguage: "en",
-    creator: {
-      "@type": "Person",
-      name: "Pablo Zarate",
-      alternateName: "PabloZarate™",
-      url: "https://pablozarate.com",
-    },
-    isPartOf: {
-      "@type": "CollectionPage",
-      name: "PabloZarate™ Lab",
-      url: "https://lab.pablozarate.com",
-    },
-    keywords: [
-      "WebGL",
-      "shader",
-      "typography",
-      "interface design",
-      "digital experience design",
-    ],
-  };
+    inLanguage: content.inLanguage,
+    keywords: content.keywords,
+  });
+  const wordmark = buildCanonicalBrandWordmark();
 
   return (
     <main className={styles.page} data-theme="dark">
@@ -92,15 +78,15 @@ export default function ShaderExperimentPage() {
       </section>
       {"\n"}
 
-      <WordmarkStage />
+      <WordmarkStage brandName={`${wordmark.name}${wordmark.mark}`} />
 
       <footer className={styles.footer}>
         <span className={styles.footerCredit}>
           {content.footerCreditPrefix}{" "}
           <span className={styles.footerWordmark}>
-            <span className={styles.footerWordmarkName}>PabloZarate</span>
+            <span className={styles.footerWordmarkName}>{wordmark.name}</span>
             <span className={styles.footerWordmarkMark} aria-hidden="true">
-              ™
+              {wordmark.mark}
             </span>
           </span>
         </span>
