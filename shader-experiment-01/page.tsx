@@ -63,7 +63,7 @@ export default function ShaderExperimentPage() {
   const wordmark = buildCanonicalBrandWordmark();
 
   return (
-    <main className={styles.page} data-theme="dark">
+    <main className={styles.page} data-theme="dark" lang={content.inLanguage}>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
@@ -78,7 +78,10 @@ export default function ShaderExperimentPage() {
       </section>
       {"\n"}
 
-      <WordmarkStage brandName={`${wordmark.name}${wordmark.mark}`} />
+      <WordmarkStage
+        brandName={`${wordmark.name}${wordmark.mark}`}
+        interfaceCopy={content.interfaceCopy}
+      />
 
       <footer className={styles.footer}>
         <span className={styles.footerCredit}>

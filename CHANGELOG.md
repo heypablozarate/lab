@@ -8,6 +8,13 @@
 
 ### Changed
 
+- 2026-08-20 / Codex: Prepared Lab renderers to consume parent-managed public
+  copy. Synapsis reads its visible labels and templates from `galaxy.json`,
+  Shader Experiment reads its visible instruction and controls from `lab.json`,
+  and the Lab `llms.txt` route reads its document labels and language from the
+  same parent content. Spanish Lab works now mark their rendered main content
+  with the CMS-managed language.
+
 - 2026-08-19 / Codex: Connected Lab landing, experiments, visible wordmarks,
   accessible labels, social metadata, and JSON-LD to the parent CMS identity
   and content sources. Lab pages now reference the canonical `WebSite` and

@@ -66,7 +66,7 @@ export default function SynapsisPage() {
   });
 
   return (
-    <main className={styles.page}>
+    <main className={styles.page} lang={publicMetadata.inLanguage ?? siteLanguage}>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }} />
 
       {"\n"}

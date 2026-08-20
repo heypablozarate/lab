@@ -5,8 +5,15 @@ import { useState } from "react"
 import styles from "../shader-experiment.module.css"
 import { ControlPanel } from "./control-panel"
 import { WordmarkShader } from "./wordmark-shader"
+import type { ShaderInterfaceCopy } from "@/lib/lab-content"
 
-export function WordmarkStage({ brandName }: { brandName: string }) {
+export function WordmarkStage({
+  brandName,
+  interfaceCopy,
+}: {
+  brandName: string
+  interfaceCopy: ShaderInterfaceCopy
+}) {
   const [effect, setEffect] = useState(0)
   const [intensity, setIntensity] = useState(1)
 
@@ -21,13 +28,12 @@ export function WordmarkStage({ brandName }: { brandName: string }) {
         />
       </div>
 
-      <p className={styles.instruction}>
-        Move your cursor across the wordmark.
-      </p>
+      <p className={styles.instruction}>{interfaceCopy.instruction}</p>
 
       <ControlPanel
         effect={effect}
         intensity={intensity}
+        interfaceCopy={interfaceCopy}
         onEffectChange={setEffect}
         onIntensityChange={setIntensity}
       />

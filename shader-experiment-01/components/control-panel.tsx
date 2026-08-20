@@ -2,52 +2,39 @@
 
 import styles from "../shader-experiment.module.css"
 
-export const EFFECTS = [
-  { id: 0, name: "Liquid" },
-  { id: 1, name: "Ripple" },
-  { id: 2, name: "Chromatic" },
-  { id: 3, name: "Glitch" },
-  { id: 4, name: "Swirl" },
-  { id: 5, name: "ASCII" },
-  { id: 6, name: "Particles" },
-  { id: 7, name: "Halftone" },
-  { id: 8, name: "Pixelate" },
-  { id: 9, name: "Wave" },
-  { id: 10, name: "Kaleidoscope" },
-  { id: 11, name: "Bulge" },
-  { id: 12, name: "Edge" },
-  { id: 13, name: "CRT" },
-  { id: 14, name: "Dissolve" },
-  { id: 15, name: "Voronoi" },
-] as const
+import type { ShaderInterfaceCopy } from "@/lib/lab-content"
+
+export const EFFECT_IDS = Array.from({ length: 16 }, (_, id) => id)
 
 export function ControlPanel({
   effect,
   intensity,
+  interfaceCopy,
   onEffectChange,
   onIntensityChange,
 }: {
   effect: number
   intensity: number
+  interfaceCopy: ShaderInterfaceCopy
   onEffectChange: (id: number) => void
   onIntensityChange: (value: number) => void
 }) {
   return (
     <div className={styles.controlPanel}>
       <div className={styles.controlGroup}>
-        <p className={styles.controlLabel}>Effect</p>
+        <p className={styles.controlLabel}>{interfaceCopy.effectHeading}</p>
         <div className={styles.effectGrid}>
-          {EFFECTS.map((e) => {
-            const active = e.id === effect
+          {EFFECT_IDS.map((id) => {
+            const active = id === effect
             return (
               <button
-                key={e.id}
+                key={id}
                 type="button"
-                onClick={() => onEffectChange(e.id)}
+                onClick={() => onEffectChange(id)}
                 aria-pressed={active}
                 className={styles.effectButton}
               >
-                {e.name}
+                {interfaceCopy.effectLabels[id]}
               </button>
             )
           })}
@@ -55,7 +42,7 @@ export function ControlPanel({
       </div>
 
       <div className={styles.controlGroup}>
-        <p className={styles.controlLabel}>Intensity</p>
+        <p className={styles.controlLabel}>{interfaceCopy.intensityHeading}</p>
         <div className={styles.rangeRow}>
           <input
             type="range"
@@ -64,7 +51,7 @@ export function ControlPanel({
             step={0.05}
             value={intensity}
             onChange={(e) => onIntensityChange(Number(e.target.value))}
-            aria-label="Effect intensity"
+            aria-label={interfaceCopy.intensityAriaLabel}
             className={styles.range}
           />
           <span className={styles.rangeValue}>{Math.round(intensity * 100)}%</span>
