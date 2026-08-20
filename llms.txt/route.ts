@@ -3,6 +3,7 @@ import {
   getLabProjectUrl,
   labHome,
   labPositioning,
+  labContent,
   projects,
 } from "@/lib/lab-content";
 import { buildLabOwnershipNote } from "@/lib/lab-seo";
@@ -10,30 +11,31 @@ import { buildLabOwnershipNote } from "@/lib/lab-seo";
 export const revalidate = 3600;
 
 export async function GET() {
+  const copy = labContent.publicDocuments.llms;
   const lines = [
     `# ${labHome.title}`,
     "",
     labHome.description,
     "",
-    "## Interpretation guidance",
+    `## ${copy.interpretationHeading}`,
     `- ${labPositioning.agentGuidance}`,
-    `- Relevant search and answer contexts include ${labPositioning.topics.join(", ")}.`,
+    `- ${copy.topicsTemplate.replace("{topics}", labPositioning.topics.join(", "))}`,
     `- ${buildLabOwnershipNote()}`,
     "",
-    "## Canonical URLs",
-    `- Lab home: ${LAB_URL}/`,
-    `- Sitemap: ${LAB_URL}/sitemap.xml`,
-    `- Robots: ${LAB_URL}/robots.txt`,
-    `- Public API document: https://pablozarate.com/api/public/lab`,
+    `## ${copy.canonicalUrlsHeading}`,
+    `- ${copy.labHomeLabel}: ${LAB_URL}/`,
+    `- ${copy.sitemapLabel}: ${LAB_URL}/sitemap.xml`,
+    `- ${copy.robotsLabel}: ${LAB_URL}/robots.txt`,
+    `- ${copy.publicApiLabel}: https://pablozarate.com/api/public/lab`,
     "",
-    "## Experiments",
+    `## ${copy.experimentsHeading}`,
     ...projects.flatMap((project) => [
       `### ${project.title}`,
-      `- URL: ${getLabProjectUrl(project)}`,
-      `- Year: ${project.year}`,
-      `- Type: ${project.kind}`,
-      `- Summary: ${project.description}`,
-      `- Topics: ${project.tags.join(", ")}`,
+      `- ${copy.urlLabel}: ${getLabProjectUrl(project)}`,
+      `- ${copy.yearLabel}: ${project.year}`,
+      `- ${copy.typeLabel}: ${project.kind}`,
+      `- ${copy.summaryLabel}: ${project.description}`,
+      `- ${copy.topicsLabel}: ${project.tags.join(", ")}`,
       "",
     ]),
   ];
@@ -41,6 +43,7 @@ export async function GET() {
   return new Response(lines.join("\n"), {
     headers: {
       "Content-Type": "text/plain; charset=utf-8",
+      "Content-Language": copy.inLanguage,
     },
   });
 }

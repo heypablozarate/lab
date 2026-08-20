@@ -62,7 +62,7 @@ export default function SoyTuAirePage() {
   })
 
   return (
-    <main className={styles.page} data-theme="light">
+    <main className={styles.page} data-theme="light" lang={content.inLanguage}>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}

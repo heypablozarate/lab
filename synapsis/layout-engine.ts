@@ -42,7 +42,27 @@ export type GalaxyMetadata = {
   description: string;
   serverContext: string;
   inLanguage?: string;
+  interfaceCopy: SynapsisInterfaceCopy;
   keywords: string[];
+};
+
+export type SynapsisInterfaceCopy = {
+  loadingLabel: string;
+  countTemplate: string;
+  backLabel: string;
+  searchLabel: string;
+  emptyResultsLabel: string;
+  lightModeLabel: string;
+  darkModeLabel: string;
+  themeLabelTemplate: string;
+  switchThemeAriaTemplate: string;
+  detailAriaTemplate: string;
+  closeLabel: string;
+  relevanceLabel: string;
+  openLinkLabel: string;
+  connectionsHeading: string;
+  aiApprovedLabel: string;
+  manualLabel: string;
 };
 
 export type GalaxyData = {

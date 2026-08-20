@@ -51,7 +51,7 @@ export default function AmeliePage() {
   })
 
   return (
-    <main className={styles.page} data-theme="dark">
+    <main className={styles.page} data-theme="dark" lang={content.inLanguage}>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}

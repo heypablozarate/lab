@@ -2,7 +2,15 @@
 
 import dynamic from "next/dynamic";
 import Link from "next/link";
-import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from "react";
 
 import { DARK_LIQUID_GLASS, LIGHT_LIQUID_GLASS, type LiquidGlassConfig } from "./liquid-glass";
 import {
@@ -10,13 +18,24 @@ import {
   type SynapsisAppearanceByTheme,
 } from "./synapsis-appearance";
 
-import type { GalaxyData, GalaxyLayout } from "../layout-engine";
+import type {
+  GalaxyData,
+  GalaxyLayout,
+  SynapsisInterfaceCopy,
+} from "../layout-engine";
 import type { LabelPool, SceneTokens } from "./galaxy-scene";
 import styles from "../synapsis.module.css";
 
+const SynapsisCopyContext = createContext<SynapsisInterfaceCopy | null>(null);
+
+function GalaxyLoading() {
+  const interfaceCopy = useContext(SynapsisCopyContext);
+  return interfaceCopy ? <p className={styles.loading}>{interfaceCopy.loadingLabel}</p> : null;
+}
+
 const GalaxyScene = dynamic(() => import("./galaxy-scene"), {
   ssr: false,
-  loading: () => <p className={styles.loading}>Cargando Synapsis…</p>,
+  loading: () => <GalaxyLoading />,
 });
 
 // Dev-only Interface Craft panel. Loaded only when `?dialkit=1` is present
@@ -119,7 +138,8 @@ const reducedMotionSnapshot = () => window.matchMedia(REDUCED_MOTION_QUERY).matc
 
 export function GalaxyStage({ data, layout }: StageProps) {
   const { nodes, edges, clusters } = data;
-  const stageTitle = data.metadata?.title ?? "Synapsis";
+  const { interfaceCopy } = data.metadata;
+  const stageTitle = data.metadata.title;
 
   const storedTheme = useSyncExternalStore(subscribeStoredTheme, storedThemeSnapshot, () => null);
   const systemDark = useSyncExternalStore(subscribeSystemDark, systemDarkSnapshot, () => false);
@@ -264,13 +284,19 @@ export function GalaxyStage({ data, layout }: StageProps) {
     }
   }
 
+  const nextThemeLabel =
+    effectiveTheme === "dark"
+      ? interfaceCopy.lightModeLabel
+      : interfaceCopy.darkModeLabel;
+
   return (
-    <div
-      className={styles.stage}
-      data-theme={effectiveTheme}
-      data-hovering={hovered !== null ? "true" : "false"}
-      data-detail-open={selectedNode ? "true" : "false"}
-    >
+    <SynapsisCopyContext.Provider value={interfaceCopy}>
+      <div
+        className={styles.stage}
+        data-theme={effectiveTheme}
+        data-hovering={hovered !== null ? "true" : "false"}
+        data-detail-open={selectedNode ? "true" : "false"}
+      >
       <div className={styles.canvasHost}>
         {tokens && appearance && (
           <GalaxyScene
@@ -324,11 +350,15 @@ export function GalaxyStage({ data, layout }: StageProps) {
       >
         <div className={styles.hudContent}>
           <Link className={styles.backLink} href="/">
-            Back to the Lab
+            {interfaceCopy.backLabel}
           </Link>
           <p className={styles.hudTitle}>{stageTitle}</p>
           <p className={styles.hudCount}>
-            {nodes.length} nodos · {edges.length} conexiones · {clusters.length} clusters
+            {formatTemplate(interfaceCopy.countTemplate, {
+              nodes: nodes.length,
+              edges: edges.length,
+              clusters: clusters.length,
+            })}
           </p>
 
           <div className={styles.search}>
@@ -336,8 +366,8 @@ export function GalaxyStage({ data, layout }: StageProps) {
               id="synapsis-search"
               className={styles.searchInput}
               type="search"
-              aria-label="Search"
-              placeholder="Search"
+              aria-label={interfaceCopy.searchLabel}
+              placeholder={interfaceCopy.searchLabel}
               autoComplete="off"
               value={query}
               onChange={(event) => setQuery(event.target.value)}
@@ -351,7 +381,9 @@ export function GalaxyStage({ data, layout }: StageProps) {
                     </button>
                   </li>
                 ))}
-                {searchMatches.length === 0 && <li className={styles.searchEmpty}>Sin resultados</li>}
+                {searchMatches.length === 0 && (
+                  <li className={styles.searchEmpty}>{interfaceCopy.emptyResultsLabel}</li>
+                )}
               </ul>
             )}
           </div>
@@ -377,7 +409,9 @@ export function GalaxyStage({ data, layout }: StageProps) {
               type="button"
               className={styles.themeToggle}
               onClick={toggleTheme}
-              aria-label={`Switch to ${effectiveTheme === "dark" ? "light" : "dark"} mode`}
+              aria-label={formatTemplate(interfaceCopy.switchThemeAriaTemplate, {
+                mode: nextThemeLabel.toLowerCase(),
+              })}
             >
               {effectiveTheme === "dark" ? (
                 <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -396,7 +430,11 @@ export function GalaxyStage({ data, layout }: StageProps) {
                   <path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M19.1 4.9l-1.8 1.8M6.7 17.3l-1.8 1.8" />
                 </svg>
               )}
-              <span className={styles.themeToggleLabel}>{effectiveTheme === "dark" ? "Light" : "Dark"} mode</span>
+              <span className={styles.themeToggleLabel}>
+                {formatTemplate(interfaceCopy.themeLabelTemplate, {
+                  mode: nextThemeLabel,
+                })}
+              </span>
             </button>
           </div>
         </div>
@@ -420,7 +458,9 @@ export function GalaxyStage({ data, layout }: StageProps) {
       {selectedNode && (
         <aside
           className={styles.panel}
-          aria-label={`Detalle de ${selectedNode.title}`}
+          aria-label={formatTemplate(interfaceCopy.detailAriaTemplate, {
+            title: selectedNode.title,
+          })}
           ref={(el) => {
             panelEls.current[1] = el;
           }}
@@ -433,10 +473,10 @@ export function GalaxyStage({ data, layout }: StageProps) {
               className={styles.panelClose}
               onClick={() => setSelected(null)}
             >
-              Cerrar
+              {interfaceCopy.closeLabel}
             </button>
             <p className={styles.panelMeta}>
-              {clusterLabel(selectedNode.cluster)} · {selectedNode.type} · relevancia {selectedNode.relevance}
+              {clusterLabel(selectedNode.cluster)} · {selectedNode.type} · {interfaceCopy.relevanceLabel} {selectedNode.relevance}
             </p>
             <h2 className={styles.panelTitle}>{selectedNode.title}</h2>
             {selectedNode.description && <p className={styles.panelDescription}>{selectedNode.description}</p>}
@@ -448,11 +488,11 @@ export function GalaxyStage({ data, layout }: StageProps) {
               </ul>
             )}
             <a className={styles.panelLink} href={selectedNode.url} target="_blank" rel="noopener noreferrer">
-              Abrir link ↗
+              {interfaceCopy.openLinkLabel}
             </a>
             {selectedConnections.length > 0 && (
               <section className={styles.panelConnections}>
-                <h3>Conexiones</h3>
+                <h3>{interfaceCopy.connectionsHeading}</h3>
                 <ul>
                   {selectedConnections.map(({ edge, otherTitle, otherIndex }) => (
                     <li key={`${edge.source}-${edge.target}`}>
@@ -461,7 +501,9 @@ export function GalaxyStage({ data, layout }: StageProps) {
                       </button>
                       {edge.rationale?.trim() ? <p>{edge.rationale}</p> : null}
                       <span className={styles.panelProvenance}>
-                        {edge.provenance === "ai-approved" ? "propuesta por AI, aprobada" : "curada a mano"}
+                        {edge.provenance === "ai-approved"
+                          ? interfaceCopy.aiApprovedLabel
+                          : interfaceCopy.manualLabel}
                       </span>
                     </li>
                   ))}
@@ -471,6 +513,17 @@ export function GalaxyStage({ data, layout }: StageProps) {
           </div>
         </aside>
       )}
-    </div>
+      </div>
+    </SynapsisCopyContext.Provider>
+  );
+}
+
+function formatTemplate(
+  template: string,
+  values: Record<string, string | number>,
+) {
+  return Object.entries(values).reduce(
+    (result, [key, value]) => result.replace(`{${key}}`, String(value)),
+    template,
   );
 }
