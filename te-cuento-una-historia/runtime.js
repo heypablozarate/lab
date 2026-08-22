@@ -124,8 +124,25 @@ let destroyed = false;
 let entering = false;
 let logoAnimation = null;
 
+function decodeStorySlug(slug) {
+  try {
+    return decodeURIComponent(slug);
+  } catch {
+    return slug;
+  }
+}
+
+function findStoryBySlug(slug) {
+  if (!slug) return null;
+  const decodedSlug = decodeStorySlug(slug);
+  return STORIES.find(
+    (story) => decodeStorySlug(story.slug) === decodedSlug,
+  ) ?? null;
+}
+
 function storyPath(slug) {
-  return `${storyRouteBase}/relatos/${encodeURIComponent(slug)}` || `/relatos/${encodeURIComponent(slug)}`;
+  const segment = encodeURIComponent(decodeStorySlug(slug));
+  return `${storyRouteBase}/relatos/${segment}` || `/relatos/${segment}`;
 }
 
 function storySlugFromPath(pathname = window.location.pathname) {
@@ -139,7 +156,10 @@ function storySlugFromPath(pathname = window.location.pathname) {
 }
 
 function writeStoryHistory(story, mode) {
-  if (mode === "none" || storySlugFromPath() === story.slug) return;
+  if (
+    mode === "none"
+    || storySlugFromPath() === decodeStorySlug(story.slug)
+  ) return;
   const state = {
     ...(window.history.state ?? {}),
     teCuentoStory: story.slug,
@@ -708,14 +728,14 @@ listen(readerBody, "click", (event) => {
   const link = event.target instanceof Element ? event.target.closest("[data-story-link]") : null;
   if (!link) return;
   event.preventDefault();
-  const linkedStory = STORIES.find((story) => story.slug === link.dataset.storyLink);
+  const linkedStory = findStoryBySlug(link.dataset.storyLink);
   if (linkedStory) openStory(linkedStory, readerReturnTarget);
 });
 listen(window, "popstate", async () => {
   await storiesReady;
   if (destroyed) return;
   const slug = storySlugFromPath();
-  const story = slug ? STORIES.find((item) => item.slug === slug) : null;
+  const story = findStoryBySlug(slug);
   if (story) {
     openStory(story, readerReturnTarget, { historyMode: "none" });
   } else if (reader.classList.contains("is-open")) {
@@ -837,7 +857,7 @@ try {
     introEnter.focus({ preventScroll: true });
   }
   if (initialStorySlug) {
-    const initialStory = STORIES.find((story) => story.slug === initialStorySlug);
+    const initialStory = findStoryBySlug(initialStorySlug);
     if (initialStory) await openStory(initialStory, stage, { historyMode: "none" });
   }
 } catch (error) {

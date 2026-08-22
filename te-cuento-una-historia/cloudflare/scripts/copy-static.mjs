@@ -2,7 +2,9 @@ import { cp, mkdir, readFile, readdir, stat, writeFile } from "node:fs/promises"
 import path from "node:path"
 
 import {
+  decodeStorySlug,
   distRoot,
+  encodeStorySlug,
   fontsRoot,
   payloadRoot,
   projectRoot,
@@ -83,7 +85,8 @@ for (const story of corpus.entries) {
   const form = story.form ?? "cuento"
   const scenes = scenesBySlug.get(story.slug) ?? []
   const media = mediaBySlug.get(story.slug) ?? null
-  const storyUrl = `${canonicalRoot}/relatos/${encodeURIComponent(story.slug)}`
+  const canonicalSlug = encodeStorySlug(story.slug)
+  const storyUrl = `${canonicalRoot}/relatos/${canonicalSlug}`
   const title = `${story.title} — ${deployment.content.title}`
   const description = summarize(markdown)
   const datePublished = story.date.slice(0, 10)
@@ -152,7 +155,11 @@ for (const story of corpus.entries) {
     `<div id="root">${serverArticle}</div>\n  </body>`,
   )
 
-  const storyDirectory = path.join(distRoot, "relatos", story.slug)
+  const storyDirectory = path.join(
+    distRoot,
+    "relatos",
+    decodeStorySlug(story.slug),
+  )
   await mkdir(storyDirectory, { recursive: true })
   await writeFile(path.join(storyDirectory, "index.html"), storyHtml, "utf8")
 }
