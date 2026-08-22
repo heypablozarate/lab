@@ -164,6 +164,26 @@ for (const story of corpus.entries) {
   await writeFile(path.join(storyDirectory, "index.html"), storyHtml, "utf8")
 }
 
+const notFoundHtml = `<!doctype html>
+<html lang="${escapeHtml(deployment.content.inLanguage)}">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="robots" content="noindex, follow" />
+    <meta name="theme-color" content="#120b07" />
+    <title>404 — ${escapeHtml(deployment.content.title)}</title>
+  </head>
+  <body style="min-height:100vh;margin:0;display:grid;place-items:center;background:#120b07;color:#f0e8d8;font-family:Georgia,serif">
+    <main style="max-width:36rem;padding:2rem;text-align:center">
+      <p style="font-family:Arial,sans-serif;letter-spacing:.16em">404</p>
+      <h1>${escapeHtml(deployment.content.title)}</h1>
+      <a href="/" style="color:#f0e8d8">${escapeHtml(deployment.content.interfaceCopy.readerCloseLabel)}</a>
+    </main>
+  </body>
+</html>
+`
+await writeFile(path.join(distRoot, "404.html"), notFoundHtml, "utf8")
+
 async function countFiles(root) {
   let count = 0
   for (const entry of await readdir(root, { withFileTypes: true })) {
