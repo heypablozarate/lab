@@ -4,6 +4,7 @@ import path from "node:path"
 import {
   contentRoot,
   deploymentRoot,
+  encodeStorySlug,
   payloadRoot,
   preparedPublicRoot,
   projectRoot,
@@ -141,7 +142,7 @@ const robots = [
 const sitemapUrls = [
   CANONICAL_URL,
   ...corpus.entries.map(
-    (story) => `${CANONICAL_URL}relatos/${encodeURIComponent(story.slug)}`,
+    (story) => `${CANONICAL_URL}relatos/${encodeStorySlug(story.slug)}`,
   ),
 ]
 const sitemap = [
@@ -166,7 +167,7 @@ const storySummaries = await Promise.all(
     const clipped = text.length <= 180 ? text : `${text.slice(0, 179).trimEnd()}…`
     return {
       title: story.title,
-      url: `${CANONICAL_URL}relatos/${encodeURIComponent(story.slug)}`,
+      url: `${CANONICAL_URL}relatos/${encodeStorySlug(story.slug)}`,
       summary: clipped,
     }
   }),

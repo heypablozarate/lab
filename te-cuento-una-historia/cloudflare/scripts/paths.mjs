@@ -39,3 +39,11 @@ export function requirePath(target, label) {
     )
   }
 }
+
+export function decodeStorySlug(slug) {
+  return decodeURIComponent(slug)
+}
+
+export function encodeStorySlug(slug) {
+  return encodeURIComponent(decodeStorySlug(slug))
+}
