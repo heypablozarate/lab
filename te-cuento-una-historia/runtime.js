@@ -3,7 +3,9 @@ import { createPopupRig } from "./rig.js";
 import {
   escapeTeCuentoHtml as escapeHtml,
   renderTeCuentoMarkdown,
+  renderTeCuentoRelatedStories,
 } from "@/lib/te-cuento-story-markdown";
+import { resolveTeCuentoRelatedStories } from "@/lib/te-cuento-story-relations";
 
 export async function mountExperience(root, options = {}) {
 if (!root?.querySelector) throw new TypeError("mountExperience requiere un nodo raíz");
@@ -42,6 +44,8 @@ const stage = required("#stage");
 const clueLayer = required("#clue-layer");
 const reader = required("#reader");
 const readerBody = required("#reader-body");
+const relatedStoriesTitle = readerBody.dataset.relatedTitle;
+if (!relatedStoriesTitle) throw new Error("Falta el título editorial de relatos relacionados");
 const readerMeta = required("#reader-meta");
 const readerTitle = required("#reader-title");
 const readerPage = required("#reader-page");
@@ -187,20 +191,22 @@ function illustrationUrl(value) {
 }
 
 async function loadStories() {
-  const [corpusResponse, hotspotsResponse, scenesResponse, mediaResponse] = await Promise.all([
+  const [corpusResponse, hotspotsResponse, scenesResponse, mediaResponse, relationsResponse] = await Promise.all([
     fetch(assetUrl("data/corpus.json"), { signal }),
     fetch(assetUrl("data/hotspots.json"), { signal }),
     fetch(assetUrl("data/story-scenes.json"), { signal }),
     fetch(assetUrl("data/story-media.json"), { signal }),
+    fetch(assetUrl("data/story-relations.json"), { signal }),
   ]);
-  if (!corpusResponse.ok || !hotspotsResponse.ok || !scenesResponse.ok || !mediaResponse.ok) {
+  if (!corpusResponse.ok || !hotspotsResponse.ok || !scenesResponse.ok || !mediaResponse.ok || !relationsResponse.ok) {
     throw new Error("No se pudo cargar el mapa de historias");
   }
-  const [corpus, hotspots, storyScenes, storyMedia] = await Promise.all([
+  const [corpus, hotspots, storyScenes, storyMedia, relations] = await Promise.all([
     corpusResponse.json(),
     hotspotsResponse.json(),
     scenesResponse.json(),
     mediaResponse.json(),
+    relationsResponse.json(),
   ]);
   MASTER = hotspots.master;
   const entriesBySlug = new Map(corpus.entries.map((entry) => [entry.slug, entry]));
@@ -227,6 +233,11 @@ async function loadStories() {
         src: illustrationUrl(scene.src),
       })),
       media: mediaBySlug.get(entry.slug) ?? null,
+      relatedStories: resolveTeCuentoRelatedStories(
+        relations,
+        corpus.entries,
+        entry.slug,
+      ),
     };
   });
 }
@@ -405,10 +416,17 @@ async function storyHtml(story) {
         if (!response.ok) throw new Error(`No se pudo leer ${story.title}`);
         return response.text();
       })
-      .then((markdown) => renderTeCuentoMarkdown(markdown, story, {
-        mediaOrigin: window.location.origin,
-        storyRouteBase,
-      }));
+      .then((markdown) => {
+        const body = renderTeCuentoMarkdown(markdown, story, {
+          mediaOrigin: window.location.origin,
+          storyRouteBase,
+        });
+        const related = renderTeCuentoRelatedStories(story.relatedStories, {
+          title: relatedStoriesTitle,
+          storyRouteBase,
+        });
+        return `${body}${related}`;
+      });
     CACHE.set(story.slug, request);
   }
   return CACHE.get(story.slug);

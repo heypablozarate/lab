@@ -35,12 +35,13 @@ async function walk(directory = payloadRoot) {
   return result.sort();
 }
 
-const [manifest, corpus, hotspots, storyScenes, storyMedia, sumsText, files] = await Promise.all([
+const [manifest, corpus, hotspots, storyScenes, storyMedia, storyRelations, sumsText, files] = await Promise.all([
   readFile(path.join(payloadRoot, "PROJECT-MANIFEST.json"), "utf8").then(JSON.parse),
   readFile(path.join(payloadRoot, "data/corpus.json"), "utf8").then(JSON.parse),
   readFile(path.join(payloadRoot, "data/hotspots.json"), "utf8").then(JSON.parse),
   readFile(path.join(payloadRoot, "data/story-scenes.json"), "utf8").then(JSON.parse),
   readFile(path.join(payloadRoot, "data/story-media.json"), "utf8").then(JSON.parse),
+  readFile(path.join(payloadRoot, "data/story-relations.json"), "utf8").then(JSON.parse),
   readFile(path.join(payloadRoot, "SHA256SUMS.txt"), "utf8"),
   walk(),
 ]);
@@ -96,6 +97,34 @@ if (JSON.stringify([...corpusSlugs].sort()) !== JSON.stringify([...hotspotSlugs]
 if (hotspots.master?.width !== 1920 || hotspots.master?.height !== 1200) failures.push("hotspot-master");
 if (!unique(sceneSlugs) || sceneSlugs.some((slug) => !corpusSlugs.includes(slug))) failures.push("scene-slugs");
 if (storyMedia.entries.length !== 10 || !unique(mediaSlugs) || mediaSlugs.some((slug) => !corpusSlugs.includes(slug))) failures.push("media-slugs");
+
+const relationKinds = new Set(["character", "series", "continuity", "theme"]);
+const relationGroups = Array.isArray(storyRelations.groups) ? storyRelations.groups : [];
+const relationGroupIds = relationGroups.map((group) => group.id);
+const relatedPairs = new Set();
+if (storyRelations.schema !== "te-cuento-una-historia/story-relations-v1") failures.push("story-relations-schema");
+if (relationGroups.length === 0 || !unique(relationGroupIds)) failures.push("story-relations-groups");
+for (const group of relationGroups) {
+  if (
+    typeof group.id !== "string"
+    || !/^[a-z0-9-]+$/u.test(group.id)
+    || !relationKinds.has(group.kind)
+    || typeof group.label !== "string"
+    || !group.label.trim()
+    || !Array.isArray(group.stories)
+    || group.stories.length < 2
+    || !unique(group.stories)
+  ) {
+    failures.push(`story-relation-group:${group.id ?? "unknown"}`);
+    continue;
+  }
+  if (group.stories.some((slug) => !corpusSlugs.includes(slug))) failures.push(`story-relation-slug:${group.id}`);
+  for (const source of group.stories) {
+    for (const target of group.stories) {
+      if (source !== target) relatedPairs.add(`${source}:${target}`);
+    }
+  }
+}
 
 const declaredIllustrations = corpus.entries
   .flatMap((entry) => Object.values(entry.illustrations ?? {}))
@@ -159,7 +188,6 @@ for (const entry of storyScenes.entries) {
 }
 if (sceneIllustrations !== 4) failures.push("scene-illustrations");
 
-let internalLinkCount = 0;
 for (const entry of corpus.entries) {
   const selectedVariant = entry.illustrationVariant ?? "ink";
   const illustrationEntries = Object.entries(entry.illustrations ?? {});
@@ -194,8 +222,8 @@ for (const entry of corpus.entries) {
     if (emphasisMarkers.length % 2 !== 0) failures.push(`unbalanced-emphasis:${entry.slug}:${blockIndex + 1}`);
   }
   const internalTargets = [...storyBody.matchAll(/\[[^\]]+\]\(story:([a-z0-9%_-]+)\)/gu)].map((match) => match[1]);
-  internalLinkCount += internalTargets.length;
   if (internalTargets.some((slug) => !corpusSlugs.includes(slug))) failures.push(`broken-story-link:${entry.slug}`);
+  if (internalTargets.some((slug) => !relatedPairs.has(`${entry.slug}:${slug}`))) failures.push(`unmapped-story-link:${entry.slug}`);
   if (/^\*\*-\s*[IVXLCDM]+\s*-\*\*/mu.test(storyBody)) failures.push(`styled-roman-heading:${entry.slug}`);
 
   if (entry.slug !== "del-tengo-eso-y-quiero-aquello") {
@@ -203,13 +231,25 @@ for (const entry of corpus.entries) {
     if (/(?:Sebastian Moon|Sr\. Moon)/u.test(withoutMoonLinks)) failures.push(`unlinked-moon:${entry.slug}`);
   }
 }
-if (internalLinkCount !== 28) failures.push("internal-link-count");
 
 if (storyBodies.get("apesta-a-espiritu-adolescente-de-lo-que-nos-dejo-cobain")?.includes(">")) failures.push("apesta-raw-angle-marker");
 if (storyBodies.get("consideraciones-sobre-la-belleza")?.includes("*")) failures.push("belleza-visible-asterisk");
-const moonTrail = storyBodies.get("del-tengo-eso-y-quiero-aquello")?.match(/### Otros rastros de Sebastian Moon\s*\n([\s\S]+)$/u)?.[1]?.trim() ?? "";
-if (!moonTrail || moonTrail.split("\n").some((line) => !/^- \[[^\]]+\]\(story:[a-z0-9%_-]+\)$/u.test(line))) {
-  failures.push("sebastian-moon-title-index");
+if ([...storyBodies.values()].some((body) => /^### Otros rastros/mu.test(body))) failures.push("manual-related-story-index");
+
+const recurringCharacters = [
+  ["sebastian-moon", /(?:Sebastian Moon|Sr\. Moon|S\. M\.)/u],
+  ["zenon-santilan", /Zen[oó]n(?: Santil[aá]n)?/u],
+  ["gunther-smith", /(?:G[uü]nther(?: Smith)?|G\. S\.)/u],
+  ["don-ernesto", /Don Ernesto/u],
+];
+for (const [groupId, pattern] of recurringCharacters) {
+  const group = relationGroups.find((candidate) => candidate.id === groupId);
+  const mentionedSlugs = [...storyBodies]
+    .filter(([, body]) => pattern.test(body))
+    .map(([slug]) => slug)
+    .sort();
+  const relatedSlugs = [...(group?.stories ?? [])].sort();
+  if (JSON.stringify(mentionedSlugs) !== JSON.stringify(relatedSlugs)) failures.push(`recurring-character-index:${groupId}`);
 }
 
 const moonPortrait = corpus.entries.find((entry) => entry.slug === "del-tengo-eso-y-quiero-aquello");
