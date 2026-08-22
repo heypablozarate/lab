@@ -1,0 +1,58 @@
+:root {
+  --brand-accent: #ff460c;
+  --brand-signature-name-color: currentcolor;
+  --brand-signature-mark-color: var(--brand-accent);
+  --brand-signature-name-weight: 700;
+  --brand-wordmark-mark-gap: 0.06em;
+  background: #120b07;
+  color: #f3e5c3;
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+.brand-signature,
+.brand-wordmark {
+  display: inline-flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+}
+
+.brand-signature__name {
+  color: var(--brand-signature-name-color);
+  font-weight: var(--brand-signature-name-weight);
+}
+
+.brand-signature__mark {
+  margin-left: var(--brand-wordmark-mark-gap);
+  color: var(--brand-signature-mark-color);
+  font-weight: var(--brand-signature-name-weight);
+}
+
+.deployment-error {
+  display: grid;
+  width: 100%;
+  min-height: 100%;
+  margin: 0;
+  place-items: center;
+  padding: 2rem;
+  color: #f3e5c3;
+  font: 500 1rem/1.5 system-ui, sans-serif;
+  text-align: center;
+}

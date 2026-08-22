@@ -1,4 +1,5 @@
 import { labHomeUpdatedAt, projects } from "../projects";
+import { getTeCuentoStories, TE_CUENTO_PUBLIC_URL } from "@/lib/te-cuento-stories";
 
 const LAB_URL = "https://lab.pablozarate.com";
 
@@ -21,6 +22,11 @@ export async function GET() {
       loc: `${LAB_URL}/${project.slug}`,
       priority: "0.8",
       lastModified: project.updatedAt,
+    })),
+    ...getTeCuentoStories().map((story) => ({
+      loc: `${TE_CUENTO_PUBLIC_URL}/relatos/${story.slug}`,
+      priority: "0.7",
+      lastModified: undefined,
     })),
   ];
 

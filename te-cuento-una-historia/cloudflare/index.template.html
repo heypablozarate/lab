@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="{{LANG}}">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#120b07" />
+    <meta name="description" content="{{DESCRIPTION}}" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <link rel="canonical" href="https://cuentos.ar/" />
+    <link rel="preload" href="/rams/assets/fonts/NHaasGroteskDSPro-55Rg.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/rams/assets/fonts/CenturyStd-Book.woff2" as="font" type="font/woff2" crossorigin />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="es_AR" />
+    <meta property="og:site_name" content="{{TITLE}}" />
+    <meta property="og:title" content="{{METADATA_TITLE}}" />
+    <meta property="og:description" content="{{DESCRIPTION}}" />
+    <meta property="og:url" content="https://cuentos.ar/" />
+    <meta property="og:image" content="https://cuentos.ar/lab/te-cuento-una-historia/opengraph-image.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="{{IMAGE_ALT}}" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="{{METADATA_TITLE}}" />
+    <meta name="twitter:description" content="{{DESCRIPTION}}" />
+    <meta name="twitter:image" content="https://cuentos.ar/lab/te-cuento-una-historia/opengraph-image.jpg" />
+    <title>{{METADATA_TITLE}}</title>
+    <script type="application/ld+json">{{JSON_LD}}</script>
+  </head>
+  <body>
+    <div id="root">
+      <main lang="{{LANG}}">
+        <h1>{{TITLE}}</h1>
+        <p>{{SERVER_CONTEXT}}</p>
+      </main>
+    </div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

@@ -1,0 +1,27 @@
+{
+  "name": "te-cuento-una-historia-cloudflare",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "prepare": "node scripts/prepare-content.mjs",
+    "build": "npm run prepare && vite build && node scripts/copy-static.mjs",
+    "typecheck": "npm run prepare && tsc --noEmit",
+    "preview": "npm run build && vite preview",
+    "deploy": "npm run build && wrangler deploy",
+    "cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts"
+  },
+  "dependencies": {
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "three": "^0.185.1"
+  },
+  "devDependencies": {
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "@types/three": "^0.185.0",
+    "typescript": "^5",
+    "vite": "^7.1.3",
+    "wrangler": "^4.31.0"
+  }
+}

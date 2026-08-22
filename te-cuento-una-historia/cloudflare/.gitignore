@@ -1,0 +1,6 @@
+dist/
+generated-public/
+index.html
+node_modules/
+src/generated-content.json
+.wrangler/
