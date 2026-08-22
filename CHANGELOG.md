@@ -15,6 +15,10 @@
 
 ### Changed
 
+- 2026-08-22 / Codex: Made related-story navigation resilient to reader DOM
+  replacement during click bubbling, so selecting **Otros rastros** keeps the
+  reader open while updating both its content and the real browser URL.
+
 - 2026-08-20 / Codex: Prepared Lab renderers to consume parent-managed public
   copy. Synapsis reads its visible labels and templates from `galaxy.json`,
   Shader Experiment reads its visible instruction and controls from `lab.json`,
