@@ -8,6 +8,12 @@
 
 ### Fixed
 
+- 2026-08-23 / Codex: Anchored the **¿Te cuento una historia?** hotspot layer
+  to the pop-up canvas coordinate space, so lights, labels, and 44px hit
+  targets stay registered during touch panning, resize, and orientation changes.
+  Its Cloudflare typecheck and bundle now also resolve runtime dependencies
+  exclusively from the standalone deployment target.
+
 - 2026-08-23 / Codex: Rebuilt the **¿Te cuento una historia?** credits as a
   reader-style making-of sequence, preserving the final editorial copy and
   switching illustrations as each production chapter enters the reading flow.

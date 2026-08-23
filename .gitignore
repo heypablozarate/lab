@@ -8,3 +8,5 @@ te-cuento-una-historia/cloudflare/generated-public/
 te-cuento-una-historia/cloudflare/index.html
 te-cuento-una-historia/cloudflare/src/generated-content.json
 te-cuento-una-historia/cloudflare/node_modules/
+te-cuento-una-historia/cloudflare/playwright-report/
+te-cuento-una-historia/cloudflare/test-results/
