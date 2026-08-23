@@ -29,6 +29,10 @@ function centerPanViewport(viewport: HTMLElement) {
   viewport.scrollTo({ left: maximum / 2, behavior: "auto" })
 }
 
+function isDirectStoryPath(pathname: string) {
+  return /\/relatos\/[^/]+\/?$/u.test(pathname)
+}
+
 type SocialLink = { href: string; label: string }
 
 function StoryLogo({
@@ -78,6 +82,9 @@ export function ExperienceShell({
   const viewportRef = useRef<HTMLDivElement | null>(null)
   const panProgressRef = useRef(0.5)
   const [loadError, setLoadError] = useState(false)
+  const [directStoryEntry] = useState(
+    () => typeof window !== "undefined" && isDirectStoryPath(window.location.pathname),
+  )
 
   useLayoutEffect(() => {
     const viewport = viewportRef.current
@@ -216,11 +223,13 @@ export function ExperienceShell({
 
       <section
         id="intro"
-        className={styles.intro}
+        className={`${styles.intro} ${directStoryEntry ? styles.introDirectEntry : ""}`}
         role="dialog"
-        aria-modal="true"
+        aria-modal={directStoryEntry ? undefined : "true"}
+        aria-hidden={directStoryEntry ? "true" : undefined}
         aria-labelledby="intro-title"
         aria-describedby="intro-description intro-instructions"
+        inert={directStoryEntry ? true : undefined}
       >
         <div className={styles.introComposition}>
           <header id="intro-logo" className={`${styles.logo} ${styles.introLogo}`}>
