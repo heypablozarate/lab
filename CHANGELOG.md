@@ -8,6 +8,10 @@
 
 ### Fixed
 
+- 2026-08-23 / Codex: Rebuilt the **¿Te cuento una historia?** credits as a
+  reader-style making-of sequence, preserving the final editorial copy and
+  switching illustrations as each production chapter enters the reading flow.
+
 - 2026-08-22 / Codex: Direct **¿Te cuento una historia?** permalinks now bypass
   the welcome dialog from the first client render and prepare the fully open
   book behind the reader. Closing the story exposes an immediately usable

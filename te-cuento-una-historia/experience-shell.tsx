@@ -282,7 +282,7 @@ export function ExperienceShell({
               role="region"
               aria-label={copy.readerRegionLabel}
             >
-              <header id="reader-header">
+              <header id="reader-header" className={styles.readerHeader}>
                 <time id="reader-meta" className={styles.readerMeta} />
                 <h2 id="reader-title" className={styles.readerTitle} />
                 <div id="reader-rule" className={styles.readerRule} aria-hidden="true" />
@@ -295,14 +295,14 @@ export function ExperienceShell({
 
       <section
         id="credits"
-        className={styles.credits}
+        className={`${styles.reader} ${styles.credits}`}
         role="dialog"
         aria-modal="true"
         aria-hidden="true"
         aria-labelledby="credits-title"
         inert
       >
-        <div id="credits-shell" className={styles.creditsShell}>
+        <div id="credits-shell" className={styles.readerShell}>
           <button
             id="credits-close"
             className={styles.readerClose}
@@ -311,35 +311,85 @@ export function ExperienceShell({
           >
             {copy.readerCloseLabel}
           </button>
-          <article id="credits-panel" className={styles.creditsPanel}>
-            <header className={styles.creditsHeader}>
-              <p className={styles.creditsKicker}>{copy.logoTitle}</p>
-              <h2 id="credits-title" className={styles.creditsTitle}>{credits.title}</h2>
-            </header>
-            <div className={styles.creditsGrid}>
-              <section aria-labelledby="credits-history-title">
-                <h3 id="credits-history-title" className={styles.creditsHeading}>{credits.historyHeading}</h3>
-                {credits.historyParagraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
-                <p className={styles.creditsPeriod}>
-                  <span className={styles.srOnly}>Período: </span>{credits.periodLabel}
-                </p>
-              </section>
-              <section aria-labelledby="credits-music-title">
-                <h3 id="credits-music-title" className={styles.creditsHeading}>{credits.musicHeading}</h3>
-                <p>{credits.musicBody}</p>
-              </section>
-            </div>
-            <nav className={styles.creditsSocial} aria-labelledby="credits-social-title">
-              <h3 id="credits-social-title" className={styles.creditsHeading}>{credits.socialHeading}</h3>
-              <ul>
-                {socialLinks.map((link) => (
-                  <li key={link.href}>
-                    <a href={link.href} target="_blank" rel="noopener noreferrer">{link.label}</a>
-                  </li>
+          <article
+            id="credits-panel"
+            className={`${styles.readerArticle} has-scene-sequence`}
+          >
+            <figure
+              id="credits-illustration-wrap"
+              className={`${styles.readerIllustrationWrap} ${styles.creditsIllustrationWrap}`}
+            >
+              <img
+                id="credits-illustration"
+                className={`${styles.readerIllustration} ${styles.creditsIllustration}`}
+                src={credits.makingOfScenes[0].image.src}
+                alt={credits.makingOfScenes[0].image.alt}
+                width={credits.makingOfScenes[0].image.width}
+                height={credits.makingOfScenes[0].image.height}
+                data-fit={credits.makingOfScenes[0].image.fit}
+                decoding="async"
+              />
+              <figcaption
+                id="credits-illustration-caption"
+                className={styles.creditsIllustrationCaption}
+              >
+                {credits.makingOfScenes[0].image.caption}
+              </figcaption>
+            </figure>
+            <div
+              id="credits-page"
+              className={styles.readerPage}
+              tabIndex={0}
+              role="region"
+              aria-label={credits.title}
+            >
+              <header className={styles.readerHeader}>
+                <p className={styles.readerMeta}>{credits.historyHeading}</p>
+                <h2 id="credits-title" className={styles.readerTitle}>{credits.title}</h2>
+                <div className={styles.readerRule} aria-hidden="true" />
+              </header>
+              <div id="credits-body" className={styles.readerBody}>
+                {credits.historyParagraphs.map((paragraph, index) => (
+                  <p className={index === 0 ? "story-opening" : undefined} key={paragraph}>
+                    {paragraph}
+                  </p>
                 ))}
-              </ul>
-            </nav>
-            <p className={styles.creditsSignature}>{credits.signature}</p>
+
+                {credits.makingOfScenes.map((scene) => (
+                  <section
+                    className={styles.creditsScene}
+                    data-credits-scene={scene.id}
+                    data-scene-src={scene.image.src}
+                    data-scene-alt={scene.image.alt}
+                    data-scene-caption={scene.image.caption}
+                    data-scene-fit={scene.image.fit}
+                    key={scene.id}
+                  >
+                    <h2>{scene.heading}</h2>
+                    {scene.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+                  </section>
+                ))}
+
+                <section className={styles.creditsDetails} aria-labelledby="credits-music-title">
+                  <h2 id="credits-music-title">{credits.musicHeading}</h2>
+                  <p>{credits.musicBody}</p>
+                  <p className={styles.creditsPeriod}>
+                    <span className={styles.srOnly}>Período: </span>{credits.periodLabel}
+                  </p>
+                </section>
+
+                <nav className={styles.creditsSocial} aria-labelledby="credits-social-title">
+                  <h2 id="credits-social-title">{credits.socialHeading}</h2>
+                  <ul>
+                    {socialLinks.map((link) => (
+                      <li key={link.href}>
+                        <a href={link.href} target="_blank" rel="noopener noreferrer">{link.label}</a>
+                      </li>
+                    ))}
+                  </ul>
+                </nav>
+              </div>
+            </div>
           </article>
         </div>
       </section>

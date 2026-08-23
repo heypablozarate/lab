@@ -54,6 +54,11 @@ const creditsToggle = required("#credits-toggle");
 const credits = required("#credits");
 const creditsPanel = required("#credits-panel");
 const creditsClose = required("#credits-close");
+const creditsPage = required("#credits-page");
+const creditsBody = required("#credits-body");
+const creditsIllustrationWrap = required("#credits-illustration-wrap");
+const creditsIllustration = required("#credits-illustration");
+const creditsIllustrationCaption = required("#credits-illustration-caption");
 const authorMark = required("#author-mark");
 const intro = required("#intro");
 const introEnter = required("#intro-enter");
@@ -85,6 +90,9 @@ let creditsReturnTarget = null;
 let stateFrame = 0;
 let sceneFrame = 0;
 let sceneSwitchToken = 0;
+let creditsSceneFrame = 0;
+let creditsSceneSwitchToken = 0;
+let activeCreditsSceneId = "";
 let activeStory = null;
 let activeSceneId = "opener";
 const MIX = Object.freeze({
@@ -420,6 +428,69 @@ function setSceneInert(inert) {
   creditsToggle.inert = inert;
 }
 
+function creditsSceneMarkers() {
+  return [...creditsBody.querySelectorAll("[data-credits-scene]")];
+}
+
+function setCreditsIllustration(marker, { immediate = false } = {}) {
+  if (!(marker instanceof HTMLElement)) return;
+  const src = marker.dataset.sceneSrc;
+  if (!src) return;
+  const alt = marker.dataset.sceneAlt ?? "";
+  const caption = marker.dataset.sceneCaption ?? "";
+  const fit = marker.dataset.sceneFit ?? "contain";
+  const token = ++creditsSceneSwitchToken;
+  const commit = () => {
+    if (token !== creditsSceneSwitchToken || !credits.classList.contains("is-open")) return;
+    creditsIllustration.src = src;
+    creditsIllustration.alt = alt;
+    creditsIllustration.dataset.fit = fit;
+    creditsIllustrationCaption.textContent = caption;
+    requestAnimationFrame(() => {
+      if (!destroyed) creditsIllustration.classList.remove("is-switching");
+    });
+  };
+  if (immediate) {
+    creditsIllustration.classList.remove("is-switching");
+    commit();
+    return;
+  }
+  const preload = new Image();
+  preload.src = src;
+  const ready = typeof preload.decode === "function"
+    ? preload.decode()
+    : new Promise((resolve, reject) => {
+      preload.addEventListener("load", resolve, { once: true, signal });
+      preload.addEventListener("error", reject, { once: true, signal });
+    });
+  creditsIllustration.classList.add("is-switching");
+  ready.catch(() => {}).then(commit);
+}
+
+function updateCreditsScene() {
+  if (!credits.classList.contains("is-open")) return;
+  const markers = creditsSceneMarkers();
+  if (markers.length === 0) return;
+  const compact = window.matchMedia("(max-aspect-ratio: 6 / 5), (max-width: 760px)").matches;
+  const pageRect = creditsPage.getBoundingClientRect();
+  const triggerLine = compact
+    ? creditsIllustrationWrap.getBoundingClientRect().bottom + Math.min(44, credits.clientHeight * 0.055)
+    : pageRect.top + pageRect.height * 0.38;
+  let selected = markers[0];
+  for (const marker of markers) {
+    if (marker.getBoundingClientRect().top <= triggerLine) selected = marker;
+  }
+  const nextId = selected.dataset.creditsScene ?? "";
+  if (nextId === activeCreditsSceneId) return;
+  activeCreditsSceneId = nextId;
+  setCreditsIllustration(selected);
+}
+
+function queueCreditsSceneUpdate() {
+  cancelAnimationFrame(creditsSceneFrame);
+  creditsSceneFrame = requestAnimationFrame(updateCreditsScene);
+}
+
 function openCredits() {
   if (credits.classList.contains("is-open")) return;
   creditsReturnTarget = creditsToggle;
@@ -427,6 +498,15 @@ function openCredits() {
   credits.classList.add("is-open");
   credits.setAttribute("aria-hidden", "false");
   credits.inert = false;
+  credits.scrollTop = 0;
+  creditsPage.scrollTop = 0;
+  activeCreditsSceneId = "";
+  const firstScene = creditsSceneMarkers()[0];
+  if (firstScene) {
+    activeCreditsSceneId = firstScene.dataset.creditsScene ?? "";
+    setCreditsIllustration(firstScene, { immediate: true });
+  }
+  queueCreditsSceneUpdate();
   creditsClose.focus({ preventScroll: true });
 }
 
@@ -435,6 +515,10 @@ function closeCredits() {
   credits.classList.remove("is-open");
   credits.setAttribute("aria-hidden", "true");
   credits.inert = true;
+  cancelAnimationFrame(creditsSceneFrame);
+  creditsSceneFrame = 0;
+  creditsSceneSwitchToken += 1;
+  creditsIllustration.classList.remove("is-switching");
   setSceneInert(false);
   const returnTarget = creditsReturnTarget?.isConnected ? creditsReturnTarget : creditsToggle;
   creditsReturnTarget = null;
@@ -745,6 +829,8 @@ listen(window, "popstate", async () => {
 });
 listen(readerPage, "scroll", queueSceneUpdate, { passive: true });
 listen(reader, "scroll", queueSceneUpdate, { passive: true });
+listen(creditsPage, "scroll", queueCreditsSceneUpdate, { passive: true });
+listen(credits, "scroll", queueCreditsSceneUpdate, { passive: true });
 listen(soundToggle, "click", () => {
   soundEnabled = !soundEnabled;
   audioEngine.enabled = soundEnabled;
@@ -763,7 +849,10 @@ listen(document, "visibilitychange", () => {
     audioEngine.resume().catch(() => {});
   }
 });
-listen(window, "resize", queueSceneUpdate, { passive: true });
+listen(window, "resize", () => {
+  queueSceneUpdate();
+  queueCreditsSceneUpdate();
+}, { passive: true });
 listen(window, "keydown", (event) => {
   if (event.key === "Escape" && credits.classList.contains("is-open")) {
     event.preventDefault();
@@ -901,10 +990,12 @@ async function destroy() {
   window.clearTimeout(soundFade);
   cancelAnimationFrame(stateFrame);
   cancelAnimationFrame(sceneFrame);
+  cancelAnimationFrame(creditsSceneFrame);
   logoAnimation?.cancel();
   logoAnimation = null;
   stateFrame = 0;
   sceneFrame = 0;
+  creditsSceneFrame = 0;
   teardownStoryMedia();
   activeStory = null;
   clueLayer.replaceChildren();
