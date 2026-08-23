@@ -20,9 +20,6 @@
       "@/lib/lab-content": ["src/content-types.ts"],
       "@/lib/te-cuento-story-markdown": [
         "../../../../lib/te-cuento-story-markdown.ts"
-      ],
-      "@/lib/te-cuento-story-relations": [
-        "../../../../lib/te-cuento-story-relations.ts"
       ]
     }
   },
@@ -30,7 +27,6 @@
     "src",
     "../experience-shell.tsx",
     "../*.js",
-    "../../../../lib/te-cuento-story-markdown.ts",
-    "../../../../lib/te-cuento-story-relations.ts"
+    "../../../../lib/te-cuento-story-markdown.ts"
   ]
 }

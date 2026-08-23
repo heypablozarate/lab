@@ -6,7 +6,6 @@ import { RamsWordmark } from "@/components/rams/primitives"
 import { getSiteConfig } from "@/content/loader"
 import { getLabExperiment, LAB_URL } from "@/lib/lab-content"
 import { getCanonicalIdentityLabels } from "@/lib/lab-seo"
-import { renderTeCuentoRelatedStories } from "@/lib/te-cuento-story-markdown"
 import {
   getTeCuentoStories,
   getTeCuentoStory,
@@ -104,10 +103,6 @@ export default async function TeCuentoStoryPage({ params }: StoryPageProps) {
   const { previous, next } = getTeCuentoStoryNeighbors(story.slug)
   const storyUrl = `${TE_CUENTO_PUBLIC_URL}/relatos/${story.slug}`
   const projectUrl = TE_CUENTO_PUBLIC_URL
-  const relatedHtml = renderTeCuentoRelatedStories(story.relatedStories, {
-    title: content.interfaceCopy.relatedStoriesTitle,
-    storyRouteBase: TE_CUENTO_PUBLIC_URL,
-  })
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -128,12 +123,6 @@ export default async function TeCuentoStoryPage({ params }: StoryPageProps) {
       name: content.title,
       url: projectUrl,
     },
-    mentions: story.relatedStories.map((relatedStory) => ({
-      "@type": "Article",
-      "@id": `${TE_CUENTO_PUBLIC_URL}/relatos/${relatedStory.slug}#article`,
-      name: relatedStory.title,
-      url: `${TE_CUENTO_PUBLIC_URL}/relatos/${relatedStory.slug}`,
-    })),
   }
 
   return (
@@ -178,7 +167,7 @@ export default async function TeCuentoStoryPage({ params }: StoryPageProps) {
           <div
             className={styles.readerBody}
             data-form={story.form}
-            dangerouslySetInnerHTML={{ __html: `${story.html}${relatedHtml}` }}
+            dangerouslySetInnerHTML={{ __html: story.html }}
           />
           <nav className={styles.storyRoutePagination} aria-label="Relatos">
             {previous ? (

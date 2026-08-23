@@ -4,13 +4,6 @@
 
 ### Added
 
-- 2026-08-22 / Codex: Added reciprocal related-story rendering for **¿Te
-  cuento una historia?** across the interactive reader, real story routes, and
-  the isolated Cloudflare static target. The runtime consumes the parent-owned
-  editorial graph, direct pages expose the same relationships in Article
-  structured data, and the payload verifier guards graph integrity and inline
-  link coverage.
-
 - 2026-07-14 / Claude: Added the Amélie (2004) experiment route at `/amelie`: server metadata, JSON-LD, and hidden server context read from the parent admin data (`getLabExperiment("amelie")`), with the interactive experience served as a full-viewport iframe of the static recreation bundle under the parent's `public/lab/amelie/`.
 
 ### Changed

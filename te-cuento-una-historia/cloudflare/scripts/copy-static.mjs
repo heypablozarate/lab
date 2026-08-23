@@ -12,10 +12,8 @@ import {
 } from "./paths.mjs"
 import {
   renderTeCuentoMarkdown,
-  renderTeCuentoRelatedStories,
   teCuentoMarkdownToPlainText,
 } from "../../../../../lib/te-cuento-story-markdown.ts"
-import { resolveTeCuentoRelatedStories } from "../../../../../lib/te-cuento-story-relations.ts"
 
 requirePath(payloadRoot, "Canonical Te cuento payload")
 requirePath(fontsRoot, "RAMS font source")
@@ -68,12 +66,11 @@ const replaceTag = (html, pattern, replacement) => {
   return html.replace(pattern, replacement)
 }
 
-const [shell, corpus, sceneData, mediaData, relations, deployment] = await Promise.all([
+const [shell, corpus, sceneData, mediaData, deployment] = await Promise.all([
   readFile(path.join(distRoot, "index.html"), "utf8"),
   readFile(path.join(payloadRoot, "data/corpus.json"), "utf8").then(JSON.parse),
   readFile(path.join(payloadRoot, "data/story-scenes.json"), "utf8").then(JSON.parse),
   readFile(path.join(payloadRoot, "data/story-media.json"), "utf8").then(JSON.parse),
-  readFile(path.join(payloadRoot, "data/story-relations.json"), "utf8").then(JSON.parse),
   readFile(path.join(projectRoot, "src/generated-content.json"), "utf8").then(JSON.parse),
 ])
 const scenesBySlug = new Map(sceneData.entries.map((entry) => [entry.slug, entry.scenes]))
@@ -99,20 +96,11 @@ for (const story of corpus.entries) {
     throw new Error(`Missing illustration for ${story.slug}/${illustrationVariant}`)
   }
   const illustration = `/lab/te-cuento-una-historia/${illustrationPath.replace(/^\.\//u, "")}`
-  const relatedStories = resolveTeCuentoRelatedStories(
-    relations,
-    corpus.entries,
-    story.slug,
-  )
   const articleBody = renderTeCuentoMarkdown(
     markdown,
     { form, scenes, media },
     { mediaOrigin: canonicalRoot, storyRouteBase: canonicalRoot },
   )
-  const relatedStoriesHtml = renderTeCuentoRelatedStories(relatedStories, {
-    title: deployment.content.interfaceCopy.relatedStoriesTitle,
-    storyRouteBase: canonicalRoot,
-  })
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -135,12 +123,6 @@ for (const story of corpus.entries) {
       name: deployment.content.title,
       url: `${canonicalRoot}/`,
     },
-    mentions: relatedStories.map((relatedStory) => ({
-      "@type": "Article",
-      "@id": `${canonicalRoot}/relatos/${relatedStory.slug}#article`,
-      name: relatedStory.title,
-      url: `${canonicalRoot}/relatos/${relatedStory.slug}`,
-    })),
   }
   const serverArticle = `<main lang="${escapeHtml(deployment.content.inLanguage)}" style="min-height:100vh;padding:32px;background:#120b07;color:#211913">
   <article style="max-width:760px;margin:0 auto;padding:clamp(28px,6vw,72px);border-radius:8px;background:#f0e8d8">
@@ -148,7 +130,7 @@ for (const story of corpus.entries) {
     <time datetime="${datePublished}" style="display:block;margin:36px 0 12px;color:#735b43">${datePublished}</time>
     <h1>${escapeHtml(story.title)}</h1>
     <img src="${illustration}" alt="${escapeHtml(story.illustrationAlt ?? `Ilustración de ${story.title}`)}" style="display:block;width:100%;max-height:520px;object-fit:contain;margin:32px 0" />
-    <div>${articleBody}${relatedStoriesHtml}</div>
+    <div>${articleBody}</div>
   </article>
 </main>`
 

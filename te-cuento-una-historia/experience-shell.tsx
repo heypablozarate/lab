@@ -278,12 +278,7 @@ export function ExperienceShell({
                 <h2 id="reader-title" className={styles.readerTitle} />
                 <div id="reader-rule" className={styles.readerRule} aria-hidden="true" />
               </header>
-              <div
-                id="reader-body"
-                className={styles.readerBody}
-                data-form="cuento"
-                data-related-title={copy.relatedStoriesTitle}
-              />
+              <div id="reader-body" className={styles.readerBody} data-form="cuento" />
             </div>
           </article>
         </div>

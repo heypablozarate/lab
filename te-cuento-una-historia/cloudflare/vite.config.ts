@@ -27,10 +27,6 @@ export default defineConfig({
         projectRoot,
         "../../../../lib/te-cuento-story-markdown.ts",
       ),
-      "@/lib/te-cuento-story-relations": path.resolve(
-        projectRoot,
-        "../../../../lib/te-cuento-story-relations.ts",
-      ),
     },
   },
 })
