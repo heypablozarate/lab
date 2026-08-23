@@ -3,7 +3,7 @@ import { createPopupRig } from "./rig.js";
 import {
   escapeTeCuentoHtml as escapeHtml,
   renderTeCuentoMarkdown,
-} from "@/lib/te-cuento-story-markdown";
+} from "./lib/te-cuento-story-markdown";
 
 export async function mountExperience(root, options = {}) {
 if (!root?.querySelector) throw new TypeError("mountExperience requiere un nodo raíz");

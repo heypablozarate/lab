@@ -10,11 +10,11 @@ import {
   type KeyboardEvent,
 } from "react"
 
-import { RamsWordmark } from "@/components/rams/primitives"
+import { RamsWordmark } from "./cloudflare/src/rams-wordmark"
 import type {
   TeCuentoCreditsContent,
   TeCuentoInterfaceCopy,
-} from "@/lib/lab-content"
+} from "./cloudflare/src/content-types"
 
 import styles from "./te-cuento-una-historia.module.css"
 
