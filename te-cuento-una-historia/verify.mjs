@@ -203,13 +203,12 @@ for (const entry of corpus.entries) {
     if (/(?:Sebastian Moon|Sr\. Moon)/u.test(withoutMoonLinks)) failures.push(`unlinked-moon:${entry.slug}`);
   }
 }
-if (internalLinkCount !== 28) failures.push("internal-link-count");
+if (internalLinkCount !== 17) failures.push("internal-link-count");
 
 if (storyBodies.get("apesta-a-espiritu-adolescente-de-lo-que-nos-dejo-cobain")?.includes(">")) failures.push("apesta-raw-angle-marker");
 if (storyBodies.get("consideraciones-sobre-la-belleza")?.includes("*")) failures.push("belleza-visible-asterisk");
-const moonTrail = storyBodies.get("del-tengo-eso-y-quiero-aquello")?.match(/### Otros rastros de Sebastian Moon\s*\n([\s\S]+)$/u)?.[1]?.trim() ?? "";
-if (!moonTrail || moonTrail.split("\n").some((line) => !/^- \[[^\]]+\]\(story:[a-z0-9%_-]+\)$/u.test(line))) {
-  failures.push("sebastian-moon-title-index");
+if (/Otros rastros de Sebastian Moon/u.test(storyBodies.get("del-tengo-eso-y-quiero-aquello") ?? "")) {
+  failures.push("generated-moon-trail");
 }
 
 const moonPortrait = corpus.entries.find((entry) => entry.slug === "del-tengo-eso-y-quiero-aquello");
