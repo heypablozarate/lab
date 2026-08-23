@@ -2,7 +2,7 @@ import { mkdir, readFile, rm, writeFile } from "node:fs/promises"
 import path from "node:path"
 
 import {
-  contentRoot,
+  contentPath,
   deploymentRoot,
   encodeStorySlug,
   payloadRoot,
@@ -10,10 +10,7 @@ import {
   projectRoot,
   requirePath,
 } from "./paths.mjs"
-import { teCuentoMarkdownToPlainText } from "../../../../../lib/te-cuento-story-markdown.ts"
-
-const CANONICAL_URL = "https://cuentos.ar/"
-const SLUG = "te-cuento-una-historia"
+import { teCuentoMarkdownToPlainText } from "../../lib/te-cuento-story-markdown.ts"
 
 await Promise.all([
   rm(deploymentRoot, { recursive: true, force: true }),
@@ -26,29 +23,26 @@ await Promise.all([
 ])
 await mkdir(deploymentRoot, { recursive: true })
 
-const labPath = path.join(contentRoot, "lab.json")
-const sitePath = path.join(contentRoot, "site.json")
 const corpusPath = path.join(payloadRoot, "data/corpus.json")
-requirePath(labPath, "Lab content")
-requirePath(sitePath, "Site content")
+requirePath(contentPath, "Project content")
 requirePath(corpusPath, "Story corpus")
 
-const [lab, site, corpus] = await Promise.all(
-  [labPath, sitePath, corpusPath].map(async (file) =>
+const [source, corpus] = await Promise.all(
+  [contentPath, corpusPath].map(async (file) =>
     JSON.parse(await readFile(file, "utf8")),
   ),
 )
 
-const content = lab.experiments?.[SLUG]
-if (!content) throw new Error(`Missing Lab experiment content for ${SLUG}`)
+if (source.schema !== "te-cuento-una-historia/content-v1") {
+  throw new Error(`Unsupported project content schema: ${source.schema}`)
+}
+const content = source.content
+const canonicalUrl = `${source.canonicalUrl.replace(/\/$/u, "")}/`
 
 const deployment = {
   content,
-  identity: {
-    brandName: site.identity.brandName,
-    brandUrl: site.siteUrl,
-  },
-  socialLinks: site.socialLinks,
+  identity: source.identity,
+  socialLinks: source.socialLinks,
 }
 
 const generatedContentPath = path.join(
@@ -75,29 +69,26 @@ const escapeHtml = (value) =>
       })[character],
   )
 
-const project = lab.projects.find((entry) => entry.slug === SLUG)
-if (!project) throw new Error(`Missing Lab project record for ${SLUG}`)
-
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "CreativeWork",
   name: content.title,
   description: content.description,
   abstract: content.serverContext,
-  url: CANONICAL_URL,
+  url: canonicalUrl,
   inLanguage: content.inLanguage,
   keywords: content.keywords,
   dateCreated: content.dateCreated,
   isBasedOn: content.isBasedOn,
   author: {
     "@type": "Person",
-    name: site.identity.agentName,
-    url: site.siteUrl,
+    name: source.identity.agentName,
+    url: source.identity.brandUrl,
   },
   creator: {
     "@type": "Person",
-    name: site.identity.agentName,
-    url: site.siteUrl,
+    name: source.identity.agentName,
+    url: source.identity.brandUrl,
   },
 }
 
@@ -135,14 +126,14 @@ const robots = [
   "User-agent: *",
   "Allow: /",
   "",
-  `Sitemap: ${CANONICAL_URL}sitemap.xml`,
+  `Sitemap: ${canonicalUrl}sitemap.xml`,
   "",
 ].join("\n")
 
 const sitemapUrls = [
-  CANONICAL_URL,
+  canonicalUrl,
   ...corpus.entries.map(
-    (story) => `${CANONICAL_URL}relatos/${encodeStorySlug(story.slug)}`,
+    (story) => `${canonicalUrl}relatos/${encodeStorySlug(story.slug)}`,
   ),
 ]
 const sitemap = [
@@ -167,7 +158,7 @@ const storySummaries = await Promise.all(
     const clipped = text.length <= 180 ? text : `${text.slice(0, 179).trimEnd()}…`
     return {
       title: story.title,
-      url: `${CANONICAL_URL}relatos/${encodeStorySlug(story.slug)}`,
+      url: `${canonicalUrl}relatos/${encodeStorySlug(story.slug)}`,
       summary: clipped,
     }
   }),
@@ -178,7 +169,7 @@ const llms = [
   "",
   content.description,
   "",
-  `Canonical: ${CANONICAL_URL}`,
+  `Canonical: ${canonicalUrl}`,
   `Language: ${content.inLanguage}`,
   `Period: ${content.credits.periodLabel}`,
   "",

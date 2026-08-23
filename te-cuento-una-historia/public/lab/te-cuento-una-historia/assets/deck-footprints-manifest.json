@@ -1,0 +1,85 @@
+{
+  "schema": "te-cuento-popup-component-assets-refined/v0.4",
+  "status": "stable_for_rig_import_not_approved",
+  "sourceManifest": "/private/tmp/popup-component-assets-v0.4/manifest.json",
+  "purpose": "Replace rectangular near-deck support plates with alpha-contour die-cut geometry without changing approved art.",
+  "decks": [
+    {
+      "id": "near-left-deck",
+      "replacesSupportGeometryFor": "front_deck_left",
+      "sourceAssetId": "near-left-deck-base",
+      "sourceGlobalBboxPx": [
+        162,
+        620,
+        798,
+        355
+      ],
+      "sourceUvOnMaster": [
+        0.084375,
+        0.51666667,
+        0.415625,
+        0.29583333
+      ],
+      "surfaceFile": "assets/deck-footprints/near-left-deck-surface.png",
+      "footprintFile": "assets/deck-footprints/near-left-deck-footprint-alpha.png",
+      "contoursFile": "assets/deck-footprints/near-left-deck-contours.json",
+      "surfaceSha256": "b1d59f377b217f3c9dc904df95de4d3fc053bd7e4ce846822a7d6c9f78895a85",
+      "sourceSha256": "b1d59f377b217f3c9dc904df95de4d3fc053bd7e4ce846822a7d6c9f78895a85",
+      "surfacePixelsPreserved": true,
+      "physical": {
+        "widthMm": 154,
+        "depthMm": 50,
+        "elevationMm": 9
+      }
+    },
+    {
+      "id": "near-right-deck",
+      "replacesSupportGeometryFor": "front_deck_right",
+      "sourceAssetId": "near-right-deck-base",
+      "sourceGlobalBboxPx": [
+        960,
+        669,
+        836,
+        308
+      ],
+      "sourceUvOnMaster": [
+        0.5,
+        0.5575,
+        0.43541667,
+        0.25666667
+      ],
+      "surfaceFile": "assets/deck-footprints/near-right-deck-surface.png",
+      "footprintFile": "assets/deck-footprints/near-right-deck-footprint-alpha.png",
+      "contoursFile": "assets/deck-footprints/near-right-deck-contours.json",
+      "surfaceSha256": "7bf3387ebeb76f49d5f0c64d5252a4e64d83d54deb25b7d95871754a264f82ad",
+      "sourceSha256": "7bf3387ebeb76f49d5f0c64d5252a4e64d83d54deb25b7d95871754a264f82ad",
+      "surfacePixelsPreserved": true,
+      "physical": {
+        "widthMm": 161,
+        "depthMm": 62,
+        "elevationMm": 12
+      }
+    }
+  ],
+  "geometryContract": {
+    "required": [
+      "Build one THREE.Shape per outer contour and attach its declared holes.",
+      "Use ShapeGeometry for the printed top and ExtrudeGeometry (or contour side walls) for thickness.",
+      "Map the unchanged surface PNG over the original crop bounds; preserve transparent pixels.",
+      "Keep each mechanism's current transform, hinge, rise, yaw, and elevation."
+    ],
+    "forbidden": [
+      "BoxGeometry below the full texture crop",
+      "full-width front/rear/side wall spans",
+      "convex hull or rectangular UV slice"
+    ],
+    "fallback": "Use footprintFile as an alpha-tested paper support only; never restore a rectangular opaque body."
+  },
+  "qa": {
+    "validation": "qa/deck-footprint-validation.json",
+    "artifactMap": "qa/artifact-map.json",
+    "inventory": "qa/deck-footprint-inventory.png",
+    "isolationEvidence": "qa/isolation",
+    "allPass": true
+  }
+}

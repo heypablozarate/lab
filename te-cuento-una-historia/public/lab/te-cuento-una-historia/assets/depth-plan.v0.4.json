@@ -1,0 +1,246 @@
+{
+  "schema": "te-cuento-popup-depth-plan/v0.4",
+  "status": "implementation_contract_not_approved",
+  "source": {
+    "sceneMap": "/private/tmp/popup-opening-v0.3-package/assets/scene-map.json",
+    "canvasPx": [1920, 1200],
+    "gutterPx": 960,
+    "note": "v0.3 remains untouched; this contract reinterprets its PNGs as paper mechanisms."
+  },
+  "diagnosis": {
+    "primaryFailure": "Every final city mesh in v0.3 resolves to an XY billboard facing the camera; order changes, but perspective and occlusion do not produce a physically legible paper volume.",
+    "secondaryFailure": "The grouped PNGs are not single manufacturable silhouettes. Their declared bottom hinge often touches alpha only across a small fraction of the width, so buildings and people appear to float from an invisible sheet.",
+    "doNotRepeat": [
+      "Do not put every cutout at rotation.x=0 facing camera.",
+      "Do not hinge a disconnected people PNG as one transparent panel.",
+      "Do not turn artwork with baked top-down perspective into a 90-degree facade.",
+      "Do not use scale, opacity or UV reveal to simulate paper rising."
+    ]
+  },
+  "coordinateSystem": {
+    "units": "page-mm",
+    "axes": {"x": "left-to-right", "y": "elevation-above-paper", "z": "front-edge-to-back-edge"},
+    "spread": {"width": 360, "depth": 150, "gutterX": 0, "frontZ": 0, "backZ": 150},
+    "sourceMapping": {
+      "xMm": "(globalCenterX - 960) * 0.1923077",
+      "zMm": "clamp((977 - sourceBottomHingeY) * 0.2, 0, 150)"
+    },
+    "cameraTarget": {
+      "projection": "perspective",
+      "fovDegRange": [32, 36],
+      "positionMm": [0, 245, -315],
+      "lookAtMm": [0, 34, 72],
+      "rule": "The page is XZ and height is Y. No final card may be parallel to the camera sensor."
+    }
+  },
+  "mechanicalRules": [
+    "Every elevated texture needs visible geometry connecting it to a hinge, slot, tab or box-fold support.",
+    "A source with baked roofs, floor or street perspective stays on a deck or inclined relief plane.",
+    "A source that reads as an elevation may become a vertical V-fold card.",
+    "Tabs and base rails use page paper color and are hidden behind a lower row, but must cast contact shadows.",
+    "All mechanisms are driven by book open angle. Timing offsets change slack/occlusion, not scale or opacity.",
+    "Minimum separation between nominally adjacent planes is 4 mm; coincident layers are forbidden."
+  ],
+  "rows": [
+    {
+      "id": "R0_page_print",
+      "zMmRange": [0, 150],
+      "construction": "page-decal",
+      "contains": ["street", "taxi", "most far pedestrians"],
+      "riseDeg": 0
+    },
+    {
+      "id": "R1_front_relief",
+      "zMmRange": [0, 18],
+      "construction": "parallel box-fold deck and compound wedge",
+      "contains": ["near-left", "near-right", "mid-left", "near standees"],
+      "sharePlane": false
+    },
+    {
+      "id": "R2_mid_facades",
+      "zMmRange": [48, 64],
+      "construction": "three overlapping V-fold facade cards",
+      "contains": ["mid-right", "selected far pedestrians"],
+      "sharePlane": false
+    },
+    {
+      "id": "R3_monument",
+      "zMmRange": [94, 102],
+      "construction": "cross-slot tower on gutter bridge",
+      "contains": ["obelisk"],
+      "sharePlane": false
+    },
+    {
+      "id": "R4_rear_skyline",
+      "zMmRange": [106, 120],
+      "construction": "left and right V-fold skyline wings",
+      "contains": ["far-left", "far-right"],
+      "sharePlane": "row only; wings have opposite yaw and an 8 mm depth offset"
+    }
+  ],
+  "pieces": [
+    {
+      "id": "rear_skyline_left",
+      "row": "R4_rear_skyline",
+      "source": "city/city-buildings-far-left--left.png",
+      "assetStrategy": "keep as one silhouette for pass A; add a page-colored base rail behind alpha; optional later split only along architectural silhouettes",
+      "anchor": {"xMm": -64, "zMm": 116, "hinge": "bottom rail", "railWidthMm": 102},
+      "finalPose": {"elevationMm": 0, "riseFromPageDeg": 81, "yawDeg": 6},
+      "physicalSizeMm": {"width": 113, "height": 62},
+      "motion": {"openStartDeg": 58, "openFinishDeg": 159, "lagMs": 70}
+    },
+    {
+      "id": "rear_skyline_right",
+      "row": "R4_rear_skyline",
+      "source": "city/city-buildings-far-right--right.png",
+      "assetStrategy": "keep as one silhouette for pass A; add a page-colored base rail behind alpha; optional later split only along architectural silhouettes",
+      "anchor": {"xMm": 70, "zMm": 108, "hinge": "bottom rail", "railWidthMm": 108},
+      "finalPose": {"elevationMm": 0, "riseFromPageDeg": 83, "yawDeg": -6},
+      "physicalSizeMm": {"width": 118, "height": 66},
+      "motion": {"openStartDeg": 55, "openFinishDeg": 157, "lagMs": 35}
+    },
+    {
+      "id": "obelisk_cross",
+      "row": "R3_monument",
+      "source": ["city/city-obelisk--left.png", "city/city-obelisk--right.png"],
+      "materialOverlay": ["city/city-obelisk-shading--left.png", "city/city-obelisk-shading--right.png"],
+      "assetStrategy": "merge visible front face; create a second narrow paper-colored side face. Shading is a material layer, never an independent card.",
+      "anchor": {"xMm": 1, "zMm": 97, "hinge": "two-tab gutter bridge", "bridgeWidthMm": 21},
+      "construction": {"type": "cross-slot", "faces": 2, "faceAngleDeg": 72},
+      "finalPose": {"riseFromPageDeg": 89, "yawDeg": 0},
+      "physicalSizeMm": {"width": 13, "height": 108, "sideDepth": 7},
+      "motion": {"openStartDeg": 66, "openFinishDeg": 166, "lagMs": 110}
+    },
+    {
+      "id": "mid_right_dome",
+      "row": "R2_mid_facades",
+      "source": "city/city-buildings-mid-right--right.png",
+      "sourceRegionPx": [0, 0, 238, 608],
+      "assetStrategy": "new silhouette matte around the domed left complex; do not use a rectangular strip",
+      "anchor": {"xMm": 27, "zMm": 62, "hinge": "V-fold tab"},
+      "finalPose": {"riseFromPageDeg": 79, "yawDeg": 8},
+      "physicalSizeMm": {"width": 46, "height": 83},
+      "motion": {"openStartDeg": 48, "openFinishDeg": 151, "lagMs": 0}
+    },
+    {
+      "id": "mid_right_terminal",
+      "row": "R2_mid_facades",
+      "source": "city/city-buildings-mid-right--right.png",
+      "sourceRegionPx": [190, 0, 515, 608],
+      "assetStrategy": "new silhouette matte around the central roof and terminal arch; it overlaps dome by 8 mm in depth, not duplicated pixels",
+      "anchor": {"xMm": 78, "zMm": 56, "hinge": "V-fold tab"},
+      "finalPose": {"riseFromPageDeg": 84, "yawDeg": -2},
+      "physicalSizeMm": {"width": 63, "height": 92},
+      "motion": {"openStartDeg": 52, "openFinishDeg": 155, "lagMs": 45}
+    },
+    {
+      "id": "mid_right_church",
+      "row": "R2_mid_facades",
+      "source": "city/city-buildings-mid-right--right.png",
+      "sourceRegionPx": [470, 110, 688, 608],
+      "assetStrategy": "new silhouette matte around the right church/chapel group",
+      "anchor": {"xMm": 124, "zMm": 50, "hinge": "V-fold tab"},
+      "finalPose": {"riseFromPageDeg": 77, "yawDeg": -9},
+      "physicalSizeMm": {"width": 42, "height": 64},
+      "motion": {"openStartDeg": 57, "openFinishDeg": 159, "lagMs": 80}
+    },
+    {
+      "id": "mid_left_clock_door",
+      "row": "R1_front_relief",
+      "source": "city/city-buildings-mid-left--left.png",
+      "sourceRegionPx": [0, 55, 245, 650],
+      "assetStrategy": "new silhouette matte around clock tower and red-door rear mass",
+      "anchor": {"xMm": -116, "zMm": 25, "hinge": "rear tab on compound wedge"},
+      "finalPose": {"riseFromPageDeg": 76, "yawDeg": 9},
+      "physicalSizeMm": {"width": 47, "height": 76},
+      "motion": {"openStartDeg": 44, "openFinishDeg": 146, "lagMs": 0}
+    },
+    {
+      "id": "mid_left_hall_wedge",
+      "row": "R1_front_relief",
+      "source": "city/city-buildings-mid-left--left.png",
+      "sourceRegionPx": [145, 115, 455, 710],
+      "assetStrategy": "new matte around central hall plus roof; preserve baked perspective on an inclined wedge, not a vertical billboard",
+      "anchor": {"xMm": -70, "zMm": 12, "hinge": "parallel box-fold"},
+      "finalPose": {"riseFromPageDeg": 28, "yawDeg": 2, "platformElevationMm": 13},
+      "physicalSizeMm": {"width": 60, "depth": 58, "height": 13},
+      "motion": {"openStartDeg": 39, "openFinishDeg": 150, "lagMs": 25}
+    },
+    {
+      "id": "mid_left_right_tower",
+      "row": "R1_front_relief",
+      "source": "city/city-buildings-mid-left--left.png",
+      "sourceRegionPx": [390, 105, 584, 610],
+      "assetStrategy": "new silhouette matte around the narrow right tower and side facade",
+      "anchor": {"xMm": -30, "zMm": 19, "hinge": "front tab on compound wedge"},
+      "finalPose": {"riseFromPageDeg": 81, "yawDeg": -7},
+      "physicalSizeMm": {"width": 38, "height": 70},
+      "motion": {"openStartDeg": 50, "openFinishDeg": 154, "lagMs": 60}
+    },
+    {
+      "id": "front_deck_left",
+      "row": "R1_front_relief",
+      "source": "city/city-buildings-near--left.png",
+      "assetStrategy": "single die-cut deck retaining its baked overhead perspective; add a 9 mm page-paper box wall under the front contour",
+      "anchor": {"xMm": -77, "zMm": 2, "hinge": "parallel box-fold"},
+      "finalPose": {"riseFromPageDeg": 8, "yawDeg": 2, "platformElevationMm": 9},
+      "physicalSizeMm": {"width": 154, "depth": 50, "height": 9},
+      "motion": {"openStartDeg": 36, "openFinishDeg": 150, "lagMs": 0}
+    },
+    {
+      "id": "front_deck_right",
+      "row": "R1_front_relief",
+      "source": "city/city-buildings-near--right.png",
+      "assetStrategy": "single die-cut deck retaining its baked overhead perspective; add a 12 mm page-paper box wall and two visible support tabs under the pier",
+      "anchor": {"xMm": 80, "zMm": 5, "hinge": "parallel box-fold"},
+      "finalPose": {"riseFromPageDeg": 11, "yawDeg": -2, "platformElevationMm": 12},
+      "physicalSizeMm": {"width": 161, "depth": 62, "height": 12},
+      "motion": {"openStartDeg": 41, "openFinishDeg": 154, "lagMs": 40}
+    },
+    {
+      "id": "far_people_print",
+      "row": "R0_page_print",
+      "source": ["city/city-people-far--left.png", "city/city-people-far--right.png"],
+      "assetStrategy": "split by grouped alpha components; print all figures under 10 mm projected height on the street",
+      "finalPose": {"riseFromPageDeg": 0},
+      "motion": {"type": "none"}
+    },
+    {
+      "id": "far_people_standees",
+      "row": "R2_mid_facades",
+      "source": ["city/city-people-far--left.png", "city/city-people-far--right.png"],
+      "assetStrategy": "select 5 to 7 isolated grouped alpha components with clean feet; crop per component plus 2 px bleed and add a 2 mm page-colored foot tab",
+      "anchor": {"zMmRange": [45, 68], "hinge": "individual foot tabs"},
+      "finalPose": {"riseFromPageDegRange": [80, 87], "yawDegRange": [-12, 12]},
+      "physicalSizeMm": {"heightRange": [7, 12]},
+      "motion": {"openStartDeg": 76, "openFinishDeg": 164, "lagMsRange": [0, 120]}
+    },
+    {
+      "id": "near_people_standees",
+      "row": "R1_front_relief",
+      "source": "city/city-people-near--left.png",
+      "assetStrategy": "11 grouped alpha components detected; instantiate each separately with a real foot tab, never the 823x302 parent plane",
+      "anchor": {"zMmRange": [5, 24], "hinge": "individual foot tabs"},
+      "finalPose": {"riseFromPageDegRange": [82, 88], "yawDegRange": [-16, 16]},
+      "physicalSizeMm": {"heightRange": [14, 22]},
+      "motion": {"openStartDeg": 82, "openFinishDeg": 166, "lagMsRange": [0, 160]}
+    }
+  ],
+  "lightingAndContact": {
+    "key": "single warm desk-lamp direction inherited from approved composite",
+    "required": [
+      "2-4 mm contact shadow under every hinge rail and standee foot",
+      "soft row-to-row cast shadows that move during opening",
+      "ambient occlusion only at paper intersections",
+      "paper thickness edge 0.35-0.6 mm on silhouette cards"
+    ],
+    "forbidden": ["global drop shadow copied from final PSD", "identical shadow on every layer", "depthTest false on structural pieces"]
+  },
+  "implementationGates": [
+    "Clay render must read as five depth zones before textures are enabled.",
+    "Side-profile render must show decks, tabs and cards touching paper without floating.",
+    "Normal render must preserve the approved composite hierarchy without returning to coplanar billboards.",
+    "No whole-group people plane may exist in the scene graph.",
+    "Final endpoint must show at least 4 mm world-space separation between rear, mid and front card families."
+  ]
+}

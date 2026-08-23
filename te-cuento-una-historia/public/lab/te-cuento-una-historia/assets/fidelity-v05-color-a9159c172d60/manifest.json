@@ -1,0 +1,338 @@
+{
+  "schema": "te-cuento-popup-color-runtime-bundle/v0.2",
+  "status": "isolated_candidate_not_promoted",
+  "structuralSourceSha256": "cb2631344452522596fcbd64de0b30da793bfc60bb4d811a24193fcc4bb8fe13",
+  "ownershipManifestSha256": "f03457ff872298c525193ac5b9458f44ba169b25cdd6ce18743b0d70fc7b0c58",
+  "rules": {
+    "ownerMultiplicityMaximum": 1,
+    "blend": "multiply in linear-light sRGB",
+    "runtimeScreenOverlays": false,
+    "sourceAlphaPolicy": "byte-exact for every replaced runtime texture",
+    "derivedPolicy": "all splits regenerated from baked canonical owners"
+  },
+  "qa": [
+    {
+      "id": "front-left-exact-baked-recomposition",
+      "overlapPixels": 0,
+      "mismatchedPixels": 0,
+      "pass": true
+    },
+    {
+      "id": "rear-left-exact-baked-recomposition",
+      "overlapPixels": 0,
+      "mismatchedPixels": 0,
+      "pass": true
+    },
+    {
+      "id": "rear-right-exact-baked-recomposition",
+      "overlapPixels": 0,
+      "mismatchedPixels": 0,
+      "pass": true
+    },
+    {
+      "id": "obelisk-exact-baked-recomposition",
+      "overlapPixels": 0,
+      "mismatchedPixels": 0,
+      "pass": true
+    }
+  ],
+  "alphaMismatchFiles": [],
+  "outputs": [
+    {
+      "file": "book/gutter-print.png",
+      "sha256": "5aadd283f762a70d76c112dbf470df24b19fad650689b2937034189b9ad9cea2"
+    },
+    {
+      "file": "city/city-buildings-far-left--left.png",
+      "sha256": "6ff596049b066f117c2c86fb7ec4153dd4287d4fb4386ce98689abfac61370c7"
+    },
+    {
+      "file": "city/city-buildings-far-right--right.png",
+      "sha256": "9c393fdbca84aa51381d408993890082afe0bc23a1a352cb77e946f57cb39fdc"
+    },
+    {
+      "file": "city/city-buildings-mid-left--left.png",
+      "sha256": "a76269aedbcb264dcef250c7aa9648c11badf17544d8e5a8f0b44d3556d2203b"
+    },
+    {
+      "file": "city/city-buildings-mid-right--right.png",
+      "sha256": "f350c46467d07b432599d58bf8afa56c37794c2337044d54de4c2f8443014e1b"
+    },
+    {
+      "file": "city/city-buildings-near--left.png",
+      "sha256": "bbb77ff1657cecd0094d92a87ddbbade01b3d0b0eae316bb5287a636ed50df17"
+    },
+    {
+      "file": "city/city-buildings-near--right.png",
+      "sha256": "d3a3fcab06a2a942898a4c4fe0c4cb02ef5e34d622cc298b9aeeaf6e4bef5bb7"
+    },
+    {
+      "file": "city/city-obelisk--left.png",
+      "sha256": "0871f778710f02d78244d10ba454f0160683df3f961dd284060d0e93d8ebdff0"
+    },
+    {
+      "file": "city/city-obelisk--right.png",
+      "sha256": "cb1329f89c28a1c3a4dbdd2dad555b44a3b3dceb88e00f2a5054981beb9d07ab"
+    },
+    {
+      "file": "city/city-obelisk-shading--left.png",
+      "sha256": "f116003018393f6f683d04d9fca535721422542cf27ffa4e83f41b457ec22819"
+    },
+    {
+      "file": "city/city-obelisk-shading--right.png",
+      "sha256": "6bb1aaa2ffcff8ccef18e9007ac06000e76fac44eb1a6e54618f63bf8de85ebf"
+    },
+    {
+      "file": "city/city-people-far--left.png",
+      "sha256": "dd9bdaf60f2b4ba2e6e45cd2c004c6c558e9b03d6bcd1cbe1e1c3f9ca7befb2a"
+    },
+    {
+      "file": "city/city-people-far--right.png",
+      "sha256": "cc154f5e5d17e36432f281f6dea42a35c2e3acef1bbd433c1fb40e18ce839be8"
+    },
+    {
+      "file": "city/city-people-near--left.png",
+      "sha256": "625a9ca7f0f5a3e849e5b922335524a50e3a01a322b95e1f9865df8b8feeaa9d"
+    },
+    {
+      "file": "city/city-people-near--right.png",
+      "sha256": "8cda3ff11816677142a369aa618a7f413def9b599b27808bb471a30f6fc42a1f"
+    },
+    {
+      "file": "city/city-taxi.png",
+      "sha256": "b83e5887016d51e14ad38324483d370eb76391fda11cd4b3ef581a4914c4cf91"
+    },
+    {
+      "file": "city/standees/far-left-01.png",
+      "sha256": "61000e1647a255a6ae3f04e5b84a625642ceec045206e5b9ad1a5bfaae6f09ba"
+    },
+    {
+      "file": "city/standees/far-left-02.png",
+      "sha256": "fb5e10dbd2787b3d6d76a2019153affaa20e4532e957322cfdf6aef544884487"
+    },
+    {
+      "file": "city/standees/far-left-03.png",
+      "sha256": "aa6c5a4bffb6c00c1b0fb91f809979898006f7723fb46ed6a262488c6d642c20"
+    },
+    {
+      "file": "city/standees/far-left-04.png",
+      "sha256": "24b6f71e414af665f9c8c4cfe4fafbf85a827463527622c15d360962c19ffbd2"
+    },
+    {
+      "file": "city/standees/far-right-01.png",
+      "sha256": "0d44d2fba01e6a8a0b63d7bb93597945295eaf7a2413dfcfdfb8d1f7ae820e04"
+    },
+    {
+      "file": "city/standees/far-right-02.png",
+      "sha256": "bc834dff7e2877e1e7788cd37d2311c515a0281e06070a0e9a14cc5a0b8d5a90"
+    },
+    {
+      "file": "city/standees/far-right-03.png",
+      "sha256": "405d6809e7ce10f9357282f4d77ab7e888ef9672d12ad65eb8529aa17f2e33ce"
+    },
+    {
+      "file": "city/standees/near-left-01.png",
+      "sha256": "e6751b85aeed923340ae1a468d82b2a813e53b9e1934ea353d9241285490ff93"
+    },
+    {
+      "file": "city/standees/near-left-02.png",
+      "sha256": "7b724d2d40b44e520118b436386644feb9b7f956dd151b6ec3932201c8f08c20"
+    },
+    {
+      "file": "city/standees/near-left-03.png",
+      "sha256": "d8e521eccdf1929363c392d9b9bd7b63c207d8ab6926c330ef00693f195430bb"
+    },
+    {
+      "file": "city/standees/near-left-04.png",
+      "sha256": "d1af015df7b2f388f92d355551a68c9c697ce9752015912f82b01e8fff633fee"
+    },
+    {
+      "file": "city/standees/near-left-05.png",
+      "sha256": "d76b75ba8c75f23ae8dfba85475d01c35c0207dc92ba8cc7a0243abd574feb52"
+    },
+    {
+      "file": "city/standees/near-left-06.png",
+      "sha256": "9cd91717784bf4ee9269b991333b17bdb1b48e1d2dd42d8b96185bee56f15650"
+    },
+    {
+      "file": "city/standees/near-left-07.png",
+      "sha256": "40b04767f6318421defd4304d940e430a8e6b8f33e38e1b0de61089b76ace77b"
+    },
+    {
+      "file": "city/standees/near-left-08.png",
+      "sha256": "9db42fb73c7f1ac16b7b084bdcec0c3ce789b97a17bea177f8fa9668a568d9d1"
+    },
+    {
+      "file": "city/standees/near-left-09.png",
+      "sha256": "4c564ba51018eb7aac0f02ef4a1173033ea1889a13d9d649b45228589cded465"
+    },
+    {
+      "file": "city/standees/near-left-10.png",
+      "sha256": "f639d1d501d47e61942572164c06dc3085b75b77f214902cbfe19fe76fcea80a"
+    },
+    {
+      "file": "components/assets/mid-left/mid-left-central-hall.png",
+      "sha256": "c0a7ab1b124e39bf8a72945e1af1b297d9ef5bacccc8fdada26a8b177658d61c"
+    },
+    {
+      "file": "components/assets/mid-left/mid-left-clock-red-door.png",
+      "sha256": "8924a1d47532e4c41a71b2eb2a7423c680f995070c1e4ba56328d4b3a0506768"
+    },
+    {
+      "file": "components/assets/mid-left/mid-left-right-tower.png",
+      "sha256": "c6269ebec16d23adc154c0112c90e8b7d0058ff209c95f504ad83d5227533224"
+    },
+    {
+      "file": "components/assets/mid-right/mid-right-church.png",
+      "sha256": "453e56aae62c49c06905079188f322f173170e424d519a6978eeab7122cb80c0"
+    },
+    {
+      "file": "components/assets/mid-right/mid-right-dome.png",
+      "sha256": "8ebdce75a879c1bb5f6fcfbc7fe55f138c290576b8d432dbd54d7788fded5661"
+    },
+    {
+      "file": "components/assets/mid-right/mid-right-terminal.png",
+      "sha256": "8bc1454ec352086c8cc97921670b91f76e1163bb4d9a82e56c60d876ab7aa535"
+    },
+    {
+      "file": "components/assets/near-left/near-left-deck-base.png",
+      "sha256": "456abbbd58c08cef2a2064568bdea004fcb25966ca2f6a571a2e90909a433cba"
+    },
+    {
+      "file": "components/assets/near-left/near-left-west-gate.png",
+      "sha256": "c04ff0b2082dcd5a70a2a4400a746b21c3724452ac4bb34200e781fedfd126b1"
+    },
+    {
+      "file": "components/assets/near-right/near-right-back-facades.png",
+      "sha256": "148ee8c55a1a8ba270dc6832003b17b3e174a224f34414ddf485ceeabb193de4"
+    },
+    {
+      "file": "components/assets/near-right/near-right-clock-tower.png",
+      "sha256": "0f3cd6b41cb00a22dffd431ff32f1d730161770330ff3470ff395ada2ac7b14e"
+    },
+    {
+      "file": "components/assets/near-right/near-right-deck-base.png",
+      "sha256": "ba18b5d4009ace97fdfeef56cbc0edc31d01c511e6789e09c54546618c7b011c"
+    },
+    {
+      "file": "components/assets/obelisk/obelisk-face-left-shading-baked.png",
+      "sha256": "b9bb1dcc5eef696261061310045fddf053e4b9fa256e2eda9916771bd04cbae2"
+    },
+    {
+      "file": "components/assets/obelisk/obelisk-face-right-shading-baked.png",
+      "sha256": "32e6bc38e7d68f6932d0951f67fe2f272bb2df9960f7cd43f9b25f02331b7cb5"
+    },
+    {
+      "file": "components/assets/obelisk/obelisk-front-joined-shading-baked.png",
+      "sha256": "ba782154ddb83f125fe8cac71b2a38c271c7ba24a312ff97f982156dd84ee298"
+    },
+    {
+      "file": "deck-footprints/near-left-deck-contours.json",
+      "sha256": "110caee8dcc88b9aa99bd0a214b538e033958ec24504d059a0ecb7096fed17a2"
+    },
+    {
+      "file": "deck-footprints/near-left-deck-surface.png",
+      "sha256": "456abbbd58c08cef2a2064568bdea004fcb25966ca2f6a571a2e90909a433cba"
+    },
+    {
+      "file": "deck-footprints/near-right-deck-contours.json",
+      "sha256": "1adbf0d1ea5434331b14ca850f2a9185b4f92768624e9c68d73b1331059a949d"
+    },
+    {
+      "file": "deck-footprints/near-right-deck-surface.png",
+      "sha256": "ba18b5d4009ace97fdfeef56cbc0edc31d01c511e6789e09c54546618c7b011c"
+    },
+    {
+      "file": "materials/cardstock-back-fiber.png",
+      "sha256": "7e89d70c814ead312a90595d1dc0d1074cd7eb762960720b7a2a51669a397a65"
+    },
+    {
+      "file": "physical-partition/cant-horizontal-left.png",
+      "sha256": "5476b08773e2bf9279c6249f3976e328658adc5c064c634643978396bc8f6d27"
+    },
+    {
+      "file": "physical-partition/cant-horizontal-right.png",
+      "sha256": "4765f706eebea490c9aeeeb7098e3e11f18488a45effcf824e5bee319a0c3589"
+    },
+    {
+      "file": "physical-partition/cant-vertical-left.png",
+      "sha256": "531591f081dd26c2c2284ffc9a2ed473a88d467d0686fc6c4015143fff28af8f"
+    },
+    {
+      "file": "physical-partition/cant-vertical-right.png",
+      "sha256": "26d3d3986f06443f8ee1f4565262f6aaf23af17e1d26ec5995a455fdbbd5f165"
+    },
+    {
+      "file": "physical-partition/top-skin-left.png",
+      "sha256": "30fb9beec07a30233bf1ea726b597cad12c2ea2473b708c69da1028353ab9b64"
+    },
+    {
+      "file": "physical-partition/top-skin-right.png",
+      "sha256": "0d1bda2b79cdeab6c18650773cf239cda9809e0a3dd7a338793ba1e2d3ddebb1"
+    },
+    {
+      "file": "physical-v05/front-left/front-left-microdeck-top.png",
+      "sha256": "0cc8198f8621c044c01c4f0b4aee5ba02c5f23c4f56b762a6c29079c414dd48a"
+    },
+    {
+      "file": "physical-v05/front-left/front-left-page-ground-print.png",
+      "sha256": "71019d09cf7f5717cbd4204b3229965f9e63cc64d6dc2c6817c8c6dd84638476"
+    },
+    {
+      "file": "physical-v05/front-left/front-left-page-ground-residual.png",
+      "sha256": "01527b86ccc1bcf4c8d81fdd10ed93be644e4a5ae1d19018791e1fcadf6c6788"
+    },
+    {
+      "file": "physical-v05/front-left/front-left-retiro-train-fascia.png",
+      "sha256": "10d07ed8765001c04a0ee270c4ee23b9f1ef3f38dab76091f9753ea5df05f511"
+    },
+    {
+      "file": "physical-v05/front-left/front-left-stair-wing.png",
+      "sha256": "c40c6ce43328c093c5fdbb72ae4340ed9b7b73f9f03f0da2ee72a85eac12ae67"
+    },
+    {
+      "file": "physical-v05/obelisk/obelisk-base-page-print.png",
+      "sha256": "4f253d2b77582efee9a171ee3eee8e9b61ef8cb9a49053816fb97394aeab93e2"
+    },
+    {
+      "file": "physical-v05/obelisk/obelisk-front-left-2px-bleed.png",
+      "sha256": "740f2e5f27508b7bf3c461e745a548179aa9387d4235b734f5aa8497ca82ffc0"
+    },
+    {
+      "file": "physical-v05/obelisk/obelisk-front-left-trim.png",
+      "sha256": "8d935cecf9409fc6f8a346e79db047eb02fb9d6097d217a8fb85e04ca0453de2"
+    },
+    {
+      "file": "physical-v05/obelisk/obelisk-front-right-2px-bleed.png",
+      "sha256": "65f84d44396ab38d4fa49899faaa888badb0a31f830618506acca900a6886bee"
+    },
+    {
+      "file": "physical-v05/obelisk/obelisk-front-right-trim.png",
+      "sha256": "08d7feacff24bd73be1c2007bfb3cbe5aa1aac2122b3bae3ab15d70a721d7190"
+    },
+    {
+      "file": "physical-v05/obelisk/obelisk-return-left-strip.png",
+      "sha256": "7d58fa3a63da65ecc897941d9634a52177d0d78af6a9cf980d22e686b0b2c6d5"
+    },
+    {
+      "file": "physical-v05/obelisk/obelisk-return-right-strip.png",
+      "sha256": "4ba11adc91064aeb803d587bd65d1c2199f0811b8fca01489964a10b4e0bdaac"
+    },
+    {
+      "file": "physical-v05/rear-left/rear-left-inner.png",
+      "sha256": "f452a550ae22c6825b8329f4ec4d424aadc5a7efeca7824b000087468dd3b36e"
+    },
+    {
+      "file": "physical-v05/rear-left/rear-left-outer.png",
+      "sha256": "c5bca19a00ac09dfdb152442e3d94c0281d74849d227fc5f0265f4fef7515922"
+    },
+    {
+      "file": "physical-v05/rear-right/rear-right-inner.png",
+      "sha256": "ccd39b2051b8d1bfecd8dd7b612a4c2e978556964873b70a3b4744c423c8dcd6"
+    },
+    {
+      "file": "physical-v05/rear-right/rear-right-outer.png",
+      "sha256": "862c49b6083624c838b2955c8db335165b811562971162f2f55701531a889ddb"
+    }
+  ]
+}

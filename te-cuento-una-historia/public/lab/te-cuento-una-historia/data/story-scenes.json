@@ -1,0 +1,35 @@
+{
+  "schema": "te-cuento-una-historia/story-scenes-v1",
+  "status": "ready_for_pablo",
+  "entries": [
+    {
+      "slug": "un-poco-de-zoologia-fantastica",
+      "scenes": [
+        {
+          "id": "fenix",
+          "anchor": "FÉNIX",
+          "src": "./assets/stories/un-poco-de-zoologia-fantastica/scenes/fenix.png",
+          "alt": "Un ave fénix resurge de un nido de canela, cenizas y un huevo."
+        },
+        {
+          "id": "anfisbena",
+          "anchor": "ANFISBENA",
+          "src": "./assets/stories/un-poco-de-zoologia-fantastica/scenes/anfisbena.png",
+          "alt": "Una anfisbena de dos cabezas atraviesa el desierto libio."
+        },
+        {
+          "id": "kappa",
+          "anchor": "KAPPA",
+          "src": "./assets/stories/un-poco-de-zoologia-fantastica/scenes/kappa.png",
+          "alt": "Un kappa inclina su coronilla llena de agua frente a un pepino."
+        },
+        {
+          "id": "clurichaun",
+          "anchor": "CLURICHAUN",
+          "src": "./assets/stories/un-poco-de-zoologia-fantastica/scenes/clurichaun.png",
+          "alt": "Un clurichaun borracho alborota una taberna junto a una oveja."
+        }
+      ]
+    }
+  ]
+}

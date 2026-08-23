@@ -4,8 +4,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const codeRoot = path.dirname(fileURLToPath(import.meta.url));
-const repoRoot = path.resolve(codeRoot, "../../../..");
-const payloadRoot = path.join(repoRoot, "public/lab/te-cuento-una-historia");
+const payloadRoot = path.join(codeRoot, "public/lab/te-cuento-una-historia");
 const excluded = new Set(["PROJECT-MANIFEST.json", "SHA256SUMS.txt"]);
 
 async function walk(directory = payloadRoot) {
@@ -32,7 +31,7 @@ for (const relative of allFiles.filter((file) => !excluded.has(file))) {
 
 const manifest = {
   schema: "te-cuento-una-historia/public-payload-v1",
-  scope: "/public/lab/te-cuento-una-historia",
+  scope: "/lab/te-cuento-una-historia",
   status: "ready_for_pablo",
   generatedAt: new Date().toISOString(),
   counts: { files: records.length, stories: 68, illustrations: 68, sceneIllustrations: 4, mediaEmbeds: 10, mappedCues: 68 },

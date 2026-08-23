@@ -23,6 +23,12 @@
 
 ### Changed
 
+- 2026-08-23 / Codex: Made **¿Te cuento una historia?** a self-contained public
+  Lab project for Cloudflare: its content, runtime, 68-story payload, required
+  RAMS font subset, integrity scripts, and static deployment now build from this
+  repository alone. The legacy Next routes are permanent redirect stubs to
+  `https://cuentos.ar`, while generated Cloudflare artifacts remain ignored.
+
 - 2026-08-20 / Codex: Prepared Lab renderers to consume parent-managed public
   copy. Synapsis reads its visible labels and templates from `galaxy.json`,
   Shader Experiment reads its visible instruction and controls from `lab.json`,

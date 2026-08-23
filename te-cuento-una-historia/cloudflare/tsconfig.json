@@ -1,7 +1,5 @@
 {
   "compilerOptions": {
-    "allowJs": true,
-    "checkJs": false,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "jsx": "react-jsx",
@@ -19,14 +17,14 @@
       "@/components/rams/primitives": ["src/rams-wordmark.tsx"],
       "@/lib/lab-content": ["src/content-types.ts"],
       "@/lib/te-cuento-story-markdown": [
-        "../../../../lib/te-cuento-story-markdown.ts"
+        "../lib/te-cuento-story-markdown.ts"
       ]
     }
   },
   "include": [
     "src",
     "../experience-shell.tsx",
-    "../*.js",
-    "../../../../lib/te-cuento-story-markdown.ts"
+    "../runtime.d.ts",
+    "../lib/te-cuento-story-markdown.ts"
   ]
 }

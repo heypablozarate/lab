@@ -4,8 +4,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const codeRoot = path.dirname(fileURLToPath(import.meta.url));
-const repoRoot = path.resolve(codeRoot, "../../../..");
-const payloadRoot = path.join(repoRoot, "public/lab/te-cuento-una-historia");
+const payloadRoot = path.join(codeRoot, "public/lab/te-cuento-una-historia");
 const META_FILES = new Set(["PROJECT-MANIFEST.json", "SHA256SUMS.txt"]);
 const EXPECTED_AUDIO = [
   "assets/audio/city-traffic-walla-horns-v003.mp3",
@@ -48,7 +47,7 @@ const [manifest, corpus, hotspots, storyScenes, storyMedia, sumsText, files] = a
 const failures = [];
 const payloadFiles = files.filter((file) => !META_FILES.has(file));
 if (manifest.schema !== "te-cuento-una-historia/public-payload-v1") failures.push("manifest-schema");
-if (manifest.scope !== "/public/lab/te-cuento-una-historia") failures.push("manifest-scope");
+if (manifest.scope !== "/lab/te-cuento-una-historia") failures.push("manifest-scope");
 for (const stalePath of ["assets", "data", "rig-poses.json", "PROJECT-MANIFEST.json", "SHA256SUMS.txt"]) {
   try {
     await stat(path.join(codeRoot, stalePath));

@@ -1,0 +1,784 @@
+{
+  "schema": "te-cuento-popup-rig-assets/v0.3",
+  "status": "rig_input_verified",
+  "units": "target-px",
+  "sourceCanvas": {
+    "width": 3840,
+    "height": 2400
+  },
+  "canvas": {
+    "width": 1920,
+    "height": 1200
+  },
+  "scaleFromSource": 0.5,
+  "gutter": {
+    "x": 960,
+    "normalizedX": 0.5
+  },
+  "book": {
+    "globalBbox": {
+      "x": 27,
+      "y": 270,
+      "width": 1872,
+      "height": 764
+    },
+    "pages": {
+      "left": {
+        "globalBbox": {
+          "x": 27,
+          "y": 270,
+          "width": 933,
+          "height": 764
+        },
+        "hinge": {
+          "globalX": 960,
+          "localX": 933,
+          "edge": "right"
+        },
+        "pageContourLocal": {
+          "method": "row-envelope-rdp",
+          "alphaThreshold": 8,
+          "tolerancePx": 1.5,
+          "pointCount": 23,
+          "points": [
+            [
+              730,
+              0
+            ],
+            [
+              494,
+              19
+            ],
+            [
+              303,
+              25
+            ],
+            [
+              270,
+              57
+            ],
+            [
+              246,
+              59
+            ],
+            [
+              238,
+              64
+            ],
+            [
+              150,
+              319
+            ],
+            [
+              30,
+              649
+            ],
+            [
+              4,
+              714
+            ],
+            [
+              0,
+              731
+            ],
+            [
+              5,
+              738
+            ],
+            [
+              17,
+              741
+            ],
+            [
+              828,
+              742
+            ],
+            [
+              835,
+              748
+            ],
+            [
+              861,
+              757
+            ],
+            [
+              904,
+              763
+            ],
+            [
+              933,
+              763
+            ],
+            [
+              933,
+              59
+            ],
+            [
+              907,
+              35
+            ],
+            [
+              869,
+              16
+            ],
+            [
+              832,
+              6
+            ],
+            [
+              786,
+              0
+            ],
+            [
+              730,
+              0
+            ]
+          ]
+        },
+        "surfaceContourLocal": {
+          "method": "row-envelope-rdp",
+          "alphaThreshold": 8,
+          "tolerancePx": 1.5,
+          "pointCount": 37,
+          "points": [
+            [
+              731,
+              1
+            ],
+            [
+              507,
+              20
+            ],
+            [
+              314,
+              25
+            ],
+            [
+              304,
+              26
+            ],
+            [
+              293,
+              35
+            ],
+            [
+              289,
+              46
+            ],
+            [
+              291,
+              62
+            ],
+            [
+              257,
+              166
+            ],
+            [
+              239,
+              220
+            ],
+            [
+              236,
+              224
+            ],
+            [
+              229,
+              227
+            ],
+            [
+              221,
+              249
+            ],
+            [
+              213,
+              278
+            ],
+            [
+              195,
+              326
+            ],
+            [
+              194,
+              336
+            ],
+            [
+              182,
+              366
+            ],
+            [
+              174,
+              395
+            ],
+            [
+              168,
+              407
+            ],
+            [
+              135,
+              504
+            ],
+            [
+              129,
+              528
+            ],
+            [
+              119,
+              553
+            ],
+            [
+              121,
+              560
+            ],
+            [
+              88,
+              653
+            ],
+            [
+              84,
+              671
+            ],
+            [
+              87,
+              676
+            ],
+            [
+              111,
+              677
+            ],
+            [
+              906,
+              678
+            ],
+            [
+              923,
+              695
+            ],
+            [
+              932,
+              712
+            ],
+            [
+              932,
+              718
+            ],
+            [
+              933,
+              718
+            ],
+            [
+              933,
+              59
+            ],
+            [
+              907,
+              36
+            ],
+            [
+              869,
+              17
+            ],
+            [
+              845,
+              10
+            ],
+            [
+              787,
+              1
+            ],
+            [
+              731,
+              1
+            ]
+          ]
+        }
+      },
+      "right": {
+        "globalBbox": {
+          "x": 960,
+          "y": 270,
+          "width": 939,
+          "height": 764
+        },
+        "hinge": {
+          "globalX": 960,
+          "localX": 0,
+          "edge": "left"
+        },
+        "pageContourLocal": {
+          "method": "row-envelope-rdp",
+          "alphaThreshold": 8,
+          "tolerancePx": 1.5,
+          "pointCount": 24,
+          "points": [
+            [
+              159,
+              8
+            ],
+            [
+              113,
+              12
+            ],
+            [
+              66,
+              21
+            ],
+            [
+              26,
+              37
+            ],
+            [
+              0,
+              58
+            ],
+            [
+              0,
+              763
+            ],
+            [
+              42,
+              763
+            ],
+            [
+              85,
+              757
+            ],
+            [
+              108,
+              748
+            ],
+            [
+              903,
+              747
+            ],
+            [
+              927,
+              746
+            ],
+            [
+              935,
+              743
+            ],
+            [
+              939,
+              737
+            ],
+            [
+              939,
+              728
+            ],
+            [
+              935,
+              716
+            ],
+            [
+              809,
+              367
+            ],
+            [
+              704,
+              66
+            ],
+            [
+              698,
+              54
+            ],
+            [
+              669,
+              50
+            ],
+            [
+              640,
+              24
+            ],
+            [
+              438,
+              22
+            ],
+            [
+              248,
+              10
+            ],
+            [
+              166,
+              8
+            ],
+            [
+              159,
+              8
+            ]
+          ]
+        },
+        "surfaceContourLocal": {
+          "method": "row-envelope-rdp",
+          "alphaThreshold": 8,
+          "tolerancePx": 1.5,
+          "pointCount": 29,
+          "points": [
+            [
+              157,
+              10
+            ],
+            [
+              103,
+              15
+            ],
+            [
+              61,
+              24
+            ],
+            [
+              22,
+              41
+            ],
+            [
+              7,
+              52
+            ],
+            [
+              0,
+              61
+            ],
+            [
+              0,
+              721
+            ],
+            [
+              4,
+              721
+            ],
+            [
+              909,
+              720
+            ],
+            [
+              900,
+              717
+            ],
+            [
+              865,
+              686
+            ],
+            [
+              863,
+              674
+            ],
+            [
+              830,
+              573
+            ],
+            [
+              756,
+              354
+            ],
+            [
+              755,
+              343
+            ],
+            [
+              750,
+              337
+            ],
+            [
+              746,
+              319
+            ],
+            [
+              729,
+              274
+            ],
+            [
+              729,
+              265
+            ],
+            [
+              724,
+              255
+            ],
+            [
+              720,
+              252
+            ],
+            [
+              710,
+              230
+            ],
+            [
+              647,
+              41
+            ],
+            [
+              657,
+              39
+            ],
+            [
+              642,
+              26
+            ],
+            [
+              479,
+              25
+            ],
+            [
+              368,
+              20
+            ],
+            [
+              225,
+              10
+            ],
+            [
+              157,
+              10
+            ]
+          ]
+        }
+      }
+    },
+    "edgeMaterialSourceCropGlobal": {
+      "x": 1231,
+      "y": 938,
+      "width": 256,
+      "height": 24
+    },
+    "compositing": [
+      {
+        "file": "book-open-base.png",
+        "blendMode": "normal"
+      },
+      {
+        "layer": "city",
+        "blendMode": "per scene-map city entry"
+      },
+      {
+        "file": "book-final-shadows.png",
+        "blendMode": "multiply",
+        "timing": "late"
+      },
+      {
+        "file": "book-paper-texture-overlay.png",
+        "blendMode": "multiply",
+        "timing": "late"
+      }
+    ]
+  },
+  "taxi": {
+    "file": "city/city-taxi.png",
+    "x": 780,
+    "y": 489,
+    "width": 122,
+    "height": 50,
+    "attachment": "page-surface"
+  },
+  "city": [
+    {
+      "role": "city.people.far",
+      "side": "left",
+      "file": "city/city-people-far--left.png",
+      "alphaMask": "city/masks/city-people-far--left-alpha.png",
+      "x": 408,
+      "y": 222,
+      "width": 552,
+      "height": 496,
+      "centerOffsetFromGutter": -276.0,
+      "bottomHingeY": 718,
+      "order": 7,
+      "blendMode": "normal",
+      "splitAtGutter": true
+    },
+    {
+      "role": "city.people.far",
+      "side": "right",
+      "file": "city/city-people-far--right.png",
+      "alphaMask": "city/masks/city-people-far--right-alpha.png",
+      "x": 960,
+      "y": 222,
+      "width": 567,
+      "height": 496,
+      "centerOffsetFromGutter": 283.5,
+      "bottomHingeY": 718,
+      "order": 7,
+      "blendMode": "normal",
+      "splitAtGutter": true
+    },
+    {
+      "role": "city.obelisk",
+      "side": "left",
+      "file": "city/city-obelisk--left.png",
+      "alphaMask": "city/masks/city-obelisk--left-alpha.png",
+      "x": 922,
+      "y": 38,
+      "width": 38,
+      "height": 454,
+      "centerOffsetFromGutter": -19.0,
+      "bottomHingeY": 492,
+      "order": 8,
+      "blendMode": "normal",
+      "splitAtGutter": true
+    },
+    {
+      "role": "city.obelisk",
+      "side": "right",
+      "file": "city/city-obelisk--right.png",
+      "alphaMask": "city/masks/city-obelisk--right-alpha.png",
+      "x": 960,
+      "y": 38,
+      "width": 49,
+      "height": 454,
+      "centerOffsetFromGutter": 24.5,
+      "bottomHingeY": 492,
+      "order": 8,
+      "blendMode": "normal",
+      "splitAtGutter": true
+    },
+    {
+      "role": "city.obelisk.shading",
+      "side": "left",
+      "file": "city/city-obelisk-shading--left.png",
+      "alphaMask": "city/masks/city-obelisk-shading--left-alpha.png",
+      "x": 952,
+      "y": 438,
+      "width": 8,
+      "height": 20,
+      "centerOffsetFromGutter": -4.0,
+      "bottomHingeY": 458,
+      "order": 9,
+      "blendMode": "darken",
+      "splitAtGutter": true
+    },
+    {
+      "role": "city.obelisk.shading",
+      "side": "right",
+      "file": "city/city-obelisk-shading--right.png",
+      "alphaMask": "city/masks/city-obelisk-shading--right-alpha.png",
+      "x": 960,
+      "y": 438,
+      "width": 18,
+      "height": 20,
+      "centerOffsetFromGutter": 9.0,
+      "bottomHingeY": 458,
+      "order": 9,
+      "blendMode": "darken",
+      "splitAtGutter": true
+    },
+    {
+      "role": "city.buildings.far.right",
+      "side": "right",
+      "file": "city/city-buildings-far-right--right.png",
+      "alphaMask": "city/masks/city-buildings-far-right--right-alpha.png",
+      "x": 1015,
+      "y": 78,
+      "width": 613,
+      "height": 357,
+      "centerOffsetFromGutter": 361.5,
+      "bottomHingeY": 435,
+      "order": 10,
+      "blendMode": "normal",
+      "splitAtGutter": false
+    },
+    {
+      "role": "city.buildings.far.left",
+      "side": "left",
+      "file": "city/city-buildings-far-left--left.png",
+      "alphaMask": "city/masks/city-buildings-far-left--left-alpha.png",
+      "x": 334,
+      "y": 88,
+      "width": 588,
+      "height": 310,
+      "centerOffsetFromGutter": -332.0,
+      "bottomHingeY": 398,
+      "order": 11,
+      "blendMode": "normal",
+      "splitAtGutter": false
+    },
+    {
+      "role": "city.buildings.mid.right",
+      "side": "right",
+      "file": "city/city-buildings-mid-right--right.png",
+      "alphaMask": "city/masks/city-buildings-mid-right--right-alpha.png",
+      "x": 1014,
+      "y": 88,
+      "width": 688,
+      "height": 608,
+      "centerOffsetFromGutter": 398.0,
+      "bottomHingeY": 696,
+      "order": 12,
+      "blendMode": "normal",
+      "splitAtGutter": false
+    },
+    {
+      "role": "city.buildings.mid.left",
+      "side": "left",
+      "file": "city/city-buildings-mid-left--left.png",
+      "alphaMask": "city/masks/city-buildings-mid-left--left-alpha.png",
+      "x": 306,
+      "y": 98,
+      "width": 584,
+      "height": 830,
+      "centerOffsetFromGutter": -362.0,
+      "bottomHingeY": 928,
+      "order": 13,
+      "blendMode": "normal",
+      "splitAtGutter": false
+    },
+    {
+      "role": "city.buildings.near",
+      "side": "left",
+      "file": "city/city-buildings-near--left.png",
+      "alphaMask": "city/masks/city-buildings-near--left-alpha.png",
+      "x": 162,
+      "y": 502,
+      "width": 798,
+      "height": 475,
+      "centerOffsetFromGutter": -399.0,
+      "bottomHingeY": 977,
+      "order": 14,
+      "blendMode": "normal",
+      "splitAtGutter": true
+    },
+    {
+      "role": "city.buildings.near",
+      "side": "right",
+      "file": "city/city-buildings-near--right.png",
+      "alphaMask": "city/masks/city-buildings-near--right-alpha.png",
+      "x": 960,
+      "y": 502,
+      "width": 836,
+      "height": 475,
+      "centerOffsetFromGutter": 418.0,
+      "bottomHingeY": 977,
+      "order": 14,
+      "blendMode": "normal",
+      "splitAtGutter": true
+    },
+    {
+      "role": "city.people.near",
+      "side": "left",
+      "file": "city/city-people-near--left.png",
+      "alphaMask": "city/masks/city-people-near--left-alpha.png",
+      "x": 137,
+      "y": 617,
+      "width": 823,
+      "height": 302,
+      "centerOffsetFromGutter": -411.5,
+      "bottomHingeY": 919,
+      "order": 15,
+      "blendMode": "normal",
+      "splitAtGutter": true
+    },
+    {
+      "role": "city.people.near",
+      "side": "right",
+      "file": "city/city-people-near--right.png",
+      "alphaMask": "city/masks/city-people-near--right-alpha.png",
+      "x": 960,
+      "y": 617,
+      "width": 84,
+      "height": 302,
+      "centerOffsetFromGutter": 42.0,
+      "bottomHingeY": 919,
+      "order": 15,
+      "blendMode": "normal",
+      "splitAtGutter": true
+    }
+  ]
+}

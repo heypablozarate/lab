@@ -47,3 +47,21 @@ export type TeCuentoCreditsContent = {
   musicBody: string
   socialHeading: string
 }
+
+export type TeCuentoDeployment = {
+  content: {
+    title: string
+    serverContext: string
+    inLanguage: string
+    interfaceCopy: TeCuentoInterfaceCopy
+    credits: TeCuentoCreditsContent
+  }
+  identity: {
+    brandName: string
+    brandUrl: string
+  }
+  socialLinks: Array<{
+    href: string
+    label: string
+  }>
+}
