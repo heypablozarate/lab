@@ -1,0 +1,76 @@
+{
+  "schema": "te-cuento-una-historia/story-media-v1",
+  "status": "ready_for_pablo",
+  "entries": [
+    {
+      "slug": "hades-persefone-y-el-motivo-del-invierno",
+      "anchor": "El nombre lo dice todo",
+      "youtubeId": "1NT0-MltgxU",
+      "title": "Kreisler: Penas de amor — Denis Kolobov y Eleonora Karpukhova",
+      "provenance": "playable-replacement-for-original-youtube"
+    },
+    {
+      "slug": "arquimedes-de-siracusa",
+      "anchor": "Con Uds., el teorema de Thales",
+      "youtubeId": "OXrYNPJQoTA",
+      "title": "Teorema de Thales — Les Luthiers",
+      "provenance": "replacement-for-original-youtube"
+    },
+    {
+      "slug": "de-medialunas-cuento-de-desayuno",
+      "anchor": "Nessun Dorma",
+      "youtubeId": "rxxHvW0oNpU",
+      "title": "Nessun Dorma — Luciano Pavarotti, Turín 2006",
+      "provenance": "official-playable-replacement-for-original-youtube"
+    },
+    {
+      "slug": "johannes-brahms-y-su-caracter-delicado",
+      "anchor": "Guten Abend, gute Nacht",
+      "youtubeId": "bzegc8yeqM0",
+      "title": "Guten Abend, gute Nacht — Martin Gross",
+      "provenance": "original-youtube"
+    },
+    {
+      "slug": "un-poco-de-zoologia-fantastica",
+      "anchor": "Puff, the magic dragon",
+      "youtubeId": "H6fNPhUc_ZE",
+      "title": "Puff, the Magic Dragon — Peter, Paul and Mary, Londres 1965",
+      "provenance": "playable-replacement-for-original-youtube"
+    },
+    {
+      "slug": "costumbres-esteticas-de-la-antigua-francia",
+      "anchor": "Life on Mars?",
+      "youtubeId": "sJB24LVx6fw",
+      "title": "Life on Mars? — David Bowie, Glastonbury 2000",
+      "provenance": "official-playable-replacement-for-original-youtube"
+    },
+    {
+      "slug": "los-cielos-aztecas",
+      "anchor": "Las mañanitas",
+      "youtubeId": "8FR6cDdINHM",
+      "title": "Las mañanitas — Topo Gigio",
+      "provenance": "replacement-for-original-youtube"
+    },
+    {
+      "slug": "de-la-temperatura-infernal-y-celestial",
+      "anchor": "Desperado",
+      "youtubeId": "jCciTAHKFsM",
+      "title": "Desperado — Linda Ronstadt, Offenbach 1976",
+      "provenance": "playable-replacement-for-original-youtube"
+    },
+    {
+      "slug": "las-fabulosas-locuras-de-jorge-iii-y-como-estas-lo-condujeron-a-una-reconocida-fama-historica",
+      "anchor": "Balada para un loco",
+      "youtubeId": "itaaf_4kaNs",
+      "title": "Balada para un loco — Astor Piazzolla y Roberto Goyeneche",
+      "provenance": "playable-replacement-for-original-goear"
+    },
+    {
+      "slug": "la-pesadilla-de-balder-y-el-crepusculo-de-los-dioses",
+      "anchor": "Canta Mercedes Simone",
+      "youtubeId": "YI4l5vyrpSU",
+      "title": "Cadenas — Mercedes Simone",
+      "provenance": "playable-replacement-for-original-wax"
+    }
+  ]
+}

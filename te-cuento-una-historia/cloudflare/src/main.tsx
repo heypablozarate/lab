@@ -5,6 +5,7 @@ import { ExperienceShell } from "../../experience-shell"
 import styles from "../../te-cuento-una-historia.module.css"
 
 import deployment from "./generated-content.json"
+import type { TeCuentoDeployment } from "./content-types"
 import "./global.css"
 
 class AppErrorBoundary extends Component<
@@ -40,7 +41,7 @@ class AppErrorBoundary extends Component<
 }
 
 function App() {
-  const { content, identity, socialLinks } = deployment
+  const { content, identity, socialLinks } = deployment as TeCuentoDeployment
 
   return (
     <main className={styles.page} data-theme="dark" lang={content.inLanguage}>

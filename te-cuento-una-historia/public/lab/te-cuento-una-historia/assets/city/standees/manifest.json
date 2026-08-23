@@ -1,0 +1,449 @@
+{
+  "schema": "te-cuento-popup-standees/v0.4",
+  "status": "mechanics_input",
+  "count": 17,
+  "pieces": [
+    {
+      "id": "far-left-01",
+      "file": "city/standees/far-left-01.png",
+      "family": "far",
+      "side": "left",
+      "sourceRole": "city.people.far",
+      "sourceComponent": 0,
+      "sourceCrop": [
+        0,
+        399,
+        42,
+        464
+      ],
+      "sourceGlobalCenterX": 427.5,
+      "anchor": {
+        "zMm": 45.0
+      },
+      "finalPose": {
+        "riseFromPageDeg": 80,
+        "yawDeg": -12
+      },
+      "physicalSizeMm": {
+        "width": 5.34,
+        "height": 8.27
+      }
+    },
+    {
+      "id": "far-left-02",
+      "file": "city/standees/far-left-02.png",
+      "family": "far",
+      "side": "left",
+      "sourceRole": "city.people.far",
+      "sourceComponent": 5,
+      "sourceCrop": [
+        164,
+        413,
+        201,
+        484
+      ],
+      "sourceGlobalCenterX": 590.5,
+      "anchor": {
+        "zMm": 52.67
+      },
+      "finalPose": {
+        "riseFromPageDeg": 82,
+        "yawDeg": -7
+      },
+      "physicalSizeMm": {
+        "width": 4.6,
+        "height": 8.82
+      }
+    },
+    {
+      "id": "far-left-03",
+      "file": "city/standees/far-left-03.png",
+      "family": "far",
+      "side": "left",
+      "sourceRole": "city.people.far",
+      "sourceComponent": 6,
+      "sourceCrop": [
+        214,
+        359,
+        245,
+        433
+      ],
+      "sourceGlobalCenterX": 637.5,
+      "anchor": {
+        "zMm": 60.33
+      },
+      "finalPose": {
+        "riseFromPageDeg": 84,
+        "yawDeg": -3
+      },
+      "physicalSizeMm": {
+        "width": 3.81,
+        "height": 9.09
+      }
+    },
+    {
+      "id": "far-left-04",
+      "file": "city/standees/far-left-04.png",
+      "family": "far",
+      "side": "left",
+      "sourceRole": "city.people.far",
+      "sourceComponent": 10,
+      "sourceCrop": [
+        406,
+        280,
+        470,
+        404
+      ],
+      "sourceGlobalCenterX": 846.0,
+      "anchor": {
+        "zMm": 68.0
+      },
+      "finalPose": {
+        "riseFromPageDeg": 86,
+        "yawDeg": 4
+      },
+      "physicalSizeMm": {
+        "width": 6.19,
+        "height": 12
+      }
+    },
+    {
+      "id": "far-right-01",
+      "file": "city/standees/far-right-01.png",
+      "family": "far",
+      "side": "right",
+      "sourceRole": "city.people.far",
+      "sourceComponent": 7,
+      "sourceCrop": [
+        50,
+        270,
+        130,
+        405
+      ],
+      "sourceGlobalCenterX": 1050.0,
+      "anchor": {
+        "zMm": 45.0
+      },
+      "finalPose": {
+        "riseFromPageDeg": 80,
+        "yawDeg": -12
+      },
+      "physicalSizeMm": {
+        "width": 7.11,
+        "height": 12
+      }
+    },
+    {
+      "id": "far-right-02",
+      "file": "city/standees/far-right-02.png",
+      "family": "far",
+      "side": "right",
+      "sourceRole": "city.people.far",
+      "sourceComponent": 9,
+      "sourceCrop": [
+        133,
+        380,
+        186,
+        471
+      ],
+      "sourceGlobalCenterX": 1119.5,
+      "anchor": {
+        "zMm": 56.5
+      },
+      "finalPose": {
+        "riseFromPageDeg": 82,
+        "yawDeg": -7
+      },
+      "physicalSizeMm": {
+        "width": 6.2,
+        "height": 10.64
+      }
+    },
+    {
+      "id": "far-right-03",
+      "file": "city/standees/far-right-03.png",
+      "family": "far",
+      "side": "right",
+      "sourceRole": "city.people.far",
+      "sourceComponent": 14,
+      "sourceCrop": [
+        340,
+        164,
+        382,
+        258
+      ],
+      "sourceGlobalCenterX": 1321.0,
+      "anchor": {
+        "zMm": 68.0
+      },
+      "finalPose": {
+        "riseFromPageDeg": 84,
+        "yawDeg": -3
+      },
+      "physicalSizeMm": {
+        "width": 4.87,
+        "height": 10.91
+      }
+    },
+    {
+      "id": "near-left-01",
+      "file": "city/standees/near-left-01.png",
+      "family": "near",
+      "side": "left",
+      "sourceRole": "city.people.near",
+      "sourceComponent": 0,
+      "sourceCrop": [
+        0,
+        192,
+        36,
+        284
+      ],
+      "sourceGlobalCenterX": 153.5,
+      "anchor": {
+        "zMm": 5.0
+      },
+      "finalPose": {
+        "riseFromPageDeg": 82,
+        "yawDeg": -12
+      },
+      "physicalSizeMm": {
+        "width": 8.25,
+        "height": 21.09
+      }
+    },
+    {
+      "id": "near-left-02",
+      "file": "city/standees/near-left-02.png",
+      "family": "near",
+      "side": "left",
+      "sourceRole": "city.people.near",
+      "sourceComponent": 1,
+      "sourceCrop": [
+        34,
+        188,
+        66,
+        270
+      ],
+      "sourceGlobalCenterX": 187.0,
+      "anchor": {
+        "zMm": 7.11
+      },
+      "finalPose": {
+        "riseFromPageDeg": 84,
+        "yawDeg": -7
+      },
+      "physicalSizeMm": {
+        "width": 7.34,
+        "height": 18.8
+      }
+    },
+    {
+      "id": "near-left-03",
+      "file": "city/standees/near-left-03.png",
+      "family": "near",
+      "side": "left",
+      "sourceRole": "city.people.near",
+      "sourceComponent": 2,
+      "sourceCrop": [
+        43,
+        92,
+        82,
+        173
+      ],
+      "sourceGlobalCenterX": 199.5,
+      "anchor": {
+        "zMm": 9.22
+      },
+      "finalPose": {
+        "riseFromPageDeg": 86,
+        "yawDeg": -3
+      },
+      "physicalSizeMm": {
+        "width": 8.94,
+        "height": 18.57
+      }
+    },
+    {
+      "id": "near-left-04",
+      "file": "city/standees/near-left-04.png",
+      "family": "near",
+      "side": "left",
+      "sourceRole": "city.people.near",
+      "sourceComponent": 3,
+      "sourceCrop": [
+        595,
+        208,
+        630,
+        292
+      ],
+      "sourceGlobalCenterX": 749.5,
+      "anchor": {
+        "zMm": 11.33
+      },
+      "finalPose": {
+        "riseFromPageDeg": 88,
+        "yawDeg": 4
+      },
+      "physicalSizeMm": {
+        "width": 8.03,
+        "height": 19.26
+      }
+    },
+    {
+      "id": "near-left-05",
+      "file": "city/standees/near-left-05.png",
+      "family": "near",
+      "side": "left",
+      "sourceRole": "city.people.near",
+      "sourceComponent": 4,
+      "sourceCrop": [
+        651,
+        0,
+        679,
+        64
+      ],
+      "sourceGlobalCenterX": 802.0,
+      "anchor": {
+        "zMm": 13.44
+      },
+      "finalPose": {
+        "riseFromPageDeg": 82,
+        "yawDeg": 8
+      },
+      "physicalSizeMm": {
+        "width": 6.72,
+        "height": 15.37
+      }
+    },
+    {
+      "id": "near-left-06",
+      "file": "city/standees/near-left-06.png",
+      "family": "near",
+      "side": "left",
+      "sourceRole": "city.people.near",
+      "sourceComponent": 5,
+      "sourceCrop": [
+        670,
+        102,
+        704,
+        179
+      ],
+      "sourceGlobalCenterX": 824.0,
+      "anchor": {
+        "zMm": 15.56
+      },
+      "finalPose": {
+        "riseFromPageDeg": 84,
+        "yawDeg": 12
+      },
+      "physicalSizeMm": {
+        "width": 7.8,
+        "height": 17.66
+      }
+    },
+    {
+      "id": "near-left-07",
+      "file": "city/standees/near-left-07.png",
+      "family": "near",
+      "side": "left",
+      "sourceRole": "city.people.near",
+      "sourceComponent": 6,
+      "sourceCrop": [
+        704,
+        127,
+        742,
+        206
+      ],
+      "sourceGlobalCenterX": 860.0,
+      "anchor": {
+        "zMm": 17.67
+      },
+      "finalPose": {
+        "riseFromPageDeg": 86,
+        "yawDeg": -9
+      },
+      "physicalSizeMm": {
+        "width": 8.71,
+        "height": 18.11
+      }
+    },
+    {
+      "id": "near-left-08",
+      "file": "city/standees/near-left-08.png",
+      "family": "near",
+      "side": "left",
+      "sourceRole": "city.people.near",
+      "sourceComponent": 7,
+      "sourceCrop": [
+        751,
+        78,
+        789,
+        150
+      ],
+      "sourceGlobalCenterX": 907.0,
+      "anchor": {
+        "zMm": 19.78
+      },
+      "finalPose": {
+        "riseFromPageDeg": 88,
+        "yawDeg": 6
+      },
+      "physicalSizeMm": {
+        "width": 8.71,
+        "height": 16.51
+      }
+    },
+    {
+      "id": "near-left-09",
+      "file": "city/standees/near-left-09.png",
+      "family": "near",
+      "side": "left",
+      "sourceRole": "city.people.near",
+      "sourceComponent": 8,
+      "sourceCrop": [
+        765,
+        228,
+        802,
+        302
+      ],
+      "sourceGlobalCenterX": 920.5,
+      "anchor": {
+        "zMm": 21.89
+      },
+      "finalPose": {
+        "riseFromPageDeg": 82,
+        "yawDeg": 1
+      },
+      "physicalSizeMm": {
+        "width": 8.83,
+        "height": 17.66
+      }
+    },
+    {
+      "id": "near-left-10",
+      "file": "city/standees/near-left-10.png",
+      "family": "near",
+      "side": "left",
+      "sourceRole": "city.people.near",
+      "sourceComponent": 9,
+      "sourceCrop": [
+        792,
+        126,
+        823,
+        197
+      ],
+      "sourceGlobalCenterX": 944.5,
+      "anchor": {
+        "zMm": 24.0
+      },
+      "finalPose": {
+        "riseFromPageDeg": 84,
+        "yawDeg": -5
+      },
+      "physicalSizeMm": {
+        "width": 7.11,
+        "height": 16.29
+      }
+    }
+  ]
+}

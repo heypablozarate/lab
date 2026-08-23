@@ -8,6 +8,10 @@
 
 ### Fixed
 
+- 2026-08-23 / Codex: Rebuilt the **¿Te cuento una historia?** credits as a
+  reader-style making-of sequence, preserving the final editorial copy and
+  switching illustrations as each production chapter enters the reading flow.
+
 - 2026-08-22 / Codex: Removed the added Sebastian Moon trail from the canonical
   story body; internal navigation now exists only on names and references that
   were already part of the recovered texts.
@@ -18,6 +22,12 @@
   scene. Related navigation remains limited to links authored in story files.
 
 ### Changed
+
+- 2026-08-23 / Codex: Made **¿Te cuento una historia?** a self-contained public
+  Lab project for Cloudflare: its content, runtime, 68-story payload, required
+  RAMS font subset, integrity scripts, and static deployment now build from this
+  repository alone. The legacy Next routes are permanent redirect stubs to
+  `https://cuentos.ar`, while generated Cloudflare artifacts remain ignored.
 
 - 2026-08-20 / Codex: Prepared Lab renderers to consume parent-managed public
   copy. Synapsis reads its visible labels and templates from `galaxy.json`,

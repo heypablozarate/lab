@@ -1,0 +1,175 @@
+{
+  "schema": "te-cuento-una-historia/content-v1",
+  "canonicalUrl": "https://cuentos.ar",
+  "project": {
+    "slug": "te-cuento-una-historia",
+    "documentLanguage": "es",
+    "title": "¿Te cuento una historia?",
+    "year": 2026,
+    "kind": "Narrativa interactiva / Three.js",
+    "description": "Esto es una colección de relatos publicados entre 2006 y 2013 puestos en valor en una nueva experiencia narrativa e interactiva. Escrita y diseñada por PabloZarate™.",
+    "tags": [
+      "Three.js",
+      "WebGL",
+      "narrativa interactiva",
+      "libro pop-up",
+      "diseño de experiencia",
+      "archivo editorial"
+    ],
+    "accent": "#9a392f",
+    "href": "https://cuentos.ar/"
+  },
+  "content": {
+    "title": "¿Te cuento una historia?",
+    "metadataTitle": "¿Te cuento una historia? — una experiencia literaria de PabloZarate™",
+    "description": "Esto es una colección de relatos publicados entre 2006 y 2013 puestos en valor en una nueva experiencia narrativa e interactiva. Escrita y diseñada por PabloZarate™.",
+    "serverContext": "Esto es una colección de relatos publicados entre 2006 y 2013 puestos en valor en una nueva experiencia narrativa e interactiva. Escrita y diseñada por PabloZarate™. El proyecto nació como un blog de WordPress y como una inquietud creativa por escribir de forma inconexa, impulsada únicamente por la pasión por escribir. Esta edición recupera 68 textos publicados entre el 9 de octubre de 2006 y el 21 de mayo de 2013. La ciudad emerge de un libro pop-up tridimensional y se explora como un panorama horizontal; sus puertas y luces conducen a relatos recuperados del archivo editorial, con ilustraciones, escenas y medios asociados.",
+    "inLanguage": "es",
+    "dateCreated": "2026",
+    "isBasedOn": "¿Te cuento una historia?, blog de WordPress de PabloZarate™ (2006–2013)",
+    "socialImages": {
+      "openGraph": "https://cuentos.ar/lab/te-cuento-una-historia/opengraph-image.jpg",
+      "twitter": "https://cuentos.ar/lab/te-cuento-una-historia/opengraph-image.jpg",
+      "alt": "Libro pop-up de ¿Te cuento una historia? abierto sobre un escritorio de madera, con una ciudad porteña tridimensional, el Obelisco en el centro, edificios, puertas iluminadas y objetos de escritura alrededor."
+    },
+    "keywords": [
+      "narrativa interactiva",
+      "libro pop-up digital",
+      "Three.js",
+      "WebGL",
+      "historias mínimas",
+      "archivo editorial",
+      "diseño de experiencia",
+      "Pablo Zarate",
+      "PabloZarate™ Lab"
+    ],
+    "interfaceCopy": {
+      "experienceLabel": "¿Te cuento una historia?",
+      "logoTitle": "¿Te cuento una historia?",
+      "logoCreditPrefix": "Escrito, diseñado y olvidado por",
+      "panInstructions": "Explorá la escena desplazándote horizontalmente. Usá las flechas izquierda y derecha, Inicio o Fin cuando el panorama tenga foco.",
+      "panoramaLabel": "Panorama interactivo",
+      "stageLabel": "Abrir ¿Te cuento una historia?, libro pop-up porteño",
+      "authorMark": "Pablo Zárate",
+      "clueLayerLabel": "Pistas narrativas",
+      "introKicker": "Consejos para no perderse en este libro",
+      "introTitle": "Elija con cuidado",
+      "introDescription": "Se dice que cada luz es el pasaje a un lugar desconocido y que detrás de cada luz espera una historia, un relato, un misterio… También se dice que algunos textos no permiten que el lector regrese siendo exactamente el mismo.",
+      "introInstructions": [
+        "Pista del Autor: Tenga cuidado con las luces intermitentes.",
+        "Proceda bajo su propia responsabilidad"
+      ],
+      "introEnterLabel": "Quiero una historia",
+      "readerCloseLabel": "Volver",
+      "readerRegionLabel": "Texto del relato; desplazá para continuar",
+      "soundOnLabel": "Sonido",
+      "soundOffLabel": "Sin sonido",
+      "soundRetryLabel": "Activar sonido",
+      "creditsTriggerLabel": "Créditos",
+      "creditsCloseLabel": "Cerrar créditos",
+      "runtimeError": "No se pudo iniciar la experiencia. Recargá la página para volver a intentarlo."
+    },
+    "credits": {
+      "title": "Créditos",
+      "historyHeading": "Crónica de una ciudad que aún no sabía abrirse",
+      "historyParagraphs": [
+        "Todo empezó en un cuaderno. En una página dibujé un libro abierto; en la otra, una ciudad imposible que parecía decidida a salir de él. Todavía no sabía cómo construirla. El dibujo, por fortuna, tampoco."
+      ],
+      "makingOfScenes": [
+        {
+          "id": "cuaderno",
+          "heading": "Una ciudad en dos páginas",
+          "paragraphs": [
+            "El Obelisco ocupó el centro. A su alrededor aparecieron edificios, calles y unas cuantas líneas cuya única responsabilidad era parecer importantes.",
+            "Ninguna sabía todavía si terminaría siendo papel, pantalla o un simple delirio de autor. Yo tampoco."
+          ],
+          "image": {
+            "src": "/lab/te-cuento-una-historia/assets/making-of/primer-boceto.jpg",
+            "alt": "Boceto original a tinta sobre un cuaderno punteado: un libro pop-up abierto con edificios porteños y el Obelisco en el centro.",
+            "caption": "El primer boceto, cuando la ciudad todavía cabía entre dos páginas.",
+            "width": 1024,
+            "height": 768,
+            "fit": "cover"
+          }
+        },
+        {
+          "id": "mvp",
+          "heading": "El artefacto aprende a abrirse",
+          "paragraphs": [
+            "Después vino el MVP: una criatura más voluntariosa que elegante, construida para averiguar si el libro podía abrirse, si la ciudad podía levantarse y si sus luces eran capaces de conducir a algún relato.",
+            "Se caía con una frecuencia poco digna, pero también volvía a ponerse de pie. Para un primer milagro, era suficiente."
+          ],
+          "image": {
+            "src": "/lab/te-cuento-una-historia/assets/making-of/mvp-en-ejecucion.jpg",
+            "alt": "Primera versión ejecutable del libro pop-up abierta en el navegador, con la ciudad, el Obelisco y el escritorio completo.",
+            "caption": "El primer artefacto en ejecución: el libro ya se abría y la ciudad comenzaba a responder.",
+            "width": 1440,
+            "height": 900,
+            "fit": "cover"
+          }
+        },
+        {
+          "id": "photoshop",
+          "heading": "Photoshop a medianoche",
+          "paragraphs": [
+            "Cuando el mecanismo dejó de desarmarse ante cada intento, regresé a Photoshop, como en los viejos tiempos. Allí separé la ciudad en veinticinco piezas: libro, hojas, calle, edificios, Obelisco, luces y los pequeños objetos del escritorio.",
+            "Toda ciudad pierde un poco de dignidad cuando se la mira por capas. Volví a reunirlas hasta que el prototipo dejó de parecer una prueba y adquirió ese aire sospechoso de los recuerdos."
+          ],
+          "image": {
+            "src": "/lab/te-cuento-una-historia/assets/making-of/photoshop-capas.jpg",
+            "alt": "Hoja de contacto del archivo de Photoshop con las capas separadas del libro, la ciudad, el Obelisco, los edificios, las personas y los objetos del escritorio.",
+            "caption": "La ciudad desarmada: capas, grupos, transparencias y veinticinco piezas antes de volver a ser una sola escena.",
+            "width": 1920,
+            "height": 2640,
+            "fit": "contain"
+          }
+        },
+        {
+          "id": "final",
+          "heading": "La noche en que se encendieron las luces",
+          "paragraphs": [
+            "Las luces llegaron al final. Detrás de cada una escondí uno de los 68 relatos recuperados del viejo archivo: no para devolverlos al pasado —los regresos rara vez funcionan— sino para darles otra puerta.",
+            "El cuaderno sigue allí, estimado lector. Sólo que ahora ocupa toda la pantalla. Y usted, si llegó hasta acá, ya entró."
+          ],
+          "image": {
+            "src": "/lab/te-cuento-una-historia/opengraph-image.jpg",
+            "alt": "Resultado final del libro pop-up abierto sobre un escritorio, con una ciudad porteña tridimensional y el Obelisco en el centro.",
+            "caption": "El resultado final: el boceto convertido en una ciudad de luces, puertas y relatos.",
+            "width": 1200,
+            "height": 630,
+            "fit": "cover"
+          }
+        }
+      ],
+      "periodLabel": "9 de octubre de 2006 — 21 de mayo de 2013",
+      "periodStart": "2006-10-09",
+      "periodEnd": "2013-05-21",
+      "musicHeading": "Música",
+      "musicBody": "Notas compuestas por Federico Mizrahi. Sampleadas y loopeadas por Pablo Zárate para esta experiencia.",
+      "socialHeading": "Encontrame en"
+    }
+  },
+  "identity": {
+    "brandName": "PabloZarate™",
+    "agentName": "Pablo Zarate",
+    "brandUrl": "https://pablozarate.com"
+  },
+  "socialLinks": [
+    {
+      "href": "https://x.com/heyPabloZarate",
+      "label": "X"
+    },
+    {
+      "href": "https://www.linkedin.com/in/pablozarate/",
+      "label": "LinkedIn"
+    },
+    {
+      "href": "https://instagram.com/heyPabloZarate",
+      "label": "Instagram"
+    },
+    {
+      "href": "https://behance.net/pablozarate",
+      "label": "Behance"
+    }
+  ]
+}

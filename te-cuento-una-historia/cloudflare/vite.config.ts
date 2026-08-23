@@ -25,7 +25,7 @@ export default defineConfig({
       "@/lib/lab-content": path.join(projectRoot, "src/content-types.ts"),
       "@/lib/te-cuento-story-markdown": path.resolve(
         projectRoot,
-        "../../../../lib/te-cuento-story-markdown.ts",
+        "../lib/te-cuento-story-markdown.ts",
       ),
     },
   },

@@ -1,2 +1,10 @@
 .DS_Store
 Thumbs.db
+
+# Te cuento una historia standalone Cloudflare build output.
+te-cuento-una-historia/.artifacts/
+te-cuento-una-historia/cloudflare/dist/
+te-cuento-una-historia/cloudflare/generated-public/
+te-cuento-una-historia/cloudflare/index.html
+te-cuento-una-historia/cloudflare/src/generated-content.json
+te-cuento-una-historia/cloudflare/node_modules/

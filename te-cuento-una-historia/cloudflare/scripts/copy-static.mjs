@@ -13,7 +13,7 @@ import {
 import {
   renderTeCuentoMarkdown,
   teCuentoMarkdownToPlainText,
-} from "../../../../../lib/te-cuento-story-markdown.ts"
+} from "../../lib/te-cuento-story-markdown.ts"
 
 requirePath(payloadRoot, "Canonical Te cuento payload")
 requirePath(fontsRoot, "RAMS font source")

@@ -659,95 +659,59 @@
 
 .credits {
   z-index: 50;
-  overflow: hidden;
-  padding: clamp(10px, 2vw, 30px);
-  background: rgba(10, 7, 5, 0.9);
-  backdrop-filter: blur(15px);
-  content-visibility: hidden;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 260ms ease;
 }
 
-.credits:global(.is-open) {
-  content-visibility: visible;
-  opacity: 1;
-  pointer-events: auto;
+.creditsIllustrationWrap {
+  background: #17100c;
 }
 
-.creditsShell {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  width: min(94vw, 860px);
-  min-height: 0;
+.creditsIllustration {
+  filter: none;
 }
 
-.creditsPanel {
-  position: relative;
-  width: 100%;
-  max-height: min(calc(90dvh - 54px), 760px);
-  overflow: auto;
-  padding: clamp(38px, 6vw, 76px);
-  border: 1px solid rgba(92, 70, 42, 0.42);
-  border-radius: 8px;
-  background: #eee6d6;
-  box-shadow: 0 34px 110px rgba(0, 0, 0, 0.72), inset 0 0 90px rgba(91, 65, 34, 0.08);
-  color: #241b14;
-  transform: translateY(18px) scale(0.985);
-  transition: transform 360ms cubic-bezier(0.2, 0.75, 0.2, 1);
+.creditsIllustration[data-fit="cover"] {
+  object-fit: cover;
 }
 
-.credits:global(.is-open) .creditsPanel {
-  transform: translateY(0) scale(1);
+.creditsIllustration[data-fit="contain"] {
+  object-fit: contain;
 }
 
-.creditsHeader {
-  max-width: 36rem;
-  margin-bottom: clamp(30px, 5vw, 52px);
-}
-
-.creditsKicker {
-  margin: 0 0 9px;
-  color: #735a40;
-  font: 700 11px/1.2 var(--font-display), Arial, sans-serif;
-  letter-spacing: 0.17em;
-  text-transform: uppercase;
-}
-
-.creditsTitle {
+.creditsIllustrationCaption {
+  position: absolute;
+  z-index: 2;
+  right: clamp(18px, 3vw, 36px);
+  bottom: clamp(18px, 3vw, 34px);
+  left: clamp(18px, 3vw, 36px);
   margin: 0;
-  font: 500 clamp(46px, 7vw, 82px)/0.92 var(--font-display), Arial, sans-serif;
-  letter-spacing: -0.052em;
+  padding: 10px 12px 9px;
+  border: 1px solid rgba(255, 240, 207, 0.18);
+  background: rgba(17, 11, 8, 0.76);
+  box-shadow: 0 8px 26px rgba(0, 0, 0, 0.3);
+  color: #f5e4c4;
+  font: italic 14px/1.35 var(--reader-font);
+  text-wrap: pretty;
+  backdrop-filter: blur(7px);
 }
 
-.creditsGrid {
-  display: grid;
-  grid-template-columns: minmax(0, 1.2fr) minmax(230px, 0.8fr);
-  gap: clamp(30px, 5vw, 64px);
+.creditsDetails {
+  margin-top: 2.15em;
+  padding-top: 1.3em;
+  border-top: 1px solid rgba(88, 61, 36, 0.28);
 }
 
-.creditsGrid p,
-.creditsSocial {
-  margin: 0 0 0.9em;
-  font: 18px/1.48 var(--font-signature), "Times New Roman", serif;
-}
-
-.creditsHeading {
-  margin: 0 0 13px;
-  color: #624e3a;
-  font: 700 11px/1.2 var(--font-display), Arial, sans-serif;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
+.readerBody .creditsDetails > :global(h2),
+.readerBody .creditsSocial > :global(h2) {
+  margin-block: 0 0.75em;
 }
 
 .creditsPeriod {
   color: #6d2c26;
-  font-style: italic !important;
+  font-style: italic;
 }
 
 .creditsSocial {
-  margin-top: clamp(28px, 4vw, 44px);
+  margin-top: 2.2em;
 }
 
 .creditsSocial ul {
@@ -764,15 +728,7 @@
   --text-link-hover-color: #9a392f;
   --text-link-focus-color: #6d2c26;
 
-  font-family: var(--font-display), Arial, sans-serif;
-  font-size: 14px;
-  font-weight: 650;
-}
-
-.creditsSignature {
-  margin: clamp(28px, 5vw, 54px) 0 0;
-  font: italic 23px/1 var(--font-signature), "Times New Roman", serif;
-  text-align: right;
+  font: inherit;
 }
 
 .readerShell {
@@ -856,8 +812,7 @@
   outline-offset: -5px;
 }
 
-.readerMeta,
-.readerTitle,
+.readerHeader,
 .readerBody,
 .readerPage :global(#reader-header) {
   width: min(100%, 34rem);
@@ -1188,15 +1143,13 @@
     padding: 0;
   }
 
-  .readerShell,
-  .creditsShell {
+  .readerShell {
     width: 100%;
     min-height: 100%;
     gap: 0;
   }
 
-  .readerArticle,
-  .creditsPanel {
+  .readerArticle {
     display: block;
     width: 100%;
     min-height: calc(100svh - 58px);
@@ -1223,10 +1176,6 @@
 
   .readerPage {
     overflow: visible;
-    padding: 36px clamp(20px, 6.4vw, 26px) 88px;
-  }
-
-  .creditsPanel {
     padding: 36px clamp(20px, 6.4vw, 26px) 88px;
   }
 
@@ -1274,13 +1223,12 @@
     font-size: 17px;
   }
 
-  .creditsGrid {
-    grid-template-columns: 1fr;
-    gap: 22px;
-  }
-
-  .creditsGrid p {
-    font-size: 17px;
+  .creditsIllustrationCaption {
+    right: 14px;
+    bottom: 12px;
+    left: 14px;
+    padding: 7px 9px;
+    font-size: 12px;
   }
 
   .utilityControls {
@@ -1315,7 +1263,6 @@
   .introCard,
   .reader,
   .credits,
-  .creditsPanel,
   .readerArticle,
   .readerIllustration,
   .clueLayer :global(.clue) {

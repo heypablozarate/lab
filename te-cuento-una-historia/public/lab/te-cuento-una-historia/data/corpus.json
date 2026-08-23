@@ -1,0 +1,845 @@
+{
+  "schema": "te-cuento-una-historia/corpus-v1",
+  "status": "candidate-content-complete-cue-map",
+  "stories": 68,
+  "illustrations": 68,
+  "excluded": [
+    {
+      "slug": "charlas-con-el-sr-moon",
+      "reason": "Posteo normal; Pablo indicó que no forma parte de los relatos de la obra."
+    },
+    {
+      "slug": "chau-2009",
+      "reason": "Saludo de fin de año; Pablo indicó que no es un relato de la obra."
+    },
+    {
+      "slug": "un-ultimo-adios-a-cyd-charisse",
+      "reason": "Efeméride funeraria compuesta sólo por las fechas 1921–2008; Pablo indicó que no es un relato de la obra."
+    },
+    {
+      "slug": "hombrecito-mirando-al-manana",
+      "reason": "Reflexión de una sola frase asociada a una imagen, sin forma de cuento, relato, poema o historia; Pablo indicó retirarla."
+    }
+  ],
+  "entries": [
+    {
+      "order": 1,
+      "slug": "reflexiones-de-taxi",
+      "title": "Reflexiones de Taxi",
+      "date": "2006-10-09 23:11:34",
+      "form": "relato",
+      "file": "./data/stories/reflexiones-de-taxi.md",
+      "illustrations": {
+        "ink": "./assets/stories/reflexiones-de-taxi/ink.png"
+      },
+      "cueStatus": "mapped"
+    },
+    {
+      "order": 2,
+      "slug": "de-macbeth",
+      "title": "De Macbeth",
+      "date": "2006-10-14 01:56:51",
+      "form": "diálogo",
+      "file": "./data/stories/de-macbeth.md",
+      "illustrations": {
+        "ink": "./assets/stories/de-macbeth/ink.png"
+      },
+      "cueStatus": "mapped"
+    },
+    {
+      "order": 3,
+      "slug": "digno-fin-cuestionable-medio",
+      "title": "Digno Fin. Cuestionable Medio.",
+      "date": "2006-10-16 20:24:07",
+      "form": "cuento",
+      "file": "./data/stories/digno-fin-cuestionable-medio.md",
+      "illustrations": {
+        "ink": "./assets/stories/digno-fin-cuestionable-medio/ink.png"
+      },
+      "cueStatus": "mapped"
+    },
+    {
+      "order": 4,
+      "slug": "reflexiones-de-taxi-2-cronica-de-un-hastiado",
+      "title": "Reflexiones de taxi 2, \"crónica de un hastiado\"",
+      "date": "2006-10-21 18:55:17",
+      "form": "relato",
+      "file": "./data/stories/reflexiones-de-taxi-2-cronica-de-un-hastiado.md",
+      "illustrations": {
+        "ink": "./assets/stories/reflexiones-de-taxi-2-cronica-de-un-hastiado/ink.png"
+      },
+      "cueStatus": "mapped"
+    },
+    {
+      "order": 5,
+      "slug": "la-dolorosa-muerte-del-sr-buen-gusto",
+      "title": "La Dolorosa Muerte del Sr. Buen Gusto",
+      "date": "2006-10-25 21:10:18",
+      "form": "cuento",
+      "file": "./data/stories/la-dolorosa-muerte-del-sr-buen-gusto.md",
+      "illustrations": {
+        "ink": "./assets/stories/la-dolorosa-muerte-del-sr-buen-gusto/ink.png"
+      },
+      "cueStatus": "mapped"
+    },
+    {
+      "order": 6,
+      "slug": "don-ernesto-y-el-joven-depresion",
+      "title": "Don Ernesto y el Joven Depresión",
+      "date": "2006-10-30 00:24:32",
+      "form": "cuento",
+      "file": "./data/stories/don-ernesto-y-el-joven-depresion.md",
+      "illustrations": {
+        "ink": "./assets/stories/don-ernesto-y-el-joven-depresion/ink.png"
+      },
+      "cueStatus": "mapped"
+    },
+    {
+      "order": 7,
+      "slug": "entre-la-nada-y-el-adios-confesiones-de-un-optimista",
+      "title": "Entre la nada y el adiós, confesiones de un optimista",
+      "date": "2006-11-05 23:56:50",
+      "form": "prosa poética",
+      "file": "./data/stories/entre-la-nada-y-el-adios-confesiones-de-un-optimista.md",
+      "illustrations": {
+        "ink": "./assets/stories/entre-la-nada-y-el-adios-confesiones-de-un-optimista/ink.png"
+      },
+      "cueStatus": "mapped"
+    },
+    {
+      "order": 8,
+      "slug": "la-dama-del-lago-excalibur-y-como-esta-llego-a-arturo",
+      "title": "La Dama del Lago, Excalibur y cómo esta llegó a Arturo",
+      "date": "2006-11-10 00:16:15",
+      "form": "cuento",
+      "file": "./data/stories/la-dama-del-lago-excalibur-y-como-esta-llego-a-arturo.md",
+      "illustrations": {
+        "ink": "./assets/stories/la-dama-del-lago-excalibur-y-como-esta-llego-a-arturo/ink.png"
+      },
+      "cueStatus": "mapped"
+    },
+    {
+      "order": 9,
+      "slug": "de-las-cosas-secundarias",
+      "title": "De las cosas secundarias",
+      "date": "2006-11-15 00:55:58",
+      "form": "escena",
+      "file": "./data/stories/de-las-cosas-secundarias.md",
+      "illustrations": {
+        "ink": "./assets/stories/de-las-cosas-secundarias/ink.png"
+      },
+      "cueStatus": "mapped"
+    },
+    {
+      "order": 10,
+      "slug": "delirios-de-un-artista-a-medianoche",
+      "title": "Delirios de un artista a medianoche",
+      "date": "2006-11-23 00:50:04",
+      "form": "escena",
+      "file": "./data/stories/delirios-de-un-artista-a-medianoche.md",
+      "illustrations": {
+        "ink": "./assets/stories/delirios-de-un-artista-a-medianoche/ink.png"
+      },
+      "cueStatus": "mapped"
+    },
+    {
+      "order": 11,
+      "slug": "breves-historias-famosas-de-fantasmas",
+      "title": "Breves historias famosas de fantasmas",
+      "date": "2006-12-10 23:22:08",
+      "form": "crónica narrativa",
+      "file": "./data/stories/breves-historias-famosas-de-fantasmas.md",
+      "illustrations": {
+        "ink": "./assets/stories/breves-historias-famosas-de-fantasmas/ink.png"
+      },
+      "cueStatus": "mapped"
+    },
+    {
+      "order": 12,
+      "slug": "aquel-nuevo-ayer-complicacion-temporal",
+      "title": "Aquel nuevo ayer [complicación temporal]",
+      "date": "2006-12-13 00:48:59",
+      "form": "cuento",
+      "file": "./data/stories/aquel-nuevo-ayer-complicacion-temporal.md",
+      "illustrations": {
+        "ink": "./assets/stories/aquel-nuevo-ayer-complicacion-temporal/ink.png"
+      },
+      "cueStatus": "mapped"
+    },
+    {
+      "order": 13,
+      "slug": "aquellos-viejos-fantasmas-nuevos-miedos-recurrentes",
+      "title": "Aquellos viejos fantasmas [nuevos miedos recurrentes]",
+      "date": "2006-12-18 00:56:59",
+      "form": "cuento",
+      "file": "./data/stories/aquellos-viejos-fantasmas-nuevos-miedos-recurrentes.md",
+      "illustrations": {
+        "ink": "./assets/stories/aquellos-viejos-fantasmas-nuevos-miedos-recurrentes/ink.png"
+      },
+      "cueStatus": "mapped"
+    },
+    {
+      "order": 14,
+      "slug": "honestos-abstenerse",
+      "title": "Presénteme honesto",
+      "date": "2006-12-21 22:05:24",
+      "form": "relato",
+      "file": "./data/stories/honestos-abstenerse.md",
+      "illustrations": {
+        "ink": "./assets/stories/honestos-abstenerse/ink.png"
+      },
+      "cueStatus": "mapped"
+    },
+    {
+      "order": 15,
+      "slug": "breves-historias-de-cabezas-tristemente-celebres",
+      "title": "Breves historias de cabezas tristemente célebres",
+      "date": "2006-12-31 00:45:25",
+      "form": "crónica narrativa",
+      "file": "./data/stories/breves-historias-de-cabezas-tristemente-celebres.md",
+      "illustrations": {
+        "ink": "./assets/stories/breves-historias-de-cabezas-tristemente-celebres/ink.png"
+      },
+      "cueStatus": "mapped"
+    },
+    {
+      "order": 16,
+      "slug": "cronicas-absurdas-el-prado",
+      "title": "Crónicas Absurdas: \"El Prado\"",
+      "date": "2007-02-17 21:27:31",
+      "form": "prosa poética",
+      "file": "./data/stories/cronicas-absurdas-el-prado.md",
+      "illustrations": {
+        "ink": "./assets/stories/cronicas-absurdas-el-prado/ink.png"
+      },
+      "cueStatus": "mapped"
+    },
+    {
+      "order": 17,
+      "slug": "la-habitacion-numero-setenta-y-ocho-de-magos-y-hechiceros",
+      "title": "La habitación número setenta y ocho (De magos, hechiceros)",
+      "date": "2007-02-20 23:51:18",
+      "form": "cuento",
+      "file": "./data/stories/la-habitacion-numero-setenta-y-ocho-de-magos-y-hechiceros.md",
+      "illustrations": {
+        "ink": "./assets/stories/la-habitacion-numero-setenta-y-ocho-de-magos-y-hechiceros/ink.png"
+      },
+      "cueStatus": "mapped"
+    },
+    {
+      "order": 18,
+      "slug": "johannes-brahms-y-su-caracter-delicado",
+      "title": "Johannes Brahms y su carácter delicado",
+      "date": "2007-02-28 23:42:54",
+      "form": "crónica narrativa",
+      "file": "./data/stories/johannes-brahms-y-su-caracter-delicado.md",
+      "illustrations": {
+        "ink": "./assets/stories/johannes-brahms-y-su-caracter-delicado/ink.png"
+      },
+      "cueStatus": "mapped"
+    },
+    {
+      "order": 19,
+      "slug": "247",
+      "title": "24/7",
+      "date": "2007-03-04 13:41:26",
+      "form": "prosa poética",
+      "file": "./data/stories/247.md",
+      "illustrations": {
+        "ink": "./assets/stories/247/ink.png"
+      },
+      "cueStatus": "mapped"
+    },
+    {
+      "order": 20,
+      "slug": "cronicas-absurdas-licor-de-mi-agonia",
+      "title": "Crónicas Absurdas: \"Licor de mi Agonía\"",
+      "date": "2007-03-14 22:12:01",
+      "form": "prosa poética",
+      "file": "./data/stories/cronicas-absurdas-licor-de-mi-agonia.md",
+      "illustrations": {
+        "ink": "./assets/stories/cronicas-absurdas-licor-de-mi-agonia/ink.png"
+      },
+      "cueStatus": "mapped"
+    },
+    {
+      "order": 21,
+      "slug": "de-medialunas-cuento-de-desayuno",
+      "title": "De medialunas (cuento de desayuno)",
+      "date": "2007-03-17 01:59:44",
+      "form": "crónica narrativa",
+      "file": "./data/stories/de-medialunas-cuento-de-desayuno.md",
+      "illustrations": {
+        "ink": "./assets/stories/de-medialunas-cuento-de-desayuno/ink.png"
+      },
+      "cueStatus": "mapped"
+    },
+    {
+      "order": 22,
+      "slug": "del-tengo-eso-y-quiero-aquello",
+      "title": "Del tengo eso y quiero aquello",
+      "date": "2007-03-25 21:31:02",
+      "form": "relato",
+      "portraitOf": "sebastian-moon",
+      "illustrationVariant": "paper",
+      "illustrationAlt": "Retrato en tinta de Sebastian Moon, sosteniendo una moneda frente a su mano vacía.",
+      "file": "./data/stories/del-tengo-eso-y-quiero-aquello.md",
+      "illustrations": {
+        "paper": "./assets/stories/del-tengo-eso-y-quiero-aquello/paper.png"
+      },
+      "cueStatus": "mapped"
+    },
+    {
+      "order": 23,
+      "slug": "deja-vu",
+      "title": "Deja vú",
+      "date": "2007-04-01 01:05:14",
+      "form": "cuento",
+      "file": "./data/stories/deja-vu.md",
+      "illustrations": {
+        "ink": "./assets/stories/deja-vu/ink.png"
+      },
+      "cueStatus": "mapped"
+    },
+    {
+      "order": 24,
+      "slug": "monte-criollo",
+      "title": "Monte criollo",
+      "date": "2007-04-07 00:06:32",
+      "form": "relato",
+      "file": "./data/stories/monte-criollo.md",
+      "illustrations": {
+        "ink": "./assets/stories/monte-criollo/ink.png"
+      },
+      "cueStatus": "mapped"
+    },
+    {
+      "order": 25,
+      "slug": "consideraciones-sobre-la-belleza",
+      "title": "Consideraciones sobre la belleza",
+      "date": "2007-04-11 00:16:38",
+      "form": "relato",
+      "file": "./data/stories/consideraciones-sobre-la-belleza.md",
+      "illustrations": {
+        "ink": "./assets/stories/consideraciones-sobre-la-belleza/ink.png"
+      },
+      "cueStatus": "mapped"
+    },
+    {
+      "order": 26,
+      "slug": "de-los-consejos",
+      "title": "De los consejos",
+      "date": "2007-04-18 21:09:12",
+      "form": "diálogo",
+      "file": "./data/stories/de-los-consejos.md",
+      "illustrations": {
+        "ink": "./assets/stories/de-los-consejos/ink.png"
+      },
+      "cueStatus": "mapped"
+    },
+    {
+      "order": 27,
+      "slug": "la-importancia-de-ser-don-ernesto",
+      "title": "La importancia de ser Don Ernesto",
+      "date": "2007-04-26 00:04:18",
+      "form": "cuento",
+      "file": "./data/stories/la-importancia-de-ser-don-ernesto.md",
+      "illustrations": {
+        "ink": "./assets/stories/la-importancia-de-ser-don-ernesto/ink.png"
+      },
+      "cueStatus": "mapped"
+    },
+    {
+      "order": 28,
+      "slug": "de-la-temperatura-infernal-y-celestial",
+      "title": "De la temperatura infernal y celestial",
+      "date": "2007-05-05 01:00:54",
+      "form": "crónica narrativa",
+      "file": "./data/stories/de-la-temperatura-infernal-y-celestial.md",
+      "illustrations": {
+        "ink": "./assets/stories/de-la-temperatura-infernal-y-celestial/ink.png"
+      },
+      "cueStatus": "mapped"
+    },
+    {
+      "order": 29,
+      "slug": "una-flor-llamada-amanda",
+      "title": "Una flor llamada Amanda",
+      "date": "2007-05-18 22:47:16",
+      "form": "cuento",
+      "file": "./data/stories/una-flor-llamada-amanda.md",
+      "illustrations": {
+        "ink": "./assets/stories/una-flor-llamada-amanda/ink.png"
+      },
+      "cueStatus": "mapped"
+    },
+    {
+      "order": 30,
+      "slug": "aquellos-viejos-fantasmas-ii",
+      "title": "Aquellos viejos fantasmas II",
+      "date": "2007-05-28 23:02:17",
+      "form": "cuento",
+      "file": "./data/stories/aquellos-viejos-fantasmas-ii.md",
+      "illustrations": {
+        "ink": "./assets/stories/aquellos-viejos-fantasmas-ii/ink.png"
+      },
+      "cueStatus": "mapped"
+    },
+    {
+      "order": 31,
+      "slug": "de-cuando-el-ano-se-parte-al-medio",
+      "title": "De cuando el año se parte al medio",
+      "date": "2007-06-06 00:04:56",
+      "form": "relato",
+      "file": "./data/stories/de-cuando-el-ano-se-parte-al-medio.md",
+      "illustrations": {
+        "ink": "./assets/stories/de-cuando-el-ano-se-parte-al-medio/ink.png"
+      },
+      "cueStatus": "mapped"
+    },
+    {
+      "order": 32,
+      "slug": "buenas-noches-%c2%bfcomo-le-va",
+      "title": "Buenas noches, ¿cómo le va?",
+      "date": "2007-06-17 18:27:38",
+      "form": "relato",
+      "file": "./data/stories/buenas-noches-%c2%bfcomo-le-va.md",
+      "illustrations": {
+        "ink": "./assets/stories/buenas-noches-%c2%bfcomo-le-va/ink.png"
+      },
+      "cueStatus": "mapped"
+    },
+    {
+      "order": 33,
+      "slug": "del-motivo-de-la-poesia",
+      "title": "Del motivo de la poesía",
+      "date": "2007-06-21 23:52:43",
+      "form": "relato",
+      "file": "./data/stories/del-motivo-de-la-poesia.md",
+      "illustrations": {
+        "ink": "./assets/stories/del-motivo-de-la-poesia/ink.png"
+      },
+      "cueStatus": "mapped"
+    },
+    {
+      "order": 34,
+      "slug": "los-cielos-aztecas",
+      "title": "Los cielos aztecas",
+      "date": "2007-07-15T23:13:22+0000",
+      "form": "crónica narrativa",
+      "file": "./data/stories/los-cielos-aztecas.md",
+      "illustrations": {
+        "ink": "./assets/stories/los-cielos-aztecas/ink.png"
+      },
+      "cueStatus": "mapped"
+    },
+    {
+      "order": 35,
+      "slug": "cronicas-absurdas-maldito-egocentrico",
+      "title": "Crónicas Absurdas: \"Maldito egocéntrico\"",
+      "date": "2007-08-20 01:38:53",
+      "form": "poema",
+      "file": "./data/stories/cronicas-absurdas-maldito-egocentrico.md",
+      "illustrations": {
+        "ink": "./assets/stories/cronicas-absurdas-maldito-egocentrico/ink.png"
+      },
+      "cueStatus": "mapped"
+    },
+    {
+      "order": 36,
+      "slug": "el-narrador-de-historias",
+      "title": "El narrador de historias",
+      "date": "2007-08-31 00:19:35",
+      "form": "cuento",
+      "file": "./data/stories/el-narrador-de-historias.md",
+      "illustrations": {
+        "ink": "./assets/stories/el-narrador-de-historias/ink.png"
+      },
+      "cueStatus": "mapped"
+    },
+    {
+      "order": 37,
+      "slug": "apocalipsis-y-treboles-delirios-de-color",
+      "title": "Apocalipsis y tréboles [delirios de color]",
+      "date": "2007-09-20 21:26:49",
+      "form": "prosa poética",
+      "file": "./data/stories/apocalipsis-y-treboles-delirios-de-color.md",
+      "illustrations": {
+        "ink": "./assets/stories/apocalipsis-y-treboles-delirios-de-color/ink.png"
+      },
+      "cueStatus": "mapped"
+    },
+    {
+      "order": 38,
+      "slug": "apesta-a-espiritu-adolescente-de-lo-que-nos-dejo-cobain",
+      "title": "Apesta a espíritu adolescente [de lo que nos dejó Cobain]",
+      "date": "2007-09-21 20:57:08",
+      "form": "relato",
+      "file": "./data/stories/apesta-a-espiritu-adolescente-de-lo-que-nos-dejo-cobain.md",
+      "illustrations": {
+        "ink": "./assets/stories/apesta-a-espiritu-adolescente-de-lo-que-nos-dejo-cobain/ink.png"
+      },
+      "cueStatus": "mapped"
+    },
+    {
+      "order": 39,
+      "slug": "experiencias-religiosas-de-las-equivocaciones-celestiales",
+      "title": "Experiencia religiosa [de las equivocaciones celestiales]",
+      "date": "2007-10-04 23:31:27",
+      "form": "cuento",
+      "file": "./data/stories/experiencias-religiosas-de-las-equivocaciones-celestiales.md",
+      "illustrations": {
+        "ink": "./assets/stories/experiencias-religiosas-de-las-equivocaciones-celestiales/ink.png"
+      },
+      "cueStatus": "mapped"
+    },
+    {
+      "order": 40,
+      "slug": "espejo-magico",
+      "title": "Espejo mágico",
+      "date": "2007-10-17 22:14:04",
+      "form": "escena",
+      "file": "./data/stories/espejo-magico.md",
+      "illustrations": {
+        "ink": "./assets/stories/espejo-magico/ink.png"
+      },
+      "cueStatus": "mapped"
+    },
+    {
+      "order": 41,
+      "slug": "costumbres-esteticas-de-la-antigua-francia",
+      "title": "Costumbres estéticas de la antigua Francia",
+      "date": "2007-11-30 00:15:38",
+      "form": "crónica narrativa",
+      "file": "./data/stories/costumbres-esteticas-de-la-antigua-francia.md",
+      "illustrations": {
+        "ink": "./assets/stories/costumbres-esteticas-de-la-antigua-francia/ink.png"
+      },
+      "cueStatus": "mapped"
+    },
+    {
+      "order": 42,
+      "slug": "arquimedes-de-siracusa",
+      "title": "Arquímedes de Siracusa",
+      "date": "2007-12-25 23:21:12",
+      "form": "crónica narrativa",
+      "file": "./data/stories/arquimedes-de-siracusa.md",
+      "illustrations": {
+        "ink": "./assets/stories/arquimedes-de-siracusa/ink.png"
+      },
+      "cueStatus": "mapped"
+    },
+    {
+      "order": 43,
+      "slug": "de-los-conductores-relato-automovilistico",
+      "title": "De los conductores (relato automovilístico)",
+      "date": "2008-02-11 23:17:18",
+      "form": "relato",
+      "file": "./data/stories/de-los-conductores-relato-automovilistico.md",
+      "illustrations": {
+        "ink": "./assets/stories/de-los-conductores-relato-automovilistico/ink.png"
+      },
+      "cueStatus": "mapped"
+    },
+    {
+      "order": 44,
+      "slug": "arte-y-tragedia",
+      "title": "Arte y tragedia",
+      "date": "2008-03-11 20:22:29",
+      "form": "diálogo",
+      "file": "./data/stories/arte-y-tragedia.md",
+      "illustrations": {
+        "ink": "./assets/stories/arte-y-tragedia/ink.png"
+      },
+      "cueStatus": "mapped"
+    },
+    {
+      "order": 45,
+      "slug": "cronicas-absurdas-el-lugar-de-los-coros-dantescos",
+      "title": "Crónicas Absurdas: \"El lugar de los coros dantescos\"",
+      "date": "2008-03-24 18:17:23",
+      "form": "prosa poética",
+      "file": "./data/stories/cronicas-absurdas-el-lugar-de-los-coros-dantescos.md",
+      "illustrations": {
+        "ink": "./assets/stories/cronicas-absurdas-el-lugar-de-los-coros-dantescos/ink.png"
+      },
+      "cueStatus": "mapped"
+    },
+    {
+      "order": 46,
+      "slug": "remembranzas",
+      "title": "Remembranzas",
+      "date": "2008-04-09 00:02:25",
+      "form": "cuento",
+      "file": "./data/stories/remembranzas.md",
+      "illustrations": {
+        "ink": "./assets/stories/remembranzas/ink.png"
+      },
+      "cueStatus": "mapped"
+    },
+    {
+      "order": 47,
+      "slug": "de-las-pesadillas-del-autor",
+      "title": "De las pesadillas del autor",
+      "date": "2008-04-19 15:34:25",
+      "form": "escena",
+      "file": "./data/stories/de-las-pesadillas-del-autor.md",
+      "illustrations": {
+        "ink": "./assets/stories/de-las-pesadillas-del-autor/ink.png"
+      },
+      "cueStatus": "mapped"
+    },
+    {
+      "order": 48,
+      "slug": "un-poco-de-zoologia-fantastica",
+      "title": "Un poco de zoología fantástica",
+      "date": "2008-06-22",
+      "form": "crónica narrativa",
+      "file": "./data/stories/un-poco-de-zoologia-fantastica.md",
+      "illustrations": {
+        "ink": "./assets/stories/un-poco-de-zoologia-fantastica/ink.png"
+      },
+      "cueStatus": "mapped"
+    },
+    {
+      "order": 49,
+      "slug": "esquinas-i",
+      "title": "Esquinas I",
+      "date": "2008-08-11",
+      "form": "cuento",
+      "file": "./data/stories/esquinas-i.md",
+      "illustrations": {
+        "ink": "./assets/stories/esquinas-i/ink.png"
+      },
+      "cueStatus": "mapped"
+    },
+    {
+      "order": 50,
+      "slug": "las-fabulosas-locuras-de-jorge-iii-y-como-estas-lo-condujeron-a-una-reconocida-fama-historica",
+      "title": "Las fabulosas locuras de Jorge III y cómo estas lo condujeron a una reconocida fama histórica",
+      "date": "2008-10-10",
+      "form": "crónica narrativa",
+      "file": "./data/stories/las-fabulosas-locuras-de-jorge-iii-y-como-estas-lo-condujeron-a-una-reconocida-fama-historica.md",
+      "illustrations": {
+        "ink": "./assets/stories/las-fabulosas-locuras-de-jorge-iii-y-como-estas-lo-condujeron-a-una-reconocida-fama-historica/ink.png"
+      },
+      "cueStatus": "mapped"
+    },
+    {
+      "order": 51,
+      "slug": "hades-persefone-y-el-motivo-del-invierno",
+      "title": "Hades, Perséfone y el motivo del invierno",
+      "date": "2008-12-27",
+      "form": "cuento",
+      "file": "./data/stories/hades-persefone-y-el-motivo-del-invierno.md",
+      "illustrations": {
+        "ink": "./assets/stories/hades-persefone-y-el-motivo-del-invierno/ink.png"
+      },
+      "cueStatus": "mapped"
+    },
+    {
+      "order": 52,
+      "slug": "reflexiones-de-taxi-3-el-patriota",
+      "title": "Reflexiones de taxi 3, ‘El patriota’",
+      "date": "2009-01-07",
+      "form": "relato",
+      "file": "./data/stories/reflexiones-de-taxi-3-el-patriota.md",
+      "illustrations": {
+        "ink": "./assets/stories/reflexiones-de-taxi-3-el-patriota/ink.png"
+      },
+      "cueStatus": "mapped"
+    },
+    {
+      "order": 53,
+      "slug": "de-los-tiempos-pasados-i",
+      "title": "De los tiempos pasados I",
+      "date": "2009-02-06",
+      "form": "relato",
+      "file": "./data/stories/de-los-tiempos-pasados-i.md",
+      "illustrations": {
+        "ink": "./assets/stories/de-los-tiempos-pasados-i/ink.png"
+      },
+      "cueStatus": "mapped"
+    },
+    {
+      "order": 54,
+      "slug": "la-pesadilla-de-balder-y-el-crepusculo-de-los-dioses",
+      "title": "La pesadilla de Balder y el crepúsculo de los dioses",
+      "date": "2009-03-23",
+      "form": "crónica narrativa",
+      "file": "./data/stories/la-pesadilla-de-balder-y-el-crepusculo-de-los-dioses.md",
+      "illustrations": {
+        "ink": "./assets/stories/la-pesadilla-de-balder-y-el-crepusculo-de-los-dioses/ink.png"
+      },
+      "cueStatus": "mapped"
+    },
+    {
+      "order": 55,
+      "slug": "siluetas",
+      "title": "Siluetas",
+      "date": "2009-04-27",
+      "form": "diálogo",
+      "file": "./data/stories/siluetas.md",
+      "illustrations": {
+        "ink": "./assets/stories/siluetas/ink.png"
+      },
+      "cueStatus": "mapped"
+    },
+    {
+      "order": 56,
+      "slug": "puertas",
+      "title": "Puertas",
+      "date": "2009-06-07",
+      "form": "cuento",
+      "file": "./data/stories/puertas.md",
+      "illustrations": {
+        "ink": "./assets/stories/puertas/ink.png"
+      },
+      "cueStatus": "mapped"
+    },
+    {
+      "order": 57,
+      "slug": "el-japones-errante",
+      "title": "El japonés errante",
+      "date": "2009-06-15",
+      "form": "relato",
+      "file": "./data/stories/el-japones-errante.md",
+      "illustrations": {
+        "ink": "./assets/stories/el-japones-errante/ink.png"
+      },
+      "cueStatus": "mapped"
+    },
+    {
+      "order": 58,
+      "slug": "acabar-no-se-cuando",
+      "title": "Acabar no sé cuándo",
+      "date": "2009-08-12",
+      "form": "prosa poética",
+      "file": "./data/stories/acabar-no-se-cuando.md",
+      "illustrations": {
+        "ink": "./assets/stories/acabar-no-se-cuando/ink.png"
+      },
+      "cueStatus": "mapped"
+    },
+    {
+      "order": 59,
+      "slug": "descripciones-geograficas",
+      "title": "Descripciones geográficas",
+      "date": "2009-09-12",
+      "form": "relato",
+      "file": "./data/stories/descripciones-geograficas.md",
+      "illustrations": {
+        "ink": "./assets/stories/descripciones-geograficas/ink.png"
+      },
+      "cueStatus": "mapped"
+    },
+    {
+      "order": 60,
+      "slug": "de-lunares-y-evoluciones",
+      "title": "De lunares y evoluciones",
+      "date": "2009-11-19",
+      "form": "escena",
+      "file": "./data/stories/de-lunares-y-evoluciones.md",
+      "illustrations": {
+        "ink": "./assets/stories/de-lunares-y-evoluciones/ink.png"
+      },
+      "cueStatus": "mapped"
+    },
+    {
+      "order": 61,
+      "slug": "de-corazones-rotos",
+      "title": "De corazones rotos",
+      "date": "2009-11-30T23:00:22+0000",
+      "form": "escena",
+      "file": "./data/stories/de-corazones-rotos.md",
+      "illustrations": {
+        "ink": "./assets/stories/de-corazones-rotos/ink.png"
+      },
+      "cueStatus": "mapped"
+    },
+    {
+      "order": 62,
+      "slug": "de-muertes-y-resurrecciones",
+      "title": "De muertes y resurrecciones",
+      "date": "2010-01-25T17:14:50+0000",
+      "form": "crónica narrativa",
+      "file": "./data/stories/de-muertes-y-resurrecciones.md",
+      "illustrations": {
+        "ink": "./assets/stories/de-muertes-y-resurrecciones/ink.png"
+      },
+      "cueStatus": "mapped"
+    },
+    {
+      "order": 63,
+      "slug": "de-las-escondidas-ajenos-recuerdos-infantiles",
+      "title": "De las escondidas [ajenos recuerdos infantiles]",
+      "date": "2010-01-29T10:08:10+0000",
+      "form": "cuento",
+      "file": "./data/stories/de-las-escondidas-ajenos-recuerdos-infantiles.md",
+      "illustrations": {
+        "ink": "./assets/stories/de-las-escondidas-ajenos-recuerdos-infantiles/ink.png"
+      },
+      "cueStatus": "mapped"
+    },
+    {
+      "order": 64,
+      "slug": "cronicas-absurdas-corazones-muertos",
+      "title": "Crónicas Absurdas: “Corazones muertos”",
+      "date": "2010-04-21T23:27:36+0000",
+      "form": "poema",
+      "file": "./data/stories/cronicas-absurdas-corazones-muertos.md",
+      "illustrations": {
+        "ink": "./assets/stories/cronicas-absurdas-corazones-muertos/ink.png"
+      },
+      "cueStatus": "mapped"
+    },
+    {
+      "order": 65,
+      "slug": "guia-para-la-vida-o-instrucciones-para-pedir-la-cuenta-en-un-cafe-havanna",
+      "title": "Guía para la vida o instrucciones para pedir la cuenta en un café Havanna",
+      "date": "2010-04-29T00:02:57+0000",
+      "form": "escena",
+      "file": "./data/stories/guia-para-la-vida-o-instrucciones-para-pedir-la-cuenta-en-un-cafe-havanna.md",
+      "illustrations": {
+        "ink": "./assets/stories/guia-para-la-vida-o-instrucciones-para-pedir-la-cuenta-en-un-cafe-havanna/ink.png"
+      },
+      "cueStatus": "mapped"
+    },
+    {
+      "order": 66,
+      "slug": "de-regresos-y-desconocimientos",
+      "title": "De regresos y desconocimientos",
+      "date": "2011-11-09T23:08:15+0000",
+      "form": "relato",
+      "file": "./data/stories/de-regresos-y-desconocimientos.md",
+      "illustrations": {
+        "ink": "./assets/stories/de-regresos-y-desconocimientos/ink.png"
+      },
+      "cueStatus": "mapped"
+    },
+    {
+      "order": 67,
+      "slug": "fin-del-mundo",
+      "title": "Fin del mundo",
+      "date": "2012-03-21T14:23:56+0000",
+      "form": "prosa poética",
+      "file": "./data/stories/fin-del-mundo.md",
+      "illustrations": {
+        "ink": "./assets/stories/fin-del-mundo/ink.png"
+      },
+      "cueStatus": "mapped"
+    },
+    {
+      "order": 68,
+      "slug": "de-bebidas-y-momentos",
+      "title": "De bebidas y momentos",
+      "date": "2013-05-21T19:41:08+0000",
+      "form": "relato",
+      "file": "./data/stories/de-bebidas-y-momentos.md",
+      "illustrations": {
+        "ink": "./assets/stories/de-bebidas-y-momentos/ink.png"
+      },
+      "cueStatus": "mapped"
+    }
+  ]
+}

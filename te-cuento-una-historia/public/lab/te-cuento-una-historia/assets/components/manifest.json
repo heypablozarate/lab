@@ -1,0 +1,644 @@
+{
+  "schema": "te-cuento-popup-component-assets/v0.4",
+  "status": "implementation_assets_ready_not_approved",
+  "canvasPx": [
+    1920,
+    1200
+  ],
+  "gutterPx": 960,
+  "source": {
+    "sceneMap": "/private/tmp/popup-opening-v0.3-package/assets/scene-map.json",
+    "depthPlan": "/private/tmp/popup-depth-plan-v0.4/depth-plan.v0.4.json"
+  },
+  "rules": {
+    "sourcePixelsRepainted": false,
+    "partitionOverlap": false,
+    "transparentBleedPx": 3,
+    "rectangularUvSlicesForbidden": true,
+    "wholePeopleParentPlanesForbidden": true,
+    "structuralOpacityScaleRevealForbidden": true
+  },
+  "assets": [
+    {
+      "id": "mid-left-clock-red-door",
+      "family": "mid-left",
+      "file": "assets/mid-left/mid-left-clock-red-door.png",
+      "source": "city/city-buildings-mid-left--left.png",
+      "sourceSha256": "7d6b4f6b48eccca87ba5e535fc538f5a1915c22f52ea1fb69445bc096a8a6464",
+      "cropLocalPx": [
+        0,
+        0,
+        237,
+        830
+      ],
+      "globalBboxPx": [
+        306,
+        98,
+        237,
+        830
+      ],
+      "uvOnMaster": [
+        0.159375,
+        0.08166667,
+        0.1234375,
+        0.69166667
+      ],
+      "alphaPixels": 97062,
+      "alphaCoverage": 0.493427,
+      "transparentBleedPx": 3,
+      "alphaBottomLocalY": 707,
+      "supportSpansBottom3RowsPx": [
+        [
+          190,
+          207
+        ]
+      ],
+      "supportWidthPx": 17,
+      "connectedComponents": 1,
+      "significantComponents": 1,
+      "mechanism": "rear-tab-on-compound-wedge",
+      "physical": {
+        "riseDeg": 76,
+        "yawDeg": 9,
+        "baseRailMm": 47
+      },
+      "maskMethod": "minimum-energy semantic seam in plan overlap x=145..245",
+      "preservesSourcePixels": true
+    },
+    {
+      "id": "mid-left-central-hall",
+      "family": "mid-left",
+      "file": "assets/mid-left/mid-left-central-hall.png",
+      "source": "city/city-buildings-mid-left--left.png",
+      "sourceSha256": "7d6b4f6b48eccca87ba5e535fc538f5a1915c22f52ea1fb69445bc096a8a6464",
+      "cropLocalPx": [
+        182,
+        70,
+        258,
+        641
+      ],
+      "globalBboxPx": [
+        488,
+        168,
+        258,
+        641
+      ],
+      "uvOnMaster": [
+        0.25416667,
+        0.14,
+        0.134375,
+        0.53416667
+      ],
+      "alphaPixels": 119434,
+      "alphaCoverage": 0.722188,
+      "transparentBleedPx": 3,
+      "alphaBottomLocalY": 635,
+      "supportSpansBottom3RowsPx": [
+        [
+          22,
+          35
+        ]
+      ],
+      "supportWidthPx": 13,
+      "connectedComponents": 1,
+      "significantComponents": 1,
+      "mechanism": "inclined-parallel-box-fold",
+      "physical": {
+        "riseDeg": 28,
+        "yawDeg": 2,
+        "platformElevationMm": 13
+      },
+      "maskMethod": "residual between two minimum-energy semantic seams",
+      "preservesSourcePixels": true
+    },
+    {
+      "id": "mid-left-right-tower",
+      "family": "mid-left",
+      "file": "assets/mid-left/mid-left-right-tower.png",
+      "source": "city/city-buildings-mid-left--left.png",
+      "sourceSha256": "7d6b4f6b48eccca87ba5e535fc538f5a1915c22f52ea1fb69445bc096a8a6464",
+      "cropLocalPx": [
+        411,
+        130,
+        173,
+        460
+      ],
+      "globalBboxPx": [
+        717,
+        228,
+        173,
+        460
+      ],
+      "uvOnMaster": [
+        0.3734375,
+        0.19,
+        0.09010417,
+        0.38333333
+      ],
+      "alphaPixels": 50236,
+      "alphaCoverage": 0.631264,
+      "transparentBleedPx": 3,
+      "alphaBottomLocalY": 429,
+      "supportSpansBottom3RowsPx": [
+        [
+          24,
+          38
+        ]
+      ],
+      "supportWidthPx": 14,
+      "connectedComponents": 1,
+      "significantComponents": 1,
+      "mechanism": "front-tab-on-compound-wedge",
+      "physical": {
+        "riseDeg": 81,
+        "yawDeg": -7,
+        "baseRailMm": 38
+      },
+      "maskMethod": "minimum-energy semantic seam in plan overlap x=390..455",
+      "preservesSourcePixels": true
+    },
+    {
+      "id": "mid-right-dome",
+      "family": "mid-right",
+      "file": "assets/mid-right/mid-right-dome.png",
+      "source": "city/city-buildings-mid-right--right.png",
+      "sourceSha256": "236d0a5d2e90c50f6be0090f374a0777b114aff8b621240c3c4e97196c57caa8",
+      "cropLocalPx": [
+        0,
+        40,
+        238,
+        568
+      ],
+      "globalBboxPx": [
+        1014,
+        128,
+        238,
+        568
+      ],
+      "uvOnMaster": [
+        0.528125,
+        0.10666667,
+        0.12395833,
+        0.47333333
+      ],
+      "alphaPixels": 86166,
+      "alphaCoverage": 0.637398,
+      "transparentBleedPx": 3,
+      "alphaBottomLocalY": 567,
+      "supportSpansBottom3RowsPx": [
+        [
+          131,
+          144
+        ]
+      ],
+      "supportWidthPx": 13,
+      "connectedComponents": 1,
+      "significantComponents": 1,
+      "mechanism": "v-fold-tab",
+      "physical": {
+        "riseDeg": 79,
+        "yawDeg": 8,
+        "baseRailMm": 46
+      },
+      "maskMethod": "minimum-energy semantic seam in plan overlap x=190..238",
+      "preservesSourcePixels": true
+    },
+    {
+      "id": "mid-right-terminal",
+      "family": "mid-right",
+      "file": "assets/mid-right/mid-right-terminal.png",
+      "source": "city/city-buildings-mid-right--right.png",
+      "sourceSha256": "236d0a5d2e90c50f6be0090f374a0777b114aff8b621240c3c4e97196c57caa8",
+      "cropLocalPx": [
+        196,
+        0,
+        320,
+        591
+      ],
+      "globalBboxPx": [
+        1210,
+        88,
+        320,
+        591
+      ],
+      "uvOnMaster": [
+        0.63020833,
+        0.07333333,
+        0.16666667,
+        0.4925
+      ],
+      "alphaPixels": 119817,
+      "alphaCoverage": 0.63355,
+      "transparentBleedPx": 3,
+      "alphaBottomLocalY": 585,
+      "supportSpansBottom3RowsPx": [
+        [
+          163,
+          225
+        ],
+        [
+          277,
+          291
+        ]
+      ],
+      "supportWidthPx": 76,
+      "connectedComponents": 1,
+      "significantComponents": 1,
+      "mechanism": "v-fold-tab",
+      "physical": {
+        "riseDeg": 84,
+        "yawDeg": -2,
+        "baseRailMm": 63
+      },
+      "maskMethod": "residual between two minimum-energy semantic seams",
+      "preservesSourcePixels": true
+    },
+    {
+      "id": "mid-right-church",
+      "family": "mid-right",
+      "file": "assets/mid-right/mid-right-church.png",
+      "source": "city/city-buildings-mid-right--right.png",
+      "sourceSha256": "236d0a5d2e90c50f6be0090f374a0777b114aff8b621240c3c4e97196c57caa8",
+      "cropLocalPx": [
+        483,
+        0,
+        205,
+        584
+      ],
+      "globalBboxPx": [
+        1497,
+        88,
+        205,
+        584
+      ],
+      "uvOnMaster": [
+        0.7796875,
+        0.07333333,
+        0.10677083,
+        0.48666667
+      ],
+      "alphaPixels": 54810,
+      "alphaCoverage": 0.457818,
+      "transparentBleedPx": 3,
+      "alphaBottomLocalY": 579,
+      "supportSpansBottom3RowsPx": [
+        [
+          19,
+          54
+        ],
+        [
+          75,
+          108
+        ]
+      ],
+      "supportWidthPx": 68,
+      "connectedComponents": 1,
+      "significantComponents": 1,
+      "mechanism": "v-fold-tab",
+      "physical": {
+        "riseDeg": 77,
+        "yawDeg": -9,
+        "baseRailMm": 42
+      },
+      "maskMethod": "minimum-energy semantic seam in plan overlap x=470..515",
+      "preservesSourcePixels": true
+    },
+    {
+      "id": "near-left-west-gate",
+      "family": "near-left",
+      "file": "assets/near-left/near-left-west-gate.png",
+      "source": "city/city-buildings-near--left.png",
+      "sourceSha256": "2cd2a8b981b4e210d52f587b55229012509e6bff847ce89f250cf1d904523afd",
+      "cropLocalPx": [
+        0,
+        2,
+        215,
+        464
+      ],
+      "globalBboxPx": [
+        162,
+        504,
+        215,
+        464
+      ],
+      "uvOnMaster": [
+        0.084375,
+        0.42,
+        0.11197917,
+        0.38666667
+      ],
+      "alphaPixels": 41262,
+      "alphaCoverage": 0.413613,
+      "transparentBleedPx": 3,
+      "alphaBottomLocalY": 460,
+      "supportSpansBottom3RowsPx": [
+        [
+          0,
+          14
+        ]
+      ],
+      "supportWidthPx": 14,
+      "connectedComponents": 1,
+      "significantComponents": 1,
+      "mechanism": "inclined-relief-card-with-foot-tab",
+      "physical": {
+        "riseDeg": 58,
+        "yawDeg": 7,
+        "tabMm": 3
+      },
+      "maskMethod": "architectural polygon follows the winged west gate contour",
+      "preservesSourcePixels": true
+    },
+    {
+      "id": "near-left-deck-base",
+      "family": "near-left",
+      "file": "assets/near-left/near-left-deck-base.png",
+      "source": "city/city-buildings-near--left.png",
+      "sourceSha256": "2cd2a8b981b4e210d52f587b55229012509e6bff847ce89f250cf1d904523afd",
+      "cropLocalPx": [
+        0,
+        118,
+        798,
+        355
+      ],
+      "globalBboxPx": [
+        162,
+        620,
+        798,
+        355
+      ],
+      "uvOnMaster": [
+        0.084375,
+        0.51666667,
+        0.415625,
+        0.29583333
+      ],
+      "alphaPixels": 174564,
+      "alphaCoverage": 0.616202,
+      "transparentBleedPx": 3,
+      "alphaBottomLocalY": 350,
+      "supportSpansBottom3RowsPx": [
+        [
+          34,
+          67
+        ]
+      ],
+      "supportWidthPx": 33,
+      "connectedComponents": 1,
+      "significantComponents": 1,
+      "mechanism": "parallel-box-fold-deck",
+      "physical": {
+        "riseDeg": 8,
+        "yawDeg": 2,
+        "platformElevationMm": 9
+      },
+      "maskMethod": "exact residual after detaching west gate; retains train/street baked perspective",
+      "preservesSourcePixels": true
+    },
+    {
+      "id": "near-right-back-facades",
+      "family": "near-right",
+      "file": "assets/near-right/near-right-back-facades.png",
+      "source": "city/city-buildings-near--right.png",
+      "sourceSha256": "4f2e09031609da94b6aca7f76839565a0693f908480b5f2dce7457be48ebb0cc",
+      "cropLocalPx": [
+        0,
+        0,
+        722,
+        206
+      ],
+      "globalBboxPx": [
+        960,
+        502,
+        722,
+        206
+      ],
+      "uvOnMaster": [
+        0.5,
+        0.41833333,
+        0.37604167,
+        0.17166667
+      ],
+      "alphaPixels": 95465,
+      "alphaCoverage": 0.641859,
+      "transparentBleedPx": 3,
+      "alphaBottomLocalY": 202,
+      "supportSpansBottom3RowsPx": [
+        [
+          656,
+          719
+        ]
+      ],
+      "supportWidthPx": 63,
+      "connectedComponents": 1,
+      "significantComponents": 1,
+      "mechanism": "shallow-v-fold-backdrop",
+      "physical": {
+        "riseDeg": 61,
+        "yawDeg": -5,
+        "tabMm": 3
+      },
+      "maskMethod": "skyline silhouette above a street-aligned variable base curve",
+      "preservesSourcePixels": true
+    },
+    {
+      "id": "near-right-clock-tower",
+      "family": "near-right",
+      "file": "assets/near-right/near-right-clock-tower.png",
+      "source": "city/city-buildings-near--right.png",
+      "sourceSha256": "4f2e09031609da94b6aca7f76839565a0693f908480b5f2dce7457be48ebb0cc",
+      "cropLocalPx": [
+        713,
+        27,
+        115,
+        347
+      ],
+      "globalBboxPx": [
+        1673,
+        529,
+        115,
+        347
+      ],
+      "uvOnMaster": [
+        0.87135417,
+        0.44083333,
+        0.05989583,
+        0.28916667
+      ],
+      "alphaPixels": 23727,
+      "alphaCoverage": 0.594587,
+      "transparentBleedPx": 3,
+      "alphaBottomLocalY": 343,
+      "supportSpansBottom3RowsPx": [
+        [
+          54,
+          109
+        ]
+      ],
+      "supportWidthPx": 55,
+      "connectedComponents": 1,
+      "significantComponents": 1,
+      "mechanism": "inclined-relief-card-with-foot-tab",
+      "physical": {
+        "riseDeg": 66,
+        "yawDeg": -9,
+        "tabMm": 3
+      },
+      "maskMethod": "architectural polygon isolates the eastern clock/sign tower",
+      "preservesSourcePixels": true
+    },
+    {
+      "id": "near-right-deck-base",
+      "family": "near-right",
+      "file": "assets/near-right/near-right-deck-base.png",
+      "source": "city/city-buildings-near--right.png",
+      "sourceSha256": "4f2e09031609da94b6aca7f76839565a0693f908480b5f2dce7457be48ebb0cc",
+      "cropLocalPx": [
+        0,
+        167,
+        836,
+        308
+      ],
+      "globalBboxPx": [
+        960,
+        669,
+        836,
+        308
+      ],
+      "uvOnMaster": [
+        0.5,
+        0.5575,
+        0.43541667,
+        0.25666667
+      ],
+      "alphaPixels": 200323,
+      "alphaCoverage": 0.77799,
+      "transparentBleedPx": 3,
+      "alphaBottomLocalY": 307,
+      "supportSpansBottom3RowsPx": [
+        [
+          696,
+          836
+        ]
+      ],
+      "supportWidthPx": 140,
+      "connectedComponents": 1,
+      "significantComponents": 1,
+      "mechanism": "parallel-box-fold-deck",
+      "physical": {
+        "riseDeg": 11,
+        "yawDeg": -2,
+        "platformElevationMm": 12
+      },
+      "maskMethod": "exact residual after backdrop and clock tower; retains street/pier baked perspective",
+      "preservesSourcePixels": true
+    },
+    {
+      "id": "obelisk-face-left",
+      "family": "obelisk",
+      "file": "assets/obelisk/obelisk-face-left-shading-baked.png",
+      "source": [
+        "city/city-obelisk--left.png",
+        "city/city-obelisk-shading--left.png"
+      ],
+      "sourceSha256": [
+        "0871f778710f02d78244d10ba454f0160683df3f961dd284060d0e93d8ebdff0",
+        "f116003018393f6f683d04d9fca535721422542cf27ffa4e83f41b457ec22819"
+      ],
+      "globalBboxPx": [
+        922,
+        38,
+        38,
+        454
+      ],
+      "uvOnMaster": [
+        0.48020833,
+        0.03166667,
+        0.01979167,
+        0.37833333
+      ],
+      "blendBaked": "darken source-over",
+      "mechanism": "cross-slot-front-face-half",
+      "preservesBasePixelsOutsideShade": true
+    },
+    {
+      "id": "obelisk-face-right",
+      "family": "obelisk",
+      "file": "assets/obelisk/obelisk-face-right-shading-baked.png",
+      "source": [
+        "city/city-obelisk--right.png",
+        "city/city-obelisk-shading--right.png"
+      ],
+      "sourceSha256": [
+        "cb1329f89c28a1c3a4dbdd2dad555b44a3b3dceb88e00f2a5054981beb9d07ab",
+        "6bb1aaa2ffcff8ccef18e9007ac06000e76fac44eb1a6e54618f63bf8de85ebf"
+      ],
+      "globalBboxPx": [
+        960,
+        38,
+        49,
+        454
+      ],
+      "uvOnMaster": [
+        0.5,
+        0.03166667,
+        0.02552083,
+        0.37833333
+      ],
+      "blendBaked": "darken source-over",
+      "mechanism": "cross-slot-front-face-half",
+      "preservesBasePixelsOutsideShade": true
+    },
+    {
+      "id": "obelisk-front-joined",
+      "family": "obelisk",
+      "file": "assets/obelisk/obelisk-front-joined-shading-baked.png",
+      "source": [
+        "assets/obelisk/obelisk-face-left-shading-baked.png",
+        "assets/obelisk/obelisk-face-right-shading-baked.png"
+      ],
+      "globalBboxPx": [
+        922,
+        38,
+        87,
+        454
+      ],
+      "uvOnMaster": [
+        0.48020833,
+        0.03166667,
+        0.0453125,
+        0.37833333
+      ],
+      "mechanism": "cross-slot-front-face",
+      "preservesGutterSplit": true
+    }
+  ],
+  "peopleHandoff": {
+    "status": "prepared_by_rig_implementer",
+    "manifest": "/private/tmp/book-rig-v0.4/assets/city/standees/manifest.json",
+    "count": 17,
+    "breakdown": {
+      "nearLeft": 10,
+      "farLeft": 4,
+      "farRight": 3
+    },
+    "parentCardsForbidden": [
+      "city-people-near--left.png",
+      "city-people-far--left.png",
+      "city-people-far--right.png"
+    ]
+  },
+  "crossSlotConfig": "assets/obelisk/obelisk-cross-slot.json",
+  "qa": {
+    "recomposition": "qa/recomposition.json",
+    "inventorySheet": "qa/inventory-sheet.png",
+    "recompositionSheet": "qa/recomposition-sheet.png"
+  },
+  "qaSummary": {
+    "pass": true,
+    "partitionedSources": 4,
+    "assetCount": 14,
+    "allPartitionGroupsExact": true,
+    "obeliskJoinedExact": true
+  }
+}

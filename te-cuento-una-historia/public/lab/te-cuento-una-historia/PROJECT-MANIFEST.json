@@ -1,0 +1,1289 @@
+{
+  "schema": "te-cuento-una-historia/public-payload-v1",
+  "scope": "/lab/te-cuento-una-historia",
+  "status": "ready_for_pablo",
+  "generatedAt": "2026-08-23T03:43:23.857Z",
+  "counts": {
+    "files": 251,
+    "stories": 68,
+    "illustrations": 68,
+    "sceneIllustrations": 4,
+    "mediaEmbeds": 10,
+    "mappedCues": 68
+  },
+  "excluded": [
+    {
+      "slug": "charlas-con-el-sr-moon",
+      "reason": "Posteo normal; Pablo indicó que no forma parte de los relatos de la obra."
+    },
+    {
+      "slug": "chau-2009",
+      "reason": "Saludo de fin de año; Pablo indicó que no es un relato de la obra."
+    },
+    {
+      "slug": "un-ultimo-adios-a-cyd-charisse",
+      "reason": "Efeméride funeraria compuesta sólo por las fechas 1921–2008; Pablo indicó que no es un relato de la obra."
+    },
+    {
+      "slug": "hombrecito-mirando-al-manana",
+      "reason": "Reflexión de una sola frase asociada a una imagen, sin forma de cuento, relato, poema o historia; Pablo indicó retirarla."
+    }
+  ],
+  "files": [
+    {
+      "path": "assets/audio/city-traffic-walla-horns-v003.mp3",
+      "bytes": 1328193,
+      "sha256": "f8878f3d5a85560ac51ad678172f64c23e8601c033e380c0a6a23d4fac4b63db"
+    },
+    {
+      "path": "assets/audio/climax-loop-source-403956f-44100.mp3",
+      "bytes": 135570,
+      "sha256": "f6b61ba7ce75fe52464c2f684ee8703683c1cfc88309d88113e1ea5db92f3aa2"
+    },
+    {
+      "path": "assets/audio/pablo-loop-source-447615f-44100.mp3",
+      "bytes": 184755,
+      "sha256": "bcd0ebb5a4f5c5c34fd24a32ef3ac6094b4a97d4a54674b6cce61976f21758d6"
+    },
+    {
+      "path": "assets/book/edge-material-horizontal.png",
+      "bytes": 11670,
+      "sha256": "2ca454a80f14e94c2f4c70711fdd8c754d8b815ae626eb25176dcc9d0ef17a27"
+    },
+    {
+      "path": "assets/book/edge-material-vertical.png",
+      "bytes": 11777,
+      "sha256": "a55b5e4d61e5a1caa9b528c0b21bdf520974ed9c823119cbcaf519381882927e"
+    },
+    {
+      "path": "assets/book/page-left.png",
+      "bytes": 1343840,
+      "sha256": "33c1ee9f4b2d38e752136b039de98d8f514138c26d59232843058b8635932078"
+    },
+    {
+      "path": "assets/book/page-right.png",
+      "bytes": 1343007,
+      "sha256": "a02f3e1d8979ff9c9dfedc6374104b08a9d38a3ba84387d3ed38925fe9e92541"
+    },
+    {
+      "path": "assets/book/surface-left.png",
+      "bytes": 1134375,
+      "sha256": "f0392fac1585258df58b11ef33cca07927def02b4a308581f102931c787db2b0"
+    },
+    {
+      "path": "assets/book/surface-right.png",
+      "bytes": 1127883,
+      "sha256": "318799f0a4ef454745d556fa06d01d18748a0ca88c2d553b93c95ba099934053"
+    },
+    {
+      "path": "assets/city/standees/manifest.json",
+      "bytes": 9101,
+      "sha256": "18e3e75766d571bcad0b18a09124202de0d0adf006ab2b07197da4a15dd74acb"
+    },
+    {
+      "path": "assets/components/manifest.json",
+      "bytes": 16023,
+      "sha256": "b93e2cca6239e07fa0470836c96308af620fa89a8d946c3df9d01a479abea409"
+    },
+    {
+      "path": "assets/cover.png",
+      "bytes": 2789312,
+      "sha256": "902b37f12b0b0edce333c365e94fcdce3801b8ca136a63bbe6bf2062d31b7e6f"
+    },
+    {
+      "path": "assets/deck-footprints-manifest.json",
+      "bytes": 3066,
+      "sha256": "1b3547b48c823cd0fce757adf15d4718f79c82927402fd9b32ce5ae2bb54a625"
+    },
+    {
+      "path": "assets/depth-plan.v0.4.json",
+      "bytes": 12520,
+      "sha256": "bc874fc49fed830e7af11c8e51bb7e25b2093a5cd30933474564f8ebe53485e7"
+    },
+    {
+      "path": "assets/desktop/box.png",
+      "bytes": 119330,
+      "sha256": "74778b4e5d646d071100a7dfa2d15a32be4c8b9b6492db93d7fdd2d82f087eec"
+    },
+    {
+      "path": "assets/desktop/clock.png",
+      "bytes": 194044,
+      "sha256": "3e4c750a9591ef43354f98a27f7a7013655fc010150e459e94d23b4d0107cd05"
+    },
+    {
+      "path": "assets/desktop/cup.png",
+      "bytes": 61024,
+      "sha256": "c99ae3a16a7be3f352441a40a17e09107b8540d2e45069ff7673a79625e7f1bc"
+    },
+    {
+      "path": "assets/desktop/inkwell.png",
+      "bytes": 50590,
+      "sha256": "75376899cfa4b61e823a39d36f487146512a6468725632d86df936d920426d52"
+    },
+    {
+      "path": "assets/desktop/lamp.png",
+      "bytes": 173400,
+      "sha256": "7be51a579c8b0d1baac5aafab4b3f8351bae35bd5737072df4a12897de7c2096"
+    },
+    {
+      "path": "assets/desktop/magnifier.png",
+      "bytes": 106372,
+      "sha256": "28f8b8f9010b79fe47c2580ecec77d3632de53a0cf6eaa2d0732e2974b5a549d"
+    },
+    {
+      "path": "assets/desktop/portrait.png",
+      "bytes": 168880,
+      "sha256": "397cba3e0b4c3e364691854788cf2e2e3ad6fd5109f2dee2399ef301e85cb552"
+    },
+    {
+      "path": "assets/desktop/quill.png",
+      "bytes": 52929,
+      "sha256": "84c3d70e953fd26ddef1087d89efa70b6c6bdff94a43d77cb6805f1483bbb6f4"
+    },
+    {
+      "path": "assets/desktop/table.png",
+      "bytes": 3711698,
+      "sha256": "8bf13c1ff588e194bb4b2eccf7b78f3f0071f91a1f3cf10b940220429c39f9b4"
+    },
+    {
+      "path": "assets/desktop/vignette.png",
+      "bytes": 244836,
+      "sha256": "7587fc29c11deb101858353a7829e458cf220448a23f16bc4bf28665055fc4e4"
+    },
+    {
+      "path": "assets/fidelity-v05-color-a9159c172d60/city/city-buildings-far-left--left.png",
+      "bytes": 339142,
+      "sha256": "6ff596049b066f117c2c86fb7ec4153dd4287d4fb4386ce98689abfac61370c7"
+    },
+    {
+      "path": "assets/fidelity-v05-color-a9159c172d60/city/city-buildings-far-right--right.png",
+      "bytes": 412644,
+      "sha256": "9c393fdbca84aa51381d408993890082afe0bc23a1a352cb77e946f57cb39fdc"
+    },
+    {
+      "path": "assets/fidelity-v05-color-a9159c172d60/city/city-buildings-mid-left--left.png",
+      "bytes": 781158,
+      "sha256": "a76269aedbcb264dcef250c7aa9648c11badf17544d8e5a8f0b44d3556d2203b"
+    },
+    {
+      "path": "assets/fidelity-v05-color-a9159c172d60/city/city-buildings-mid-right--right.png",
+      "bytes": 758490,
+      "sha256": "f350c46467d07b432599d58bf8afa56c37794c2337044d54de4c2f8443014e1b"
+    },
+    {
+      "path": "assets/fidelity-v05-color-a9159c172d60/city/city-buildings-near--left.png",
+      "bytes": 569329,
+      "sha256": "bbb77ff1657cecd0094d92a87ddbbade01b3d0b0eae316bb5287a636ed50df17"
+    },
+    {
+      "path": "assets/fidelity-v05-color-a9159c172d60/city/city-buildings-near--right.png",
+      "bytes": 859306,
+      "sha256": "d3a3fcab06a2a942898a4c4fe0c4cb02ef5e34d622cc298b9aeeaf6e4bef5bb7"
+    },
+    {
+      "path": "assets/fidelity-v05-color-a9159c172d60/city/city-obelisk--left.png",
+      "bytes": 18455,
+      "sha256": "0871f778710f02d78244d10ba454f0160683df3f961dd284060d0e93d8ebdff0"
+    },
+    {
+      "path": "assets/fidelity-v05-color-a9159c172d60/city/city-obelisk--right.png",
+      "bytes": 33336,
+      "sha256": "cb1329f89c28a1c3a4dbdd2dad555b44a3b3dceb88e00f2a5054981beb9d07ab"
+    },
+    {
+      "path": "assets/fidelity-v05-color-a9159c172d60/city/city-obelisk-shading--left.png",
+      "bytes": 820,
+      "sha256": "f116003018393f6f683d04d9fca535721422542cf27ffa4e83f41b457ec22819"
+    },
+    {
+      "path": "assets/fidelity-v05-color-a9159c172d60/city/city-obelisk-shading--right.png",
+      "bytes": 1003,
+      "sha256": "6bb1aaa2ffcff8ccef18e9007ac06000e76fac44eb1a6e54618f63bf8de85ebf"
+    },
+    {
+      "path": "assets/fidelity-v05-color-a9159c172d60/city/city-people-far--left.png",
+      "bytes": 55738,
+      "sha256": "dd9bdaf60f2b4ba2e6e45cd2c004c6c558e9b03d6bcd1cbe1e1c3f9ca7befb2a"
+    },
+    {
+      "path": "assets/fidelity-v05-color-a9159c172d60/city/city-people-far--right.png",
+      "bytes": 57830,
+      "sha256": "cc154f5e5d17e36432f281f6dea42a35c2e3acef1bbd433c1fb40e18ce839be8"
+    },
+    {
+      "path": "assets/fidelity-v05-color-a9159c172d60/city/city-people-near--left.png",
+      "bytes": 39777,
+      "sha256": "625a9ca7f0f5a3e849e5b922335524a50e3a01a322b95e1f9865df8b8feeaa9d"
+    },
+    {
+      "path": "assets/fidelity-v05-color-a9159c172d60/city/city-people-near--right.png",
+      "bytes": 217,
+      "sha256": "8cda3ff11816677142a369aa618a7f413def9b599b27808bb471a30f6fc42a1f"
+    },
+    {
+      "path": "assets/fidelity-v05-color-a9159c172d60/city/city-taxi.png",
+      "bytes": 11680,
+      "sha256": "b83e5887016d51e14ad38324483d370eb76391fda11cd4b3ef581a4914c4cf91"
+    },
+    {
+      "path": "assets/fidelity-v05-color-a9159c172d60/city/standees/far-left-01.png",
+      "bytes": 4124,
+      "sha256": "61000e1647a255a6ae3f04e5b84a625642ceec045206e5b9ad1a5bfaae6f09ba"
+    },
+    {
+      "path": "assets/fidelity-v05-color-a9159c172d60/city/standees/far-left-02.png",
+      "bytes": 3373,
+      "sha256": "fb5e10dbd2787b3d6d76a2019153affaa20e4532e957322cfdf6aef544884487"
+    },
+    {
+      "path": "assets/fidelity-v05-color-a9159c172d60/city/standees/far-left-03.png",
+      "bytes": 3372,
+      "sha256": "aa6c5a4bffb6c00c1b0fb91f809979898006f7723fb46ed6a262488c6d642c20"
+    },
+    {
+      "path": "assets/fidelity-v05-color-a9159c172d60/city/standees/far-left-04.png",
+      "bytes": 8103,
+      "sha256": "24b6f71e414af665f9c8c4cfe4fafbf85a827463527622c15d360962c19ffbd2"
+    },
+    {
+      "path": "assets/fidelity-v05-color-a9159c172d60/city/standees/far-right-01.png",
+      "bytes": 9962,
+      "sha256": "0d44d2fba01e6a8a0b63d7bb93597945295eaf7a2413dfcfdfb8d1f7ae820e04"
+    },
+    {
+      "path": "assets/fidelity-v05-color-a9159c172d60/city/standees/far-right-02.png",
+      "bytes": 6316,
+      "sha256": "bc834dff7e2877e1e7788cd37d2311c515a0281e06070a0e9a14cc5a0b8d5a90"
+    },
+    {
+      "path": "assets/fidelity-v05-color-a9159c172d60/city/standees/far-right-03.png",
+      "bytes": 4650,
+      "sha256": "405d6809e7ce10f9357282f4d77ab7e888ef9672d12ad65eb8529aa17f2e33ce"
+    },
+    {
+      "path": "assets/fidelity-v05-color-a9159c172d60/city/standees/near-left-01.png",
+      "bytes": 4351,
+      "sha256": "e6751b85aeed923340ae1a468d82b2a813e53b9e1934ea353d9241285490ff93"
+    },
+    {
+      "path": "assets/fidelity-v05-color-a9159c172d60/city/standees/near-left-02.png",
+      "bytes": 3194,
+      "sha256": "7b724d2d40b44e520118b436386644feb9b7f956dd151b6ec3932201c8f08c20"
+    },
+    {
+      "path": "assets/fidelity-v05-color-a9159c172d60/city/standees/near-left-03.png",
+      "bytes": 3779,
+      "sha256": "d8e521eccdf1929363c392d9b9bd7b63c207d8ab6926c330ef00693f195430bb"
+    },
+    {
+      "path": "assets/fidelity-v05-color-a9159c172d60/city/standees/near-left-04.png",
+      "bytes": 4448,
+      "sha256": "d1af015df7b2f388f92d355551a68c9c697ce9752015912f82b01e8fff633fee"
+    },
+    {
+      "path": "assets/fidelity-v05-color-a9159c172d60/city/standees/near-left-05.png",
+      "bytes": 2305,
+      "sha256": "d76b75ba8c75f23ae8dfba85475d01c35c0207dc92ba8cc7a0243abd574feb52"
+    },
+    {
+      "path": "assets/fidelity-v05-color-a9159c172d60/city/standees/near-left-06.png",
+      "bytes": 3658,
+      "sha256": "9cd91717784bf4ee9269b991333b17bdb1b48e1d2dd42d8b96185bee56f15650"
+    },
+    {
+      "path": "assets/fidelity-v05-color-a9159c172d60/city/standees/near-left-07.png",
+      "bytes": 4180,
+      "sha256": "40b04767f6318421defd4304d940e430a8e6b8f33e38e1b0de61089b76ace77b"
+    },
+    {
+      "path": "assets/fidelity-v05-color-a9159c172d60/city/standees/near-left-08.png",
+      "bytes": 3634,
+      "sha256": "9db42fb73c7f1ac16b7b084bdcec0c3ce789b97a17bea177f8fa9668a568d9d1"
+    },
+    {
+      "path": "assets/fidelity-v05-color-a9159c172d60/city/standees/near-left-09.png",
+      "bytes": 3956,
+      "sha256": "4c564ba51018eb7aac0f02ef4a1173033ea1889a13d9d649b45228589cded465"
+    },
+    {
+      "path": "assets/fidelity-v05-color-a9159c172d60/city/standees/near-left-10.png",
+      "bytes": 2724,
+      "sha256": "f639d1d501d47e61942572164c06dc3085b75b77f214902cbfe19fe76fcea80a"
+    },
+    {
+      "path": "assets/fidelity-v05-color-a9159c172d60/components/assets/mid-left/mid-left-central-hall.png",
+      "bytes": 396483,
+      "sha256": "c0a7ab1b124e39bf8a72945e1af1b297d9ef5bacccc8fdada26a8b177658d61c"
+    },
+    {
+      "path": "assets/fidelity-v05-color-a9159c172d60/components/assets/mid-left/mid-left-clock-red-door.png",
+      "bytes": 330038,
+      "sha256": "8924a1d47532e4c41a71b2eb2a7423c680f995070c1e4ba56328d4b3a0506768"
+    },
+    {
+      "path": "assets/fidelity-v05-color-a9159c172d60/components/assets/mid-left/mid-left-right-tower.png",
+      "bytes": 177726,
+      "sha256": "c6269ebec16d23adc154c0112c90e8b7d0058ff209c95f504ad83d5227533224"
+    },
+    {
+      "path": "assets/fidelity-v05-color-a9159c172d60/components/assets/mid-right/mid-right-church.png",
+      "bytes": 170971,
+      "sha256": "453e56aae62c49c06905079188f322f173170e424d519a6978eeab7122cb80c0"
+    },
+    {
+      "path": "assets/fidelity-v05-color-a9159c172d60/components/assets/mid-right/mid-right-dome.png",
+      "bytes": 277536,
+      "sha256": "8ebdce75a879c1bb5f6fcfbc7fe55f138c290576b8d432dbd54d7788fded5661"
+    },
+    {
+      "path": "assets/fidelity-v05-color-a9159c172d60/components/assets/mid-right/mid-right-terminal.png",
+      "bytes": 395965,
+      "sha256": "8bc1454ec352086c8cc97921670b91f76e1163bb4d9a82e56c60d876ab7aa535"
+    },
+    {
+      "path": "assets/fidelity-v05-color-a9159c172d60/components/assets/near-left/near-left-deck-base.png",
+      "bytes": 555044,
+      "sha256": "456abbbd58c08cef2a2064568bdea004fcb25966ca2f6a571a2e90909a433cba"
+    },
+    {
+      "path": "assets/fidelity-v05-color-a9159c172d60/components/assets/near-left/near-left-west-gate.png",
+      "bytes": 157955,
+      "sha256": "c04ff0b2082dcd5a70a2a4400a746b21c3724452ac4bb34200e781fedfd126b1"
+    },
+    {
+      "path": "assets/fidelity-v05-color-a9159c172d60/components/assets/near-right/near-right-back-facades.png",
+      "bytes": 325836,
+      "sha256": "148ee8c55a1a8ba270dc6832003b17b3e174a224f34414ddf485ceeabb193de4"
+    },
+    {
+      "path": "assets/fidelity-v05-color-a9159c172d60/components/assets/near-right/near-right-clock-tower.png",
+      "bytes": 67793,
+      "sha256": "0f3cd6b41cb00a22dffd431ff32f1d730161770330ff3470ff395ada2ac7b14e"
+    },
+    {
+      "path": "assets/fidelity-v05-color-a9159c172d60/components/assets/near-right/near-right-deck-base.png",
+      "bytes": 596090,
+      "sha256": "ba18b5d4009ace97fdfeef56cbc0edc31d01c511e6789e09c54546618c7b011c"
+    },
+    {
+      "path": "assets/fidelity-v05-color-a9159c172d60/components/assets/obelisk/obelisk-face-left-shading-baked.png",
+      "bytes": 21663,
+      "sha256": "b9bb1dcc5eef696261061310045fddf053e4b9fa256e2eda9916771bd04cbae2"
+    },
+    {
+      "path": "assets/fidelity-v05-color-a9159c172d60/components/assets/obelisk/obelisk-face-right-shading-baked.png",
+      "bytes": 37276,
+      "sha256": "32e6bc38e7d68f6932d0951f67fe2f272bb2df9960f7cd43f9b25f02331b7cb5"
+    },
+    {
+      "path": "assets/fidelity-v05-color-a9159c172d60/components/assets/obelisk/obelisk-front-joined-shading-baked.png",
+      "bytes": 57572,
+      "sha256": "ba782154ddb83f125fe8cac71b2a38c271c7ba24a312ff97f982156dd84ee298"
+    },
+    {
+      "path": "assets/fidelity-v05-color-a9159c172d60/deck-footprints/near-left-deck-contours.json",
+      "bytes": 165322,
+      "sha256": "110caee8dcc88b9aa99bd0a214b538e033958ec24504d059a0ecb7096fed17a2"
+    },
+    {
+      "path": "assets/fidelity-v05-color-a9159c172d60/deck-footprints/near-left-deck-surface.png",
+      "bytes": 555044,
+      "sha256": "456abbbd58c08cef2a2064568bdea004fcb25966ca2f6a571a2e90909a433cba"
+    },
+    {
+      "path": "assets/fidelity-v05-color-a9159c172d60/deck-footprints/near-right-deck-contours.json",
+      "bytes": 93857,
+      "sha256": "1adbf0d1ea5434331b14ca850f2a9185b4f92768624e9c68d73b1331059a949d"
+    },
+    {
+      "path": "assets/fidelity-v05-color-a9159c172d60/deck-footprints/near-right-deck-surface.png",
+      "bytes": 596090,
+      "sha256": "ba18b5d4009ace97fdfeef56cbc0edc31d01c511e6789e09c54546618c7b011c"
+    },
+    {
+      "path": "assets/fidelity-v05-color-a9159c172d60/manifest.json",
+      "bytes": 12656,
+      "sha256": "a9159c172d608c920792644c4a37c8d14586b020f1e72337433dff34a220f9eb"
+    },
+    {
+      "path": "assets/fidelity-v05-color-a9159c172d60/materials/cardstock-back-fiber.png",
+      "bytes": 34281,
+      "sha256": "7e89d70c814ead312a90595d1dc0d1074cd7eb762960720b7a2a51669a397a65"
+    },
+    {
+      "path": "assets/fidelity-v05-color-a9159c172d60/physical-partition/cant-horizontal-left.png",
+      "bytes": 179470,
+      "sha256": "5476b08773e2bf9279c6249f3976e328658adc5c064c634643978396bc8f6d27"
+    },
+    {
+      "path": "assets/fidelity-v05-color-a9159c172d60/physical-partition/cant-horizontal-right.png",
+      "bytes": 181666,
+      "sha256": "4765f706eebea490c9aeeeb7098e3e11f18488a45effcf824e5bee319a0c3589"
+    },
+    {
+      "path": "assets/fidelity-v05-color-a9159c172d60/physical-partition/cant-vertical-left.png",
+      "bytes": 138060,
+      "sha256": "531591f081dd26c2c2284ffc9a2ed473a88d467d0686fc6c4015143fff28af8f"
+    },
+    {
+      "path": "assets/fidelity-v05-color-a9159c172d60/physical-partition/cant-vertical-right.png",
+      "bytes": 135503,
+      "sha256": "26d3d3986f06443f8ee1f4565262f6aaf23af17e1d26ec5995a455fdbbd5f165"
+    },
+    {
+      "path": "assets/fidelity-v05-color-a9159c172d60/physical-partition/top-skin-left.png",
+      "bytes": 1347610,
+      "sha256": "30fb9beec07a30233bf1ea726b597cad12c2ea2473b708c69da1028353ab9b64"
+    },
+    {
+      "path": "assets/fidelity-v05-color-a9159c172d60/physical-partition/top-skin-right.png",
+      "bytes": 1340797,
+      "sha256": "0d1bda2b79cdeab6c18650773cf239cda9809e0a3dd7a338793ba1e2d3ddebb1"
+    },
+    {
+      "path": "assets/fidelity-v05-color-a9159c172d60/physical-v05/front-left/front-left-microdeck-top.png",
+      "bytes": 556120,
+      "sha256": "0cc8198f8621c044c01c4f0b4aee5ba02c5f23c4f56b762a6c29079c414dd48a"
+    },
+    {
+      "path": "assets/fidelity-v05-color-a9159c172d60/physical-v05/front-left/front-left-page-ground-print.png",
+      "bytes": 560869,
+      "sha256": "71019d09cf7f5717cbd4204b3229965f9e63cc64d6dc2c6817c8c6dd84638476"
+    },
+    {
+      "path": "assets/fidelity-v05-color-a9159c172d60/physical-v05/front-left/front-left-page-ground-residual.png",
+      "bytes": 553477,
+      "sha256": "01527b86ccc1bcf4c8d81fdd10ed93be644e4a5ae1d19018791e1fcadf6c6788"
+    },
+    {
+      "path": "assets/fidelity-v05-color-a9159c172d60/physical-v05/front-left/front-left-retiro-train-fascia.png",
+      "bytes": 564355,
+      "sha256": "10d07ed8765001c04a0ee270c4ee23b9f1ef3f38dab76091f9753ea5df05f511"
+    },
+    {
+      "path": "assets/fidelity-v05-color-a9159c172d60/physical-v05/front-left/front-left-stair-wing.png",
+      "bytes": 574177,
+      "sha256": "c40c6ce43328c093c5fdbb72ae4340ed9b7b73f9f03f0da2ee72a85eac12ae67"
+    },
+    {
+      "path": "assets/fidelity-v05-color-a9159c172d60/physical-v05/obelisk/obelisk-base-page-print.png",
+      "bytes": 56075,
+      "sha256": "4f253d2b77582efee9a171ee3eee8e9b61ef8cb9a49053816fb97394aeab93e2"
+    },
+    {
+      "path": "assets/fidelity-v05-color-a9159c172d60/physical-v05/obelisk/obelisk-front-left-2px-bleed.png",
+      "bytes": 56790,
+      "sha256": "740f2e5f27508b7bf3c461e745a548179aa9387d4235b734f5aa8497ca82ffc0"
+    },
+    {
+      "path": "assets/fidelity-v05-color-a9159c172d60/physical-v05/obelisk/obelisk-front-left-trim.png",
+      "bytes": 56708,
+      "sha256": "8d935cecf9409fc6f8a346e79db047eb02fb9d6097d217a8fb85e04ca0453de2"
+    },
+    {
+      "path": "assets/fidelity-v05-color-a9159c172d60/physical-v05/obelisk/obelisk-front-right-2px-bleed.png",
+      "bytes": 56736,
+      "sha256": "65f84d44396ab38d4fa49899faaa888badb0a31f830618506acca900a6886bee"
+    },
+    {
+      "path": "assets/fidelity-v05-color-a9159c172d60/physical-v05/obelisk/obelisk-front-right-trim.png",
+      "bytes": 56798,
+      "sha256": "08d7feacff24bd73be1c2007bfb3cbe5aa1aac2122b3bae3ab15d70a721d7190"
+    },
+    {
+      "path": "assets/fidelity-v05-color-a9159c172d60/physical-v05/obelisk/obelisk-return-left-strip.png",
+      "bytes": 2803,
+      "sha256": "7d58fa3a63da65ecc897941d9634a52177d0d78af6a9cf980d22e686b0b2c6d5"
+    },
+    {
+      "path": "assets/fidelity-v05-color-a9159c172d60/physical-v05/obelisk/obelisk-return-right-strip.png",
+      "bytes": 2844,
+      "sha256": "4ba11adc91064aeb803d587bd65d1c2199f0811b8fca01489964a10b4e0bdaac"
+    },
+    {
+      "path": "assets/fidelity-v05-color-a9159c172d60/physical-v05/rear-left/rear-left-inner.png",
+      "bytes": 343512,
+      "sha256": "f452a550ae22c6825b8329f4ec4d424aadc5a7efeca7824b000087468dd3b36e"
+    },
+    {
+      "path": "assets/fidelity-v05-color-a9159c172d60/physical-v05/rear-left/rear-left-outer.png",
+      "bytes": 344952,
+      "sha256": "c5bca19a00ac09dfdb152442e3d94c0281d74849d227fc5f0265f4fef7515922"
+    },
+    {
+      "path": "assets/fidelity-v05-color-a9159c172d60/physical-v05/rear-right/rear-right-inner.png",
+      "bytes": 420829,
+      "sha256": "ccd39b2051b8d1bfecd8dd7b612a4c2e978556964873b70a3b4744c423c8dcd6"
+    },
+    {
+      "path": "assets/fidelity-v05-color-a9159c172d60/physical-v05/rear-right/rear-right-outer.png",
+      "bytes": 420458,
+      "sha256": "862c49b6083624c838b2955c8db335165b811562971162f2f55701531a889ddb"
+    },
+    {
+      "path": "assets/fonts/OFL.txt",
+      "bytes": 4394,
+      "sha256": "865f0949b59fab5925506f80102dff3d12e8666412daf52d212db969d40adc25"
+    },
+    {
+      "path": "assets/fonts/newsreader-latin-italic-variable.woff2",
+      "bytes": 147060,
+      "sha256": "a99fb127682b9af538780d21420037452197b0d37dfd273eb108f8a3665d5501"
+    },
+    {
+      "path": "assets/fonts/newsreader-latin-variable.woff2",
+      "bytes": 131848,
+      "sha256": "01817351be3edfc1714fe6d60ddea6a22a169a5ebd033b50c7f9495e5d9c386a"
+    },
+    {
+      "path": "assets/making-of/mvp-en-ejecucion.jpg",
+      "bytes": 403345,
+      "sha256": "9c725d55514c60dbf30cfe354bf79b521218aaadd8c88aac4d10560ad14307b1"
+    },
+    {
+      "path": "assets/making-of/photoshop-capas.jpg",
+      "bytes": 1174855,
+      "sha256": "1e1f1b3ac8c5da10fa8766d4ff69fc24e9baaaea94f79f03b7a64c1219a67a64"
+    },
+    {
+      "path": "assets/making-of/primer-boceto.jpg",
+      "bytes": 196381,
+      "sha256": "df7b676c3ceeb13f2aae1ddaedfbdaedda2322139303b9db7f8a31844da7197a"
+    },
+    {
+      "path": "assets/scene-map.json",
+      "bytes": 15556,
+      "sha256": "df70f4ce756fbb498d2463f28e63bd1f5f0850a66c17852e63920d9392d8191a"
+    },
+    {
+      "path": "assets/stories/247/ink.png",
+      "bytes": 651225,
+      "sha256": "4a9fcd401f9c81992f3a9a7594a2b1297adedade6f0bd72406cbf4b5745f1182"
+    },
+    {
+      "path": "assets/stories/acabar-no-se-cuando/ink.png",
+      "bytes": 1871278,
+      "sha256": "6b0f9cfcd2460391d7b2ec50fe6ce3e9e0592afd28d7924c6fe91ee8aa0527dc"
+    },
+    {
+      "path": "assets/stories/apesta-a-espiritu-adolescente-de-lo-que-nos-dejo-cobain/ink.png",
+      "bytes": 1007477,
+      "sha256": "007a26e505b943949e869455e2094e2a1b643a4a563fe5e749cd3624a5262122"
+    },
+    {
+      "path": "assets/stories/apocalipsis-y-treboles-delirios-de-color/ink.png",
+      "bytes": 1410137,
+      "sha256": "4d5af00dd4cfc414d18dddb37cbaaf3b5ee4c6f861adfac77501ba9533cdc5da"
+    },
+    {
+      "path": "assets/stories/aquel-nuevo-ayer-complicacion-temporal/ink.png",
+      "bytes": 937354,
+      "sha256": "c69a9876c4fcb5b9981526171579e8500d0a8d7889e893d02535c85bdc8409ae"
+    },
+    {
+      "path": "assets/stories/aquellos-viejos-fantasmas-ii/ink.png",
+      "bytes": 1986664,
+      "sha256": "42b6880e7d1d194315c31432abee68a647b45ea632aa97dc65796e9a0c6219ec"
+    },
+    {
+      "path": "assets/stories/aquellos-viejos-fantasmas-nuevos-miedos-recurrentes/ink.png",
+      "bytes": 1005861,
+      "sha256": "ae46ec6f71a4a2263d9845c4f2f2e5f515d24aeefe4b17cdb2475673ef72b457"
+    },
+    {
+      "path": "assets/stories/arquimedes-de-siracusa/ink.png",
+      "bytes": 1612789,
+      "sha256": "e8e30cb86e3bf212284f2bb51f83a0a717f9c4d5e88cdb562f5453b7e6edd20b"
+    },
+    {
+      "path": "assets/stories/arte-y-tragedia/ink.png",
+      "bytes": 916728,
+      "sha256": "af8de2e30fbaf36a6138f1abbcbb75536e76a3fe25983f25155f421535a13927"
+    },
+    {
+      "path": "assets/stories/breves-historias-de-cabezas-tristemente-celebres/ink.png",
+      "bytes": 502632,
+      "sha256": "50aee27b6e96bd21069085e8b4b2d3d46f3d7d0899841cd5b956db1a5155c38d"
+    },
+    {
+      "path": "assets/stories/breves-historias-famosas-de-fantasmas/ink.png",
+      "bytes": 1133939,
+      "sha256": "ca4f42048424de327eef0a1a709916bfeca307c7f0db6ab05f9161eba48e1edb"
+    },
+    {
+      "path": "assets/stories/buenas-noches-%c2%bfcomo-le-va/ink.png",
+      "bytes": 1218147,
+      "sha256": "a564b10279eace685158e5eb62bd7015ebb9bb3fd54ac39256c2d3fe8f3339df"
+    },
+    {
+      "path": "assets/stories/consideraciones-sobre-la-belleza/ink.png",
+      "bytes": 1015290,
+      "sha256": "255602fe1fc3d911ae7a2419dc5ed879991dc8d5606e59a5ab01dd8042c4026f"
+    },
+    {
+      "path": "assets/stories/costumbres-esteticas-de-la-antigua-francia/ink.png",
+      "bytes": 1455591,
+      "sha256": "50de29bfb3bbeb9e546830d0f1ac670cbe32824cdde91f167fec88d28c9c5001"
+    },
+    {
+      "path": "assets/stories/cronicas-absurdas-corazones-muertos/ink.png",
+      "bytes": 1032505,
+      "sha256": "76025ece775c10417ddaa2781a6f1a3d5915dd3900f42ddaeece32e8f94274e9"
+    },
+    {
+      "path": "assets/stories/cronicas-absurdas-el-lugar-de-los-coros-dantescos/ink.png",
+      "bytes": 2163515,
+      "sha256": "7aa426f14c61a2001b7f78ca51d198804561e202ef8ac081dd53d38ceb7de747"
+    },
+    {
+      "path": "assets/stories/cronicas-absurdas-el-prado/ink.png",
+      "bytes": 1175265,
+      "sha256": "e1a92367ac0dfafe6bb816e1bcd76f456df5a2d58cea215081ea751ea13262e7"
+    },
+    {
+      "path": "assets/stories/cronicas-absurdas-licor-de-mi-agonia/ink.png",
+      "bytes": 822165,
+      "sha256": "2413aacbf6d0e4f963e64e1e251c961a1b5c8b9d43a2fd03e09f5e703e8adcee"
+    },
+    {
+      "path": "assets/stories/cronicas-absurdas-maldito-egocentrico/ink.png",
+      "bytes": 642869,
+      "sha256": "84e3a8431b3d887767c00b1b32db3fa3738f71a9570b48d710e66d7cd8eb9bf4"
+    },
+    {
+      "path": "assets/stories/de-bebidas-y-momentos/ink.png",
+      "bytes": 970853,
+      "sha256": "bf4c616dc9e566ca48e410bc45e39799b52ff26e212ba44b66694d935a02186e"
+    },
+    {
+      "path": "assets/stories/de-corazones-rotos/ink.png",
+      "bytes": 1112735,
+      "sha256": "817f6bff248d948196ac857cba35db6824f31780d9f5f20075b36c9c3c3964de"
+    },
+    {
+      "path": "assets/stories/de-cuando-el-ano-se-parte-al-medio/ink.png",
+      "bytes": 645536,
+      "sha256": "003dd13389ed5783901b78ee66682c908a4b9fef251c1347ad6370f95b18297f"
+    },
+    {
+      "path": "assets/stories/de-la-temperatura-infernal-y-celestial/ink.png",
+      "bytes": 1100007,
+      "sha256": "42875d73c7aebbb8b55fe8eed07f2181cc445012f62c6dcbec87b4684d9f4f8e"
+    },
+    {
+      "path": "assets/stories/de-las-cosas-secundarias/ink.png",
+      "bytes": 1025825,
+      "sha256": "5ec141a12c02e06f07853ee6c312a53102c11b2164860e560b3db3b2e7caee3b"
+    },
+    {
+      "path": "assets/stories/de-las-escondidas-ajenos-recuerdos-infantiles/ink.png",
+      "bytes": 1898699,
+      "sha256": "6f94868c4f1d11232992cd7bb3379206e84e4ee20731fd71a670e14e1d1f053f"
+    },
+    {
+      "path": "assets/stories/de-las-pesadillas-del-autor/ink.png",
+      "bytes": 1697127,
+      "sha256": "dd80e50806c7f506bfa46b7142a5a82aeb6880256f8221c9c1eea2fc4d05c1d6"
+    },
+    {
+      "path": "assets/stories/de-los-conductores-relato-automovilistico/ink.png",
+      "bytes": 1430281,
+      "sha256": "a2845a24b48ac6171c76b5bf901fde8d4be167925826e6d17f61b3e1f805f9c3"
+    },
+    {
+      "path": "assets/stories/de-los-consejos/ink.png",
+      "bytes": 875739,
+      "sha256": "7a499356c8aeac9cee01e6b07a9af19bef8b949b5d4b4d940d50e5866d26fd9c"
+    },
+    {
+      "path": "assets/stories/de-los-tiempos-pasados-i/ink.png",
+      "bytes": 1793867,
+      "sha256": "b8eb7c53cd21d72f136cca376469d80f31767de7afdfdcd9fba6521bce1b49f2"
+    },
+    {
+      "path": "assets/stories/de-lunares-y-evoluciones/ink.png",
+      "bytes": 1031530,
+      "sha256": "c6475a681bd2524038ca5b6c9dc08b722031e37c03ecebcf764f674180aa4a41"
+    },
+    {
+      "path": "assets/stories/de-macbeth/ink.png",
+      "bytes": 573264,
+      "sha256": "cf0be421b62dbb80c146ff72f8d8eec0bcc6c22f20f829faf1d033b253483858"
+    },
+    {
+      "path": "assets/stories/de-medialunas-cuento-de-desayuno/ink.png",
+      "bytes": 947428,
+      "sha256": "fe8480dc696999f1f3f3718b433eaae59f4b31ad8bca615ac51751617cd3eaab"
+    },
+    {
+      "path": "assets/stories/de-muertes-y-resurrecciones/ink.png",
+      "bytes": 1576739,
+      "sha256": "02ccd71d09cb00d005306ee5e104df9bb4ee2bd6e57c23276f00271af66788c3"
+    },
+    {
+      "path": "assets/stories/de-regresos-y-desconocimientos/ink.png",
+      "bytes": 1149233,
+      "sha256": "206043a78d5916d0c9c2c16aa055f13741ead0b52a167858c4029ff586355795"
+    },
+    {
+      "path": "assets/stories/deja-vu/ink.png",
+      "bytes": 902854,
+      "sha256": "55313bceb2833272e822fc869b7409f9dfcb1e74b6b10d532dce5170c5bb5a81"
+    },
+    {
+      "path": "assets/stories/del-motivo-de-la-poesia/ink.png",
+      "bytes": 1034630,
+      "sha256": "a4fbfe5d59b55f3840beecddf765a8a7629f3c871ad3ade2880af11be4dd6292"
+    },
+    {
+      "path": "assets/stories/del-tengo-eso-y-quiero-aquello/paper.png",
+      "bytes": 1012835,
+      "sha256": "51a6e5287d567452bb00efa89b7f1d928d8e64aeaa26e2d736874e1f6840d030"
+    },
+    {
+      "path": "assets/stories/delirios-de-un-artista-a-medianoche/ink.png",
+      "bytes": 1061865,
+      "sha256": "c7f316988e411f6f4490d1751bb283f1ce0e2f187c6512d2618c64f670363042"
+    },
+    {
+      "path": "assets/stories/descripciones-geograficas/ink.png",
+      "bytes": 1269576,
+      "sha256": "f54d71311b78733806bd4aae973c676e02bd60f02f565fb2600fdb491a38e8ee"
+    },
+    {
+      "path": "assets/stories/digno-fin-cuestionable-medio/ink.png",
+      "bytes": 741387,
+      "sha256": "861f9ef955794dfdbb5984709239262b4e07f52320f9b2b07b5e634c6775dbe8"
+    },
+    {
+      "path": "assets/stories/don-ernesto-y-el-joven-depresion/ink.png",
+      "bytes": 1241405,
+      "sha256": "feb7c33d3972e9d7bab3d42a1aa147d6f46338b8a143dcfe34697c0ff04b5e16"
+    },
+    {
+      "path": "assets/stories/el-japones-errante/ink.png",
+      "bytes": 393735,
+      "sha256": "50a043e179ce2fcffe15bcf7296b51f995417cc800b6333eb19c583e74c9fbe8"
+    },
+    {
+      "path": "assets/stories/el-narrador-de-historias/ink.png",
+      "bytes": 1221257,
+      "sha256": "90cb07d6cb6c8520c256653783b4a69f48dc28344d3c7b561740029bef610422"
+    },
+    {
+      "path": "assets/stories/entre-la-nada-y-el-adios-confesiones-de-un-optimista/ink.png",
+      "bytes": 1158948,
+      "sha256": "8b94e36db0533262ab06ac73708fb868c10bc9a2173061b0587cf1c90450b9f5"
+    },
+    {
+      "path": "assets/stories/espejo-magico/ink.png",
+      "bytes": 1364504,
+      "sha256": "b492b616dd977258a8b591c09e115b728d06280d212ec6f95647ab4718adc164"
+    },
+    {
+      "path": "assets/stories/esquinas-i/ink.png",
+      "bytes": 1694800,
+      "sha256": "2c7b4d1d6ebc872feb7e56d4a7b34c9bf8421da064af18a071c4e88becb72477"
+    },
+    {
+      "path": "assets/stories/experiencias-religiosas-de-las-equivocaciones-celestiales/ink.png",
+      "bytes": 1525341,
+      "sha256": "5d297d2dbbc9665d444427d0f93841089c608d0750030e38ee85e509296829ce"
+    },
+    {
+      "path": "assets/stories/fin-del-mundo/ink.png",
+      "bytes": 2219715,
+      "sha256": "b63698c6e7f3b0d9fbc50076139b84e27ac1b3fd0901bbe7c7f2575a67528cd3"
+    },
+    {
+      "path": "assets/stories/guia-para-la-vida-o-instrucciones-para-pedir-la-cuenta-en-un-cafe-havanna/ink.png",
+      "bytes": 1038610,
+      "sha256": "406b0aa9a2e7df8067acc27c1c3d4c037396b021dca30b8ee8a83c3e7caec4e2"
+    },
+    {
+      "path": "assets/stories/hades-persefone-y-el-motivo-del-invierno/ink.png",
+      "bytes": 1386899,
+      "sha256": "8051ba51cce7238b384f2d1409569080e2670ff82a3c6546ccf837c22b760cfb"
+    },
+    {
+      "path": "assets/stories/honestos-abstenerse/ink.png",
+      "bytes": 577376,
+      "sha256": "68f445b5078e4c2a5fd1282d6947d692cf2ef0188927fc5c49afc18b4a64eb86"
+    },
+    {
+      "path": "assets/stories/johannes-brahms-y-su-caracter-delicado/ink.png",
+      "bytes": 918552,
+      "sha256": "04d90937490d6dc553a6791179601f727ad4d556ce37186e23e8144b76d210e9"
+    },
+    {
+      "path": "assets/stories/la-dama-del-lago-excalibur-y-como-esta-llego-a-arturo/ink.png",
+      "bytes": 1263140,
+      "sha256": "defea869de504091b9aa89ecb63757c28498a34162736adf69bb7b9a5cda2556"
+    },
+    {
+      "path": "assets/stories/la-dolorosa-muerte-del-sr-buen-gusto/ink.png",
+      "bytes": 726563,
+      "sha256": "e888966b24626ca06a8a3a9f06fe50e86a5f9ed13189a475e0fd2b912fef7df2"
+    },
+    {
+      "path": "assets/stories/la-habitacion-numero-setenta-y-ocho-de-magos-y-hechiceros/ink.png",
+      "bytes": 1121947,
+      "sha256": "c9382ee7a30d415cc71f57943460e59472b1e12431cb36037d2352bc4694218e"
+    },
+    {
+      "path": "assets/stories/la-importancia-de-ser-don-ernesto/ink.png",
+      "bytes": 1303515,
+      "sha256": "963fcdc5b6ff4bb820d0cbb41879a26f179fb046f8ecd3b6b9cc3f1fa11bec44"
+    },
+    {
+      "path": "assets/stories/la-pesadilla-de-balder-y-el-crepusculo-de-los-dioses/ink.png",
+      "bytes": 968946,
+      "sha256": "56a1af8cb2d920a7f8621308321de60146663772075c8940948657a46f7ec4bd"
+    },
+    {
+      "path": "assets/stories/las-fabulosas-locuras-de-jorge-iii-y-como-estas-lo-condujeron-a-una-reconocida-fama-historica/ink.png",
+      "bytes": 1371262,
+      "sha256": "6f799c38d15bf072ffa7767d6f448ecd95e58c0c7752768da1926f889b5cb543"
+    },
+    {
+      "path": "assets/stories/los-cielos-aztecas/ink.png",
+      "bytes": 2304946,
+      "sha256": "823bb044e59f849677cbdebd35e8b51da20bf73ac0e75b6920c4b75cbb11df14"
+    },
+    {
+      "path": "assets/stories/monte-criollo/ink.png",
+      "bytes": 917318,
+      "sha256": "eca306397fc599a256b7ea8c994aa3093af45ee1df46af49fa5d2c664ed444c9"
+    },
+    {
+      "path": "assets/stories/puertas/ink.png",
+      "bytes": 1425914,
+      "sha256": "78b01fe80e6889f3b2cb8c6d6ef6b24dbe7c5744cee79c7694097b9ea43db235"
+    },
+    {
+      "path": "assets/stories/reflexiones-de-taxi-2-cronica-de-un-hastiado/ink.png",
+      "bytes": 958092,
+      "sha256": "acd1e526210d3c932d97541c32b23cba5079df55cb2e8773e55389e0e0aa006f"
+    },
+    {
+      "path": "assets/stories/reflexiones-de-taxi-3-el-patriota/ink.png",
+      "bytes": 1063042,
+      "sha256": "4be231c424f2c20626a3193c36502b986fb33a1da54c7952af47a2d1fbce58f8"
+    },
+    {
+      "path": "assets/stories/reflexiones-de-taxi/ink.png",
+      "bytes": 1118226,
+      "sha256": "f927d59c0df06ec6b5e68b61eef6546b024744f530c47ae6856d82510bd5bcc7"
+    },
+    {
+      "path": "assets/stories/remembranzas/ink.png",
+      "bytes": 931407,
+      "sha256": "00ea3fc04527e1199fc58e47eff2d9be851c07b886d9d7042ccbf678a081e2d2"
+    },
+    {
+      "path": "assets/stories/siluetas/ink.png",
+      "bytes": 1178997,
+      "sha256": "6e8e150d5f801ac6101f3bc3f6bfe37a2b2c1fb212464e74c46cb6790411b8ac"
+    },
+    {
+      "path": "assets/stories/un-poco-de-zoologia-fantastica/ink.png",
+      "bytes": 1045692,
+      "sha256": "802b381dc05366c66cdd22438adefebd57d3c87ccffcff2e0fe0d3db256afb98"
+    },
+    {
+      "path": "assets/stories/un-poco-de-zoologia-fantastica/scenes/anfisbena.png",
+      "bytes": 2552834,
+      "sha256": "62fd7227d5a2727881fe32ef74875c5fd0601b6e3ac760e3e2b463dd1c67164d"
+    },
+    {
+      "path": "assets/stories/un-poco-de-zoologia-fantastica/scenes/clurichaun.png",
+      "bytes": 2216880,
+      "sha256": "4534f9dfb90e9d6eed13614577e5db8377781b0580bb67a4f876e10a6ed38d5a"
+    },
+    {
+      "path": "assets/stories/un-poco-de-zoologia-fantastica/scenes/fenix.png",
+      "bytes": 3038876,
+      "sha256": "c78ee92455146d1dcfcfcad9f815aa383fba4ee567be86f799f93c3c5c811047"
+    },
+    {
+      "path": "assets/stories/un-poco-de-zoologia-fantastica/scenes/kappa.png",
+      "bytes": 2907389,
+      "sha256": "97767ff1a04e3573e74a982f7186e435081f5b281e85ce6717b8b81e59c1d11f"
+    },
+    {
+      "path": "assets/stories/una-flor-llamada-amanda/ink.png",
+      "bytes": 1772981,
+      "sha256": "c6ea2f7c6cce8d9584c859479a2d55135b77cc57e6d540274c53e83f1d3b5330"
+    },
+    {
+      "path": "data/corpus.json",
+      "bytes": 28180,
+      "sha256": "c030cee3e93e1c76687291fe82c7cc920064b27d78a3a36415c46ca46f85325c"
+    },
+    {
+      "path": "data/hotspots.json",
+      "bytes": 10548,
+      "sha256": "d46dd39b085ff4b19a29918dbbc14d0aaa0b65ed4e9d0aea47bacf44c4334075"
+    },
+    {
+      "path": "data/stories/247.md",
+      "bytes": 517,
+      "sha256": "aacc5f5ef4bdb1fc96388e8670d17a811f0c823c794fa516bb76a0b1d1f2ca69"
+    },
+    {
+      "path": "data/stories/acabar-no-se-cuando.md",
+      "bytes": 652,
+      "sha256": "db4e118bafe98cf6737a5e306ef952de53613e8fcd27bd72c0e99a5c2ab5ba4e"
+    },
+    {
+      "path": "data/stories/apesta-a-espiritu-adolescente-de-lo-que-nos-dejo-cobain.md",
+      "bytes": 1464,
+      "sha256": "c63c2aa3b5c6f02b98fc4e225ff2eb27355e611e54d417ca06729d4fe3d93710"
+    },
+    {
+      "path": "data/stories/apocalipsis-y-treboles-delirios-de-color.md",
+      "bytes": 1259,
+      "sha256": "bed6feb1587d0f9d38e6711f4784a5a6b069e1ab7efbc82433f390163e0fb73e"
+    },
+    {
+      "path": "data/stories/aquel-nuevo-ayer-complicacion-temporal.md",
+      "bytes": 1201,
+      "sha256": "5ce8bff7ea854041fe2b61cd31b5eac0752335ff308cf24d5d86d7f9d8882298"
+    },
+    {
+      "path": "data/stories/aquellos-viejos-fantasmas-ii.md",
+      "bytes": 1878,
+      "sha256": "a54fd0100d44457d741933d7c5eee998fa6f2d005f50ae3697908d94c34855d4"
+    },
+    {
+      "path": "data/stories/aquellos-viejos-fantasmas-nuevos-miedos-recurrentes.md",
+      "bytes": 1201,
+      "sha256": "2302aec5967a95a2192bc5479eb55a91b7ca95a9b0b6843e0350073c67348c72"
+    },
+    {
+      "path": "data/stories/arquimedes-de-siracusa.md",
+      "bytes": 6929,
+      "sha256": "c7bc90c9e3623ab311a5e5a81185ad9b4d321e627882bd66d5914887ebcb65b6"
+    },
+    {
+      "path": "data/stories/arte-y-tragedia.md",
+      "bytes": 650,
+      "sha256": "a3e90b0e60bc4698b2a9a8755b4ea890eed91d34ee778a59bb1f50ec4a48df76"
+    },
+    {
+      "path": "data/stories/breves-historias-de-cabezas-tristemente-celebres.md",
+      "bytes": 7102,
+      "sha256": "dcbf7ca0808499634460bc26624270415e012d20e20c9d12892d79d4596846c6"
+    },
+    {
+      "path": "data/stories/breves-historias-famosas-de-fantasmas.md",
+      "bytes": 8894,
+      "sha256": "4ec917e59a34b2c2f7f55ce7070c902be21b40e64f38dbdcaf40ad3bfac9c3c6"
+    },
+    {
+      "path": "data/stories/buenas-noches-%c2%bfcomo-le-va.md",
+      "bytes": 2638,
+      "sha256": "c51df86b19329037e4a871e135b7e87bbca258e299beb7293fb251daca99f405"
+    },
+    {
+      "path": "data/stories/consideraciones-sobre-la-belleza.md",
+      "bytes": 2297,
+      "sha256": "2dd747e0b32db8efd035e368d03cbfbedafdaafcb38758c585d9fcccd6e00f0f"
+    },
+    {
+      "path": "data/stories/costumbres-esteticas-de-la-antigua-francia.md",
+      "bytes": 5707,
+      "sha256": "a1c98ffcffbb060f6dafd3e828dbc456d2166b1ff2b2e1603bd9609eac211ec0"
+    },
+    {
+      "path": "data/stories/cronicas-absurdas-corazones-muertos.md",
+      "bytes": 1817,
+      "sha256": "1081799d0a64b683770ed020196b5399f3180b265437dfc78e380da28396725b"
+    },
+    {
+      "path": "data/stories/cronicas-absurdas-el-lugar-de-los-coros-dantescos.md",
+      "bytes": 2580,
+      "sha256": "41a2818f27dcfd58c77471db522637f1f3de00805dd4b435297cb1df6967b8fe"
+    },
+    {
+      "path": "data/stories/cronicas-absurdas-el-prado.md",
+      "bytes": 1208,
+      "sha256": "c620b704ca3a78d250add9ccee7e83f4c49fb31ced2797369a701c09d184c929"
+    },
+    {
+      "path": "data/stories/cronicas-absurdas-licor-de-mi-agonia.md",
+      "bytes": 2056,
+      "sha256": "5720089687af228f0b9338195fd2d90fb49fc401eeefd557a339ad89c9057302"
+    },
+    {
+      "path": "data/stories/cronicas-absurdas-maldito-egocentrico.md",
+      "bytes": 2061,
+      "sha256": "804acf1af1efed54c9a7c0e299a41563006b0539456d2e19a7ed500872bcc729"
+    },
+    {
+      "path": "data/stories/de-bebidas-y-momentos.md",
+      "bytes": 798,
+      "sha256": "c122d5d01747dbb756dc6d269ef61cdbf3e1c4e7f95ea2695d25bd5fd2406d49"
+    },
+    {
+      "path": "data/stories/de-corazones-rotos.md",
+      "bytes": 1440,
+      "sha256": "3a2ebde6e212c31549131733adb0f359ff5a39f0ae3fd4d15264075e7ca9361b"
+    },
+    {
+      "path": "data/stories/de-cuando-el-ano-se-parte-al-medio.md",
+      "bytes": 2103,
+      "sha256": "5581b66692c919cfde43ff7deb845f7f5065e8323ebcda6c580858bfebfd770c"
+    },
+    {
+      "path": "data/stories/de-la-temperatura-infernal-y-celestial.md",
+      "bytes": 3183,
+      "sha256": "4aff05369ff218f7d7c3d0f1fa4e09b4c099b9d28873f1b5458961b9955c74c7"
+    },
+    {
+      "path": "data/stories/de-las-cosas-secundarias.md",
+      "bytes": 3735,
+      "sha256": "d33548d5e5b59f1bf7db5f7b36c4572e8f920b9247ec08a3ae6a2a4f4e6dff4c"
+    },
+    {
+      "path": "data/stories/de-las-escondidas-ajenos-recuerdos-infantiles.md",
+      "bytes": 4385,
+      "sha256": "6f31d45f95d4e737a6efd67ea4b9926fe18e2b0f00ef661a5d9627660878cd21"
+    },
+    {
+      "path": "data/stories/de-las-pesadillas-del-autor.md",
+      "bytes": 1122,
+      "sha256": "0412ad7dcc66041b2e26436bf020fa082aca2a4c4fea91ada06cde7bdc5c6c5d"
+    },
+    {
+      "path": "data/stories/de-los-conductores-relato-automovilistico.md",
+      "bytes": 3009,
+      "sha256": "9d6d82b932598ac661eede31e337d93c25fe294c7a9b8f4b15b952b1372d2bf3"
+    },
+    {
+      "path": "data/stories/de-los-consejos.md",
+      "bytes": 797,
+      "sha256": "d705742a3ebc9c9149135c0feb5f6bb6234ffed7897b3e58c9e66e8685ca9392"
+    },
+    {
+      "path": "data/stories/de-los-tiempos-pasados-i.md",
+      "bytes": 923,
+      "sha256": "23d40c4ddbf7da691a0284b867d17b284b5fe7b71c49191f9907ad16d114a669"
+    },
+    {
+      "path": "data/stories/de-lunares-y-evoluciones.md",
+      "bytes": 869,
+      "sha256": "55a8b667bbf2004567b0ae532b425d7675268c5488a3ab18431fb798f8b67a8b"
+    },
+    {
+      "path": "data/stories/de-macbeth.md",
+      "bytes": 596,
+      "sha256": "e5e34527ad301cc5a010c70f4742b534bb907a585d031c4542dc70815bc31158"
+    },
+    {
+      "path": "data/stories/de-medialunas-cuento-de-desayuno.md",
+      "bytes": 3671,
+      "sha256": "2f8e81b0e2e3ae7fedad5a9e7f12a255d9b47bc55c8cc099143e5a7f9ce63bef"
+    },
+    {
+      "path": "data/stories/de-muertes-y-resurrecciones.md",
+      "bytes": 2881,
+      "sha256": "8e0c35869824519cb4e0ab457dc0b554d07cd2928e029a96ee19aebc635246c5"
+    },
+    {
+      "path": "data/stories/de-regresos-y-desconocimientos.md",
+      "bytes": 1109,
+      "sha256": "3d1a83359a5d98e17962d19a8ce64af0ab616148a3b7979d124d35863762e7a9"
+    },
+    {
+      "path": "data/stories/deja-vu.md",
+      "bytes": 2354,
+      "sha256": "d8649364c61c430f11647104290fd143514794798f6f65c4d4bce4580dfcc2ae"
+    },
+    {
+      "path": "data/stories/del-motivo-de-la-poesia.md",
+      "bytes": 681,
+      "sha256": "accc2cdb425aacdb4b1cbb3caa5be10f95165dd53804fbf417457aeedadba50d"
+    },
+    {
+      "path": "data/stories/del-tengo-eso-y-quiero-aquello.md",
+      "bytes": 609,
+      "sha256": "3ba92467572d272788b212a3f3a9fdc8edcca1b25a034e7a45b68338eba7fb2f"
+    },
+    {
+      "path": "data/stories/delirios-de-un-artista-a-medianoche.md",
+      "bytes": 2483,
+      "sha256": "4623675e421fb5e8318e2ddf78e3e15f9cc45fd865f2e6ef375fd8c39729a554"
+    },
+    {
+      "path": "data/stories/descripciones-geograficas.md",
+      "bytes": 2856,
+      "sha256": "bf2e2711c9ac831e2af1214020f2a6c250ac371e64903edfbfd4ed39e2afd05c"
+    },
+    {
+      "path": "data/stories/digno-fin-cuestionable-medio.md",
+      "bytes": 5144,
+      "sha256": "373eac6a603221f13a3011bc1785d118cef363e97d2cfb8fbc0746556a25f2c9"
+    },
+    {
+      "path": "data/stories/don-ernesto-y-el-joven-depresion.md",
+      "bytes": 7059,
+      "sha256": "7e37bcc2791407b9e1eaf1d85b359d8c72414ac1c11e8393767f5678850aabc9"
+    },
+    {
+      "path": "data/stories/el-japones-errante.md",
+      "bytes": 1282,
+      "sha256": "a1cdb7c9128ce7b69f18e83535fe0202814cb0b34218194c40a51cfa639bbd52"
+    },
+    {
+      "path": "data/stories/el-narrador-de-historias.md",
+      "bytes": 2438,
+      "sha256": "314ea932ff212d589272cf384ef95b4056ad3a64c801e536e163aa911ecb60e2"
+    },
+    {
+      "path": "data/stories/entre-la-nada-y-el-adios-confesiones-de-un-optimista.md",
+      "bytes": 1560,
+      "sha256": "c5ec0be399d5937ebefe9c9c9da262bbc828854b3d2cc1ed2815d2863cae77ab"
+    },
+    {
+      "path": "data/stories/espejo-magico.md",
+      "bytes": 684,
+      "sha256": "07faebe147c0471af63c997f1908b00aa0243b291af5626c097c02a135e8b9d5"
+    },
+    {
+      "path": "data/stories/esquinas-i.md",
+      "bytes": 1577,
+      "sha256": "53aaba15c0346553c5dec66839387eaeb591422b25fd3b23ccb4e881f2d56c2c"
+    },
+    {
+      "path": "data/stories/experiencias-religiosas-de-las-equivocaciones-celestiales.md",
+      "bytes": 4704,
+      "sha256": "fd974596342ce3c1b73f46a8d2c707349d25263cad7e6a7734eb9731cd0ff392"
+    },
+    {
+      "path": "data/stories/fin-del-mundo.md",
+      "bytes": 986,
+      "sha256": "5468af7593e53597ff78a240b303504fdc97c125708c295e46c6d74eb1bcf950"
+    },
+    {
+      "path": "data/stories/guia-para-la-vida-o-instrucciones-para-pedir-la-cuenta-en-un-cafe-havanna.md",
+      "bytes": 3145,
+      "sha256": "9662b6da5e89e11133561a8d393cfd21e21b3904dd6953607747c54985987d80"
+    },
+    {
+      "path": "data/stories/hades-persefone-y-el-motivo-del-invierno.md",
+      "bytes": 4441,
+      "sha256": "af22ee6fa3458447ca5971a7e40188ff9dc8fa86bcdcfd5fa98333b31927351a"
+    },
+    {
+      "path": "data/stories/honestos-abstenerse.md",
+      "bytes": 1693,
+      "sha256": "07154935ccbb69ccd32726a4431195d739e58df199c5e1b456ef785dbc635326"
+    },
+    {
+      "path": "data/stories/johannes-brahms-y-su-caracter-delicado.md",
+      "bytes": 4942,
+      "sha256": "6316b7d915b790cb1765ab232341ca6b97e61598447f6bb29192aa3a6c515d0b"
+    },
+    {
+      "path": "data/stories/la-dama-del-lago-excalibur-y-como-esta-llego-a-arturo.md",
+      "bytes": 1739,
+      "sha256": "a582c59c7575b246507243bf45b49e720da15f942285c6bc353b694ee50b0bff"
+    },
+    {
+      "path": "data/stories/la-dolorosa-muerte-del-sr-buen-gusto.md",
+      "bytes": 3660,
+      "sha256": "56654aebed47c0559061a46f0982fae61bdfc3c8621d790de59ea8217c0d2800"
+    },
+    {
+      "path": "data/stories/la-habitacion-numero-setenta-y-ocho-de-magos-y-hechiceros.md",
+      "bytes": 5409,
+      "sha256": "4c68c75afa95d98b8a54bba8c80a6391c05157294404ac0849549a548a125bbe"
+    },
+    {
+      "path": "data/stories/la-importancia-de-ser-don-ernesto.md",
+      "bytes": 1605,
+      "sha256": "1b0e1e7c06fa415d869890d3fc2b132d805dc5746e9adccfe687bb35872422e5"
+    },
+    {
+      "path": "data/stories/la-pesadilla-de-balder-y-el-crepusculo-de-los-dioses.md",
+      "bytes": 3474,
+      "sha256": "3ee7503c1eac3ab543763cfb4e6aed7d807686871772e13b5b7bd17104bf3d80"
+    },
+    {
+      "path": "data/stories/las-fabulosas-locuras-de-jorge-iii-y-como-estas-lo-condujeron-a-una-reconocida-fama-historica.md",
+      "bytes": 3589,
+      "sha256": "568181551dd3786f41a11fe2934f08bc1b63472cf65b3967f290e165f97e3183"
+    },
+    {
+      "path": "data/stories/los-cielos-aztecas.md",
+      "bytes": 3525,
+      "sha256": "b35d0e46e27e4e8e52d15215fe3b96434998e7bd4a7fb377b0c2980a794e0080"
+    },
+    {
+      "path": "data/stories/monte-criollo.md",
+      "bytes": 741,
+      "sha256": "35137d0c2e0e691106f73c798a64298d305e1222afbffa9a09d2f05badc0e2ca"
+    },
+    {
+      "path": "data/stories/puertas.md",
+      "bytes": 2554,
+      "sha256": "e0e9a65aee04e701079077d6aae5cf89ec946481357c3f3c272c1aa7359a10c0"
+    },
+    {
+      "path": "data/stories/reflexiones-de-taxi-2-cronica-de-un-hastiado.md",
+      "bytes": 3262,
+      "sha256": "e09b93f2f22f6e5722251881f68f4c90ba5335710cb53578e47e2d6f30467ea8"
+    },
+    {
+      "path": "data/stories/reflexiones-de-taxi-3-el-patriota.md",
+      "bytes": 3306,
+      "sha256": "e46622ff86b4d047b8faa34302cc89d70162dc5989c1a0171f7a9a8a70e3f460"
+    },
+    {
+      "path": "data/stories/reflexiones-de-taxi.md",
+      "bytes": 1612,
+      "sha256": "47d6a066025911016974e1639be1e27c1011a06c627f735c7b076cabbf885da7"
+    },
+    {
+      "path": "data/stories/remembranzas.md",
+      "bytes": 2264,
+      "sha256": "ad9c8bb0464dafcc2a9f307ebec5b57d4044d2640b60b1713afb973d70a4b4d1"
+    },
+    {
+      "path": "data/stories/siluetas.md",
+      "bytes": 806,
+      "sha256": "54499bc385f8d634b0271b65b8abdb72aa420127bac3ce432175e2136e745a5c"
+    },
+    {
+      "path": "data/stories/un-poco-de-zoologia-fantastica.md",
+      "bytes": 6606,
+      "sha256": "9a0085f44011c6dea1297701012f253516caa932bf9de6888880d0a70d29553e"
+    },
+    {
+      "path": "data/stories/una-flor-llamada-amanda.md",
+      "bytes": 4834,
+      "sha256": "6a1160423ea422300d5a0b90a58b85022bef4afe8ae72e66c29f31c5686d15d9"
+    },
+    {
+      "path": "data/story-media.json",
+      "bytes": 2796,
+      "sha256": "55658d5d3833a6e07f0da964b41205a96655e69d714c1d9dfe50174fd6f9d4d7"
+    },
+    {
+      "path": "data/story-scenes.json",
+      "bytes": 1186,
+      "sha256": "634af113904fb4b49daea7c1204d5f21793281ed1b0d9dca0f144214b0d9a93f"
+    },
+    {
+      "path": "opengraph-image.jpg",
+      "bytes": 263204,
+      "sha256": "1674e6de52c3f3fe804bb24aa0eb6184e514f2abd01acc64b6b63d64bdd4061e"
+    },
+    {
+      "path": "rig-poses.json",
+      "bytes": 1709,
+      "sha256": "d4ba283afb86f3a66c1735c00067ac05123754f5d5820f2df222cbd91c31802c"
+    }
+  ]
+}

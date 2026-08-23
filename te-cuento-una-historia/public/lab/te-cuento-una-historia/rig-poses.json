@@ -1,0 +1,34 @@
+{
+  "schema": "te-cuento-popup-book-motion/v0.4",
+  "status": "ready_for_pablo",
+  "canvas": { "width": 1920, "height": 1200 },
+  "fps": 24,
+  "captureFrames": 60,
+  "actionDurationMs": 1900,
+  "captureDurationMs": 2500,
+  "invariants": [
+    "world-x-right-y-up-z-depth",
+    "perspective-camera-oblique",
+    "fixed-spine",
+    "left-textblock-conserved",
+    "cover-leads-left-textblock",
+    "page-spread-final-soft-v-2.5deg",
+    "city-depth-separation-over-100-world-units",
+    "role-specific-paper-mechanisms",
+    "physical-tabs-and-contact-shadows",
+    "no-structural-opacity",
+    "no-structural-scale"
+  ],
+  "poses": [
+    { "name": "closed", "timeMs": 0, "coverDeg": 0, "leftTextblockDeg": 0, "cityGlobal": 0 },
+    { "name": "cover-release", "timeMs": 130, "coverDeg": 12, "leftTextblockDeg": 2, "cityGlobal": 0 },
+    { "name": "cover-leading", "timeMs": 330, "coverDeg": 50, "leftTextblockDeg": 28, "cityGlobal": 0 },
+    { "name": "block-lifts", "timeMs": 570, "coverDeg": 94, "leftTextblockDeg": 72, "cityGlobal": 0.04 },
+    { "name": "page-crosses", "timeMs": 820, "coverDeg": 138, "leftTextblockDeg": 121, "cityGlobal": 0.2 },
+    { "name": "mechanisms-engage", "timeMs": 1080, "coverDeg": 168, "leftTextblockDeg": 151, "cityGlobal": 0.48 },
+    { "name": "popup-rises", "timeMs": 1350, "coverDeg": 178.5, "leftTextblockDeg": 169, "cityGlobal": 0.73 },
+    { "name": "near-open", "timeMs": 1580, "coverDeg": 180, "leftTextblockDeg": 175.5, "cityGlobal": 0.9 },
+    { "name": "paper-settles", "timeMs": 1760, "coverDeg": 180, "leftTextblockDeg": 177.2, "cityGlobal": 0.98 },
+    { "name": "final-rest", "timeMs": 1900, "coverDeg": 180, "leftTextblockDeg": 177.5, "cityGlobal": 1 }
+  ]
+}
