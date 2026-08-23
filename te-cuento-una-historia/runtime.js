@@ -4,6 +4,7 @@ import {
   escapeTeCuentoHtml as escapeHtml,
   renderTeCuentoMarkdown,
 } from "./lib/te-cuento-story-markdown";
+import { mapHotspotToContainer } from "./spatial-coordinates.js";
 
 export async function mountExperience(root, options = {}) {
 if (!root?.querySelector) throw new TypeError("mountExperience requiere un nodo raíz");
@@ -649,20 +650,23 @@ async function openStory(story, trigger = null, { historyMode = "push" } = {}) {
 function positionClues() {
   const canvas = stage.querySelector("canvas");
   if (!canvas) return;
-  const rect = canvas.getBoundingClientRect();
-  const minimumTarget = 44;
+  const canvasRect = canvas.getBoundingClientRect();
+  const containerRect = clueLayer.getBoundingClientRect();
   for (const story of STORIES) {
     const clue = clueLayer.querySelector(`[data-story="${story.slug}"]`);
     if (!clue) continue;
     const motionOffset = rig?.reactionScreenOffset(story.reactions) ?? { x: 0, y: 0 };
-    const centerX = rect.left + (story.x / MASTER.width) * rect.width + motionOffset.x;
-    const centerY = rect.top + (story.y / MASTER.height) * rect.height + motionOffset.y;
-    const width = Math.max((story.width / MASTER.width) * rect.width, minimumTarget);
-    const height = Math.max((story.height / MASTER.height) * rect.height, minimumTarget);
-    clue.style.left = `${centerX - width / 2}px`;
-    clue.style.top = `${centerY - height / 2}px`;
-    clue.style.width = `${width}px`;
-    clue.style.height = `${height}px`;
+    const mapped = mapHotspotToContainer({
+      canvasRect,
+      containerRect,
+      hotspot: story,
+      master: MASTER,
+      motionOffset,
+    });
+    clue.style.left = `${mapped.left}px`;
+    clue.style.top = `${mapped.top}px`;
+    clue.style.width = `${mapped.width}px`;
+    clue.style.height = `${mapped.height}px`;
   }
 }
 

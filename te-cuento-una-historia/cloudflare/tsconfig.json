@@ -14,6 +14,9 @@
     "types": ["vite/client"],
     "baseUrl": ".",
     "paths": {
+      "react": ["node_modules/@types/react/index.d.ts"],
+      "react/jsx-runtime": ["node_modules/@types/react/jsx-runtime.d.ts"],
+      "react-dom/client": ["node_modules/@types/react-dom/client.d.ts"],
       "@/components/rams/primitives": ["src/rams-wordmark.tsx"],
       "@/lib/lab-content": ["src/content-types.ts"],
       "@/lib/te-cuento-story-markdown": [
