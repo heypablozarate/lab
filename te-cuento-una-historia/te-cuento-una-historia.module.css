@@ -514,6 +514,15 @@
   pointer-events: none;
 }
 
+.introDirectEntry {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.introDirectEntry::before {
+  opacity: 0;
+}
+
 .intro:global(.is-transitioning)::before,
 .intro:global(.is-dismissed)::before {
   opacity: 0;

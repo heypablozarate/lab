@@ -6,6 +6,13 @@
 
 - 2026-07-14 / Claude: Added the Amélie (2004) experiment route at `/amelie`: server metadata, JSON-LD, and hidden server context read from the parent admin data (`getLabExperiment("amelie")`), with the interactive experience served as a full-viewport iframe of the static recreation bundle under the parent's `public/lab/amelie/`.
 
+### Fixed
+
+- 2026-08-22 / Codex: Direct **¿Te cuento una historia?** permalinks now bypass
+  the welcome dialog from the first client render and prepare the fully open
+  book behind the reader. Closing the story exposes an immediately usable
+  scene. Related navigation remains limited to links authored in story files.
+
 ### Changed
 
 - 2026-08-20 / Codex: Prepared Lab renderers to consume parent-managed public

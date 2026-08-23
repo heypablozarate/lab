@@ -720,16 +720,17 @@ listen(credits, "click", (event) => {
   if (target instanceof Node && !creditsPanel.contains(target)) closeCredits();
 });
 listen(reader, "click", (event) => {
-  const target = event.target;
-  if (!(target instanceof Node) || closeReader.contains(target)) return;
-  if (!readerArticle.contains(target)) close();
+  const eventPath = event.composedPath();
+  if (eventPath.includes(closeReader)) return;
+  if (!eventPath.includes(readerArticle)) close();
 });
 listen(readerBody, "click", (event) => {
   const link = event.target instanceof Element ? event.target.closest("[data-story-link]") : null;
   if (!link) return;
-  event.preventDefault();
   const linkedStory = findStoryBySlug(link.dataset.storyLink);
-  if (linkedStory) openStory(linkedStory, readerReturnTarget);
+  if (!linkedStory) return;
+  event.preventDefault();
+  void openStory(linkedStory, readerReturnTarget);
 });
 listen(window, "popstate", async () => {
   await storiesReady;
@@ -844,6 +845,7 @@ try {
   audioEngine.load().catch(() => {});
   await storiesReady;
   if (destroyed) throw new DOMException("La experiencia se desmontó durante la inicialización", "AbortError");
+  if (initialStorySlug) rig.setProgress(1);
   buildClues();
   syncState(bypassIntro);
   if (bypassIntro) {
