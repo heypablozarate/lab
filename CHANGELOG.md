@@ -29,6 +29,12 @@
 
 ### Changed
 
+- 2026-08-24 / Codex: Aligned the generated `cuentos.ar/robots.txt` with the
+  main site's content-use policy: one wildcard group carries
+  `ai-train=no, search=yes, ai-input=yes`, while GPTBot, ClaudeBot,
+  Google-Extended, and PerplexityBot are explicitly allowed and the canonical
+  sitemap remains published.
+
 - 2026-08-24 / Codex: Added a restrained loading state to the initial **¿Te
   cuento una historia?** entry control. Its existing underline now pulses while
   the deferred Three.js runtime prepares, exposes `aria-busy`, preserves the
