@@ -34,8 +34,9 @@ async function walk(directory = payloadRoot) {
   return result.sort();
 }
 
-const [manifest, corpus, hotspots, storyScenes, storyMedia, sumsText, files] = await Promise.all([
+const [manifest, imageFormats, corpus, hotspots, storyScenes, storyMedia, sumsText, files] = await Promise.all([
   readFile(path.join(payloadRoot, "PROJECT-MANIFEST.json"), "utf8").then(JSON.parse),
+  readFile(path.join(payloadRoot, "assets/image-formats.json"), "utf8").then(JSON.parse),
   readFile(path.join(payloadRoot, "data/corpus.json"), "utf8").then(JSON.parse),
   readFile(path.join(payloadRoot, "data/hotspots.json"), "utf8").then(JSON.parse),
   readFile(path.join(payloadRoot, "data/story-scenes.json"), "utf8").then(JSON.parse),
@@ -48,6 +49,11 @@ const failures = [];
 const payloadFiles = files.filter((file) => !META_FILES.has(file));
 if (manifest.schema !== "te-cuento-una-historia/public-payload-v1") failures.push("manifest-schema");
 if (manifest.scope !== "/lab/te-cuento-una-historia") failures.push("manifest-scope");
+if (
+  imageFormats.schema !== "te-cuento-image-formats/v1"
+  || imageFormats.preferredFormat !== "avif"
+  || imageFormats.fallbackFormat !== "webp"
+) failures.push("image-formats-schema");
 for (const stalePath of ["assets", "data", "rig-poses.json", "PROJECT-MANIFEST.json", "SHA256SUMS.txt"]) {
   try {
     await stat(path.join(codeRoot, stalePath));
@@ -70,6 +76,23 @@ for (const file of manifest.files) {
   if (bytes.length !== file.bytes) failures.push(`bytes:${file.path}`);
   if (hash !== file.sha256) failures.push(`hash:${file.path}`);
   if (sumEntries.get(file.path) !== hash) failures.push(`sums:${file.path}`);
+}
+
+const pngAssets = files.filter((file) => file.startsWith("assets/") && file.endsWith(".png")).sort();
+const declaredImageSources = imageFormats.entries.map((entry) => `assets/${entry.source}`).sort();
+if (JSON.stringify(pngAssets) !== JSON.stringify(declaredImageSources)) failures.push("image-formats-source-set");
+for (const entry of imageFormats.entries) {
+  const logicalSource = `assets/${entry.source}`;
+  const avif = logicalSource.replace(/\.png$/u, ".avif");
+  const webp = logicalSource.replace(/\.png$/u, ".webp");
+  if (!files.includes(avif)) failures.push(`image-format-missing:${avif}`);
+  if (!files.includes(webp)) failures.push(`image-format-missing:${webp}`);
+  if (!Number.isFinite(entry.width) || !Number.isFinite(entry.height) || entry.width <= 0 || entry.height <= 0) {
+    failures.push(`image-format-dimensions:${entry.source}`);
+  }
+  if (!(entry.bytes?.avif > 0) || !(entry.bytes?.webp > 0) || !(entry.bytes?.png > 0)) {
+    failures.push(`image-format-bytes:${entry.source}`);
+  }
 }
 
 const corpusSlugs = corpus.entries.map((entry) => entry.slug);

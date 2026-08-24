@@ -6,6 +6,7 @@
   "scripts": {
     "prepare": "node scripts/prepare-content.mjs",
     "build": "npm run prepare && vite build && node scripts/copy-static.mjs",
+    "optimize:assets": "node scripts/optimize-assets.mjs",
     "typecheck": "npm run prepare && tsc --noEmit",
     "preview": "npm run build && vite preview",
     "test:browser": "playwright test",
@@ -22,6 +23,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@types/three": "^0.185.0",
+    "sharp": "^0.34.3",
     "typescript": "^5",
     "vite": "^7.1.3",
     "wrangler": "^4.31.0"

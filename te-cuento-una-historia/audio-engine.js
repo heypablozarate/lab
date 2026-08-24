@@ -71,7 +71,7 @@ function makeFilter(context, type, frequency, q = 0.707, gain = 0) {
 }
 
 export class PopupAudioEngine {
-  constructor({ musicTracks, cityUrl, mix, musicCycle = {} }) {
+  constructor({ musicTracks, cityUrl, mix, musicCycle = {}, context = null }) {
     if (!Array.isArray(musicTracks) || musicTracks.length === 0) {
       throw new Error("Se necesita al menos un loop musical");
     }
@@ -97,7 +97,7 @@ export class PopupAudioEngine {
     this.musicCycleTimer = 0;
     this.activeMusicTrack = null;
     this.lastMusicIndex = -1;
-    this.context = null;
+    this.context = context;
     this.buffers = null;
     this.sources = null;
     this.gains = null;
@@ -113,17 +113,19 @@ export class PopupAudioEngine {
   async load() {
     if (this.destroyed) throw new DOMException("El motor de audio fue destruido", "AbortError");
     if (this.loading) return this.loading;
-    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-    if (!AudioContextClass) throw new Error("Web Audio API no está disponible");
-    try {
-      this.context = new AudioContextClass({
-        latencyHint: "playback",
-        sampleRate: MUSIC_SOURCE_RATE,
-      });
-    } catch {
-      // Navegadores antiguos pueden no aceptar sampleRate en el constructor.
-      // El frame count equivalente conserva la duración exacta de cada loop.
-      this.context = new AudioContextClass({ latencyHint: "playback" });
+    if (!this.context) {
+      const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+      if (!AudioContextClass) throw new Error("Web Audio API no está disponible");
+      try {
+        this.context = new AudioContextClass({
+          latencyHint: "playback",
+          sampleRate: MUSIC_SOURCE_RATE,
+        });
+      } catch {
+        // Navegadores antiguos pueden no aceptar sampleRate en el constructor.
+        // El frame count equivalente conserva la duración exacta de cada loop.
+        this.context = new AudioContextClass({ latencyHint: "playback" });
+      }
     }
     const loadingContext = this.context;
     const musicRequests = this.musicTracks.map((track) => (

@@ -1,0 +1,1933 @@
+{
+  "schema": "te-cuento-image-formats/v1",
+  "sourceFormat": "png",
+  "preferredFormat": "avif",
+  "fallbackFormat": "webp",
+  "entries": [
+    {
+      "source": "book/edge-material-horizontal.png",
+      "width": 256,
+      "height": 24,
+      "sourceWidth": 256,
+      "sourceHeight": 24,
+      "bytes": {
+        "png": 11670,
+        "avif": 1499,
+        "webp": 1742
+      }
+    },
+    {
+      "source": "book/edge-material-vertical.png",
+      "width": 24,
+      "height": 256,
+      "sourceWidth": 24,
+      "sourceHeight": 256,
+      "bytes": {
+        "png": 11777,
+        "avif": 1516,
+        "webp": 1752
+      }
+    },
+    {
+      "source": "book/page-left.png",
+      "width": 933,
+      "height": 764,
+      "sourceWidth": 933,
+      "sourceHeight": 764,
+      "bytes": {
+        "png": 1343840,
+        "avif": 149140,
+        "webp": 177204
+      }
+    },
+    {
+      "source": "book/page-right.png",
+      "width": 939,
+      "height": 764,
+      "sourceWidth": 939,
+      "sourceHeight": 764,
+      "bytes": {
+        "png": 1343007,
+        "avif": 144752,
+        "webp": 166998
+      }
+    },
+    {
+      "source": "book/surface-left.png",
+      "width": 933,
+      "height": 764,
+      "sourceWidth": 933,
+      "sourceHeight": 764,
+      "bytes": {
+        "png": 1134375,
+        "avif": 124272,
+        "webp": 137150
+      }
+    },
+    {
+      "source": "book/surface-right.png",
+      "width": 939,
+      "height": 764,
+      "sourceWidth": 939,
+      "sourceHeight": 764,
+      "bytes": {
+        "png": 1127883,
+        "avif": 120428,
+        "webp": 133174
+      }
+    },
+    {
+      "source": "cover.png",
+      "width": 768,
+      "height": 1152,
+      "sourceWidth": 1024,
+      "sourceHeight": 1536,
+      "bytes": {
+        "png": 2789312,
+        "avif": 138041,
+        "webp": 134452
+      }
+    },
+    {
+      "source": "desktop/box.png",
+      "width": 312,
+      "height": 258,
+      "sourceWidth": 312,
+      "sourceHeight": 258,
+      "bytes": {
+        "png": 119330,
+        "avif": 12922,
+        "webp": 16748
+      }
+    },
+    {
+      "source": "desktop/clock.png",
+      "width": 511,
+      "height": 270,
+      "sourceWidth": 511,
+      "sourceHeight": 270,
+      "bytes": {
+        "png": 194044,
+        "avif": 22903,
+        "webp": 33900
+      }
+    },
+    {
+      "source": "desktop/cup.png",
+      "width": 236,
+      "height": 213,
+      "sourceWidth": 236,
+      "sourceHeight": 213,
+      "bytes": {
+        "png": 61024,
+        "avif": 7097,
+        "webp": 9306
+      }
+    },
+    {
+      "source": "desktop/inkwell.png",
+      "width": 178,
+      "height": 183,
+      "sourceWidth": 178,
+      "sourceHeight": 183,
+      "bytes": {
+        "png": 50590,
+        "avif": 6704,
+        "webp": 8262
+      }
+    },
+    {
+      "source": "desktop/lamp.png",
+      "width": 417,
+      "height": 470,
+      "sourceWidth": 417,
+      "sourceHeight": 470,
+      "bytes": {
+        "png": 173400,
+        "avif": 20187,
+        "webp": 27858
+      }
+    },
+    {
+      "source": "desktop/magnifier.png",
+      "width": 242,
+      "height": 301,
+      "sourceWidth": 242,
+      "sourceHeight": 301,
+      "bytes": {
+        "png": 106372,
+        "avif": 10885,
+        "webp": 13966
+      }
+    },
+    {
+      "source": "desktop/portrait.png",
+      "width": 258,
+      "height": 418,
+      "sourceWidth": 258,
+      "sourceHeight": 418,
+      "bytes": {
+        "png": 168880,
+        "avif": 17153,
+        "webp": 21826
+      }
+    },
+    {
+      "source": "desktop/quill.png",
+      "width": 505,
+      "height": 186,
+      "sourceWidth": 505,
+      "sourceHeight": 186,
+      "bytes": {
+        "png": 52929,
+        "avif": 6417,
+        "webp": 9416
+      }
+    },
+    {
+      "source": "desktop/table.png",
+      "width": 1918,
+      "height": 1200,
+      "sourceWidth": 1923,
+      "sourceHeight": 1203,
+      "bytes": {
+        "png": 3711698,
+        "avif": 133372,
+        "webp": 298386
+      }
+    },
+    {
+      "source": "desktop/vignette.png",
+      "width": 1920,
+      "height": 1200,
+      "sourceWidth": 1920,
+      "sourceHeight": 1200,
+      "bytes": {
+        "png": 244836,
+        "avif": 3005,
+        "webp": 69570
+      }
+    },
+    {
+      "source": "fidelity-v05-color-a9159c172d60/city/city-buildings-far-left--left.png",
+      "width": 588,
+      "height": 310,
+      "sourceWidth": 588,
+      "sourceHeight": 310,
+      "bytes": {
+        "png": 339142,
+        "avif": 51466,
+        "webp": 56736
+      }
+    },
+    {
+      "source": "fidelity-v05-color-a9159c172d60/city/city-buildings-far-right--right.png",
+      "width": 613,
+      "height": 357,
+      "sourceWidth": 613,
+      "sourceHeight": 357,
+      "bytes": {
+        "png": 412644,
+        "avif": 64610,
+        "webp": 70064
+      }
+    },
+    {
+      "source": "fidelity-v05-color-a9159c172d60/city/city-buildings-mid-left--left.png",
+      "width": 584,
+      "height": 830,
+      "sourceWidth": 584,
+      "sourceHeight": 830,
+      "bytes": {
+        "png": 781158,
+        "avif": 100677,
+        "webp": 117544
+      }
+    },
+    {
+      "source": "fidelity-v05-color-a9159c172d60/city/city-buildings-mid-right--right.png",
+      "width": 688,
+      "height": 608,
+      "sourceWidth": 688,
+      "sourceHeight": 608,
+      "bytes": {
+        "png": 758490,
+        "avif": 110820,
+        "webp": 120370
+      }
+    },
+    {
+      "source": "fidelity-v05-color-a9159c172d60/city/city-buildings-near--left.png",
+      "width": 798,
+      "height": 475,
+      "sourceWidth": 798,
+      "sourceHeight": 475,
+      "bytes": {
+        "png": 569329,
+        "avif": 65016,
+        "webp": 80490
+      }
+    },
+    {
+      "source": "fidelity-v05-color-a9159c172d60/city/city-buildings-near--right.png",
+      "width": 836,
+      "height": 475,
+      "sourceWidth": 836,
+      "sourceHeight": 475,
+      "bytes": {
+        "png": 859306,
+        "avif": 103508,
+        "webp": 118770
+      }
+    },
+    {
+      "source": "fidelity-v05-color-a9159c172d60/city/city-obelisk--left.png",
+      "width": 38,
+      "height": 454,
+      "sourceWidth": 38,
+      "sourceHeight": 454,
+      "bytes": {
+        "png": 18455,
+        "avif": 4476,
+        "webp": 5358
+      }
+    },
+    {
+      "source": "fidelity-v05-color-a9159c172d60/city/city-obelisk--right.png",
+      "width": 49,
+      "height": 454,
+      "sourceWidth": 49,
+      "sourceHeight": 454,
+      "bytes": {
+        "png": 33336,
+        "avif": 6816,
+        "webp": 7090
+      }
+    },
+    {
+      "source": "fidelity-v05-color-a9159c172d60/city/city-obelisk-shading--left.png",
+      "width": 8,
+      "height": 20,
+      "sourceWidth": 8,
+      "sourceHeight": 20,
+      "bytes": {
+        "png": 820,
+        "avif": 595,
+        "webp": 320
+      }
+    },
+    {
+      "source": "fidelity-v05-color-a9159c172d60/city/city-obelisk-shading--right.png",
+      "width": 18,
+      "height": 20,
+      "sourceWidth": 18,
+      "sourceHeight": 20,
+      "bytes": {
+        "png": 1003,
+        "avif": 700,
+        "webp": 440
+      }
+    },
+    {
+      "source": "fidelity-v05-color-a9159c172d60/city/city-people-far--left.png",
+      "width": 552,
+      "height": 496,
+      "sourceWidth": 552,
+      "sourceHeight": 496,
+      "bytes": {
+        "png": 55738,
+        "avif": 18518,
+        "webp": 25412
+      }
+    },
+    {
+      "source": "fidelity-v05-color-a9159c172d60/city/city-people-far--right.png",
+      "width": 567,
+      "height": 496,
+      "sourceWidth": 567,
+      "sourceHeight": 496,
+      "bytes": {
+        "png": 57830,
+        "avif": 19385,
+        "webp": 26614
+      }
+    },
+    {
+      "source": "fidelity-v05-color-a9159c172d60/city/city-people-near--left.png",
+      "width": 823,
+      "height": 302,
+      "sourceWidth": 823,
+      "sourceHeight": 302,
+      "bytes": {
+        "png": 39777,
+        "avif": 11444,
+        "webp": 15924
+      }
+    },
+    {
+      "source": "fidelity-v05-color-a9159c172d60/city/city-people-near--right.png",
+      "width": 84,
+      "height": 302,
+      "sourceWidth": 84,
+      "sourceHeight": 302,
+      "bytes": {
+        "png": 217,
+        "avif": 479,
+        "webp": 178
+      }
+    },
+    {
+      "source": "fidelity-v05-color-a9159c172d60/city/city-taxi.png",
+      "width": 122,
+      "height": 50,
+      "sourceWidth": 122,
+      "sourceHeight": 50,
+      "bytes": {
+        "png": 11680,
+        "avif": 3201,
+        "webp": 3440
+      }
+    },
+    {
+      "source": "fidelity-v05-color-a9159c172d60/city/standees/far-left-01.png",
+      "width": 42,
+      "height": 65,
+      "sourceWidth": 42,
+      "sourceHeight": 65,
+      "bytes": {
+        "png": 4124,
+        "avif": 1608,
+        "webp": 1878
+      }
+    },
+    {
+      "source": "fidelity-v05-color-a9159c172d60/city/standees/far-left-02.png",
+      "width": 37,
+      "height": 71,
+      "sourceWidth": 37,
+      "sourceHeight": 71,
+      "bytes": {
+        "png": 3373,
+        "avif": 1569,
+        "webp": 1702
+      }
+    },
+    {
+      "source": "fidelity-v05-color-a9159c172d60/city/standees/far-left-03.png",
+      "width": 31,
+      "height": 74,
+      "sourceWidth": 31,
+      "sourceHeight": 74,
+      "bytes": {
+        "png": 3372,
+        "avif": 1578,
+        "webp": 1598
+      }
+    },
+    {
+      "source": "fidelity-v05-color-a9159c172d60/city/standees/far-left-04.png",
+      "width": 64,
+      "height": 124,
+      "sourceWidth": 64,
+      "sourceHeight": 124,
+      "bytes": {
+        "png": 8103,
+        "avif": 3270,
+        "webp": 3684
+      }
+    },
+    {
+      "source": "fidelity-v05-color-a9159c172d60/city/standees/far-right-01.png",
+      "width": 80,
+      "height": 135,
+      "sourceWidth": 80,
+      "sourceHeight": 135,
+      "bytes": {
+        "png": 9962,
+        "avif": 4272,
+        "webp": 5280
+      }
+    },
+    {
+      "source": "fidelity-v05-color-a9159c172d60/city/standees/far-right-02.png",
+      "width": 53,
+      "height": 91,
+      "sourceWidth": 53,
+      "sourceHeight": 91,
+      "bytes": {
+        "png": 6316,
+        "avif": 2913,
+        "webp": 3348
+      }
+    },
+    {
+      "source": "fidelity-v05-color-a9159c172d60/city/standees/far-right-03.png",
+      "width": 42,
+      "height": 94,
+      "sourceWidth": 42,
+      "sourceHeight": 94,
+      "bytes": {
+        "png": 4650,
+        "avif": 1883,
+        "webp": 2196
+      }
+    },
+    {
+      "source": "fidelity-v05-color-a9159c172d60/city/standees/near-left-01.png",
+      "width": 36,
+      "height": 92,
+      "sourceWidth": 36,
+      "sourceHeight": 92,
+      "bytes": {
+        "png": 4351,
+        "avif": 1815,
+        "webp": 2000
+      }
+    },
+    {
+      "source": "fidelity-v05-color-a9159c172d60/city/standees/near-left-02.png",
+      "width": 32,
+      "height": 82,
+      "sourceWidth": 32,
+      "sourceHeight": 82,
+      "bytes": {
+        "png": 3194,
+        "avif": 1444,
+        "webp": 1640
+      }
+    },
+    {
+      "source": "fidelity-v05-color-a9159c172d60/city/standees/near-left-03.png",
+      "width": 39,
+      "height": 81,
+      "sourceWidth": 39,
+      "sourceHeight": 81,
+      "bytes": {
+        "png": 3779,
+        "avif": 1645,
+        "webp": 1882
+      }
+    },
+    {
+      "source": "fidelity-v05-color-a9159c172d60/city/standees/near-left-04.png",
+      "width": 35,
+      "height": 84,
+      "sourceWidth": 35,
+      "sourceHeight": 84,
+      "bytes": {
+        "png": 4448,
+        "avif": 1706,
+        "webp": 1936
+      }
+    },
+    {
+      "source": "fidelity-v05-color-a9159c172d60/city/standees/near-left-05.png",
+      "width": 28,
+      "height": 64,
+      "sourceWidth": 28,
+      "sourceHeight": 64,
+      "bytes": {
+        "png": 2305,
+        "avif": 1311,
+        "webp": 1316
+      }
+    },
+    {
+      "source": "fidelity-v05-color-a9159c172d60/city/standees/near-left-06.png",
+      "width": 34,
+      "height": 77,
+      "sourceWidth": 34,
+      "sourceHeight": 77,
+      "bytes": {
+        "png": 3658,
+        "avif": 1596,
+        "webp": 1812
+      }
+    },
+    {
+      "source": "fidelity-v05-color-a9159c172d60/city/standees/near-left-07.png",
+      "width": 38,
+      "height": 79,
+      "sourceWidth": 38,
+      "sourceHeight": 79,
+      "bytes": {
+        "png": 4180,
+        "avif": 1925,
+        "webp": 2148
+      }
+    },
+    {
+      "source": "fidelity-v05-color-a9159c172d60/city/standees/near-left-08.png",
+      "width": 38,
+      "height": 72,
+      "sourceWidth": 38,
+      "sourceHeight": 72,
+      "bytes": {
+        "png": 3634,
+        "avif": 1748,
+        "webp": 1828
+      }
+    },
+    {
+      "source": "fidelity-v05-color-a9159c172d60/city/standees/near-left-09.png",
+      "width": 37,
+      "height": 74,
+      "sourceWidth": 37,
+      "sourceHeight": 74,
+      "bytes": {
+        "png": 3956,
+        "avif": 1618,
+        "webp": 1784
+      }
+    },
+    {
+      "source": "fidelity-v05-color-a9159c172d60/city/standees/near-left-10.png",
+      "width": 31,
+      "height": 71,
+      "sourceWidth": 31,
+      "sourceHeight": 71,
+      "bytes": {
+        "png": 2724,
+        "avif": 1230,
+        "webp": 1432
+      }
+    },
+    {
+      "source": "fidelity-v05-color-a9159c172d60/components/assets/mid-left/mid-left-central-hall.png",
+      "width": 258,
+      "height": 641,
+      "sourceWidth": 258,
+      "sourceHeight": 641,
+      "bytes": {
+        "png": 396483,
+        "avif": 53929,
+        "webp": 54922
+      }
+    },
+    {
+      "source": "fidelity-v05-color-a9159c172d60/components/assets/mid-left/mid-left-clock-red-door.png",
+      "width": 237,
+      "height": 830,
+      "sourceWidth": 237,
+      "sourceHeight": 830,
+      "bytes": {
+        "png": 330038,
+        "avif": 43046,
+        "webp": 43448
+      }
+    },
+    {
+      "source": "fidelity-v05-color-a9159c172d60/components/assets/mid-left/mid-left-right-tower.png",
+      "width": 173,
+      "height": 460,
+      "sourceWidth": 173,
+      "sourceHeight": 460,
+      "bytes": {
+        "png": 177726,
+        "avif": 24637,
+        "webp": 29186
+      }
+    },
+    {
+      "source": "fidelity-v05-color-a9159c172d60/components/assets/mid-right/mid-right-church.png",
+      "width": 205,
+      "height": 584,
+      "sourceWidth": 205,
+      "sourceHeight": 584,
+      "bytes": {
+        "png": 170971,
+        "avif": 24789,
+        "webp": 27412
+      }
+    },
+    {
+      "source": "fidelity-v05-color-a9159c172d60/components/assets/mid-right/mid-right-dome.png",
+      "width": 238,
+      "height": 568,
+      "sourceWidth": 238,
+      "sourceHeight": 568,
+      "bytes": {
+        "png": 277536,
+        "avif": 41931,
+        "webp": 43228
+      }
+    },
+    {
+      "source": "fidelity-v05-color-a9159c172d60/components/assets/mid-right/mid-right-terminal.png",
+      "width": 320,
+      "height": 591,
+      "sourceWidth": 320,
+      "sourceHeight": 591,
+      "bytes": {
+        "png": 395965,
+        "avif": 59539,
+        "webp": 57658
+      }
+    },
+    {
+      "source": "fidelity-v05-color-a9159c172d60/components/assets/near-left/near-left-deck-base.png",
+      "width": 798,
+      "height": 355,
+      "sourceWidth": 798,
+      "sourceHeight": 355,
+      "bytes": {
+        "png": 555044,
+        "avif": 63566,
+        "webp": 62416
+      }
+    },
+    {
+      "source": "fidelity-v05-color-a9159c172d60/components/assets/near-left/near-left-west-gate.png",
+      "width": 215,
+      "height": 464,
+      "sourceWidth": 215,
+      "sourceHeight": 464,
+      "bytes": {
+        "png": 157955,
+        "avif": 21044,
+        "webp": 20602
+      }
+    },
+    {
+      "source": "fidelity-v05-color-a9159c172d60/components/assets/near-right/near-right-back-facades.png",
+      "width": 722,
+      "height": 206,
+      "sourceWidth": 722,
+      "sourceHeight": 206,
+      "bytes": {
+        "png": 325836,
+        "avif": 42897,
+        "webp": 45202
+      }
+    },
+    {
+      "source": "fidelity-v05-color-a9159c172d60/components/assets/near-right/near-right-clock-tower.png",
+      "width": 115,
+      "height": 347,
+      "sourceWidth": 115,
+      "sourceHeight": 347,
+      "bytes": {
+        "png": 67793,
+        "avif": 10074,
+        "webp": 12050
+      }
+    },
+    {
+      "source": "fidelity-v05-color-a9159c172d60/components/assets/near-right/near-right-deck-base.png",
+      "width": 836,
+      "height": 308,
+      "sourceWidth": 836,
+      "sourceHeight": 308,
+      "bytes": {
+        "png": 596090,
+        "avif": 68021,
+        "webp": 66584
+      }
+    },
+    {
+      "source": "fidelity-v05-color-a9159c172d60/components/assets/obelisk/obelisk-face-left-shading-baked.png",
+      "width": 38,
+      "height": 454,
+      "sourceWidth": 38,
+      "sourceHeight": 454,
+      "bytes": {
+        "png": 21663,
+        "avif": 4542,
+        "webp": 5472
+      }
+    },
+    {
+      "source": "fidelity-v05-color-a9159c172d60/components/assets/obelisk/obelisk-face-right-shading-baked.png",
+      "width": 49,
+      "height": 454,
+      "sourceWidth": 49,
+      "sourceHeight": 454,
+      "bytes": {
+        "png": 37276,
+        "avif": 6833,
+        "webp": 7020
+      }
+    },
+    {
+      "source": "fidelity-v05-color-a9159c172d60/components/assets/obelisk/obelisk-front-joined-shading-baked.png",
+      "width": 87,
+      "height": 454,
+      "sourceWidth": 87,
+      "sourceHeight": 454,
+      "bytes": {
+        "png": 57572,
+        "avif": 10595,
+        "webp": 11484
+      }
+    },
+    {
+      "source": "fidelity-v05-color-a9159c172d60/deck-footprints/near-left-deck-surface.png",
+      "width": 798,
+      "height": 355,
+      "sourceWidth": 798,
+      "sourceHeight": 355,
+      "bytes": {
+        "png": 555044,
+        "avif": 63566,
+        "webp": 62416
+      }
+    },
+    {
+      "source": "fidelity-v05-color-a9159c172d60/deck-footprints/near-right-deck-surface.png",
+      "width": 836,
+      "height": 308,
+      "sourceWidth": 836,
+      "sourceHeight": 308,
+      "bytes": {
+        "png": 596090,
+        "avif": 68021,
+        "webp": 66584
+      }
+    },
+    {
+      "source": "fidelity-v05-color-a9159c172d60/materials/cardstock-back-fiber.png",
+      "width": 256,
+      "height": 256,
+      "sourceWidth": 256,
+      "sourceHeight": 256,
+      "bytes": {
+        "png": 34281,
+        "avif": 1119,
+        "webp": 1192
+      }
+    },
+    {
+      "source": "fidelity-v05-color-a9159c172d60/physical-partition/cant-horizontal-left.png",
+      "width": 933,
+      "height": 764,
+      "sourceWidth": 933,
+      "sourceHeight": 764,
+      "bytes": {
+        "png": 179470,
+        "avif": 18461,
+        "webp": 24996
+      }
+    },
+    {
+      "source": "fidelity-v05-color-a9159c172d60/physical-partition/cant-horizontal-right.png",
+      "width": 939,
+      "height": 764,
+      "sourceWidth": 939,
+      "sourceHeight": 764,
+      "bytes": {
+        "png": 181666,
+        "avif": 18738,
+        "webp": 24566
+      }
+    },
+    {
+      "source": "fidelity-v05-color-a9159c172d60/physical-partition/cant-vertical-left.png",
+      "width": 933,
+      "height": 764,
+      "sourceWidth": 933,
+      "sourceHeight": 764,
+      "bytes": {
+        "png": 138060,
+        "avif": 13432,
+        "webp": 19254
+      }
+    },
+    {
+      "source": "fidelity-v05-color-a9159c172d60/physical-partition/cant-vertical-right.png",
+      "width": 939,
+      "height": 764,
+      "sourceWidth": 939,
+      "sourceHeight": 764,
+      "bytes": {
+        "png": 135503,
+        "avif": 13343,
+        "webp": 18532
+      }
+    },
+    {
+      "source": "fidelity-v05-color-a9159c172d60/physical-partition/top-skin-left.png",
+      "width": 933,
+      "height": 764,
+      "sourceWidth": 933,
+      "sourceHeight": 764,
+      "bytes": {
+        "png": 1347610,
+        "avif": 122320,
+        "webp": 133170
+      }
+    },
+    {
+      "source": "fidelity-v05-color-a9159c172d60/physical-partition/top-skin-right.png",
+      "width": 939,
+      "height": 764,
+      "sourceWidth": 939,
+      "sourceHeight": 764,
+      "bytes": {
+        "png": 1340797,
+        "avif": 117854,
+        "webp": 128762
+      }
+    },
+    {
+      "source": "fidelity-v05-color-a9159c172d60/physical-v05/front-left/front-left-microdeck-top.png",
+      "width": 798,
+      "height": 475,
+      "sourceWidth": 798,
+      "sourceHeight": 475,
+      "bytes": {
+        "png": 556120,
+        "avif": 63070,
+        "webp": 9264
+      }
+    },
+    {
+      "source": "fidelity-v05-color-a9159c172d60/physical-v05/front-left/front-left-page-ground-print.png",
+      "width": 798,
+      "height": 475,
+      "sourceWidth": 798,
+      "sourceHeight": 475,
+      "bytes": {
+        "png": 560869,
+        "avif": 63887,
+        "webp": 8026
+      }
+    },
+    {
+      "source": "fidelity-v05-color-a9159c172d60/physical-v05/front-left/front-left-page-ground-residual.png",
+      "width": 798,
+      "height": 475,
+      "sourceWidth": 798,
+      "sourceHeight": 475,
+      "bytes": {
+        "png": 553477,
+        "avif": 63332,
+        "webp": 5300
+      }
+    },
+    {
+      "source": "fidelity-v05-color-a9159c172d60/physical-v05/front-left/front-left-retiro-train-fascia.png",
+      "width": 798,
+      "height": 475,
+      "sourceWidth": 798,
+      "sourceHeight": 475,
+      "bytes": {
+        "png": 564355,
+        "avif": 63749,
+        "webp": 23700
+      }
+    },
+    {
+      "source": "fidelity-v05-color-a9159c172d60/physical-v05/front-left/front-left-stair-wing.png",
+      "width": 798,
+      "height": 475,
+      "sourceWidth": 798,
+      "sourceHeight": 475,
+      "bytes": {
+        "png": 574177,
+        "avif": 64932,
+        "webp": 49174
+      }
+    },
+    {
+      "source": "fidelity-v05-color-a9159c172d60/physical-v05/obelisk/obelisk-base-page-print.png",
+      "width": 87,
+      "height": 454,
+      "sourceWidth": 87,
+      "sourceHeight": 454,
+      "bytes": {
+        "png": 56075,
+        "avif": 10102,
+        "webp": 4704
+      }
+    },
+    {
+      "source": "fidelity-v05-color-a9159c172d60/physical-v05/obelisk/obelisk-front-left-2px-bleed.png",
+      "width": 87,
+      "height": 454,
+      "sourceWidth": 87,
+      "sourceHeight": 454,
+      "bytes": {
+        "png": 56790,
+        "avif": 9947,
+        "webp": 4086
+      }
+    },
+    {
+      "source": "fidelity-v05-color-a9159c172d60/physical-v05/obelisk/obelisk-front-left-trim.png",
+      "width": 87,
+      "height": 454,
+      "sourceWidth": 87,
+      "sourceHeight": 454,
+      "bytes": {
+        "png": 56708,
+        "avif": 9955,
+        "webp": 4000
+      }
+    },
+    {
+      "source": "fidelity-v05-color-a9159c172d60/physical-v05/obelisk/obelisk-front-right-2px-bleed.png",
+      "width": 87,
+      "height": 454,
+      "sourceWidth": 87,
+      "sourceHeight": 454,
+      "bytes": {
+        "png": 56736,
+        "avif": 9971,
+        "webp": 5516
+      }
+    },
+    {
+      "source": "fidelity-v05-color-a9159c172d60/physical-v05/obelisk/obelisk-front-right-trim.png",
+      "width": 87,
+      "height": 454,
+      "sourceWidth": 87,
+      "sourceHeight": 454,
+      "bytes": {
+        "png": 56798,
+        "avif": 9967,
+        "webp": 5410
+      }
+    },
+    {
+      "source": "fidelity-v05-color-a9159c172d60/physical-v05/obelisk/obelisk-return-left-strip.png",
+      "width": 6,
+      "height": 358,
+      "sourceWidth": 6,
+      "sourceHeight": 358,
+      "bytes": {
+        "png": 2803,
+        "avif": 1203,
+        "webp": 1164
+      }
+    },
+    {
+      "source": "fidelity-v05-color-a9159c172d60/physical-v05/obelisk/obelisk-return-right-strip.png",
+      "width": 6,
+      "height": 358,
+      "sourceWidth": 6,
+      "sourceHeight": 358,
+      "bytes": {
+        "png": 2844,
+        "avif": 1259,
+        "webp": 1222
+      }
+    },
+    {
+      "source": "fidelity-v05-color-a9159c172d60/physical-v05/rear-left/rear-left-inner.png",
+      "width": 588,
+      "height": 310,
+      "sourceWidth": 588,
+      "sourceHeight": 310,
+      "bytes": {
+        "png": 343512,
+        "avif": 50047,
+        "webp": 26050
+      }
+    },
+    {
+      "source": "fidelity-v05-color-a9159c172d60/physical-v05/rear-left/rear-left-outer.png",
+      "width": 588,
+      "height": 310,
+      "sourceWidth": 588,
+      "sourceHeight": 310,
+      "bytes": {
+        "png": 344952,
+        "avif": 50447,
+        "webp": 31514
+      }
+    },
+    {
+      "source": "fidelity-v05-color-a9159c172d60/physical-v05/rear-right/rear-right-inner.png",
+      "width": 613,
+      "height": 357,
+      "sourceWidth": 613,
+      "sourceHeight": 357,
+      "bytes": {
+        "png": 420829,
+        "avif": 63293,
+        "webp": 40700
+      }
+    },
+    {
+      "source": "fidelity-v05-color-a9159c172d60/physical-v05/rear-right/rear-right-outer.png",
+      "width": 613,
+      "height": 357,
+      "sourceWidth": 613,
+      "sourceHeight": 357,
+      "bytes": {
+        "png": 420458,
+        "avif": 63171,
+        "webp": 30888
+      }
+    },
+    {
+      "source": "stories/247/ink.png",
+      "width": 1120,
+      "height": 1400,
+      "sourceWidth": 1120,
+      "sourceHeight": 1400,
+      "bytes": {
+        "png": 651225,
+        "avif": 171996,
+        "webp": 395870
+      }
+    },
+    {
+      "source": "stories/acabar-no-se-cuando/ink.png",
+      "width": 1120,
+      "height": 1400,
+      "sourceWidth": 1120,
+      "sourceHeight": 1400,
+      "bytes": {
+        "png": 1871278,
+        "avif": 342461,
+        "webp": 737406
+      }
+    },
+    {
+      "source": "stories/apesta-a-espiritu-adolescente-de-lo-que-nos-dejo-cobain/ink.png",
+      "width": 1120,
+      "height": 1400,
+      "sourceWidth": 1120,
+      "sourceHeight": 1400,
+      "bytes": {
+        "png": 1007477,
+        "avif": 171940,
+        "webp": 609428
+      }
+    },
+    {
+      "source": "stories/apocalipsis-y-treboles-delirios-de-color/ink.png",
+      "width": 1120,
+      "height": 1400,
+      "sourceWidth": 1120,
+      "sourceHeight": 1400,
+      "bytes": {
+        "png": 1410137,
+        "avif": 384650,
+        "webp": 701446
+      }
+    },
+    {
+      "source": "stories/aquel-nuevo-ayer-complicacion-temporal/ink.png",
+      "width": 1120,
+      "height": 1400,
+      "sourceWidth": 1120,
+      "sourceHeight": 1400,
+      "bytes": {
+        "png": 937354,
+        "avif": 292325,
+        "webp": 577216
+      }
+    },
+    {
+      "source": "stories/aquellos-viejos-fantasmas-ii/ink.png",
+      "width": 1120,
+      "height": 1400,
+      "sourceWidth": 1120,
+      "sourceHeight": 1400,
+      "bytes": {
+        "png": 1986664,
+        "avif": 409157,
+        "webp": 898878
+      }
+    },
+    {
+      "source": "stories/aquellos-viejos-fantasmas-nuevos-miedos-recurrentes/ink.png",
+      "width": 1120,
+      "height": 1400,
+      "sourceWidth": 1120,
+      "sourceHeight": 1400,
+      "bytes": {
+        "png": 1005861,
+        "avif": 249823,
+        "webp": 642298
+      }
+    },
+    {
+      "source": "stories/arquimedes-de-siracusa/ink.png",
+      "width": 1120,
+      "height": 1400,
+      "sourceWidth": 1120,
+      "sourceHeight": 1400,
+      "bytes": {
+        "png": 1612789,
+        "avif": 421834,
+        "webp": 763458
+      }
+    },
+    {
+      "source": "stories/arte-y-tragedia/ink.png",
+      "width": 1120,
+      "height": 1400,
+      "sourceWidth": 1120,
+      "sourceHeight": 1400,
+      "bytes": {
+        "png": 916728,
+        "avif": 232528,
+        "webp": 555472
+      }
+    },
+    {
+      "source": "stories/breves-historias-de-cabezas-tristemente-celebres/ink.png",
+      "width": 1120,
+      "height": 1400,
+      "sourceWidth": 1120,
+      "sourceHeight": 1400,
+      "bytes": {
+        "png": 502632,
+        "avif": 128117,
+        "webp": 279950
+      }
+    },
+    {
+      "source": "stories/breves-historias-famosas-de-fantasmas/ink.png",
+      "width": 1120,
+      "height": 1400,
+      "sourceWidth": 1120,
+      "sourceHeight": 1400,
+      "bytes": {
+        "png": 1133939,
+        "avif": 323760,
+        "webp": 725092
+      }
+    },
+    {
+      "source": "stories/buenas-noches-%c2%bfcomo-le-va/ink.png",
+      "width": 1120,
+      "height": 1400,
+      "sourceWidth": 1120,
+      "sourceHeight": 1400,
+      "bytes": {
+        "png": 1218147,
+        "avif": 240445,
+        "webp": 554508
+      }
+    },
+    {
+      "source": "stories/consideraciones-sobre-la-belleza/ink.png",
+      "width": 1120,
+      "height": 1400,
+      "sourceWidth": 1120,
+      "sourceHeight": 1400,
+      "bytes": {
+        "png": 1015290,
+        "avif": 260559,
+        "webp": 621972
+      }
+    },
+    {
+      "source": "stories/costumbres-esteticas-de-la-antigua-francia/ink.png",
+      "width": 1120,
+      "height": 1400,
+      "sourceWidth": 1120,
+      "sourceHeight": 1400,
+      "bytes": {
+        "png": 1455591,
+        "avif": 333924,
+        "webp": 669982
+      }
+    },
+    {
+      "source": "stories/cronicas-absurdas-corazones-muertos/ink.png",
+      "width": 1120,
+      "height": 1400,
+      "sourceWidth": 1120,
+      "sourceHeight": 1400,
+      "bytes": {
+        "png": 1032505,
+        "avif": 166134,
+        "webp": 404400
+      }
+    },
+    {
+      "source": "stories/cronicas-absurdas-el-lugar-de-los-coros-dantescos/ink.png",
+      "width": 1120,
+      "height": 1400,
+      "sourceWidth": 1120,
+      "sourceHeight": 1400,
+      "bytes": {
+        "png": 2163515,
+        "avif": 387334,
+        "webp": 947950
+      }
+    },
+    {
+      "source": "stories/cronicas-absurdas-el-prado/ink.png",
+      "width": 1120,
+      "height": 1400,
+      "sourceWidth": 1120,
+      "sourceHeight": 1400,
+      "bytes": {
+        "png": 1175265,
+        "avif": 232058,
+        "webp": 753510
+      }
+    },
+    {
+      "source": "stories/cronicas-absurdas-licor-de-mi-agonia/ink.png",
+      "width": 1120,
+      "height": 1400,
+      "sourceWidth": 1120,
+      "sourceHeight": 1400,
+      "bytes": {
+        "png": 822165,
+        "avif": 233446,
+        "webp": 509690
+      }
+    },
+    {
+      "source": "stories/cronicas-absurdas-maldito-egocentrico/ink.png",
+      "width": 1120,
+      "height": 1400,
+      "sourceWidth": 1120,
+      "sourceHeight": 1400,
+      "bytes": {
+        "png": 642869,
+        "avif": 135730,
+        "webp": 294546
+      }
+    },
+    {
+      "source": "stories/de-bebidas-y-momentos/ink.png",
+      "width": 1120,
+      "height": 1400,
+      "sourceWidth": 1120,
+      "sourceHeight": 1400,
+      "bytes": {
+        "png": 970853,
+        "avif": 147889,
+        "webp": 601114
+      }
+    },
+    {
+      "source": "stories/de-corazones-rotos/ink.png",
+      "width": 1120,
+      "height": 1400,
+      "sourceWidth": 1120,
+      "sourceHeight": 1400,
+      "bytes": {
+        "png": 1112735,
+        "avif": 228392,
+        "webp": 709626
+      }
+    },
+    {
+      "source": "stories/de-cuando-el-ano-se-parte-al-medio/ink.png",
+      "width": 1120,
+      "height": 1400,
+      "sourceWidth": 1120,
+      "sourceHeight": 1400,
+      "bytes": {
+        "png": 645536,
+        "avif": 146522,
+        "webp": 293672
+      }
+    },
+    {
+      "source": "stories/de-la-temperatura-infernal-y-celestial/ink.png",
+      "width": 1120,
+      "height": 1400,
+      "sourceWidth": 1120,
+      "sourceHeight": 1400,
+      "bytes": {
+        "png": 1100007,
+        "avif": 297709,
+        "webp": 556874
+      }
+    },
+    {
+      "source": "stories/de-las-cosas-secundarias/ink.png",
+      "width": 1120,
+      "height": 1400,
+      "sourceWidth": 1120,
+      "sourceHeight": 1400,
+      "bytes": {
+        "png": 1025825,
+        "avif": 310093,
+        "webp": 643364
+      }
+    },
+    {
+      "source": "stories/de-las-escondidas-ajenos-recuerdos-infantiles/ink.png",
+      "width": 1120,
+      "height": 1400,
+      "sourceWidth": 1120,
+      "sourceHeight": 1400,
+      "bytes": {
+        "png": 1898699,
+        "avif": 278173,
+        "webp": 749200
+      }
+    },
+    {
+      "source": "stories/de-las-pesadillas-del-autor/ink.png",
+      "width": 1120,
+      "height": 1400,
+      "sourceWidth": 1120,
+      "sourceHeight": 1400,
+      "bytes": {
+        "png": 1697127,
+        "avif": 335412,
+        "webp": 690800
+      }
+    },
+    {
+      "source": "stories/de-los-conductores-relato-automovilistico/ink.png",
+      "width": 1120,
+      "height": 1400,
+      "sourceWidth": 1120,
+      "sourceHeight": 1400,
+      "bytes": {
+        "png": 1430281,
+        "avif": 357065,
+        "webp": 686470
+      }
+    },
+    {
+      "source": "stories/de-los-consejos/ink.png",
+      "width": 1120,
+      "height": 1400,
+      "sourceWidth": 1120,
+      "sourceHeight": 1400,
+      "bytes": {
+        "png": 875739,
+        "avif": 183735,
+        "webp": 416292
+      }
+    },
+    {
+      "source": "stories/de-los-tiempos-pasados-i/ink.png",
+      "width": 1120,
+      "height": 1400,
+      "sourceWidth": 1120,
+      "sourceHeight": 1400,
+      "bytes": {
+        "png": 1793867,
+        "avif": 321954,
+        "webp": 746984
+      }
+    },
+    {
+      "source": "stories/de-lunares-y-evoluciones/ink.png",
+      "width": 1120,
+      "height": 1400,
+      "sourceWidth": 1120,
+      "sourceHeight": 1400,
+      "bytes": {
+        "png": 1031530,
+        "avif": 135581,
+        "webp": 641944
+      }
+    },
+    {
+      "source": "stories/de-macbeth/ink.png",
+      "width": 1120,
+      "height": 1400,
+      "sourceWidth": 1120,
+      "sourceHeight": 1400,
+      "bytes": {
+        "png": 573264,
+        "avif": 120368,
+        "webp": 345560
+      }
+    },
+    {
+      "source": "stories/de-medialunas-cuento-de-desayuno/ink.png",
+      "width": 1120,
+      "height": 1400,
+      "sourceWidth": 1120,
+      "sourceHeight": 1400,
+      "bytes": {
+        "png": 947428,
+        "avif": 253150,
+        "webp": 591312
+      }
+    },
+    {
+      "source": "stories/de-muertes-y-resurrecciones/ink.png",
+      "width": 1120,
+      "height": 1400,
+      "sourceWidth": 1120,
+      "sourceHeight": 1400,
+      "bytes": {
+        "png": 1576739,
+        "avif": 333800,
+        "webp": 627444
+      }
+    },
+    {
+      "source": "stories/de-regresos-y-desconocimientos/ink.png",
+      "width": 1120,
+      "height": 1400,
+      "sourceWidth": 1120,
+      "sourceHeight": 1400,
+      "bytes": {
+        "png": 1149233,
+        "avif": 257712,
+        "webp": 705892
+      }
+    },
+    {
+      "source": "stories/deja-vu/ink.png",
+      "width": 1120,
+      "height": 1400,
+      "sourceWidth": 1120,
+      "sourceHeight": 1400,
+      "bytes": {
+        "png": 902854,
+        "avif": 269691,
+        "webp": 559732
+      }
+    },
+    {
+      "source": "stories/del-motivo-de-la-poesia/ink.png",
+      "width": 1120,
+      "height": 1400,
+      "sourceWidth": 1120,
+      "sourceHeight": 1400,
+      "bytes": {
+        "png": 1034630,
+        "avif": 257467,
+        "webp": 488598
+      }
+    },
+    {
+      "source": "stories/del-tengo-eso-y-quiero-aquello/paper.png",
+      "width": 1120,
+      "height": 1400,
+      "sourceWidth": 1120,
+      "sourceHeight": 1400,
+      "bytes": {
+        "png": 1012835,
+        "avif": 322020,
+        "webp": 630188
+      }
+    },
+    {
+      "source": "stories/delirios-de-un-artista-a-medianoche/ink.png",
+      "width": 1120,
+      "height": 1400,
+      "sourceWidth": 1120,
+      "sourceHeight": 1400,
+      "bytes": {
+        "png": 1061865,
+        "avif": 235136,
+        "webp": 678772
+      }
+    },
+    {
+      "source": "stories/descripciones-geograficas/ink.png",
+      "width": 1120,
+      "height": 1400,
+      "sourceWidth": 1120,
+      "sourceHeight": 1400,
+      "bytes": {
+        "png": 1269576,
+        "avif": 255139,
+        "webp": 759232
+      }
+    },
+    {
+      "source": "stories/digno-fin-cuestionable-medio/ink.png",
+      "width": 1120,
+      "height": 1400,
+      "sourceWidth": 1120,
+      "sourceHeight": 1400,
+      "bytes": {
+        "png": 741387,
+        "avif": 201050,
+        "webp": 451332
+      }
+    },
+    {
+      "source": "stories/don-ernesto-y-el-joven-depresion/ink.png",
+      "width": 1120,
+      "height": 1400,
+      "sourceWidth": 1120,
+      "sourceHeight": 1400,
+      "bytes": {
+        "png": 1241405,
+        "avif": 359876,
+        "webp": 797916
+      }
+    },
+    {
+      "source": "stories/el-japones-errante/ink.png",
+      "width": 1120,
+      "height": 1400,
+      "sourceWidth": 1120,
+      "sourceHeight": 1400,
+      "bytes": {
+        "png": 393735,
+        "avif": 79116,
+        "webp": 227138
+      }
+    },
+    {
+      "source": "stories/el-narrador-de-historias/ink.png",
+      "width": 1120,
+      "height": 1400,
+      "sourceWidth": 1120,
+      "sourceHeight": 1400,
+      "bytes": {
+        "png": 1221257,
+        "avif": 212003,
+        "webp": 501340
+      }
+    },
+    {
+      "source": "stories/entre-la-nada-y-el-adios-confesiones-de-un-optimista/ink.png",
+      "width": 1120,
+      "height": 1400,
+      "sourceWidth": 1120,
+      "sourceHeight": 1400,
+      "bytes": {
+        "png": 1158948,
+        "avif": 309704,
+        "webp": 723170
+      }
+    },
+    {
+      "source": "stories/espejo-magico/ink.png",
+      "width": 1120,
+      "height": 1400,
+      "sourceWidth": 1120,
+      "sourceHeight": 1400,
+      "bytes": {
+        "png": 1364504,
+        "avif": 214955,
+        "webp": 597158
+      }
+    },
+    {
+      "source": "stories/esquinas-i/ink.png",
+      "width": 1120,
+      "height": 1400,
+      "sourceWidth": 1120,
+      "sourceHeight": 1400,
+      "bytes": {
+        "png": 1694800,
+        "avif": 293068,
+        "webp": 636594
+      }
+    },
+    {
+      "source": "stories/experiencias-religiosas-de-las-equivocaciones-celestiales/ink.png",
+      "width": 1120,
+      "height": 1400,
+      "sourceWidth": 1120,
+      "sourceHeight": 1400,
+      "bytes": {
+        "png": 1525341,
+        "avif": 346167,
+        "webp": 725886
+      }
+    },
+    {
+      "source": "stories/fin-del-mundo/ink.png",
+      "width": 1120,
+      "height": 1400,
+      "sourceWidth": 1120,
+      "sourceHeight": 1400,
+      "bytes": {
+        "png": 2219715,
+        "avif": 399292,
+        "webp": 880234
+      }
+    },
+    {
+      "source": "stories/guia-para-la-vida-o-instrucciones-para-pedir-la-cuenta-en-un-cafe-havanna/ink.png",
+      "width": 1120,
+      "height": 1400,
+      "sourceWidth": 1120,
+      "sourceHeight": 1400,
+      "bytes": {
+        "png": 1038610,
+        "avif": 185325,
+        "webp": 620262
+      }
+    },
+    {
+      "source": "stories/hades-persefone-y-el-motivo-del-invierno/ink.png",
+      "width": 1120,
+      "height": 1400,
+      "sourceWidth": 1120,
+      "sourceHeight": 1400,
+      "bytes": {
+        "png": 1386899,
+        "avif": 218366,
+        "webp": 600992
+      }
+    },
+    {
+      "source": "stories/honestos-abstenerse/ink.png",
+      "width": 1120,
+      "height": 1400,
+      "sourceWidth": 1120,
+      "sourceHeight": 1400,
+      "bytes": {
+        "png": 577376,
+        "avif": 122036,
+        "webp": 334616
+      }
+    },
+    {
+      "source": "stories/johannes-brahms-y-su-caracter-delicado/ink.png",
+      "width": 1120,
+      "height": 1400,
+      "sourceWidth": 1120,
+      "sourceHeight": 1400,
+      "bytes": {
+        "png": 918552,
+        "avif": 216659,
+        "webp": 564816
+      }
+    },
+    {
+      "source": "stories/la-dama-del-lago-excalibur-y-como-esta-llego-a-arturo/ink.png",
+      "width": 1120,
+      "height": 1400,
+      "sourceWidth": 1120,
+      "sourceHeight": 1400,
+      "bytes": {
+        "png": 1263140,
+        "avif": 322270,
+        "webp": 829070
+      }
+    },
+    {
+      "source": "stories/la-dolorosa-muerte-del-sr-buen-gusto/ink.png",
+      "width": 1120,
+      "height": 1400,
+      "sourceWidth": 1120,
+      "sourceHeight": 1400,
+      "bytes": {
+        "png": 726563,
+        "avif": 159912,
+        "webp": 446896
+      }
+    },
+    {
+      "source": "stories/la-habitacion-numero-setenta-y-ocho-de-magos-y-hechiceros/ink.png",
+      "width": 1120,
+      "height": 1400,
+      "sourceWidth": 1120,
+      "sourceHeight": 1400,
+      "bytes": {
+        "png": 1121947,
+        "avif": 317503,
+        "webp": 734910
+      }
+    },
+    {
+      "source": "stories/la-importancia-de-ser-don-ernesto/ink.png",
+      "width": 1120,
+      "height": 1400,
+      "sourceWidth": 1120,
+      "sourceHeight": 1400,
+      "bytes": {
+        "png": 1303515,
+        "avif": 284520,
+        "webp": 595176
+      }
+    },
+    {
+      "source": "stories/la-pesadilla-de-balder-y-el-crepusculo-de-los-dioses/ink.png",
+      "width": 1120,
+      "height": 1400,
+      "sourceWidth": 1120,
+      "sourceHeight": 1400,
+      "bytes": {
+        "png": 968946,
+        "avif": 205032,
+        "webp": 398690
+      }
+    },
+    {
+      "source": "stories/las-fabulosas-locuras-de-jorge-iii-y-como-estas-lo-condujeron-a-una-reconocida-fama-historica/ink.png",
+      "width": 1120,
+      "height": 1400,
+      "sourceWidth": 1120,
+      "sourceHeight": 1400,
+      "bytes": {
+        "png": 1371262,
+        "avif": 250585,
+        "webp": 553866
+      }
+    },
+    {
+      "source": "stories/los-cielos-aztecas/ink.png",
+      "width": 1120,
+      "height": 1400,
+      "sourceWidth": 1120,
+      "sourceHeight": 1400,
+      "bytes": {
+        "png": 2304946,
+        "avif": 421057,
+        "webp": 1009244
+      }
+    },
+    {
+      "source": "stories/monte-criollo/ink.png",
+      "width": 1120,
+      "height": 1400,
+      "sourceWidth": 1120,
+      "sourceHeight": 1400,
+      "bytes": {
+        "png": 917318,
+        "avif": 187963,
+        "webp": 422028
+      }
+    },
+    {
+      "source": "stories/puertas/ink.png",
+      "width": 1120,
+      "height": 1400,
+      "sourceWidth": 1120,
+      "sourceHeight": 1400,
+      "bytes": {
+        "png": 1425914,
+        "avif": 204517,
+        "webp": 531336
+      }
+    },
+    {
+      "source": "stories/reflexiones-de-taxi-2-cronica-de-un-hastiado/ink.png",
+      "width": 1120,
+      "height": 1400,
+      "sourceWidth": 1120,
+      "sourceHeight": 1400,
+      "bytes": {
+        "png": 958092,
+        "avif": 117571,
+        "webp": 547288
+      }
+    },
+    {
+      "source": "stories/reflexiones-de-taxi-3-el-patriota/ink.png",
+      "width": 1120,
+      "height": 1400,
+      "sourceWidth": 1120,
+      "sourceHeight": 1400,
+      "bytes": {
+        "png": 1063042,
+        "avif": 171224,
+        "webp": 473432
+      }
+    },
+    {
+      "source": "stories/reflexiones-de-taxi/ink.png",
+      "width": 1120,
+      "height": 1400,
+      "sourceWidth": 1120,
+      "sourceHeight": 1400,
+      "bytes": {
+        "png": 1118226,
+        "avif": 288456,
+        "webp": 706556
+      }
+    },
+    {
+      "source": "stories/remembranzas/ink.png",
+      "width": 1120,
+      "height": 1400,
+      "sourceWidth": 1120,
+      "sourceHeight": 1400,
+      "bytes": {
+        "png": 931407,
+        "avif": 195332,
+        "webp": 418476
+      }
+    },
+    {
+      "source": "stories/siluetas/ink.png",
+      "width": 1120,
+      "height": 1400,
+      "sourceWidth": 1120,
+      "sourceHeight": 1400,
+      "bytes": {
+        "png": 1178997,
+        "avif": 158617,
+        "webp": 451484
+      }
+    },
+    {
+      "source": "stories/un-poco-de-zoologia-fantastica/ink.png",
+      "width": 1120,
+      "height": 1400,
+      "sourceWidth": 1120,
+      "sourceHeight": 1400,
+      "bytes": {
+        "png": 1045692,
+        "avif": 202341,
+        "webp": 418432
+      }
+    },
+    {
+      "source": "stories/un-poco-de-zoologia-fantastica/scenes/anfisbena.png",
+      "width": 1536,
+      "height": 1024,
+      "sourceWidth": 1536,
+      "sourceHeight": 1024,
+      "bytes": {
+        "png": 2552834,
+        "avif": 155882,
+        "webp": 157686
+      }
+    },
+    {
+      "source": "stories/un-poco-de-zoologia-fantastica/scenes/clurichaun.png",
+      "width": 1536,
+      "height": 1024,
+      "sourceWidth": 1536,
+      "sourceHeight": 1024,
+      "bytes": {
+        "png": 2216880,
+        "avif": 80918,
+        "webp": 85284
+      }
+    },
+    {
+      "source": "stories/un-poco-de-zoologia-fantastica/scenes/fenix.png",
+      "width": 1536,
+      "height": 1024,
+      "sourceWidth": 1536,
+      "sourceHeight": 1024,
+      "bytes": {
+        "png": 3038876,
+        "avif": 269894,
+        "webp": 259426
+      }
+    },
+    {
+      "source": "stories/un-poco-de-zoologia-fantastica/scenes/kappa.png",
+      "width": 1536,
+      "height": 1024,
+      "sourceWidth": 1536,
+      "sourceHeight": 1024,
+      "bytes": {
+        "png": 2907389,
+        "avif": 221596,
+        "webp": 222842
+      }
+    },
+    {
+      "source": "stories/una-flor-llamada-amanda/ink.png",
+      "width": 1120,
+      "height": 1400,
+      "sourceWidth": 1120,
+      "sourceHeight": 1400,
+      "bytes": {
+        "png": 1772981,
+        "avif": 332779,
+        "webp": 806604
+      }
+    }
+  ],
+  "totals": {
+    "png": 120706543,
+    "avif": 20896579,
+    "webp": 44661120
+  }
+}

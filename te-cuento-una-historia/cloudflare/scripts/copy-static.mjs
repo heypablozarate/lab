@@ -76,6 +76,10 @@ const [shell, corpus, sceneData, mediaData, deployment] = await Promise.all([
 const scenesBySlug = new Map(sceneData.entries.map((entry) => [entry.slug, entry.scenes]))
 const mediaBySlug = new Map(mediaData.entries.map((entry) => [entry.slug, entry]))
 const canonicalRoot = "https://cuentos.ar"
+const optimizedImageSources = (value) => ({
+  avif: value.replace(/\.png(?=$|[?#])/iu, ".avif"),
+  webp: value.replace(/\.png(?=$|[?#])/iu, ".webp"),
+})
 
 for (const story of corpus.entries) {
   const markdown = await readFile(
@@ -96,6 +100,7 @@ for (const story of corpus.entries) {
     throw new Error(`Missing illustration for ${story.slug}/${illustrationVariant}`)
   }
   const illustration = `/lab/te-cuento-una-historia/${illustrationPath.replace(/^\.\//u, "")}`
+  const illustrationSources = optimizedImageSources(illustration)
   const articleBody = renderTeCuentoMarkdown(
     markdown,
     { form, scenes, media },
@@ -112,7 +117,7 @@ for (const story of corpus.entries) {
     datePublished,
     inLanguage: deployment.content.inLanguage,
     articleSection: form,
-    image: `${canonicalRoot}${illustration}`,
+    image: `${canonicalRoot}${illustrationSources.avif}`,
     author: {
       "@type": "Person",
       name: deployment.identity.brandName,
@@ -129,7 +134,10 @@ for (const story of corpus.entries) {
     <a href="/" style="color:#6d2c26">${escapeHtml(deployment.content.interfaceCopy.readerCloseLabel)}</a>
     <time datetime="${datePublished}" style="display:block;margin:36px 0 12px;color:#735b43">${datePublished}</time>
     <h1>${escapeHtml(story.title)}</h1>
-    <img src="${illustration}" alt="${escapeHtml(story.illustrationAlt ?? `Ilustración de ${story.title}`)}" style="display:block;width:100%;max-height:520px;object-fit:contain;margin:32px 0" />
+    <picture>
+      <source srcset="${illustrationSources.avif}" type="image/avif" />
+      <img src="${illustrationSources.webp}" alt="${escapeHtml(story.illustrationAlt ?? `Ilustración de ${story.title}`)}" width="1120" height="1400" loading="eager" decoding="async" style="display:block;width:100%;height:auto;max-height:520px;object-fit:contain;margin:32px 0" />
+    </picture>
     <div>${articleBody}</div>
   </article>
 </main>`

@@ -7,6 +7,7 @@ import {
   useLayoutEffect,
   useRef,
   useState,
+  type ImgHTMLAttributes,
   type KeyboardEvent,
 } from "react"
 
@@ -15,14 +16,35 @@ import type {
   TeCuentoCreditsContent,
   TeCuentoInterfaceCopy,
 } from "./cloudflare/src/content-types"
+import { optimizedImageSources } from "./image-formats"
 
 import styles from "./te-cuento-una-historia.module.css"
 
 const ASSET_ROOT = "/lab/te-cuento-una-historia/assets"
 
+function OptimizedImage({
+  src,
+  alt,
+  ...props
+}: ImgHTMLAttributes<HTMLImageElement> & { src: string }) {
+  const sources = optimizedImageSources(src)
+  if (sources.avif === src) return <img src={src} alt={alt} {...props} />
+  return (
+    <picture>
+      <source srcSet={sources.avif} type="image/avif" />
+      <img src={sources.webp} alt={alt} {...props} />
+    </picture>
+  )
+}
+
 type ExperienceHandle = {
   destroy(): void
 }
+
+type MountExperience = (
+  root: HTMLElement,
+  options?: { enterOnMount?: boolean; audioContext?: AudioContext },
+) => Promise<ExperienceHandle>
 
 function centerPanViewport(viewport: HTMLElement) {
   const maximum = Math.max(0, viewport.scrollWidth - viewport.clientWidth)
@@ -81,10 +103,19 @@ export function ExperienceShell({
   const rootRef = useRef<HTMLElement | null>(null)
   const viewportRef = useRef<HTMLDivElement | null>(null)
   const panProgressRef = useRef(0.5)
+  const startExperienceRef = useRef<(enterOnMount: boolean) => void>(() => {})
   const [loadError, setLoadError] = useState(false)
+  const [runtimeStarting, setRuntimeStarting] = useState(false)
   const [directStoryEntry] = useState(
     () => typeof window !== "undefined" && isDirectStoryPath(window.location.pathname),
   )
+  const [requiresImmediateRuntime] = useState(() => {
+    if (typeof window === "undefined") return false
+    const params = new URLSearchParams(window.location.search)
+    return isDirectStoryPath(window.location.pathname)
+      || params.get("autoplay") === "1"
+      || params.get("debugHotspots") === "1"
+  })
 
   useLayoutEffect(() => {
     const viewport = viewportRef.current
@@ -121,28 +152,57 @@ export function ExperienceShell({
 
     let cancelled = false
     let handle: ExperienceHandle | undefined
+    let starting = false
 
-    import("./runtime.js")
-      .then(async ({ mountExperience }) => {
-        if (typeof mountExperience !== "function") {
-          throw new TypeError("The experience runtime has no mount function")
+    const start = (enterOnMount: boolean) => {
+      if (cancelled || starting) return
+      starting = true
+      setRuntimeStarting(enterOnMount)
+
+      // Claim Web Audio authorization synchronously inside the gesture. The
+      // heavy runtime module can then arrive on demand without losing Safari
+      // or iOS playback permission.
+      let audioContext: AudioContext | undefined
+      if (enterOnMount) {
+        const AudioContextClass = window.AudioContext
+        try {
+          audioContext = new AudioContextClass({
+            latencyHint: "playback",
+            sampleRate: 44_100,
+          })
+        } catch {
+          audioContext = new AudioContextClass({ latencyHint: "playback" })
         }
-        const mounted = (await mountExperience(root)) as ExperienceHandle
-        if (cancelled) {
-          mounted.destroy()
-          return
-        }
-        handle = mounted
-      })
-      .catch(() => {
-        if (!cancelled) setLoadError(true)
-      })
+        void audioContext.resume()
+      }
+
+      void import("./runtime.js")
+        .then(({ mountExperience }) => {
+          if (typeof mountExperience !== "function") {
+            throw new TypeError("The experience runtime has no mount function")
+          }
+          const mount = mountExperience as MountExperience
+          return mount(root, { enterOnMount, audioContext })
+        })
+        .then((mounted) => {
+          if (cancelled) mounted.destroy()
+          else handle = mounted
+        })
+        .catch(async () => {
+          if (audioContext?.state !== "closed") await audioContext?.close().catch(() => {})
+          if (!cancelled) setLoadError(true)
+        })
+    }
+
+    startExperienceRef.current = start
+    if (requiresImmediateRuntime) start(false)
 
     return () => {
       cancelled = true
+      startExperienceRef.current = () => {}
       handle?.destroy()
     }
-  }, [])
+  }, [requiresImmediateRuntime])
 
   function handlePanKeys(event: KeyboardEvent<HTMLDivElement>) {
     const viewport = viewportRef.current
@@ -187,15 +247,15 @@ export function ExperienceShell({
         <div className={styles.panorama}>
           <div id="desktop-environment" className={styles.desktopEnvironment} aria-hidden="true">
             <div id="desk-surface" className={styles.deskSurface} />
-            <img className={`${styles.deskProp} ${styles.lamp}`} src={`${ASSET_ROOT}/desktop/lamp.png`} alt="" />
-            <img className={`${styles.deskProp} ${styles.portrait}`} src={`${ASSET_ROOT}/desktop/portrait.png`} alt="" />
-            <img className={`${styles.deskProp} ${styles.magnifier}`} src={`${ASSET_ROOT}/desktop/magnifier.png`} alt="" />
-            <img className={`${styles.deskProp} ${styles.clock}`} src={`${ASSET_ROOT}/desktop/clock.png`} alt="" />
-            <img className={`${styles.deskProp} ${styles.box}`} src={`${ASSET_ROOT}/desktop/box.png`} alt="" />
-            <img className={`${styles.deskProp} ${styles.cup}`} src={`${ASSET_ROOT}/desktop/cup.png`} alt="" />
-            <img className={`${styles.deskProp} ${styles.inkwell}`} src={`${ASSET_ROOT}/desktop/inkwell.png`} alt="" />
-            <img className={`${styles.deskProp} ${styles.quill}`} src={`${ASSET_ROOT}/desktop/quill.png`} alt="" />
-            <img id="desk-vignette" className={styles.vignette} src={`${ASSET_ROOT}/desktop/vignette.png`} alt="" />
+            <OptimizedImage className={`${styles.deskProp} ${styles.lamp}`} src={`${ASSET_ROOT}/desktop/lamp.png`} alt="" fetchPriority="high" />
+            <OptimizedImage className={`${styles.deskProp} ${styles.portrait}`} src={`${ASSET_ROOT}/desktop/portrait.png`} alt="" />
+            <OptimizedImage className={`${styles.deskProp} ${styles.magnifier}`} src={`${ASSET_ROOT}/desktop/magnifier.png`} alt="" />
+            <OptimizedImage className={`${styles.deskProp} ${styles.clock}`} src={`${ASSET_ROOT}/desktop/clock.png`} alt="" />
+            <OptimizedImage className={`${styles.deskProp} ${styles.box}`} src={`${ASSET_ROOT}/desktop/box.png`} alt="" />
+            <OptimizedImage className={`${styles.deskProp} ${styles.cup}`} src={`${ASSET_ROOT}/desktop/cup.png`} alt="" />
+            <OptimizedImage className={`${styles.deskProp} ${styles.inkwell}`} src={`${ASSET_ROOT}/desktop/inkwell.png`} alt="" />
+            <OptimizedImage className={`${styles.deskProp} ${styles.quill}`} src={`${ASSET_ROOT}/desktop/quill.png`} alt="" />
+            <OptimizedImage id="desk-vignette" className={styles.vignette} src={`${ASSET_ROOT}/desktop/vignette.png`} alt="" />
           </div>
 
           <header
@@ -253,7 +313,13 @@ export function ExperienceShell({
                 </span>
               ))}
             </p>
-            <button id="intro-enter" className={styles.introEnter} type="button" disabled>
+            <button
+              id="intro-enter"
+              className={styles.introEnter}
+              type="button"
+              disabled={runtimeStarting}
+              onClick={() => startExperienceRef.current(true)}
+            >
               {copy.introEnterLabel}
             </button>
           </article>
@@ -319,7 +385,7 @@ export function ExperienceShell({
               id="credits-illustration-wrap"
               className={`${styles.readerIllustrationWrap} ${styles.creditsIllustrationWrap}`}
             >
-              <img
+              <OptimizedImage
                 id="credits-illustration"
                 className={`${styles.readerIllustration} ${styles.creditsIllustration}`}
                 src={credits.makingOfScenes[0].image.src}
@@ -327,6 +393,7 @@ export function ExperienceShell({
                 width={credits.makingOfScenes[0].image.width}
                 height={credits.makingOfScenes[0].image.height}
                 data-fit={credits.makingOfScenes[0].image.fit}
+                loading="lazy"
                 decoding="async"
               />
               <figcaption
@@ -417,6 +484,13 @@ export function ExperienceShell({
           {copy.soundOnLabel}
         </button>
       </div>
+
+      <audio
+        id="city-audio-source"
+        src={`${ASSET_ROOT}/audio/city-traffic-walla-horns-v003.mp3`}
+        preload="none"
+        hidden
+      />
 
       <section id="debug-audio" className={styles.debugAudio} aria-labelledby="debug-audio-title" hidden>
         <h2 id="debug-audio-title" className={styles.debugAudioTitle}>Audio debug</h2>

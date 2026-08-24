@@ -1,6 +1,10 @@
 import { PopupAudioEngine } from "./audio-engine.js";
 import { createPopupRig } from "./rig.js";
 import {
+  assignOptimizedImage,
+  preloadOptimizedImage,
+} from "./image-formats";
+import {
   escapeTeCuentoHtml as escapeHtml,
   renderTeCuentoMarkdown,
 } from "./lib/te-cuento-story-markdown";
@@ -71,6 +75,7 @@ const debugMusicVolume = required("#debug-music-volume");
 const debugMusicValue = required("#debug-music-value");
 const debugCityVolume = required("#debug-city-volume");
 const debugCityValue = required("#debug-city-value");
+const cityAudioSource = required("#city-audio-source");
 panViewport.inert = true;
 soundToggle.inert = true;
 creditsToggle.inert = true;
@@ -116,7 +121,8 @@ const audioEngine = new PopupAudioEngine({
       sourceRate: 44_100,
     },
   ],
-  cityUrl: assetUrl("assets/audio/city-traffic-walla-horns-v003.mp3"),
+  cityUrl: cityAudioSource.currentSrc || cityAudioSource.src,
+  context: options.audioContext,
   mix: MIX,
   musicCycle: audioSeed == null ? {} : { seed: Number(audioSeed) },
 });
@@ -443,7 +449,7 @@ function setCreditsIllustration(marker, { immediate = false } = {}) {
   const token = ++creditsSceneSwitchToken;
   const commit = () => {
     if (token !== creditsSceneSwitchToken || !credits.classList.contains("is-open")) return;
-    creditsIllustration.src = src;
+    assignOptimizedImage(creditsIllustration, src);
     creditsIllustration.alt = alt;
     creditsIllustration.dataset.fit = fit;
     creditsIllustrationCaption.textContent = caption;
@@ -456,16 +462,8 @@ function setCreditsIllustration(marker, { immediate = false } = {}) {
     commit();
     return;
   }
-  const preload = new Image();
-  preload.src = src;
-  const ready = typeof preload.decode === "function"
-    ? preload.decode()
-    : new Promise((resolve, reject) => {
-      preload.addEventListener("load", resolve, { once: true, signal });
-      preload.addEventListener("error", reject, { once: true, signal });
-    });
   creditsIllustration.classList.add("is-switching");
-  ready.catch(() => {}).then(commit);
+  preloadOptimizedImage(src, { signal }).catch(() => {}).then(commit);
 }
 
 function updateCreditsScene() {
@@ -551,28 +549,20 @@ function close({ historyMode = "back" } = {}) {
 function setReaderIllustration(src, alt, { immediate = false } = {}) {
   const token = ++sceneSwitchToken;
   if (immediate) {
-    readerIllustration.src = src;
+    assignOptimizedImage(readerIllustration, src);
     readerIllustration.alt = alt;
     readerIllustration.classList.remove("is-switching");
     return;
   }
-  const preload = new Image();
-  preload.src = src;
-  const ready = typeof preload.decode === "function"
-    ? preload.decode()
-    : new Promise((resolve, reject) => {
-      preload.addEventListener("load", resolve, { once: true, signal });
-      preload.addEventListener("error", reject, { once: true, signal });
-    });
   readerIllustration.classList.add("is-switching");
-  ready.catch(() => {}).then(() => {
+  preloadOptimizedImage(src, { signal }).then(({ src: resolvedSrc }) => {
     if (token !== sceneSwitchToken || !activeStory) return;
-    readerIllustration.src = src;
+    readerIllustration.src = resolvedSrc;
     readerIllustration.alt = alt;
     requestAnimationFrame(() => {
       if (!destroyed) readerIllustration.classList.remove("is-switching");
     });
-  });
+  }).catch(() => {});
 }
 
 function updateStoryScene() {
@@ -623,8 +613,7 @@ async function openStory(story, trigger = null, { historyMode = "push" } = {}) {
   readerArticle.classList.toggle("has-scene-sequence", story.scenes.length > 0);
   setReaderIllustration(story.illustration, story.illustrationAlt, { immediate: true });
   for (const scene of story.scenes) {
-    const preload = new Image();
-    preload.src = scene.src;
+    preloadOptimizedImage(scene.src, { signal }).catch(() => {});
   }
   readerBody.innerHTML = "<p class=\"reader-loading\">Abriendo…</p>";
   setSceneInert(true);
@@ -920,6 +909,7 @@ listen(window, "resize", () => {
 listen(stage, "scroll", positionClues, { passive: true });
 listen(window, "popup-parallax-frame", positionClues);
 initDebugAudio();
+if (options.enterOnMount === true && soundEnabled) startSoundtrack();
 try {
   rig = await createPopupRig({
     root,
@@ -933,9 +923,8 @@ try {
     rig.destroy();
     throw new DOMException("La experiencia se desmontó durante la inicialización", "AbortError");
   }
-  // Decode before the first gesture so opening never waits for network. The
-  // AudioContext may remain suspended until start() resumes it from the click.
-  audioEngine.load().catch(() => {});
+  // Audio remains network-idle until startSoundtrack runs inside the first
+  // user gesture. This keeps all MP3 bytes outside the initial page load.
   await storiesReady;
   if (destroyed) throw new DOMException("La experiencia se desmontó durante la inicialización", "AbortError");
   if (initialStorySlug) rig.setProgress(1);
@@ -947,6 +936,8 @@ try {
     intro.setAttribute("aria-hidden", "true");
     intro.inert = true;
     setSceneInert(false);
+  } else if (options.enterOnMount === true) {
+    await enterExperience();
   } else {
     introEnter.disabled = false;
     introEnter.focus({ preventScroll: true });
