@@ -22,7 +22,12 @@ test("keeps the initial home under 4 MB and defers WebGL and audio until intent"
   expect(initial.urls.some((url) => url.endsWith(".png"))).toBe(false)
   expect(initial.urls.some((url) => url.endsWith(".mp3"))).toBe(false)
 
-  await page.locator("#intro-enter").click()
+  const enter = page.locator("#intro-enter")
+  await enter.click()
+  await expect(enter).toBeDisabled()
+  await expect(enter).toHaveAttribute("aria-busy", "true")
+  await expect(enter).toHaveAttribute("data-loading", "true")
+  expect(await enter.evaluate((button) => getComputedStyle(button, "::after").animationName)).not.toBe("none")
   await expect(page.locator("#intro")).toHaveClass(/is-dismissed/u, { timeout: 30_000 })
   await expect(page.locator("#stage canvas")).toBeAttached()
 
@@ -32,4 +37,15 @@ test("keeps the initial home under 4 MB and defers WebGL and audio until intent"
   ))
   expect(loadedAfterIntent.some((url) => url.endsWith("city-traffic-walla-horns-v003.mp3"))).toBe(true)
   expect(loadedAfterIntent.some((url) => url.endsWith(".avif"))).toBe(true)
+})
+
+test("keeps the preloader legible without motion", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" })
+  await page.goto("/")
+
+  const enter = page.locator("#intro-enter")
+  await enter.click()
+  await expect(enter).toHaveAttribute("aria-busy", "true")
+  expect(await enter.evaluate((button) => getComputedStyle(button, "::after").animationName)).toBe("none")
+  expect(await enter.evaluate((button) => Number.parseFloat(getComputedStyle(button, "::after").opacity))).toBeGreaterThan(0)
 })

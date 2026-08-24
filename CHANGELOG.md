@@ -29,6 +29,12 @@
 
 ### Changed
 
+- 2026-08-24 / Codex: Added a restrained loading state to the initial **¿Te
+  cuento una historia?** entry control. Its existing underline now pulses while
+  the deferred Three.js runtime prepares, exposes `aria-busy`, preserves the
+  first-frame asset budget, and becomes a static progress mark when reduced
+  motion is requested.
+
 - 2026-08-24 / Codex: Reduced the initial **¿Te cuento una historia?**
   Cloudflare home from a 31.8 MB live baseline to a 508 KiB local Lighthouse
   payload. All 160 PNG assets now ship with AVIF and WebP variants, the first
