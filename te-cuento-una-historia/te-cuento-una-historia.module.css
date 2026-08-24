@@ -176,7 +176,14 @@
 }
 
 .deskSurface {
-  background: #120b07 url("/lab/te-cuento-una-historia/assets/desktop/table.png") center / cover no-repeat;
+  background-color: #120b07;
+  background-image: image-set(
+    url("/lab/te-cuento-una-historia/assets/desktop/table.avif") type("image/avif"),
+    url("/lab/te-cuento-una-historia/assets/desktop/table.webp") type("image/webp")
+  );
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
 }
 
 .deskProp {

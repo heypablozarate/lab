@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { optimizedImageCandidates } from "./image-formats";
 /* eslint-disable @typescript-eslint/no-unused-vars -- This recovered fidelity rig intentionally retains named construction handles and dormant diagnostic builders; removing them during framework integration risks changing side-effectful assembly order. */
 
 export async function createPopupRig(options = {}) {
@@ -117,7 +118,15 @@ function configureTexture(texture) {
 }
 
 async function loadTexture(path) {
-  return configureTexture(await textureLoader.loadAsync(resolveAsset(path)));
+  let lastError = null;
+  for (const candidate of optimizedImageCandidates(resolveAsset(path))) {
+    try {
+      return configureTexture(await textureLoader.loadAsync(candidate));
+    } catch (error) {
+      lastError = error;
+    }
+  }
+  throw lastError ?? new Error(`No se pudo cargar la textura ${path}`);
 }
 
 function screenPlane(texture, options = {}) {
@@ -386,12 +395,14 @@ function buildGutterPrintTexture() {
   // stock: the cap remains attached to the physical gutter, while the two
   // independently modelled gold page curls retain their authored ownership.
   const coverImage = textures.get("cover.png").image;
+  const coverWidthPx = coverImage.naturalWidth || coverImage.width;
+  const coverHeightPx = coverImage.naturalHeight || coverImage.height;
   context.drawImage(
     coverImage,
-    384,
-    1420,
-    256,
-    116,
+    Math.round(384 * coverWidthPx / 1024),
+    Math.round(1420 * coverHeightPx / 1536),
+    Math.round(256 * coverWidthPx / 1024),
+    Math.round(116 * coverHeightPx / 1536),
     0,
     canvas.height - 62,
     canvas.width,

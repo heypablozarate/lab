@@ -2,4 +2,12 @@ export type ExperienceHandle = {
   destroy(): void
 }
 
-export function mountExperience(root: HTMLElement): Promise<ExperienceHandle>
+export type ExperienceOptions = {
+  enterOnMount?: boolean
+  audioContext?: AudioContext
+}
+
+export function mountExperience(
+  root: HTMLElement,
+  options?: ExperienceOptions,
+): Promise<ExperienceHandle>

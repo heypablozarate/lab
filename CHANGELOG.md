@@ -29,6 +29,14 @@
 
 ### Changed
 
+- 2026-08-24 / Codex: Reduced the initial **¿Te cuento una historia?**
+  Cloudflare home from a 31.8 MB live baseline to a 508 KiB local Lighthouse
+  payload. All 160 PNG assets now ship with AVIF and WebP variants, the first
+  frame no longer constructs WebGL before intent, story and making-of images
+  load only when opened, and Web Audio keeps `preload="none"` until the first
+  user gesture. Local Lighthouse measured 89/3.7 s LCP on mobile and 100/0.8 s
+  on desktop without a visible change in the opened book.
+
 - 2026-08-23 / Codex: Made **¿Te cuento una historia?** a self-contained public
   Lab project for Cloudflare: its content, runtime, 68-story payload, required
   RAMS font subset, integrity scripts, and static deployment now build from this
