@@ -836,6 +836,11 @@
   opacity: 0;
 }
 
+.readerIllustration:global(.is-story-loading) {
+  opacity: 0;
+  transition: none;
+}
+
 .readerPage {
   min-width: 0;
   overflow-x: hidden;

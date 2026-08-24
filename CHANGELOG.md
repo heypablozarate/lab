@@ -8,6 +8,11 @@
 
 ### Fixed
 
+- 2026-08-24 / Codex: Made **¿Te cuento una historia?** illustration changes
+  atomic when following links between stories. The reader now hides the prior
+  bitmap, decodes the target AVIF/WebP off-screen, and reveals only the image
+  belonging to the newly opened story.
+
 - 2026-08-23 / Codex: Anchored the **¿Te cuento una historia?** hotspot layer
   to the pop-up canvas coordinate space, so lights, labels, and 44px hit
   targets stay registered during touch panning, resize, and orientation changes.
