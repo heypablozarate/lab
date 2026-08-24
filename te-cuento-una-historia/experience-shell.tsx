@@ -318,6 +318,8 @@ export function ExperienceShell({
               className={styles.introEnter}
               type="button"
               disabled={runtimeStarting}
+              aria-busy={runtimeStarting || undefined}
+              data-loading={runtimeStarting ? "true" : undefined}
               onClick={() => startExperienceRef.current(true)}
             >
               {copy.introEnterLabel}
