@@ -10,6 +10,7 @@ import {
   projectRoot,
   requirePath,
 } from "./paths.mjs"
+import { buildRobotsPolicy } from "./robots-policy.mjs"
 import { teCuentoMarkdownToPlainText } from "../../lib/te-cuento-story-markdown.ts"
 
 await Promise.all([
@@ -122,13 +123,7 @@ await writeFile(path.join(deploymentRoot, "index.html"), html, "utf8")
 const publicRoot = preparedPublicRoot
 await mkdir(publicRoot, { recursive: true })
 
-const robots = [
-  "User-agent: *",
-  "Allow: /",
-  "",
-  `Sitemap: ${canonicalUrl}sitemap.xml`,
-  "",
-].join("\n")
+const robots = buildRobotsPolicy(canonicalUrl)
 
 const sitemapUrls = [
   canonicalUrl,
