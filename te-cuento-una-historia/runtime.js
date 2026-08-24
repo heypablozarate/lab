@@ -549,9 +549,25 @@ function close({ historyMode = "back" } = {}) {
 function setReaderIllustration(src, alt, { immediate = false } = {}) {
   const token = ++sceneSwitchToken;
   if (immediate) {
-    assignOptimizedImage(readerIllustration, src);
-    readerIllustration.alt = alt;
     readerIllustration.classList.remove("is-switching");
+    readerIllustration.classList.add("is-story-loading");
+    readerIllustration.alt = "";
+    preloadOptimizedImage(src, { signal }).then(({ src: resolvedSrc }) => {
+      if (token !== sceneSwitchToken || !activeStory) return;
+      readerIllustration.onerror = null;
+      readerIllustration.src = resolvedSrc;
+      readerIllustration.alt = alt;
+      requestAnimationFrame(() => {
+        if (!destroyed && token === sceneSwitchToken) {
+          readerIllustration.classList.remove("is-story-loading");
+        }
+      });
+    }).catch(() => {
+      if (token !== sceneSwitchToken || !activeStory) return;
+      readerIllustration.removeAttribute("src");
+      readerIllustration.alt = alt;
+      readerIllustration.classList.remove("is-story-loading");
+    });
     return;
   }
   readerIllustration.classList.add("is-switching");
@@ -560,7 +576,9 @@ function setReaderIllustration(src, alt, { immediate = false } = {}) {
     readerIllustration.src = resolvedSrc;
     readerIllustration.alt = alt;
     requestAnimationFrame(() => {
-      if (!destroyed) readerIllustration.classList.remove("is-switching");
+      if (!destroyed && token === sceneSwitchToken) {
+        readerIllustration.classList.remove("is-story-loading", "is-switching");
+      }
     });
   }).catch(() => {});
 }
