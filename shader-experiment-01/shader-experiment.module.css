@@ -24,6 +24,7 @@
   background: var(--shader-paper);
   color: var(--shader-ink);
   padding: clamp(2rem, 5vw, 5rem) var(--rams-page-padding);
+  padding-bottom: calc(clamp(2rem, 5vw, 5rem) + 4rem);
   color-scheme: dark;
 }
 
@@ -68,6 +69,16 @@
   width: 100%;
   height: clamp(8rem, 28vw, 16rem);
   font-family: var(--type-logo-family), var(--font-display), sans-serif;
+}
+
+.rendererStatus {
+  max-width: 36rem;
+  margin: 0.75rem auto 0;
+  color: var(--shader-muted);
+  font-family: var(--type-body-compact-family), var(--font-body), sans-serif;
+  font-size: var(--type-card-copy-size);
+  line-height: var(--type-card-copy-leading);
+  text-align: center;
 }
 
 .instruction {
@@ -162,6 +173,33 @@
   font-weight: 700;
   line-height: 1;
   text-align: right;
+}
+
+.textInput {
+  width: 100%;
+  min-height: 2.75rem;
+  border: 1px solid color-mix(in srgb, var(--shader-line) 72%, transparent);
+  border-radius: 0;
+  background: transparent;
+  color: var(--shader-ink);
+  padding: 0.625rem 0.75rem;
+  font-family: var(--type-body-compact-family), var(--font-body), sans-serif;
+  font-size: 1rem;
+  line-height: 1.25;
+}
+
+.textInput:focus-visible {
+  border-color: var(--brand-accent);
+  outline: 2px solid var(--brand-accent);
+  outline-offset: 2px;
+}
+
+.controlHelp {
+  margin: 0;
+  color: var(--shader-muted);
+  font-family: var(--type-card-meta-family), var(--font-body), sans-serif;
+  font-size: 0.75rem;
+  line-height: 1.35;
 }
 
 .footer {

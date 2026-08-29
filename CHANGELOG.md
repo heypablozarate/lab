@@ -4,6 +4,12 @@
 
 ### Added
 
+- 2026-08-29 / Codex: Added one accessible text input below the Shader
+  Experiment 01 controls. It starts with `PabloZarate™` and updates the
+  rendered wordmark live without changing the active effect or intensity,
+  including empty, Unicode, long, resized, and theme-aware values, with footer
+  clearance preserved across desktop and mobile layouts.
+
 - 2026-07-14 / Claude: Added the Amélie (2004) experiment route at `/amelie`: server metadata, JSON-LD, and hidden server context read from the parent admin data (`getLabExperiment("amelie")`), with the interactive experience served as a full-viewport iframe of the static recreation bundle under the parent's `public/lab/amelie/`.
 
 ### Fixed
@@ -33,6 +39,14 @@
   scene. Related navigation remains limited to links authored in story files.
 
 ### Changed
+
+- 2026-08-29 / Codex: Replaced Shader Experiment 01's primary manual
+  WebGL/GLSL renderer with vgpu/WebGPU and modular WGSL while preserving the
+  existing composition, sixteen effects, intensity, pointer interaction,
+  responsive layout, and RAMS dark theme. WebGL now runs only as an isolated
+  fresh-canvas fallback, with a static Canvas2D last resort; all renderers
+  consume the same React state, expose their active backend for QA, and stop
+  autonomous time under reduced motion.
 
 - 2026-08-24 / Codex: Aligned the generated `cuentos.ar/robots.txt` with the
   main site's content-use policy: one wildcard group carries

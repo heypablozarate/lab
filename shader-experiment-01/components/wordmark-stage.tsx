@@ -1,10 +1,14 @@
 "use client"
 
-import { useState } from "react"
+import { useReducer } from "react"
 
 import styles from "../shader-experiment.module.css"
 import { ControlPanel } from "./control-panel"
 import { WordmarkShader } from "./wordmark-shader"
+import {
+  createWordmarkStageState,
+  reduceWordmarkStageState,
+} from "./wordmark-stage-state"
 import type { ShaderInterfaceCopy } from "@/lib/lab-content"
 
 export function WordmarkStage({
@@ -14,28 +18,39 @@ export function WordmarkStage({
   brandName: string
   interfaceCopy: ShaderInterfaceCopy
 }) {
-  const [effect, setEffect] = useState(0)
-  const [intensity, setIntensity] = useState(1)
+  const [state, dispatch] = useReducer(
+    reduceWordmarkStageState,
+    brandName,
+    createWordmarkStageState,
+  )
 
   return (
     <div className={styles.stage}>
       <div className={styles.shaderFrame}>
         <WordmarkShader
-          brandName={brandName}
-          effect={effect}
-          intensity={intensity}
+          text={state.text}
+          effect={state.effect}
+          intensity={state.intensity}
           className={styles.shaderCanvas}
+          rendererUnavailableMessage={
+            interfaceCopy.rendererUnavailableMessage
+          }
+          statusClassName={styles.rendererStatus}
         />
       </div>
 
       <p className={styles.instruction}>{interfaceCopy.instruction}</p>
 
       <ControlPanel
-        effect={effect}
-        intensity={intensity}
+        effect={state.effect}
+        intensity={state.intensity}
+        text={state.text}
         interfaceCopy={interfaceCopy}
-        onEffectChange={setEffect}
-        onIntensityChange={setIntensity}
+        onEffectChange={(effect) => dispatch({ type: "effect", effect })}
+        onIntensityChange={(intensity) =>
+          dispatch({ type: "intensity", intensity })
+        }
+        onTextChange={(text) => dispatch({ type: "text", text })}
       />
     </div>
   )
