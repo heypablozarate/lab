@@ -28,7 +28,7 @@ test("links the initial home HTML and interactive credits to the archive", async
   await page.getByRole("button", { name: "Créditos" }).click()
   await expect(page.getByRole("link", { name: "Leer todos los relatos" })).toHaveAttribute(
     "href",
-    "/relatos",
+    "https://cuentos.ar/relatos",
   )
 })
 
