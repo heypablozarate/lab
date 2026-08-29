@@ -445,6 +445,7 @@ export function ExperienceShell({
                   <p className={styles.creditsPeriod}>
                     <span className={styles.srOnly}>Período: </span>{credits.periodLabel}
                   </p>
+                  <p><a href="/relatos">{copy.storyIndexLabel}</a></p>
                 </section>
 
                 <nav className={styles.creditsSocial} aria-labelledby="credits-social-title">

@@ -15,6 +15,7 @@ import {
   teCuentoMarkdownToPlainText,
 } from "../../lib/te-cuento-story-markdown.ts"
 import { renderServerAuthorMarkup } from "./server-author-markup.mjs"
+import { renderServerStoryIndex } from "./server-story-index-markup.mjs"
 
 requirePath(payloadRoot, "Canonical Te cuento payload")
 requirePath(fontsRoot, "RAMS font source")
@@ -81,6 +82,61 @@ const optimizedImageSources = (value) => ({
   avif: value.replace(/\.png(?=$|[?#])/iu, ".avif"),
   webp: value.replace(/\.png(?=$|[?#])/iu, ".webp"),
 })
+
+const storyIndexUrl = `${canonicalRoot}/relatos`
+const storyIndexTitle = `${deployment.content.interfaceCopy.storyIndexTitle} — ${deployment.content.title}`
+const storyIndexDescription = deployment.content.interfaceCopy.storyIndexDescription
+const storyIndexJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "@id": `${storyIndexUrl}#collection`,
+  name: deployment.content.interfaceCopy.storyIndexTitle,
+  description: storyIndexDescription,
+  url: storyIndexUrl,
+  inLanguage: deployment.content.inLanguage,
+  isPartOf: {
+    "@type": "CreativeWork",
+    name: deployment.content.title,
+    url: `${canonicalRoot}/`,
+  },
+  mainEntity: {
+    "@type": "ItemList",
+    numberOfItems: corpus.entries.length,
+    itemListElement: corpus.entries.map((story, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      url: `${canonicalRoot}/relatos/${encodeStorySlug(story.slug)}`,
+      name: story.title,
+    })),
+  },
+}
+
+let storyIndexHtml = shell
+storyIndexHtml = replaceTag(storyIndexHtml, /<title>[\s\S]*?<\/title>/u, `<title>${escapeHtml(storyIndexTitle)}</title>`)
+storyIndexHtml = replaceTag(storyIndexHtml, /<meta name="description" content="[^"]*" \/>/u, `<meta name="description" content="${escapeHtml(storyIndexDescription)}" />`)
+storyIndexHtml = replaceTag(storyIndexHtml, /<link rel="canonical" href="[^"]*" \/>/u, `<link rel="canonical" href="${storyIndexUrl}" />`)
+storyIndexHtml = replaceTag(storyIndexHtml, /<meta property="og:title" content="[^"]*" \/>/u, `<meta property="og:title" content="${escapeHtml(storyIndexTitle)}" />`)
+storyIndexHtml = replaceTag(storyIndexHtml, /<meta property="og:description" content="[^"]*" \/>/u, `<meta property="og:description" content="${escapeHtml(storyIndexDescription)}" />`)
+storyIndexHtml = replaceTag(storyIndexHtml, /<meta property="og:url" content="[^"]*" \/>/u, `<meta property="og:url" content="${storyIndexUrl}" />`)
+storyIndexHtml = replaceTag(storyIndexHtml, /<meta name="twitter:title" content="[^"]*" \/>/u, `<meta name="twitter:title" content="${escapeHtml(storyIndexTitle)}" />`)
+storyIndexHtml = replaceTag(storyIndexHtml, /<meta name="twitter:description" content="[^"]*" \/>/u, `<meta name="twitter:description" content="${escapeHtml(storyIndexDescription)}" />`)
+storyIndexHtml = replaceTag(
+  storyIndexHtml,
+  /<script type="application\/ld\+json">[\s\S]*?<\/script>/u,
+  `<script type="application/ld+json">${JSON.stringify(storyIndexJsonLd).replace(/</gu, "\\u003c")}</script>`,
+)
+storyIndexHtml = replaceTag(
+  storyIndexHtml,
+  /\s*<script type="module"[^>]*>[\s\S]*?<\/script>/u,
+  "",
+)
+storyIndexHtml = replaceTag(
+  storyIndexHtml,
+  /<div id="root">[\s\S]*<\/div>\s*<\/body>/u,
+  `<div id="root">${renderServerStoryIndex(deployment, corpus.entries, canonicalRoot)}</div>\n  </body>`,
+)
+await mkdir(path.join(distRoot, "relatos"), { recursive: true })
+await writeFile(path.join(distRoot, "relatos/index.html"), storyIndexHtml, "utf8")
 
 for (const story of corpus.entries) {
   const markdown = await readFile(

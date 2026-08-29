@@ -4,6 +4,14 @@
 
 ### Added
 
+- 2026-08-29 / Codex: Added a stable, no-JavaScript `/relatos` archive for
+  **¿Te cuento una historia?** with all 68 canonical story links, publication
+  dates, `CollectionPage`/`ItemList` JSON-LD, and a crawlable link from both
+  the initial home HTML and the interactive credits. The Cloudflare sitemap
+  and `llms.txt` now name the archive, while `robots.txt` explicitly allows
+  OpenAI's search and user-request agents (`OAI-SearchBot` and
+  `ChatGPT-User`) independently from the existing training policy.
+
 - 2026-08-29 / Codex: Added one accessible text input below the Shader
   Experiment 01 controls. It starts with `PabloZarate™` and updates the
   rendered wordmark live without changing the active effect or intensity,
