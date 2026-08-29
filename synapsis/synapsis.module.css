@@ -357,9 +357,30 @@
 /* ---- Toggle de tema (pie del sidebar, mismas reglas que la home del Lab) ---- */
 
 .hudFooter {
+  display: grid;
+  gap: 0.75rem;
   margin-top: auto;
   padding-top: 0.9rem;
   border-top: 1px solid var(--line);
+}
+
+.authorLink {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  min-height: 2.75rem;
+  color: var(--muted);
+  font-family: var(--font-body), Arial, sans-serif;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  text-decoration: none;
+  border-bottom: 1px solid var(--line);
+}
+
+.authorLink:hover,
+.authorLink:focus-visible {
+  color: var(--ink);
+  border-bottom-color: var(--ink);
 }
 
 .themeToggle {

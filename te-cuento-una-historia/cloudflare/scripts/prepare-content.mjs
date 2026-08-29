@@ -11,6 +11,7 @@ import {
   requirePath,
 } from "./paths.mjs"
 import { buildRobotsPolicy } from "./robots-policy.mjs"
+import { renderServerAuthorMarkup } from "./server-author-markup.mjs"
 import { teCuentoMarkdownToPlainText } from "../../lib/te-cuento-story-markdown.ts"
 
 await Promise.all([
@@ -101,6 +102,7 @@ const substitutions = {
   SERVER_CONTEXT: content.serverContext,
   IMAGE_ALT: content.socialImages.alt,
   JSON_LD: JSON.stringify(jsonLd).replace(/</gu, "\\u003c"),
+  SERVER_AUTHOR_MARKUP: renderServerAuthorMarkup(deployment),
 }
 
 let html = await readFile(
@@ -110,7 +112,9 @@ let html = await readFile(
 for (const [key, value] of Object.entries(substitutions)) {
   html = html.replaceAll(
     `{{${key}}}`,
-    key === "JSON_LD" ? value : escapeHtml(value),
+    key === "JSON_LD" || key === "SERVER_AUTHOR_MARKUP"
+      ? value
+      : escapeHtml(value),
   )
 }
 const viteEntryPath = path.join(projectRoot, "src/main.tsx")

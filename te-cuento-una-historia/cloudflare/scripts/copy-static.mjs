@@ -14,6 +14,7 @@ import {
   renderTeCuentoMarkdown,
   teCuentoMarkdownToPlainText,
 } from "../../lib/te-cuento-story-markdown.ts"
+import { renderServerAuthorMarkup } from "./server-author-markup.mjs"
 
 requirePath(payloadRoot, "Canonical Te cuento payload")
 requirePath(fontsRoot, "RAMS font source")
@@ -140,6 +141,7 @@ for (const story of corpus.entries) {
     </picture>
     <div>${articleBody}</div>
   </article>
+  ${renderServerAuthorMarkup(deployment)}
 </main>`
 
   let storyHtml = shell
