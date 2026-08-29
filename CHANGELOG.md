@@ -10,6 +10,10 @@
   including empty, Unicode, long, resized, and theme-aware values, with footer
   clearance preserved across desktop and mobile layouts.
 
+- 2026-08-29 / Codex: Added a visible canonical `rel="author"` link to the
+  existing Synapsis HUD and crawlable author, credit, and social-profile links
+  to the initial static HTML for the `cuentos.ar` home and all 68 story pages.
+
 - 2026-07-14 / Claude: Added the Amélie (2004) experiment route at `/amelie`: server metadata, JSON-LD, and hidden server context read from the parent admin data (`getLabExperiment("amelie")`), with the interactive experience served as a full-viewport iframe of the static recreation bundle under the parent's `public/lab/amelie/`.
 
 ### Fixed

@@ -48,6 +48,8 @@ const MAX_SEARCH_RESULTS = 6;
 type StageProps = {
   data: GalaxyData;
   layout: GalaxyLayout;
+  authorName: string;
+  authorUrl: string;
 };
 
 // Theme store: identical contract to the Lab home (lab-canvas.tsx) — same
@@ -136,7 +138,7 @@ const subscribeReducedMotion = (onChange: () => void) => {
 };
 const reducedMotionSnapshot = () => window.matchMedia(REDUCED_MOTION_QUERY).matches;
 
-export function GalaxyStage({ data, layout }: StageProps) {
+export function GalaxyStage({ data, layout, authorName, authorUrl }: StageProps) {
   const { nodes, edges, clusters } = data;
   const { interfaceCopy } = data.metadata;
   const stageTitle = data.metadata.title;
@@ -436,6 +438,9 @@ export function GalaxyStage({ data, layout }: StageProps) {
                 })}
               </span>
             </button>
+            <a className={styles.authorLink} href={authorUrl} rel="author">
+              {authorName}
+            </a>
           </div>
         </div>
       </header>

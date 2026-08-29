@@ -16,7 +16,11 @@ const PAGE_URL = `${LAB_URL}/synapsis`;
 
 const graphData = galaxy as GalaxyData;
 const pageMetadata = graphData.metadata;
-const { language: siteLanguage } = getCanonicalIdentityLabels();
+const {
+  language: siteLanguage,
+  brandName,
+  homeUrl,
+} = getCanonicalIdentityLabels();
 
 function serializeJsonLd(data: Record<string, unknown>) {
   return JSON.stringify(data).replace(/</g, "\\u003c");
@@ -76,7 +80,12 @@ export default function SynapsisPage() {
       </section>
       {"\n"}
 
-      <GalaxyStage data={data} layout={layout} />
+      <GalaxyStage
+        data={data}
+        layout={layout}
+        authorName={brandName}
+        authorUrl={homeUrl}
+      />
     </main>
   );
 }
