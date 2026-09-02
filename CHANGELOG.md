@@ -26,6 +26,12 @@
 
 ### Fixed
 
+- 2026-09-02 / Codex: Restored vertical scrolling on the static `/relatos`
+  archive despite the immersive experience's global overflow lock. The archive
+  is now `noindex, follow` and omitted from the public sitemap so it remains a
+  direct agent-reading surface advertised through `llms.txt`, while all 68
+  canonical story pages remain in the sitemap.
+
 - 2026-08-24 / Codex: Made **¿Te cuento una historia?** illustration changes
   atomic when following links between stories. The reader now hides the prior
   bitmap, decodes the target AVIF/WebP off-screen, and reveals only the image

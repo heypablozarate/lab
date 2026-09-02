@@ -133,7 +133,6 @@ const robots = buildRobotsPolicy(canonicalUrl)
 
 const sitemapUrls = [
   canonicalUrl,
-  `${canonicalUrl}relatos`,
   ...corpus.entries.map(
     (story) => `${canonicalUrl}relatos/${encodeStorySlug(story.slug)}`,
   ),
