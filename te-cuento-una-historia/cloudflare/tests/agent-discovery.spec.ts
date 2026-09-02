@@ -11,12 +11,26 @@ test("publishes a stable HTML archive with all story links", async ({ page }) =>
     "href",
     "https://cuentos.ar/relatos",
   )
+  await expect(page.locator('meta[name="robots"]')).toHaveAttribute(
+    "content",
+    "noindex, follow",
+  )
 
   const storyLinks = page.locator('main ol a[href^="https://cuentos.ar/relatos/"]')
   await expect(storyLinks).toHaveCount(68)
   await expect(storyLinks.first()).toHaveText("Reflexiones de Taxi")
   await expect(storyLinks.last()).toHaveText("De bebidas y momentos")
   await expect(page.locator('script[type="module"]')).toHaveCount(0)
+
+  const scrollState = await page.locator("html").evaluate((element) => ({
+    clientHeight: element.clientHeight,
+    overflowY: getComputedStyle(element).overflowY,
+    scrollHeight: element.scrollHeight,
+  }))
+  expect(scrollState.overflowY).toBe("auto")
+  expect(scrollState.scrollHeight).toBeGreaterThan(scrollState.clientHeight)
+  await page.evaluate(() => window.scrollTo({ top: 800, behavior: "instant" }))
+  await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(0)
 })
 
 test("links the initial home HTML and interactive credits to the archive", async ({ page }) => {
@@ -41,7 +55,7 @@ test("publishes OpenAI discovery policy across robots, sitemap, and llms", async
 
   expect(robots).toContain("User-agent: OAI-SearchBot\nAllow: /")
   expect(robots).toContain("User-agent: ChatGPT-User\nAllow: /")
-  expect(sitemap).toContain("<loc>https://cuentos.ar/relatos</loc>")
-  expect(sitemap.match(/<url>/gu)).toHaveLength(70)
+  expect(sitemap).not.toContain("<loc>https://cuentos.ar/relatos</loc>")
+  expect(sitemap.match(/<url>/gu)).toHaveLength(69)
   expect(llms).toContain("Archive: https://cuentos.ar/relatos")
 })

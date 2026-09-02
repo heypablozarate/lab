@@ -114,6 +114,7 @@ const storyIndexJsonLd = {
 let storyIndexHtml = shell
 storyIndexHtml = replaceTag(storyIndexHtml, /<title>[\s\S]*?<\/title>/u, `<title>${escapeHtml(storyIndexTitle)}</title>`)
 storyIndexHtml = replaceTag(storyIndexHtml, /<meta name="description" content="[^"]*" \/>/u, `<meta name="description" content="${escapeHtml(storyIndexDescription)}" />`)
+storyIndexHtml = replaceTag(storyIndexHtml, /<meta name="robots" content="[^"]*" \/>/u, '<meta name="robots" content="noindex, follow" />')
 storyIndexHtml = replaceTag(storyIndexHtml, /<link rel="canonical" href="[^"]*" \/>/u, `<link rel="canonical" href="${storyIndexUrl}" />`)
 storyIndexHtml = replaceTag(storyIndexHtml, /<meta property="og:title" content="[^"]*" \/>/u, `<meta property="og:title" content="${escapeHtml(storyIndexTitle)}" />`)
 storyIndexHtml = replaceTag(storyIndexHtml, /<meta property="og:description" content="[^"]*" \/>/u, `<meta property="og:description" content="${escapeHtml(storyIndexDescription)}" />`)
@@ -129,6 +130,16 @@ storyIndexHtml = replaceTag(
   storyIndexHtml,
   /\s*<script type="module"[^>]*>[\s\S]*?<\/script>/u,
   "",
+)
+storyIndexHtml = replaceTag(
+  storyIndexHtml,
+  /<\/head>/u,
+  `<style id="story-index-scroll">
+      html { height: auto; min-height: 100%; overflow-x: hidden; overflow-y: auto; }
+      body { height: auto; min-height: 100%; overflow-x: hidden; overflow-y: visible; }
+      #root { height: auto; min-height: 100vh; overflow: visible; }
+    </style>
+  </head>`,
 )
 storyIndexHtml = replaceTag(
   storyIndexHtml,

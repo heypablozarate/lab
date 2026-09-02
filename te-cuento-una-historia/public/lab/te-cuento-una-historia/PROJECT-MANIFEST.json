@@ -2,7 +2,7 @@
   "schema": "te-cuento-una-historia/public-payload-v1",
   "scope": "/lab/te-cuento-una-historia",
   "status": "ready_for_pablo",
-  "generatedAt": "2026-08-29T22:49:04.206Z",
+  "generatedAt": "2026-09-02T22:52:12.791Z",
   "counts": {
     "files": 572,
     "stories": 68,
