@@ -14,6 +14,8 @@ test("publishes the same content signal as pablozarate.com", () => {
 
 test("explicitly allows the approved AI crawlers", () => {
   for (const crawler of [
+    "OAI-SearchBot",
+    "ChatGPT-User",
     "GPTBot",
     "ClaudeBot",
     "Google-Extended",

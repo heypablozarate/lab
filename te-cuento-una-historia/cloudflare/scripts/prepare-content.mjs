@@ -12,6 +12,7 @@ import {
 } from "./paths.mjs"
 import { buildRobotsPolicy } from "./robots-policy.mjs"
 import { renderServerAuthorMarkup } from "./server-author-markup.mjs"
+import { renderServerStoryIndexLink } from "./server-story-index-markup.mjs"
 import { teCuentoMarkdownToPlainText } from "../../lib/te-cuento-story-markdown.ts"
 
 await Promise.all([
@@ -102,6 +103,7 @@ const substitutions = {
   SERVER_CONTEXT: content.serverContext,
   IMAGE_ALT: content.socialImages.alt,
   JSON_LD: JSON.stringify(jsonLd).replace(/</gu, "\\u003c"),
+  SERVER_STORY_INDEX_LINK: renderServerStoryIndexLink(deployment),
   SERVER_AUTHOR_MARKUP: renderServerAuthorMarkup(deployment),
 }
 
@@ -112,7 +114,7 @@ let html = await readFile(
 for (const [key, value] of Object.entries(substitutions)) {
   html = html.replaceAll(
     `{{${key}}}`,
-    key === "JSON_LD" || key === "SERVER_AUTHOR_MARKUP"
+    key === "JSON_LD" || key.startsWith("SERVER_")
       ? value
       : escapeHtml(value),
   )
@@ -131,6 +133,7 @@ const robots = buildRobotsPolicy(canonicalUrl)
 
 const sitemapUrls = [
   canonicalUrl,
+  `${canonicalUrl}relatos`,
   ...corpus.entries.map(
     (story) => `${canonicalUrl}relatos/${encodeStorySlug(story.slug)}`,
   ),
@@ -171,6 +174,7 @@ const llms = [
   `Canonical: ${canonicalUrl}`,
   `Language: ${content.inLanguage}`,
   `Period: ${content.credits.periodLabel}`,
+  `Archive: ${canonicalUrl}relatos`,
   "",
   content.serverContext,
   "",

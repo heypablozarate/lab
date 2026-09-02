@@ -13,6 +13,10 @@ export type TeCuentoInterfaceCopy = {
   introInstructions: string[]
   introEnterLabel: string
   readerCloseLabel: string
+  storyIndexTitle: string
+  storyIndexLabel: string
+  storyIndexDescription: string
+  storyIndexBackLabel: string
   readerRegionLabel: string
   soundOnLabel: string
   soundOffLabel: string

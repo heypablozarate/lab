@@ -1,4 +1,6 @@
 const allowedAiCrawlers = [
+  "OAI-SearchBot",
+  "ChatGPT-User",
   "GPTBot",
   "ClaudeBot",
   "Google-Extended",
