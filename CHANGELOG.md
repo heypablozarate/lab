@@ -4,6 +4,11 @@
 
 ### Added
 
+- 2026-09-05 / Codex: Added dedicated GA4 collection for cuentos.ar, including
+  direct story loads, the static archive, reader navigation, and back/forward.
+  Collection is restricted to canonical production pages, respects opt-out,
+  defers the Google script, and avoids duplicate history pageviews.
+
 - 2026-08-29 / Codex: Added a stable, no-JavaScript `/relatos` archive for
   **¿Te cuento una historia?** with all 68 canonical story links, publication
   dates, `CollectionPage`/`ItemList` JSON-LD, and a crawlable link from both

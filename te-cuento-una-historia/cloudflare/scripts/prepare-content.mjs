@@ -11,6 +11,7 @@ import {
   requirePath,
 } from "./paths.mjs"
 import { buildRobotsPolicy } from "./robots-policy.mjs"
+import { buildAnalyticsScript } from "./analytics.mjs"
 import { renderServerAuthorMarkup } from "./server-author-markup.mjs"
 import { renderServerStoryIndexLink } from "./server-story-index-markup.mjs"
 import { teCuentoMarkdownToPlainText } from "../../lib/te-cuento-story-markdown.ts"
@@ -205,6 +206,14 @@ const redirects = [
 ].join("\n")
 
 await Promise.all([
+  writeFile(path.join(publicRoot, "analytics.js"), buildAnalyticsScript({
+    "/": content.metadataTitle,
+    "/relatos": `${content.interfaceCopy.storyIndexTitle} — ${content.title}`,
+    ...Object.fromEntries(corpus.entries.map((story) => [
+      `/relatos/${encodeStorySlug(story.slug)}`,
+      `${story.title} — ${content.title}`,
+    ])),
+  }), "utf8"),
   writeFile(path.join(publicRoot, "robots.txt"), robots, "utf8"),
   writeFile(path.join(publicRoot, "sitemap.xml"), sitemap, "utf8"),
   writeFile(path.join(publicRoot, "llms.txt"), llms, "utf8"),
