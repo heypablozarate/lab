@@ -1,7 +1,11 @@
 import fs from "node:fs"
 import { spawn } from "node:child_process"
 
-const video = process.argv[2] ?? "public/lab/soy-tu-aire/Soy tu Aire - Labuat.mp4"
+const video = process.argv[2]
+if (!video || !fs.existsSync(video)) {
+  console.error("Usage: node analyze-reference-video.mjs <archived-reference.mp4> [output.json]")
+  process.exit(1)
+}
 const out = process.argv[3] ?? "/tmp/soy-tu-aire-reference-metrics.json"
 const width = 640
 const height = 480
