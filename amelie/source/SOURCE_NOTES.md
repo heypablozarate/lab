@@ -53,3 +53,9 @@ columna derecha, rojo y azul tienen música, verde es silencio — así era el o
 - `site/js/amelie-modern.js` — capa 2026: drag, sonidos, fixes
 - `site/js/amelie-sound.js` — reemplazo del reproductor Flash
 - `site/js/build_notes.md` — detalle de transformaciones
+
+## Originales fuera del runtime
+
+El AVI histórico y `Tarjetas.psd` se conservan en el archivo privado de trabajo,
+fuera de `site/` y del bundle publicado. La reproducción usa MP4/WebM.
+No volver a copiar editables ni medios de referencia al bundle online.

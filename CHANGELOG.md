@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+### Changed
+
+- Keep Soy tu Aire reference video and Amélie PSD/legacy AVI in the private
+  work archive instead of the published bundle; require an explicit archived
+  video path for offline reference analysis. Runtime audio and MP4/WebM stay intact.
+
+
 ### Added
 
 - 2026-09-05 / Codex: Added dedicated GA4 collection for cuentos.ar, including
