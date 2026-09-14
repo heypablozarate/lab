@@ -4,6 +4,7 @@ import Link from "next/link"
 import { useEffect, useRef, useState, type MouseEvent, type ReactNode } from "react"
 
 import type { SoyTuAireExperimentContent } from "@/lib/lab-content"
+import { trackLabProjectAction } from "@/lib/lab-analytics"
 
 import { Wordmark } from "../../wordmark"
 import { AudioEngine } from "../engine/audio/audio-engine"
@@ -127,7 +128,11 @@ export function Stage({
     return () => { cancelled = true; engineRef.current?.destroy(); engineRef.current = null }
   }, [])
 
-  async function handlePlay(clientX: number, clientY: number) {
+  async function handlePlay(
+    clientX: number,
+    clientY: number,
+    action: "experience_start" | "experience_restart" = "experience_start",
+  ) {
     setError(null)
     setShareStatus(null)
     setProgress(0)
@@ -152,6 +157,7 @@ export function Stage({
         setPaused(false)
         setCreditsMode("final")
         setPhase("credits")
+        trackLabProjectAction("soy-tu-aire", "experience_complete")
       })
       engineRef.current?.attachAudio(audio)
       // Born exactly where the user clicked Play.
@@ -161,6 +167,7 @@ export function Stage({
       engineRef.current?.attachTimeline(await timelinePromise)
       await audio.play()
       setPhase("playing")
+      trackLabProjectAction("soy-tu-aire", action)
     } catch {
       endedCleanupRef.current?.()
       endedCleanupRef.current = null
@@ -184,7 +191,7 @@ export function Stage({
     setError(null)
     setShareStatus(null)
     setCreditsMode("final")
-    await handlePlay(clientX, clientY)
+    await handlePlay(clientX, clientY, "experience_restart")
   }
 
   async function handleShare() {
@@ -198,10 +205,13 @@ export function Stage({
     try {
       if (navigator.share) {
         await navigator.share(payload)
+        trackLabProjectAction("soy-tu-aire", "share", { method: "native" })
         return
       }
-      await navigator.clipboard?.writeText(url)
+      if (!navigator.clipboard?.writeText) return
+      await navigator.clipboard.writeText(url)
       setShareStatus(credits.shareCopiedLabel)
+      trackLabProjectAction("soy-tu-aire", "share", { method: "clipboard" })
     } catch {
       setShareStatus(null)
     }

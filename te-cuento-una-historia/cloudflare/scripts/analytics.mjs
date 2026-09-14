@@ -1,7 +1,7 @@
 // This function is serialized into a standalone script shared by the immersive
 // shell and the static archive. Keep it independent of the React/Three bundle.
 export function installAnalytics(config, browser = window) {
-  const { measurementId, pages } = config
+  const { measurementId, pages, events = [] } = config
   const document = browser.document
   const eligible = () => browser.location.origin === "https://cuentos.ar"
     && Object.hasOwn(pages, browser.location.pathname)
@@ -20,6 +20,21 @@ export function installAnalytics(config, browser = window) {
     allow_google_signals: false,
     allow_ad_personalization_signals: false,
   })
+
+  const allowedEvents = new Set(events)
+  const pendingEvents = new Set()
+  browser.__cuentosTrack = (eventName, params = {}) => {
+    if (!eligible() || !allowedEvents.has(eventName)) return false
+    const safeParams = Object.fromEntries(Object.entries(params)
+      .filter(([, value]) => ["string", "number", "boolean"].includes(typeof value))
+      .map(([key, value]) => [key, typeof value === "string" ? value.slice(0, 100) : value]))
+    const fingerprint = `${eventName}:${JSON.stringify(safeParams)}`
+    if (pendingEvents.has(fingerprint)) return false
+    pendingEvents.add(fingerprint)
+    queueMicrotask(() => pendingEvents.delete(fingerprint))
+    gtag("event", eventName, { send_to: measurementId, ...safeParams })
+    return true
+  }
 
   let previousLocation = document.referrer
   let previousPage = null
@@ -71,5 +86,6 @@ export function buildAnalyticsScript(pages) {
   return `(${installAnalytics.toString()})(${JSON.stringify({
     measurementId: "G-2LJ5X4G79B",
     pages,
+    events: ["experience_enter", "story_engaged", "outbound_link_click"],
   }).replace(/</gu, "\\u003c")});\n`
 }

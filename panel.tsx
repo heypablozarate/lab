@@ -2,6 +2,7 @@ import type { CSSProperties, ReactNode } from "react";
 import Link from "next/link";
 
 import { labHome } from "@/lib/lab-content";
+import { trackLabProjectOpen } from "@/lib/lab-analytics";
 
 import styles from "./lab.module.css";
 import type { LabProject } from "./projects";
@@ -140,6 +141,8 @@ export function ProjectCard({
         rel="noopener noreferrer"
         aria-label={ariaLabel}
         onFocus={onFocusCard}
+        data-analytics-project={project.slug}
+        onClick={() => trackLabProjectOpen(project.slug, project.href!)}
       >
         {body}
       </a>
@@ -154,6 +157,8 @@ export function ProjectCard({
       href={`/${project.slug}`}
       aria-label={ariaLabel}
       onFocus={onFocusCard}
+      data-analytics-project={project.slug}
+      onClick={() => trackLabProjectOpen(project.slug, `/${project.slug}`)}
     >
       {body}
     </Link>

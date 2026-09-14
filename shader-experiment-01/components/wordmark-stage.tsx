@@ -10,6 +10,7 @@ import {
   reduceWordmarkStageState,
 } from "./wordmark-stage-state"
 import type { ShaderInterfaceCopy } from "@/lib/lab-content"
+import { trackLabProjectAction } from "@/lib/lab-analytics"
 
 export function WordmarkStage({
   brandName,
@@ -46,7 +47,14 @@ export function WordmarkStage({
         intensity={state.intensity}
         text={state.text}
         interfaceCopy={interfaceCopy}
-        onEffectChange={(effect) => dispatch({ type: "effect", effect })}
+        onEffectChange={(effect) => {
+          if (effect !== state.effect) {
+            trackLabProjectAction("shader-experiment-01", "effect_select", {
+              effect_id: effect,
+            })
+          }
+          dispatch({ type: "effect", effect })
+        }}
         onIntensityChange={(intensity) =>
           dispatch({ type: "intensity", intensity })
         }
