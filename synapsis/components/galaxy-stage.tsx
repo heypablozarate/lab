@@ -11,6 +11,7 @@ import {
   useState,
   useSyncExternalStore,
 } from "react";
+import { trackLabProjectAction } from "@/lib/lab-analytics";
 
 import { DARK_LIQUID_GLASS, LIGHT_LIQUID_GLASS, type LiquidGlassConfig } from "./liquid-glass";
 import {
@@ -272,7 +273,15 @@ export function GalaxyStage({ data, layout, authorName, authorUrl }: StageProps)
     });
   }
 
+  function selectNode(index: number | null, interaction: "graph" | "search" | "connection" = "graph") {
+    if (index !== null) {
+      trackLabProjectAction("synapsis", "node_open", { interaction });
+    }
+    setSelected(index);
+  }
+
   function focusSearchResult(index: number) {
+    trackLabProjectAction("synapsis", "node_open", { interaction: "search" });
     setSelected(index);
   }
 
@@ -319,7 +328,7 @@ export function GalaxyStage({ data, layout, authorName, authorUrl }: StageProps)
             appearance={appearance}
             panelEls={panelEls}
             onHover={setHovered}
-            onSelect={setSelected}
+            onSelect={(index) => selectNode(index)}
           />
         )}
       </div>
@@ -492,7 +501,15 @@ export function GalaxyStage({ data, layout, authorName, authorUrl }: StageProps)
                 ))}
               </ul>
             )}
-            <a className={styles.panelLink} href={selectedNode.url} target="_blank" rel="noopener noreferrer">
+            <a
+              className={styles.panelLink}
+              href={selectedNode.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => trackLabProjectAction("synapsis", "source_open", {
+                destination_host: new URL(selectedNode.url).hostname,
+              })}
+            >
               {interfaceCopy.openLinkLabel}
             </a>
             {selectedConnections.length > 0 && (
@@ -501,7 +518,7 @@ export function GalaxyStage({ data, layout, authorName, authorUrl }: StageProps)
                 <ul>
                   {selectedConnections.map(({ edge, otherTitle, otherIndex }) => (
                     <li key={`${edge.source}-${edge.target}`}>
-                      <button type="button" onClick={() => setSelected(otherIndex)}>
+                      <button type="button" onClick={() => selectNode(otherIndex, "connection")}>
                         {otherTitle}
                       </button>
                       {edge.rationale?.trim() ? <p>{edge.rationale}</p> : null}

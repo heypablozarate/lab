@@ -100,6 +100,7 @@ let creditsSceneFrame = 0;
 let creditsSceneSwitchToken = 0;
 let activeCreditsSceneId = "";
 let activeStory = null;
+let storyEngagementTimer = 0;
 let activeSceneId = "opener";
 const MIX = Object.freeze({
   scene: { music: 0.02, city: 0.05 },
@@ -533,6 +534,8 @@ function close({ historyMode = "back" } = {}) {
     window.history.replaceState(window.history.state, "", storyRouteBase || "/");
   }
   const restoreBackgroundAudio = teardownStoryMedia();
+  window.clearTimeout(storyEngagementTimer);
+  storyEngagementTimer = 0;
   activeStory = null;
   sceneSwitchToken += 1;
   reader.classList.remove("is-open");
@@ -616,6 +619,8 @@ async function openStory(story, trigger = null, { historyMode = "push" } = {}) {
   const restoreBackgroundAudio = teardownStoryMedia();
   const mediaToken = mediaSessionToken;
   activeStory = story;
+  window.clearTimeout(storyEngagementTimer);
+  storyEngagementTimer = 0;
   writeStoryHistory(story, historyMode);
   activeSceneId = "opener";
   readerReturnTarget = trigger ?? (document.activeElement instanceof HTMLElement ? document.activeElement : null);
@@ -650,6 +655,11 @@ async function openStory(story, trigger = null, { historyMode = "push" } = {}) {
   reader.scrollTop = 0;
   readerPage.scrollTop = 0;
   initStoryMedia(mediaToken);
+  storyEngagementTimer = window.setTimeout(() => {
+    if (activeStory === story && reader.classList.contains("is-open")) {
+      window.__cuentosTrack?.("story_engaged", { story_slug: story.slug });
+    }
+  }, 10_000);
   queueSceneUpdate();
   closeReader.focus({ preventScroll: true });
 }
@@ -764,6 +774,7 @@ function settleIntro() {
 async function enterExperience() {
   if (entering) return;
   entering = true;
+  window.__cuentosTrack?.("experience_enter");
   introEnter.disabled = true;
   beginOpening();
   rig?.play();
@@ -827,6 +838,16 @@ listen(readerBody, "click", (event) => {
   event.preventDefault();
   void openStory(linkedStory, readerReturnTarget);
 });
+listen(document, "click", (event) => {
+  const link = event.target instanceof Element ? event.target.closest("a[href]") : null;
+  if (!(link instanceof HTMLAnchorElement)) return;
+  const destination = new URL(link.href, window.location.href);
+  if (!["http:", "https:"].includes(destination.protocol) || destination.origin === window.location.origin) return;
+  window.__cuentosTrack?.("outbound_link_click", {
+    destination_host: destination.hostname,
+    source_path: window.location.pathname,
+  });
+}, { capture: true });
 listen(window, "popstate", async () => {
   await storiesReady;
   if (destroyed) return;
@@ -1001,6 +1022,7 @@ async function destroy() {
   destroyed = true;
   lifecycle.abort();
   window.clearTimeout(soundFade);
+  window.clearTimeout(storyEngagementTimer);
   cancelAnimationFrame(stateFrame);
   cancelAnimationFrame(sceneFrame);
   cancelAnimationFrame(creditsSceneFrame);

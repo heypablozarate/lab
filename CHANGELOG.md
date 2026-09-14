@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+### Added
+
+- Added privacy-bounded usage events for Synapsis, Pintando una canción, Shader
+  and Cuentos. Cuentos now distinguishes a story kept open for ten seconds from
+  a route pageview, while typed text, prose, pointer movement and continuous
+  scroll remain uncollected.
+
 ### Changed
 
 - Keep Soy tu Aire reference video and Amélie PSD/legacy AVI in the private

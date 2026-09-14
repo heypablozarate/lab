@@ -5,6 +5,7 @@ import { installAnalytics, buildAnalyticsScript } from "../cloudflare/scripts/an
 const config = {
   measurementId: "G-2LJ5X4G79B",
   pages: { "/": "Home", "/relatos": "Archive", "/relatos/story": "Story" },
+  events: ["story_engaged"],
 }
 
 function fixture(url = "https://cuentos.ar/") {
@@ -98,4 +99,17 @@ test("generated script is standalone and escapes authored text", () => {
   const script = buildAnalyticsScript({ "/": "A </script> title" })
   assert.ok(!script.includes("</script>"))
   assert.doesNotThrow(() => new Function(script))
+})
+
+test("custom events are allowlisted, private-value bounded, and de-duplicated per interaction", async () => {
+  const { browser } = fixture("https://cuentos.ar/relatos/story")
+  installAnalytics(config, browser)
+  assert.equal(browser.__cuentosTrack("unknown", { value: "no" }), false)
+  assert.equal(browser.__cuentosTrack("story_engaged", { story_slug: "story", ignored: { private: true } }), true)
+  assert.equal(browser.__cuentosTrack("story_engaged", { story_slug: "story", ignored: { private: true } }), false)
+  const events = browser.dataLayer.filter((record) => record[0] === "event" && record[1] === "story_engaged")
+  assert.equal(events.length, 1)
+  assert.deepEqual(events[0][2], { send_to: config.measurementId, story_slug: "story" })
+  await Promise.resolve()
+  assert.equal(browser.__cuentosTrack("story_engaged", { story_slug: "story" }), true)
 })

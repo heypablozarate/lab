@@ -8,6 +8,14 @@ async function views(page: Page) {
   })
 }
 
+async function customEvents(page: Page, eventName: string) {
+  return page.evaluate((name) => {
+    const records = (window as unknown as { dataLayer?: IArguments[] }).dataLayer ?? []
+    return records.filter((record) => record[0] === "event" && record[1] === name)
+      .map((record) => record[2] as Record<string, string>)
+  }, eventName)
+}
+
 test("production-tagged build measures reader navigation once without loading Google during initial render", async ({ page }) => {
   let googleLoads = 0
   await page.route("https://www.googletagmanager.com/**", async (route) => {
@@ -44,4 +52,20 @@ test("static archive includes tracking but preview origin never collects", async
   await page.getByRole("heading", { level: 1 }).waitFor()
   expect(await views(page)).toEqual([])
   expect(await page.locator('script[src*="googletagmanager"]').count()).toBe(0)
+})
+
+test("a story kept open becomes engaged without sending story content", async ({ page }) => {
+  await page.route("https://www.googletagmanager.com/**", (route) =>
+    route.fulfill({ contentType: "text/javascript", body: "" }))
+  await page.route("https://cuentos.ar/**", async (route) => {
+    const url = new URL(route.request().url())
+    const response = await route.fetch({ url: `http://127.0.0.1:4173${url.pathname}${url.search}` })
+    await route.fulfill({ response })
+  })
+  await page.goto("https://cuentos.ar/relatos/del-motivo-de-la-poesia")
+  await expect(page.locator("#reader-title")).toHaveText("Del motivo de la poesía", { timeout: 30_000 })
+  await expect.poll(() => customEvents(page, "story_engaged"), { timeout: 15_000 }).toHaveLength(1)
+  expect(await customEvents(page, "story_engaged")).toEqual([
+    { send_to: "G-2LJ5X4G79B", story_slug: "del-motivo-de-la-poesia" },
+  ])
 })
