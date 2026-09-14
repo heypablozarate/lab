@@ -208,7 +208,8 @@ export function Stage({
         trackLabProjectAction("soy-tu-aire", "share", { method: "native" })
         return
       }
-      await navigator.clipboard?.writeText(url)
+      if (!navigator.clipboard?.writeText) return
+      await navigator.clipboard.writeText(url)
       setShareStatus(credits.shareCopiedLabel)
       trackLabProjectAction("soy-tu-aire", "share", { method: "clipboard" })
     } catch {

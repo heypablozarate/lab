@@ -651,6 +651,11 @@ async function openStory(story, trigger = null, { historyMode = "push" } = {}) {
   } catch (error) {
     if (mediaToken !== mediaSessionToken || activeStory !== story) return;
     readerBody.innerHTML = `<p>${escapeHtml(error.message)}</p>`;
+    reader.scrollTop = 0;
+    readerPage.scrollTop = 0;
+    queueSceneUpdate();
+    closeReader.focus({ preventScroll: true });
+    return;
   }
   reader.scrollTop = 0;
   readerPage.scrollTop = 0;

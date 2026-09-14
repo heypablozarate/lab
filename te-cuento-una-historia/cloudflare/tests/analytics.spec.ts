@@ -69,3 +69,23 @@ test("a story kept open becomes engaged without sending story content", async ({
     { send_to: "G-2LJ5X4G79B", story_slug: "del-motivo-de-la-poesia" },
   ])
 })
+
+test("a story that fails to load never becomes engaged", async ({ page }) => {
+  await page.route("https://www.googletagmanager.com/**", (route) =>
+    route.fulfill({ contentType: "text/javascript", body: "" }))
+  await page.route("https://cuentos.ar/**", async (route) => {
+    const url = new URL(route.request().url())
+    const response = await route.fetch({ url: `http://127.0.0.1:4173${url.pathname}${url.search}` })
+    await route.fulfill({ response })
+  })
+  await page.route(
+    "https://cuentos.ar/lab/te-cuento-una-historia/data/stories/del-motivo-de-la-poesia.md",
+    (route) => route.fulfill({ status: 503, body: "Unavailable" }),
+  )
+  await page.goto("https://cuentos.ar/relatos/del-motivo-de-la-poesia")
+  await expect(page.locator("#reader-body")).toContainText("No se pudo leer", {
+    timeout: 30_000,
+  })
+  await page.waitForTimeout(10_500)
+  expect(await customEvents(page, "story_engaged")).toEqual([])
+})
