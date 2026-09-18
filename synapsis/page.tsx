@@ -42,7 +42,7 @@ export const metadata: Metadata = {
       url: SOCIAL_IMAGE_URL,
       width: 2400,
       height: 1260,
-      alt: "Synapsis by PabloZarate™ — Everything is connected",
+      alt: pageMetadata.metadataTitle,
     }],
   },
   twitter: {
@@ -51,7 +51,7 @@ export const metadata: Metadata = {
     description: pageMetadata.description,
     images: [{
       url: SOCIAL_IMAGE_URL,
-      alt: "Synapsis by PabloZarate™ — Everything is connected",
+      alt: pageMetadata.metadataTitle,
     }],
   },
 };
