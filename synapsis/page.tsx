@@ -13,7 +13,7 @@ import { computeLayout, type GalaxyData } from "./layout-engine";
 import styles from "./synapsis.module.css";
 
 const PAGE_URL = `${LAB_URL}/synapsis`;
-const SOCIAL_IMAGE_URL = `${PAGE_URL}/opengraph-image.png`;
+const SOCIAL_IMAGE_URL = `${LAB_URL}/lab/synapsis/opengraph-image.png`;
 
 const graphData = galaxy as GalaxyData;
 const pageMetadata = graphData.metadata;
