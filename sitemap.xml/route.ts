@@ -1,4 +1,5 @@
-import { labHomeUpdatedAt, projects } from "../projects";
+import { labHomeUpdatedAt } from "../projects";
+import { getLabProjects } from "@/lib/lab-content-server";
 
 const LAB_URL = "https://lab.pablozarate.com";
 
@@ -14,7 +15,7 @@ function escapeXml(value: string) {
 }
 
 export async function GET() {
-  const internalProjects = projects.filter((project) => !project.href);
+  const internalProjects = (await getLabProjects()).filter((project) => !project.href);
   const urls = [
     { loc: `${LAB_URL}/`, priority: "1", lastModified: labHomeUpdatedAt },
     ...internalProjects.map((project) => ({

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
-import galaxy from "@/content/data/synapsis/galaxy.json";
+import { getSynapsisContent } from "@/lib/synapsis/content";
+import { projectPublicSynapsis } from "@/lib/synapsis/public-data";
 import { LAB_URL } from "@/lib/lab-content";
 import {
   buildLabCreativeWorkStructuredData,
@@ -9,14 +10,12 @@ import {
 } from "@/lib/lab-seo";
 
 import { GalaxyStage } from "./components/galaxy-stage";
-import { computeLayout, type GalaxyData } from "./layout-engine";
+import { computeLayout } from "./layout-engine";
 import styles from "./synapsis.module.css";
 
 const PAGE_URL = `${LAB_URL}/synapsis`;
 const SOCIAL_IMAGE_URL = `${LAB_URL}/lab/synapsis/opengraph-image.png`;
 
-const graphData = galaxy as GalaxyData;
-const pageMetadata = graphData.metadata;
 const {
   language: siteLanguage,
   brandName,
@@ -27,7 +26,9 @@ function serializeJsonLd(data: Record<string, unknown>) {
   return JSON.stringify(data).replace(/</g, "\\u003c");
 }
 
-export const metadata: Metadata = {
+export async function generateMetadata(): Promise<Metadata> {
+  const pageMetadata = (await getSynapsisContent()).metadata;
+  return {
   title: pageMetadata.metadataTitle,
   description: pageMetadata.description,
   keywords: pageMetadata.keywords,
@@ -54,11 +55,12 @@ export const metadata: Metadata = {
       alt: pageMetadata.metadataTitle,
     }],
   },
-};
+  };
+}
 
-export default function SynapsisPage() {
-  // Deterministic layout, computed at build: the client only renders.
-  const data = toPublicGalaxyData(graphData);
+export default async function SynapsisPage() {
+  // Deterministic server layout; shared content cache changes after a save.
+  const data = projectPublicSynapsis(await getSynapsisContent());
   const layout = computeLayout(data);
   const publicMetadata = data.metadata;
 
@@ -89,16 +91,4 @@ export default function SynapsisPage() {
       />
     </main>
   );
-}
-
-function toPublicGalaxyData(data: GalaxyData): GalaxyData {
-  const nodes = data.nodes.filter((node) => node.status === "active");
-  const nodeIds = new Set(nodes.map((node) => node.id));
-  const edges = data.edges.filter((edge) => nodeIds.has(edge.source) && nodeIds.has(edge.target));
-
-  return {
-    ...data,
-    nodes,
-    edges,
-  };
 }
