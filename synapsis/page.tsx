@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { getSynapsisContent } from "@/lib/synapsis/content";
 import { projectPublicSynapsis } from "@/lib/synapsis/public-data";
 import { LAB_URL } from "@/lib/lab-content";
+import { getLabContent } from "@/lib/lab-content-server";
 import {
   buildLabCreativeWorkStructuredData,
   buildLabSiteName,
@@ -27,7 +28,10 @@ function serializeJsonLd(data: Record<string, unknown>) {
 }
 
 export async function generateMetadata(): Promise<Metadata> {
-  const pageMetadata = (await getSynapsisContent()).metadata;
+  const [pageMetadata, labContent] = await Promise.all([
+    getSynapsisContent().then((value) => value.metadata),
+    getLabContent(),
+  ]);
   return {
   title: pageMetadata.metadataTitle,
   description: pageMetadata.description,
@@ -37,7 +41,7 @@ export async function generateMetadata(): Promise<Metadata> {
     title: pageMetadata.metadataTitle,
     description: pageMetadata.description,
     url: PAGE_URL,
-    siteName: buildLabSiteName(),
+    siteName: buildLabSiteName(labContent),
     type: "website",
     images: [{
       url: SOCIAL_IMAGE_URL,
@@ -60,7 +64,8 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function SynapsisPage() {
   // Deterministic server layout; shared content cache changes after a save.
-  const data = projectPublicSynapsis(await getSynapsisContent());
+  const [synapsis, labContent] = await Promise.all([getSynapsisContent(), getLabContent()]);
+  const data = projectPublicSynapsis(synapsis);
   const layout = computeLayout(data);
   const publicMetadata = data.metadata;
 
@@ -70,6 +75,7 @@ export default async function SynapsisPage() {
     url: PAGE_URL,
     inLanguage: publicMetadata.inLanguage ?? siteLanguage,
     keywords: publicMetadata.keywords,
+    labContent,
   });
 
   return (

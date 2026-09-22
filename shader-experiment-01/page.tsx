@@ -3,9 +3,8 @@ import Link from "next/link";
 
 import {
   LAB_URL,
-  getLabExperiment,
-  labSocialImages,
 } from "@/lib/lab-content";
+import { getLabContent } from "@/lib/lab-content-server";
 import {
   buildCanonicalBrandWordmark,
   buildLabCreativeWorkStructuredData,
@@ -16,13 +15,16 @@ import { WordmarkStage } from "./components/wordmark-stage";
 import styles from "./shader-experiment.module.css";
 
 const PAGE_URL = `${LAB_URL}/shader-experiment-01`;
-const content = getLabExperiment("shader-experiment-01");
 
 function serializeJsonLd(data: Record<string, unknown>) {
   return JSON.stringify(data).replace(/</g, "\\u003c");
 }
 
-export const metadata: Metadata = {
+export async function generateMetadata(): Promise<Metadata> {
+  const labContent = await getLabContent();
+  const content = labContent.experiments["shader-experiment-01"];
+  const labSocialImages = labContent.socialImages;
+  return {
   title: content.metadataTitle,
   description: content.description,
   keywords: content.keywords,
@@ -33,7 +35,7 @@ export const metadata: Metadata = {
     title: content.metadataTitle,
     description: content.description,
     url: PAGE_URL,
-    siteName: buildLabSiteName(),
+    siteName: buildLabSiteName(labContent),
     type: "website",
     images: [
       {
@@ -50,15 +52,19 @@ export const metadata: Metadata = {
     description: content.description,
     images: [{ url: labSocialImages.twitter, alt: labSocialImages.alt }],
   },
-};
+  };
+}
 
-export default function ShaderExperimentPage() {
+export default async function ShaderExperimentPage() {
+  const labContent = await getLabContent();
+  const content = labContent.experiments["shader-experiment-01"];
   const jsonLd = buildLabCreativeWorkStructuredData({
     name: content.metadataTitle,
     description: content.description,
     url: PAGE_URL,
     inLanguage: content.inLanguage,
     keywords: content.keywords,
+    labContent,
   });
   const wordmark = buildCanonicalBrandWordmark();
 

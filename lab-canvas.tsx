@@ -14,8 +14,8 @@ import {
 import styles from "./lab.module.css";
 import { Minimap } from "./minimap";
 import { IntroCard, ProjectCard } from "./panel";
-import { projects } from "./projects";
 import { Wordmark } from "./wordmark";
+import type { LabContentData, LabProject } from "@/lib/lab-content";
 
 // Cards float on a fixed design canvas and a JS camera pans along Y (vertical
 // scroll — natural on touch and responsive). The canvas is NOT a single fixed
@@ -29,7 +29,6 @@ const PORTRAIT = { w: 780, h: 1280 }; // tall portrait — phones held upright
 const NARROW = 480; // viewport width at/below which the canvas is full portrait
 const WIDE = 1024; // viewport width at/above which the canvas is full landscape
 const GAP = 40; // world gap between stacked cards
-const COUNT = projects.length + 1; // intro + projects
 
 const clamp01 = (v: number) => Math.max(0, Math.min(1, v));
 const COLOR_SCHEME_QUERY = "(prefers-color-scheme: dark)";
@@ -88,11 +87,16 @@ export function LabCanvas({
   brandName,
   canonicalHomeUrl,
   creditLabel,
+  home,
+  projects,
 }: {
   brandName: string;
   canonicalHomeUrl: string;
   creditLabel: string;
+  home: LabContentData["home"];
+  projects: LabProject[];
 }) {
+  const count = projects.length + 1;
   const pageRef = useRef<HTMLElement>(null);
   const viewportRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
@@ -135,7 +139,7 @@ export function LabCanvas({
     cardH: LANDSCAPE.h,
     step: LANDSCAPE.h + GAP,
     camMin: LANDSCAPE.h / 2,
-    camMax: (COUNT - 1) * (LANDSCAPE.h + GAP) + LANDSCAPE.h / 2,
+    camMax: (count - 1) * (LANDSCAPE.h + GAP) + LANDSCAPE.h / 2,
     cam: LANDSCAPE.h / 2,
     target: LANDSCAPE.h / 2,
     vel: 0, // world px per frame (inertia, along Y)
@@ -171,7 +175,7 @@ export function LabCanvas({
     e.cardH = h;
     e.step = h + GAP;
     e.camMin = h / 2;
-    e.camMax = (COUNT - 1) * e.step + e.camMin;
+    e.camMax = (count - 1) * e.step + e.camMin;
 
     // Fit the card (plus a small margin) to the viewport.
     const fit = Math.min(e.vw / (w * 1.12), e.vh / (h * 1.2));
@@ -190,7 +194,7 @@ export function LabCanvas({
       // Re-centre the framed card on the new bounds. Only a width change
       // reshapes the canvas; a vertical-only resize (e.g. a mobile URL bar
       // showing/hiding) leaves the camera untouched, just the zoom.
-      const clampedIdx = Math.max(0, Math.min(COUNT - 1, idx));
+      const clampedIdx = Math.max(0, Math.min(count - 1, idx));
       e.target = e.camMin + clampedIdx * e.step;
       e.cam = e.target;
       e.vel = 0;
@@ -205,7 +209,7 @@ export function LabCanvas({
       `translate(${tx}px, ${ty}px) scale(${e.scaleBase})`,
     );
     pageRef.current?.setAttribute("data-camera-ready", "true");
-  }, []);
+  }, [count]);
 
   const clampTarget = useCallback((v: number) => {
     const e = eng.current;
@@ -215,11 +219,11 @@ export function LabCanvas({
   // Move the camera to a card (keyboard / minimap / focus).
   const goTo = useCallback((i: number) => {
     markInteracted();
-    const idx = Math.max(0, Math.min(COUNT - 1, i));
+    const idx = Math.max(0, Math.min(count - 1, i));
     const e = eng.current;
     e.target = e.camMin + idx * e.step;
     e.vel = 0;
-  }, [markInteracted]);
+  }, [count, markInteracted]);
 
   // ── camera loop ──
   useEffect(() => {
@@ -263,7 +267,7 @@ export function LabCanvas({
       const idx = e.step
         ? Math.max(
             0,
-            Math.min(COUNT - 1, Math.round((e.cam - e.camMin) / e.step)),
+            Math.min(count - 1, Math.round((e.cam - e.camMin) / e.step)),
           )
         : 0;
       setActive((prev) => (prev === idx ? prev : idx));
@@ -311,7 +315,7 @@ export function LabCanvas({
       window.removeEventListener("wheel", startCamera, true);
       window.removeEventListener("keydown", startCamera, true);
     };
-  }, [measure, clampTarget]);
+  }, [measure, clampTarget, count]);
 
   // ── wheel → vertical pan (both axes accepted; deltaY is the natural one) ──
   useEffect(() => {
@@ -423,7 +427,7 @@ export function LabCanvas({
     if (ev.key === "ArrowDown" || ev.key === "ArrowRight") target = active + 1;
     else if (ev.key === "ArrowUp" || ev.key === "ArrowLeft") target = active - 1;
     else if (ev.key === "Home") target = 0;
-    else if (ev.key === "End") target = COUNT - 1;
+    else if (ev.key === "End") target = count - 1;
     else return;
     ev.preventDefault();
     goTo(target);
@@ -436,7 +440,7 @@ export function LabCanvas({
       aria-labelledby="lab-title"
       data-theme={theme ?? undefined}
     >
-      <Minimap total={COUNT} active={active} labels={labels} onJump={goTo} />
+      <Minimap total={count} active={active} labels={labels} onJump={goTo} />
       <p id="lab-canvas-instructions" className={styles.srOnly}>
         Browse Lab panels with the arrow keys, Home and End, mouse wheel, touch
         drag, or the Lab panels navigation buttons.
@@ -460,7 +464,7 @@ export function LabCanvas({
         onKeyDown={onKeyDown}
       >
         <div ref={stageRef} className={styles.stage}>
-          <IntroCard brandName={brandName} top={0} onFocusCard={() => goTo(0)} />
+          <IntroCard brandName={brandName} home={home} top={0} onFocusCard={() => goTo(0)} />
           {projects.map((project, i) => (
             <ProjectCard
               key={project.slug}

@@ -1,7 +1,7 @@
 import type { CSSProperties, ReactNode } from "react";
 import Link from "next/link";
 
-import { labHome } from "@/lib/lab-content";
+import type { LabContentData } from "@/lib/lab-content";
 import { trackLabProjectOpen } from "@/lib/lab-analytics";
 
 import styles from "./lab.module.css";
@@ -11,24 +11,26 @@ import { Wordmark } from "./wordmark";
 /** First card — Pablo's Lab identity, presented as staggered clip-reveal lines. */
 export function IntroCard({
   brandName,
+  home,
   top,
   onFocusCard,
 }: {
   brandName: string;
+  home: LabContentData["home"];
   top: CSSProperties["top"];
   onFocusCard: () => void;
 }) {
   const lineGroups: ReactNode[][] = [
     [
-      labHome.introLine1,
-      labHome.introLine2,
+      home.introLine1,
+      home.introLine2,
       <>
         <Wordmark brandName={brandName} />
       </>,
     ],
     [
       <>
-        {labHome.welcomeLine}
+        {home.welcomeLine}
         <span className={styles.dot}>.</span>
       </>,
     ],
@@ -73,7 +75,7 @@ export function IntroCard({
             </span>
           ))}
         </h1>
-        <p className={styles.introSummary}>{labHome.summary}</p>
+        <p className={styles.introSummary}>{home.summary}</p>
       </div>
     </section>
   );
