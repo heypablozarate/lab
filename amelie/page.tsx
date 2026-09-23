@@ -30,7 +30,7 @@ export async function generateMetadata(): Promise<Metadata> {
     title: content.metadataTitle,
     description: content.description,
     url: PAGE_URL,
-    siteName: buildLabSiteName(labContent),
+    siteName: await buildLabSiteName(labContent),
     type: "website",
     images: [{ url: SOCIAL_IMAGE_URL, width: 1200, height: 630, alt: content.title }],
   },
@@ -46,7 +46,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function AmeliePage() {
   const labContent = await getLabContent()
   const content = labContent.experiments.amelie
-  const jsonLd = buildLabCreativeWorkStructuredData({
+  const jsonLd = await buildLabCreativeWorkStructuredData({
     name: content.metadataTitle,
     description: content.description,
     url: PAGE_URL,

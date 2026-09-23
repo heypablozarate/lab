@@ -38,7 +38,7 @@ export async function generateMetadata(): Promise<Metadata> {
     title: home.metadataTitle,
     description: home.description,
     url: LAB_URL,
-    siteName: buildLabSiteName(content),
+    siteName: await buildLabSiteName(content),
     type: "website",
     images: [{
       url: socialImages.openGraph,
@@ -58,11 +58,12 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function LabLandingPage() {
   const content = await getLabContent();
-  const { brandName, homeUrl, siteTitle } = getCanonicalIdentityLabels();
+  const { brandName, homeUrl, siteTitle } = await getCanonicalIdentityLabels();
+  const structuredData = await buildLabLandingStructuredData(content);
 
   return (
     <>
-      <LabStructuredData data={buildLabLandingStructuredData(content)} />
+      <LabStructuredData data={structuredData} />
       <LabCanvas
         brandName={brandName}
         canonicalHomeUrl={homeUrl}

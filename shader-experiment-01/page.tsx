@@ -35,7 +35,7 @@ export async function generateMetadata(): Promise<Metadata> {
     title: content.metadataTitle,
     description: content.description,
     url: PAGE_URL,
-    siteName: buildLabSiteName(labContent),
+    siteName: await buildLabSiteName(labContent),
     type: "website",
     images: [
       {
@@ -58,7 +58,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function ShaderExperimentPage() {
   const labContent = await getLabContent();
   const content = labContent.experiments["shader-experiment-01"];
-  const jsonLd = buildLabCreativeWorkStructuredData({
+  const jsonLd = await buildLabCreativeWorkStructuredData({
     name: content.metadataTitle,
     description: content.description,
     url: PAGE_URL,
@@ -66,7 +66,7 @@ export default async function ShaderExperimentPage() {
     keywords: content.keywords,
     labContent,
   });
-  const wordmark = buildCanonicalBrandWordmark();
+  const wordmark = await buildCanonicalBrandWordmark();
 
   return (
     <main className={styles.page} data-theme="dark" lang={content.inLanguage}>

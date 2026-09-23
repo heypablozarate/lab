@@ -17,12 +17,6 @@ import styles from "./synapsis.module.css";
 const PAGE_URL = `${LAB_URL}/synapsis`;
 const SOCIAL_IMAGE_URL = `${LAB_URL}/lab/synapsis/opengraph-image.png`;
 
-const {
-  language: siteLanguage,
-  brandName,
-  homeUrl,
-} = getCanonicalIdentityLabels();
-
 function serializeJsonLd(data: Record<string, unknown>) {
   return JSON.stringify(data).replace(/</g, "\\u003c");
 }
@@ -41,7 +35,7 @@ export async function generateMetadata(): Promise<Metadata> {
     title: pageMetadata.metadataTitle,
     description: pageMetadata.description,
     url: PAGE_URL,
-    siteName: buildLabSiteName(labContent),
+    siteName: await buildLabSiteName(labContent),
     type: "website",
     images: [{
       url: SOCIAL_IMAGE_URL,
@@ -64,12 +58,17 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function SynapsisPage() {
   // Deterministic server layout; shared content cache changes after a save.
-  const [synapsis, labContent] = await Promise.all([getSynapsisContent(), getLabContent()]);
+  const [synapsis, labContent, identity] = await Promise.all([
+    getSynapsisContent(),
+    getLabContent(),
+    getCanonicalIdentityLabels(),
+  ]);
+  const { language: siteLanguage, brandName, homeUrl } = identity;
   const data = projectPublicSynapsis(synapsis);
   const layout = computeLayout(data);
   const publicMetadata = data.metadata;
 
-  const jsonLd = buildLabCreativeWorkStructuredData({
+  const jsonLd = await buildLabCreativeWorkStructuredData({
     name: publicMetadata.metadataTitle,
     description: publicMetadata.description,
     url: PAGE_URL,

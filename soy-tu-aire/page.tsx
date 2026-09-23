@@ -31,7 +31,7 @@ export async function generateMetadata(): Promise<Metadata> {
     title: content.metadataTitle,
     description: content.description,
     url: PAGE_URL,
-    siteName: buildLabSiteName(labContent),
+    siteName: await buildLabSiteName(labContent),
     type: "website",
     images: [{ url: labSocialImages.openGraph, width: 1280, height: 746, alt: labSocialImages.alt }],
   },
@@ -55,8 +55,8 @@ export default async function SoyTuAirePage() {
         .replaceAll("{originalAgencyLabel}", content.originalAgencyLabel),
     ),
   }
-  const { brandName } = getCanonicalIdentityLabels()
-  const jsonLd = buildLabCreativeWorkStructuredData({
+  const { brandName } = await getCanonicalIdentityLabels()
+  const jsonLd = await buildLabCreativeWorkStructuredData({
     name: content.metadataTitle,
     description: content.description,
     url: PAGE_URL,
