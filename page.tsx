@@ -1,10 +1,7 @@
 import type { Metadata } from "next";
 
-import {
-  LAB_URL,
-  labHome,
-  labSocialImages,
-} from "@/lib/lab-content";
+import { LAB_URL } from "@/lib/lab-content";
+import { getLabContent } from "@/lib/lab-content-server";
 import {
   buildLabLandingStructuredData,
   buildLabSiteName,
@@ -17,9 +14,7 @@ function serializeJsonLd(data: Record<string, unknown>) {
   return JSON.stringify(data).replace(/</g, "\\u003c");
 }
 
-function LabStructuredData() {
-  const data = buildLabLandingStructuredData();
-
+function LabStructuredData({ data }: { data: Record<string, unknown> }) {
   return (
     <script
       type="application/ld+json"
@@ -28,45 +23,53 @@ function LabStructuredData() {
   );
 }
 
-export const metadata: Metadata = {
+export async function generateMetadata(): Promise<Metadata> {
+  const content = await getLabContent();
+  const { home, socialImages } = content;
+  return {
   metadataBase: new URL(LAB_URL),
-  title: labHome.metadataTitle,
-  description: labHome.description,
-  keywords: labHome.keywords,
+  title: home.metadataTitle,
+  description: home.description,
+  keywords: home.keywords,
   alternates: {
     canonical: LAB_URL,
   },
   openGraph: {
-    title: labHome.metadataTitle,
-    description: labHome.description,
+    title: home.metadataTitle,
+    description: home.description,
     url: LAB_URL,
-    siteName: buildLabSiteName(),
+    siteName: await buildLabSiteName(content),
     type: "website",
     images: [{
-      url: labSocialImages.openGraph,
+      url: socialImages.openGraph,
       width: 1280,
       height: 746,
-      alt: labSocialImages.alt,
+      alt: socialImages.alt,
     }],
   },
   twitter: {
     card: "summary_large_image",
-    title: labHome.metadataTitle,
-    description: labHome.description,
-    images: [{ url: labSocialImages.twitter, alt: labSocialImages.alt }],
+    title: home.metadataTitle,
+    description: home.description,
+    images: [{ url: socialImages.twitter, alt: socialImages.alt }],
   },
-};
+  };
+}
 
-export default function LabLandingPage() {
-  const { brandName, homeUrl, siteTitle } = getCanonicalIdentityLabels();
+export default async function LabLandingPage() {
+  const content = await getLabContent();
+  const { brandName, homeUrl, siteTitle } = await getCanonicalIdentityLabels();
+  const structuredData = await buildLabLandingStructuredData(content);
 
   return (
     <>
-      <LabStructuredData />
+      <LabStructuredData data={structuredData} />
       <LabCanvas
         brandName={brandName}
         canonicalHomeUrl={homeUrl}
         creditLabel={siteTitle}
+        home={content.home}
+        projects={content.projects}
       />
     </>
   );

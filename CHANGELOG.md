@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Keep Synapsis graph rendering and sitemap dates current through the parent content reader, preserving the existing presentation and active-node filter.
+
 ### Added
 
 - Added privacy-bounded usage events for Synapsis, Pintando una canción, Shader

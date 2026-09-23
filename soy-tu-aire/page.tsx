@@ -2,9 +2,8 @@ import type { Metadata } from "next"
 
 import {
   LAB_URL,
-  getLabExperiment,
-  labSocialImages,
 } from "@/lib/lab-content"
+import { getLabContent } from "@/lib/lab-content-server"
 import {
   buildLabCreativeWorkStructuredData,
   buildLabSiteName,
@@ -15,21 +14,15 @@ import { Stage } from "./components/stage"
 import styles from "./soy-tu-aire.module.css"
 
 const PAGE_URL = `${LAB_URL}/soy-tu-aire`
-const content = getLabExperiment("soy-tu-aire")
-const publicContent = {
-  ...content,
-  introParagraphs: content.introParagraphs.map((paragraph) =>
-    paragraph
-      .replaceAll("{appleMusicLabel}", content.appleMusicLabel)
-      .replaceAll("{originalAgencyLabel}", content.originalAgencyLabel),
-  ),
-}
-
 function serializeJsonLd(data: Record<string, unknown>) {
   return JSON.stringify(data).replace(/</g, "\\u003c")
 }
 
-export const metadata: Metadata = {
+export async function generateMetadata(): Promise<Metadata> {
+  const labContent = await getLabContent()
+  const content = labContent.experiments["soy-tu-aire"]
+  const labSocialImages = labContent.socialImages
+  return {
   title: content.metadataTitle,
   description: content.description,
   keywords: content.keywords,
@@ -38,7 +31,7 @@ export const metadata: Metadata = {
     title: content.metadataTitle,
     description: content.description,
     url: PAGE_URL,
-    siteName: buildLabSiteName(),
+    siteName: await buildLabSiteName(labContent),
     type: "website",
     images: [{ url: labSocialImages.openGraph, width: 1280, height: 746, alt: labSocialImages.alt }],
   },
@@ -48,17 +41,29 @@ export const metadata: Metadata = {
     description: content.description,
     images: [{ url: labSocialImages.twitter, alt: labSocialImages.alt }],
   },
+  }
 }
 
-export default function SoyTuAirePage() {
-  const { brandName } = getCanonicalIdentityLabels()
-  const jsonLd = buildLabCreativeWorkStructuredData({
+export default async function SoyTuAirePage() {
+  const labContent = await getLabContent()
+  const content = labContent.experiments["soy-tu-aire"]
+  const publicContent = {
+    ...content,
+    introParagraphs: content.introParagraphs.map((paragraph) =>
+      paragraph
+        .replaceAll("{appleMusicLabel}", content.appleMusicLabel)
+        .replaceAll("{originalAgencyLabel}", content.originalAgencyLabel),
+    ),
+  }
+  const { brandName } = await getCanonicalIdentityLabels()
+  const jsonLd = await buildLabCreativeWorkStructuredData({
     name: content.metadataTitle,
     description: content.description,
     url: PAGE_URL,
     inLanguage: content.inLanguage,
     dateCreated: content.dateCreated,
     isBasedOn: content.isBasedOn,
+    labContent,
   })
 
   return (

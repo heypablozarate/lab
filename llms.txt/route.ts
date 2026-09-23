@@ -1,16 +1,17 @@
 import {
   LAB_URL,
   getLabProjectUrl,
-  labHome,
-  labPositioning,
-  labContent,
-  projects,
 } from "@/lib/lab-content";
+import { getLabContent } from "@/lib/lab-content-server";
 import { buildLabOwnershipNote } from "@/lib/lab-seo";
 
 export const revalidate = 3600;
 
 export async function GET() {
+  const labContent = await getLabContent();
+  const labHome = labContent.home;
+  const labPositioning = labContent.positioning;
+  const projects = labContent.projects;
   const copy = labContent.publicDocuments.llms;
   const lines = [
     `# ${labHome.title}`,
@@ -20,7 +21,7 @@ export async function GET() {
     `## ${copy.interpretationHeading}`,
     `- ${labPositioning.agentGuidance}`,
     `- ${copy.topicsTemplate.replace("{topics}", labPositioning.topics.join(", "))}`,
-    `- ${buildLabOwnershipNote()}`,
+    `- ${await buildLabOwnershipNote(labContent)}`,
     "",
     `## ${copy.canonicalUrlsHeading}`,
     `- ${copy.labHomeLabel}: ${LAB_URL}/`,

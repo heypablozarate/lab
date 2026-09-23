@@ -2,8 +2,8 @@ import type { Metadata } from "next"
 
 import {
   LAB_URL,
-  getLabExperiment,
 } from "@/lib/lab-content"
+import { getLabContent } from "@/lib/lab-content-server"
 import {
   buildLabCreativeWorkStructuredData,
   buildLabSiteName,
@@ -13,13 +13,15 @@ import styles from "./amelie.module.css"
 
 const PAGE_URL = `${LAB_URL}/amelie`
 const SOCIAL_IMAGE_URL = `${PAGE_URL}/assets/og.jpg`
-const content = getLabExperiment("amelie")
 
 function serializeJsonLd(data: Record<string, unknown>) {
   return JSON.stringify(data).replace(/</g, "\\u003c")
 }
 
-export const metadata: Metadata = {
+export async function generateMetadata(): Promise<Metadata> {
+  const labContent = await getLabContent()
+  const content = labContent.experiments.amelie
+  return {
   title: content.metadataTitle,
   description: content.description,
   keywords: content.keywords,
@@ -28,7 +30,7 @@ export const metadata: Metadata = {
     title: content.metadataTitle,
     description: content.description,
     url: PAGE_URL,
-    siteName: buildLabSiteName(),
+    siteName: await buildLabSiteName(labContent),
     type: "website",
     images: [{ url: SOCIAL_IMAGE_URL, width: 1200, height: 630, alt: content.title }],
   },
@@ -38,16 +40,20 @@ export const metadata: Metadata = {
     description: content.description,
     images: [{ url: SOCIAL_IMAGE_URL, alt: content.title }],
   },
+  }
 }
 
-export default function AmeliePage() {
-  const jsonLd = buildLabCreativeWorkStructuredData({
+export default async function AmeliePage() {
+  const labContent = await getLabContent()
+  const content = labContent.experiments.amelie
+  const jsonLd = await buildLabCreativeWorkStructuredData({
     name: content.metadataTitle,
     description: content.description,
     url: PAGE_URL,
     inLanguage: content.inLanguage,
     dateCreated: content.dateCreated,
     isBasedOn: content.isBasedOn,
+    labContent,
   })
 
   return (
