@@ -21,7 +21,7 @@ export async function GET() {
     `## ${copy.interpretationHeading}`,
     `- ${labPositioning.agentGuidance}`,
     `- ${copy.topicsTemplate.replace("{topics}", labPositioning.topics.join(", "))}`,
-    `- ${buildLabOwnershipNote(labContent)}`,
+    `- ${await buildLabOwnershipNote(labContent)}`,
     "",
     `## ${copy.canonicalUrlsHeading}`,
     `- ${copy.labHomeLabel}: ${LAB_URL}/`,
