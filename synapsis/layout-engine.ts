@@ -1,11 +1,9 @@
 // Deterministic constellation layout for Synapsis.
 //
-// dsaints-style: no runtime physics. Node positions derive from a hash of the
-// node id, relevance sets distance to center (inverse) and visual size
-// (direct), clusters gravitate toward shared angular sectors, and edge weight
-// nudges connected nodes together in a fixed post-hash pass. Same graph in →
-// same constellation out, always. Runs server-side at build; the client only
-// renders the result.
+// Editorial territories distributed across XY, with continuous spatial depth.
+// Stable id hashes build airy local clouds; bounded edge attraction and XY
+// separation run only on the server. No runtime physics or corpus-specific
+// positions. Input ordering does not change the resulting spatial identity.
 
 export type GalaxyNode = {
   id: string;
@@ -84,24 +82,17 @@ export type GalaxyLayout = {
   indexById: Record<string, number>;
 };
 
-// World-space distances: relevance 10 sits near DIST_MIN, relevance 1 near
-// DIST_MAX. The ellipsoid is flattened on Y so it reads as a galaxy, not a ball.
-// Keep the shell airy enough that real-data clusters do not visually clump.
-const DIST_MIN = 10;
-const DIST_MAX = 44;
-const FLATTEN_Y = 0.62;
-const CLUSTER_COHESION = 0.48;
-const JITTER = 0.2;
-const EDGE_PASS_ITERATIONS = 6;
-const EDGE_PASS_STEP = 0.012;
-const SEPARATION_PASS_ITERATIONS = 5;
-const SEPARATION_STEP = 0.06;
-
-const NODE_RADIUS_BASE = 0.15;
-const NODE_RADIUS_K = 0.052;
+const FIELD_HALF_WIDTH = 40;
+const FIELD_HALF_HEIGHT = 26;
+const DEPTH_HALF_RANGE = 12;
+const EDGE_PASS_ITERATIONS = 4;
+const EDGE_PASS_STEP = 0.008;
+const SEPARATION_PASS_ITERATIONS = 10;
+const SEPARATION_STEP = 0.35;
 
 export function nodeVisualRadius(relevance: number): number {
-  return NODE_RADIUS_BASE + NODE_RADIUS_K * relevance;
+  const t = (Math.min(10, Math.max(1, relevance)) - 1) / 9;
+  return 0.15 + t * 0.15;
 }
 
 // dsaints hash: frac(sin(seed) * 10000), seeded from a djb2 of the id plus a
@@ -117,29 +108,24 @@ function hash01(id: string, salt: number): number {
 
 type Vec3 = [number, number, number];
 
-function normalize(v: Vec3): Vec3 {
-  const len = Math.hypot(v[0], v[1], v[2]) || 1;
-  return [v[0] / len, v[1] / len, v[2] / len];
-}
-
-// Evenly distributed cluster centroid directions via the golden spiral, in
-// declared cluster order so the sectors are stable across builds.
-function clusterDirections(clusters: GalaxyCluster[]): Map<string, Vec3> {
+function clusterCentroids(clusters: GalaxyCluster[], counts: Map<string, number>): Map<string, Vec3> {
   const golden = Math.PI * (3 - Math.sqrt(5));
-  const dirs = new Map<string, Vec3>();
-  const count = Math.max(clusters.length, 1);
-  clusters.forEach((cluster, i) => {
-    const y = count === 1 ? 0 : 1 - (2 * (i + 0.5)) / count;
-    const r = Math.sqrt(Math.max(0, 1 - y * y));
-    const theta = golden * i;
-    dirs.set(cluster.id, normalize([Math.cos(theta) * r, y, Math.sin(theta) * r]));
+  const occupied = clusters.filter((cluster) => counts.has(cluster.id))
+    .sort((a, b) => a.id < b.id ? -1 : a.id > b.id ? 1 : 0);
+  const centroids = new Map<string, Vec3>();
+  occupied.forEach((cluster, i) => {
+    const radius = occupied.length === 1 ? 0 : Math.sqrt((i + 0.5) / occupied.length);
+    centroids.set(cluster.id, [Math.cos(golden * i) * radius * 28, Math.sin(golden * i) * radius * 16, 0]);
   });
-  return dirs;
+  return centroids;
 }
 
 export function computeLayout(data: GalaxyData): GalaxyLayout {
   const { nodes, edges, clusters } = data;
-  const centroids = clusterDirections(clusters);
+  const counts = new Map<string, number>();
+  for (const node of nodes) counts.set(node.cluster, (counts.get(node.cluster) ?? 0) + 1);
+  const centroids = clusterCentroids(clusters, counts);
+  const order = nodes.map((_, i) => i).sort((a, b) => nodes[a].id < nodes[b].id ? -1 : nodes[a].id > nodes[b].id ? 1 : 0);
   const positions = new Array<number>(nodes.length * 3);
   const radii = new Array<number>(nodes.length);
   const indexById: Record<string, number> = {};
@@ -148,34 +134,20 @@ export function computeLayout(data: GalaxyData): GalaxyLayout {
     indexById[node.id] = i;
     radii[i] = nodeVisualRadius(node.relevance);
 
-    // Hash-random direction on the sphere.
-    const u = hash01(node.id, 1);
-    const v = hash01(node.id, 2);
-    const theta = u * Math.PI * 2;
-    const phi = Math.acos(2 * v - 1);
-    const random: Vec3 = [
-      Math.sin(phi) * Math.cos(theta),
-      Math.cos(phi),
-      Math.sin(phi) * Math.sin(theta),
-    ];
-
-    // Pull the direction toward the cluster's angular sector.
-    const centroid = centroids.get(node.cluster) ?? random;
-    const dir = normalize([
-      random[0] * (1 - CLUSTER_COHESION) + centroid[0] * CLUSTER_COHESION,
-      random[1] * (1 - CLUSTER_COHESION) + centroid[1] * CLUSTER_COHESION,
-      random[2] * (1 - CLUSTER_COHESION) + centroid[2] * CLUSTER_COHESION,
-    ]);
-
-    // Relevance → inverse distance to center, with a hash jitter so equal
-    // relevance doesn't collapse into shells.
+    const centroid = centroids.get(node.cluster) ?? [0, 0, 0];
+    const share = (counts.get(node.cluster) ?? 1) / Math.max(1, nodes.length);
     const t = (Math.min(10, Math.max(1, node.relevance)) - 1) / 9;
-    const jitter = 1 + (hash01(node.id, 3) * 2 - 1) * JITTER;
-    const dist = (DIST_MAX - t * (DIST_MAX - DIST_MIN)) * jitter;
+    const theta = hash01(node.id, 1) * Math.PI * 2;
+    const radial = Math.sqrt(hash01(node.id, 2)) * (1 - t * 0.2);
+    // Larger territories get room proportional to their population, without
+    // reserving space for empty editorial categories.
+    const cloudX = counts.size === 1 ? 34 : 7 + Math.sqrt(share) * 9;
+    const cloudY = counts.size === 1 ? 22 : 5 + Math.sqrt(share) * 6;
+    const centrality = 1 - t * 0.18;
+    positions[i * 3] = centroid[0] * centrality + Math.cos(theta) * radial * cloudX;
+    positions[i * 3 + 1] = centroid[1] * centrality + Math.sin(theta) * radial * cloudY;
+    positions[i * 3 + 2] = ((hash01(node.id, 3) * 2 - 1) * 0.7 + (hash01(node.cluster, 11) * 2 - 1) * 0.3) * DEPTH_HALF_RANGE;
 
-    positions[i * 3] = dir[0] * dist;
-    positions[i * 3 + 1] = dir[1] * dist * FLATTEN_Y;
-    positions[i * 3 + 2] = dir[2] * dist;
   });
 
   const edgeIndices: number[] = [];
@@ -188,9 +160,14 @@ export function computeLayout(data: GalaxyData): GalaxyLayout {
 
   // Post-hash edge pass: connected nodes drift toward each other proportional
   // to edge weight. Fixed iteration count and order → still deterministic.
+  const orderedEdges = [...edges].sort((a, b) => {
+    const left = [a.source, a.target].sort().join("\u0000");
+    const right = [b.source, b.target].sort().join("\u0000");
+    return left < right ? -1 : left > right ? 1 : 0;
+  });
   for (let iter = 0; iter < EDGE_PASS_ITERATIONS; iter += 1) {
     let e = 0;
-    for (const edge of edges) {
+    for (const edge of orderedEdges) {
       const a = indexById[edge.source];
       const b = indexById[edge.target];
       if (a === undefined || b === undefined) continue;
@@ -210,36 +187,45 @@ export function computeLayout(data: GalaxyData): GalaxyLayout {
   // Deterministic spacing pass: keep dense real-data clusters from reading as
   // one pile while preserving the stable no-runtime-physics contract.
   for (let iter = 0; iter < SEPARATION_PASS_ITERATIONS; iter += 1) {
-    for (let a = 0; a < nodes.length; a += 1) {
-      for (let b = a + 1; b < nodes.length; b += 1) {
+    for (let ai = 0; ai < order.length; ai += 1) {
+      const a = order[ai];
+      for (let bi = ai + 1; bi < order.length; bi += 1) {
+        const b = order[bi];
         const ax = positions[a * 3];
         const ay = positions[a * 3 + 1];
-        const az = positions[a * 3 + 2];
         const bx = positions[b * 3];
         const by = positions[b * 3 + 1];
-        const bz = positions[b * 3 + 2];
         let dx = bx - ax;
         let dy = by - ay;
-        let dz = bz - az;
-        let dist = Math.hypot(dx, dy, dz);
+        let dist = Math.hypot(dx, dy);
         if (dist < 1e-6) {
           dx = hash01(`${nodes[a].id}:${nodes[b].id}`, 7) * 2 - 1;
           dy = hash01(`${nodes[a].id}:${nodes[b].id}`, 8) * 2 - 1;
-          dz = hash01(`${nodes[a].id}:${nodes[b].id}`, 9) * 2 - 1;
-          dist = Math.hypot(dx, dy, dz) || 1;
+          dist = Math.hypot(dx, dy) || 1;
         }
-        const minDistance = 2.15 + radii[a] + radii[b];
+        const minDistance = 1.1 + radii[a] + radii[b];
         if (dist >= minDistance) continue;
         const push = ((minDistance - dist) / dist) * SEPARATION_STEP;
         positions[a * 3] -= dx * push;
         positions[a * 3 + 1] -= dy * push;
-        positions[a * 3 + 2] -= dz * push;
         positions[b * 3] += dx * push;
         positions[b * 3 + 1] += dy * push;
-        positions[b * 3 + 2] += dz * push;
       }
     }
   }
 
+  // Fit extreme population distributions inside the camera's editorial field
+  // without clipping individual points against a hard boundary.
+  let extentX = FIELD_HALF_WIDTH;
+  let extentY = FIELD_HALF_HEIGHT;
+  for (let i = 0; i < nodes.length; i += 1) {
+    extentX = Math.max(extentX, Math.abs(positions[i * 3]));
+    extentY = Math.max(extentY, Math.abs(positions[i * 3 + 1]));
+  }
+  const fit = Math.min(FIELD_HALF_WIDTH / extentX, FIELD_HALF_HEIGHT / extentY);
+  for (let i = 0; i < nodes.length; i += 1) {
+    positions[i * 3] *= fit;
+    positions[i * 3 + 1] *= fit;
+  }
   return { positions, radii, edgeIndices, indexById };
 }

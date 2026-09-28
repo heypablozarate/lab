@@ -16,7 +16,7 @@ export type LiquidGlassConfig = {
   rimWidth: number;
   /** Displacement strength in px — how hard the rim bends the background. */
   depth: number;
-  /** Rim colour fringing (0..1). 0 = clean glass. */
+  /** Rim spectral strength (0..1): up to 2 CSS px per R/B channel. 0 = clean glass. */
   chromaticAberration: number;
   /** Backdrop blur radius (px). */
   blur: number;
@@ -29,30 +29,23 @@ export type LiquidGlassConfig = {
   edgeHighlight: number;
 };
 
-// Tuned by Pablo (2026-07-23). Picked by effectiveTheme in galaxy-stage; the
-// dev DialKit still overrides the active theme while tuning.
+// Shared optical behavior, with theme-specific transmission for readable DOM
+// content. The development DialKit remains an opt-in override of this seed.
 export const LIGHT_LIQUID_GLASS: LiquidGlassConfig = {
-  radius: 20,
-  rimWidth: 0.1,
-  depth: 16,
-  chromaticAberration: 0.39,
-  blur: 6,
-  contrast: 1.39,
-  brightness: 0.91,
-  saturate: 1.45,
-  tint: 0.53,
-  edgeHighlight: 0.43,
+  radius: 24,
+  rimWidth: 0.24,
+  depth: 22,
+  chromaticAberration: 0.75,
+  blur: 2.25,
+  contrast: 1.04,
+  brightness: 1,
+  saturate: 1.03,
+  tint: 0.18,
+  edgeHighlight: 0.28,
 };
 
 export const DARK_LIQUID_GLASS: LiquidGlassConfig = {
-  radius: 20,
-  rimWidth: 0.1,
-  depth: 16,
-  chromaticAberration: 0.39,
-  blur: 6,
-  contrast: 1.39,
-  brightness: 0.91,
-  saturate: 1.45,
-  tint: 0.53,
-  edgeHighlight: 0.43,
+  ...LIGHT_LIQUID_GLASS,
+  tint: 0.24,
+  edgeHighlight: 0.18,
 };
