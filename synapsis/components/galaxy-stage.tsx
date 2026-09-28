@@ -454,7 +454,9 @@ export function GalaxyStage({ data, layout, authorName, authorUrl, authorWordmar
       ? interfaceCopy.lightModeLabel
       : interfaceCopy.darkModeLabel;
 
-  const visibleClusters = clusters.filter((cluster) => (clusterCounts.get(cluster.id) ?? 0) > 0);
+  const visibleClusters = clusters
+    .filter((cluster) => (clusterCounts.get(cluster.id) ?? 0) > 0)
+    .sort((a, b) => (clusterCounts.get(b.id) ?? 0) - (clusterCounts.get(a.id) ?? 0));
   const count = formatTemplate(interfaceCopy.countTemplate, { nodes: nodes.length, edges: edges.length, clusters: visibleClusters.length });
   const filters = <ClusterFilters clusters={visibleClusters} counts={clusterCounts} active={activeClusters} onToggle={toggleCluster} />;
   const clear = <ClearFilters copy={interfaceCopy} active={activeClusters.size > 0} onClear={() => setActiveClusters(new Set())} />;
