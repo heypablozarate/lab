@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { getTokens } from "@/content/loader";
+import { buildRamsThemeCss } from "@/lib/rams/css";
 
 import { getSynapsisContent } from "@/lib/synapsis/content";
 import { projectPublicSynapsis } from "@/lib/synapsis/public-data";
@@ -66,6 +68,8 @@ export default async function SynapsisPage() {
   const { language: siteLanguage, brandName, homeUrl } = identity;
   const data = projectPublicSynapsis(synapsis);
   const layout = computeLayout(data);
+  const tokens = await getTokens();
+  const themeCss = buildRamsThemeCss(tokens);
   const publicMetadata = data.metadata;
 
   const jsonLd = await buildLabCreativeWorkStructuredData({
@@ -79,6 +83,7 @@ export default async function SynapsisPage() {
 
   return (
     <main className={styles.page} lang={publicMetadata.inLanguage ?? siteLanguage}>
+      <style>{themeCss}</style>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }} />
 
       {"\n"}
@@ -91,6 +96,7 @@ export default async function SynapsisPage() {
       <GalaxyStage
         data={data}
         layout={layout}
+        authorWordmark={tokens.brand.wordmark}
         authorName={brandName}
         authorUrl={homeUrl}
       />

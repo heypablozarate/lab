@@ -19,6 +19,7 @@ import { useEffect, useMemo } from "react";
 import * as THREE from "three";
 
 import type { LiquidGlassConfig } from "./liquid-glass";
+import { writeGlassPanelBounds } from "./glass-geometry";
 import type { SynapsisThemeAppearance } from "./synapsis-appearance";
 
 // Uniform bag for the glass shader. Mutated only through the module-level
@@ -36,7 +37,7 @@ type GlassUniforms = {
   uRadius: { value: number };
   uDepth: { value: number };
   uRimWidth: { value: number };
-  uChroma: { value: number };
+  uChromaPx: { value: number };
   uBlur: { value: number };
   uContrast: { value: number };
   uBrightness: { value: number };
@@ -54,6 +55,7 @@ type GlassObjects = {
   postCamera: THREE.Camera;
   material: THREE.ShaderMaterial;
   mesh: THREE.Mesh;
+  panelBounds: Float32Array;
 };
 
 function createGlassObjects(): GlassObjects {
@@ -66,9 +68,9 @@ function createGlassObjects(): GlassObjects {
     uCenter1: { value: new THREE.Vector2() },
     uHalf1: { value: new THREE.Vector2() },
     uRadius: { value: 24 },
-    uDepth: { value: 14 },
-    uRimWidth: { value: 0.32 },
-    uChroma: { value: 0.35 },
+    uDepth: { value: 22 },
+    uRimWidth: { value: 0.24 },
+    uChromaPx: { value: 1.5 },
     uBlur: { value: 2 },
     uContrast: { value: 1.15 },
     uBrightness: { value: 1.05 },
@@ -85,19 +87,20 @@ function createGlassObjects(): GlassObjects {
     uniforms,
     depthTest: false,
     depthWrite: false,
+    toneMapped: false,
   });
   const mesh = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), material);
   mesh.frustumCulled = false;
   const postScene = new THREE.Scene();
   postScene.add(mesh);
-  return { uniforms, postScene, postCamera: new THREE.Camera(), material, mesh };
+  return { uniforms, postScene, postCamera: new THREE.Camera(), material, mesh, panelBounds: new Float32Array(4) };
 }
 
 function writeConfig(u: GlassUniforms, glass: LiquidGlassConfig, dpr: number) {
   u.uRadius.value = glass.radius * dpr;
   u.uDepth.value = glass.depth * dpr;
   u.uRimWidth.value = glass.rimWidth;
-  u.uChroma.value = glass.chromaticAberration;
+  u.uChromaPx.value = Math.min(1, Math.max(0, glass.chromaticAberration)) * 2 * dpr;
   u.uBlur.value = glass.blur * dpr;
   u.uContrast.value = glass.contrast;
   u.uBrightness.value = glass.brightness;
@@ -111,34 +114,28 @@ function writeUniverse(u: GlassUniforms, universe: SynapsisThemeAppearance["univ
   u.uVignette.value = universe.vignette;
 }
 
-// Per-frame writes: bind the FBO texture, the drawing-buffer resolution, and the
-// live DOM panel rects. Canvas is fixed inset-0 (= viewport), so rects are
-// canvas-relative; convert to drawing-buffer pixels with a bottom-left origin to
-// match gl_FragCoord.
+// DOM and canvas rectangles share viewport coordinates; map their difference
+// into actual framebuffer pixels, including canvas offsets and fractional DPR.
 function writeFrame(
   u: GlassUniforms,
   texture: THREE.Texture,
   els: (HTMLElement | null)[],
-  cssWidth: number,
-  cssHeight: number,
-  dpr: number,
+  canvasRect: DOMRect,
+  pixelWidth: number,
+  pixelHeight: number,
+  bounds: Float32Array,
 ) {
   u.uScene.value = texture;
-  u.uResolution.value.set(cssWidth * dpr, cssHeight * dpr);
-
-  const present = els.filter((el): el is HTMLElement => el !== null);
-  const slots = [
-    { c: u.uCenter0.value, h: u.uHalf0.value },
-    { c: u.uCenter1.value, h: u.uHalf1.value },
-  ];
-  const count = Math.min(present.length, slots.length);
-  for (let i = 0; i < count; i += 1) {
-    const rect = present[i].getBoundingClientRect();
-    slots[i].c.set(
-      (rect.left + rect.width / 2) * dpr,
-      (cssHeight - (rect.top + rect.height / 2)) * dpr,
-    );
-    slots[i].h.set((rect.width / 2) * dpr, (rect.height / 2) * dpr);
+  u.uResolution.value.set(pixelWidth, pixelHeight);
+  let count = 0;
+  for (const element of els) {
+    if (!element || count === 2) continue;
+    if (!writeGlassPanelBounds(bounds, element.getBoundingClientRect(), canvasRect, pixelWidth, pixelHeight)) continue;
+    const center = count === 0 ? u.uCenter0.value : u.uCenter1.value;
+    const halfSize = count === 0 ? u.uHalf0.value : u.uHalf1.value;
+    center.set(bounds[0], bounds[1]);
+    halfSize.set(bounds[2], bounds[3]);
+    count += 1;
   }
   u.uPanelCount.value = count;
 }
@@ -165,7 +162,7 @@ uniform vec2 uHalf1;
 uniform float uRadius;
 uniform float uDepth;
 uniform float uRimWidth;
-uniform float uChroma;
+uniform float uChromaPx;
 uniform float uBlur;
 uniform float uContrast;
 uniform float uBrightness;
@@ -176,37 +173,61 @@ uniform vec3 uPaper;
 uniform float uNoise;
 uniform float uVignette;
 
-// Signed distance to a rounded rectangle centred at the origin.
+// Rounded-box distance and its analytical outward normal. Straight edges
+// refract perpendicular to themselves; corners follow their circular arc.
 float sdRoundBox(vec2 p, vec2 b, float r) {
   vec2 q = abs(p) - b + r;
   return min(max(q.x, q.y), 0.0) + length(max(q, 0.0)) - r;
 }
 
-// Accumulate the lens displacement + rim factor for one panel.
-// (Param is halfSize, not half: half is a reserved word in GLSL.)
-void panel(vec2 fragPx, vec2 center, vec2 halfSize, inout vec2 disp, inout float inside, inout float rimT) {
-  vec2 p = fragPx - center;
-  float d = sdRoundBox(p, halfSize, uRadius);
-  if (d < 0.0) {
-    float rimPx = max(1.0, uRimWidth * min(halfSize.x, halfSize.y));
-    float t = smoothstep(-rimPx, 0.0, d);
-    float lens = t * t * (3.0 - 2.0 * t);
-    float len = length(p);
-    vec2 dir = len > 0.001 ? -p / len : vec2(0.0);
-    disp += dir * uDepth * lens;
-    inside = 1.0;
-    rimT = max(rimT, t);
-  }
+vec2 roundBoxNormal(vec2 p, vec2 b, float r) {
+  vec2 q = abs(p) - b + r;
+  vec2 corner = max(q, 0.0);
+  vec2 signs = vec2(p.x < 0.0 ? -1.0 : 1.0, p.y < 0.0 ? -1.0 : 1.0);
+  float cornerLength = length(corner);
+  if (cornerLength > 0.0001) return corner / cornerLength * signs;
+  return q.x > q.y ? vec2(signs.x, 0.0) : vec2(0.0, signs.y);
 }
 
-vec3 blurAt(vec2 uv) {
-  vec2 ox = vec2(uBlur / uResolution.x, 0.0);
-  vec2 oy = vec2(0.0, uBlur / uResolution.y);
-  vec3 c = texture2D(uScene, uv).rgb * 0.36;
-  c += texture2D(uScene, uv + ox).rgb * 0.16;
-  c += texture2D(uScene, uv - ox).rgb * 0.16;
-  c += texture2D(uScene, uv + oy).rgb * 0.16;
-  c += texture2D(uScene, uv - oy).rgb * 0.16;
+void panel(vec2 fragPx, vec2 center, vec2 halfSize,
+           inout vec2 disp, inout float coverage, inout float rimT,
+           inout float specular) {
+  vec2 p = fragPx - center;
+  float shortest = min(halfSize.x, halfSize.y);
+  float radius = clamp(uRadius, 0.0, shortest);
+  float distance = sdRoundBox(p, halfSize, radius);
+  if (distance > 1.0) return;
+  float mask = 1.0 - smoothstep(-0.75, 0.75, distance);
+  float rimPx = max(1.0, clamp(uRimWidth, 0.01, 1.0) * shortest);
+  float rim = smoothstep(-rimPx, 0.0, distance);
+  vec2 normal = roundBoxNormal(p, halfSize, radius);
+  // Restrict distortion to the edge; preserve a quiet, legible interior.
+  float lens = rim * rim;
+  float depth = clamp(uDepth, 0.0, shortest * 0.35);
+  disp = -normal * depth * lens;
+  rimT = rim;
+  coverage = mask;
+  // Directional top-left light plus a softer opposite rim reflection.
+  float light = max(dot(normal, normalize(vec2(-0.6, 0.8))), 0.0);
+  float opposite = max(dot(normal, normalize(vec2(0.6, -0.8))), 0.0);
+  float hairline = 1.0 - smoothstep(0.0, 1.8, abs(distance + 0.65));
+  specular = hairline * (0.15 + 0.65 * light + 0.2 * opposite);
+}
+
+vec2 boundedUv(vec2 uv) {
+  vec2 texel = 0.5 / uResolution;
+  return clamp(uv, texel, vec2(1.0) - texel);
+}
+
+// Five taps once, then two extra spectral samples, instead of three blurs.
+vec3 blurAt(vec2 uv, float radius) {
+  vec2 ox = vec2(radius / uResolution.x, 0.0);
+  vec2 oy = vec2(0.0, radius / uResolution.y);
+  vec3 c = texture2D(uScene, boundedUv(uv)).rgb * 0.4;
+  c += texture2D(uScene, boundedUv(uv + ox)).rgb * 0.15;
+  c += texture2D(uScene, boundedUv(uv - ox)).rgb * 0.15;
+  c += texture2D(uScene, boundedUv(uv + oy)).rgb * 0.15;
+  c += texture2D(uScene, boundedUv(uv - oy)).rgb * 0.15;
   return c;
 }
 
@@ -228,45 +249,46 @@ vec3 applyUniverseEffects(vec3 color, vec2 uv) {
 void main() {
   vec2 fragPx = gl_FragCoord.xy;
   vec2 uv = fragPx / uResolution;
-
   vec2 disp = vec2(0.0);
-  float inside = 0.0;
-  float rimT = 0.0;
+  float coverage = 0.0;
+  float rim = 0.0;
+  float specular = 0.0;
+  if (uPanelCount > 0) panel(fragPx, uCenter0, uHalf0, disp, coverage, rim, specular);
+  if (uPanelCount > 1) panel(fragPx, uCenter1, uHalf1, disp, coverage, rim, specular);
 
-  if (uPanelCount > 0) panel(fragPx, uCenter0, uHalf0, disp, inside, rimT);
-  if (uPanelCount > 1) panel(fragPx, uCenter1, uHalf1, disp, inside, rimT);
-
-  // Outside every panel: cheap pass-through of the constellation.
-  if (inside < 0.5) {
-    vec3 source = applyUniverseEffects(texture2D(uScene, uv).rgb, uv);
-    gl_FragColor = vec4(source, 1.0);
-    return;
+  vec3 source = texture2D(uScene, boundedUv(uv)).rgb;
+  vec3 color = source;
+  if (coverage > 0.0) {
+    vec2 refracted = boundedUv(uv + disp / uResolution);
+    // The rim stays optically crisp, while the middle gently diffuses detail.
+    color = blurAt(refracted, max(uBlur, 0.0) * mix(1.0, 0.35, rim));
+    // Spectral strength is a CSS-pixel distance, independent of lens depth
+    // and DPR. The default reaches 1.5px per channel only at the rim.
+    float spectralRim = smoothstep(0.15, 0.95, rim);
+    vec2 direction = disp / max(length(disp), 0.0001);
+    vec2 spectral = direction * uChromaPx * spectralRim / uResolution;
+    if (uChromaPx > 0.0 && spectralRim > 0.0) {
+      vec3 redTap = texture2D(uScene, boundedUv(refracted + spectral)).rgb;
+      vec3 blueTap = texture2D(uScene, boundedUv(refracted - spectral)).rgb;
+      color.r = mix(color.r, redTap.r, spectralRim * 0.85);
+      color.b = mix(color.b, blueTap.b, spectralRim * 0.85);
+    }
+    // All texture values and RAMS colors are linear here. Paper-relative
+    // contrast avoids crushing dark glass or muddying light glass.
+    color = uPaper + (color - uPaper) * max(uContrast, 0.0);
+    color *= max(uBrightness, 0.0);
+    float luminance = dot(color, vec3(0.2126, 0.7152, 0.0722));
+    color = mix(vec3(luminance), color, max(uSaturate, 0.0));
+    color = mix(color, uPaper, clamp(uTint, 0.0, 1.0) * mix(1.0, 0.35, rim));
+    color = mix(color, vec3(1.0), clamp(uEdge, 0.0, 1.0) * specular * 0.3);
+    color = mix(source, color, coverage);
   }
-
-  // Refraction + chromatic aberration: sample the R/G/B taps at slightly
-  // different displacements so colour fringes at the rim.
-  vec2 d = disp / uResolution;
-  float r = blurAt(uv + d * (1.0 + uChroma)).r;
-  vec3 g = blurAt(uv + d);
-  float b = blurAt(uv + d * (1.0 - uChroma)).b;
-  vec3 col = vec3(r, g.g, b);
-
-  // Paper tint for legibility, then contrast / brightness / saturation.
-  col = mix(col, uPaper, uTint);
-  col = (col - 0.5) * uContrast + 0.5;
-  col *= uBrightness;
-  float lum = dot(col, vec3(0.299, 0.587, 0.114));
-  col = mix(vec3(lum), col, uSaturate);
-
-  // Specular rim highlight near the very edge.
-  float rimLine = smoothstep(0.7, 1.0, rimT);
-  col += uEdge * 0.5 * rimLine * (1.0 - col);
-  col = applyUniverseEffects(col, uv);
-
-  // Same colour space as the pass-through above (the FBO is already display
-  // sRGB), so the glass region matches the surrounding scene — no extra encode.
-  gl_FragColor = vec4(clamp(col, 0.0, 1.0), 1.0);
+  color = applyUniverseEffects(color, uv);
+  gl_FragColor = vec4(clamp(color, 0.0, 1.0), 1.0);
+  // Three renders FBOs in linear working space. Encode exactly once on output.
+  #include <colorspace_fragment>
 }
+
 `;
 
 export function GlassPass({
@@ -283,10 +305,16 @@ export function GlassPass({
   const gl = useThree((s) => s.gl);
   const scene = useThree((s) => s.scene);
   const camera = useThree((s) => s.camera);
-  const size = useThree((s) => s.size);
   const dpr = useThree((s) => s.viewport.dpr);
 
-  const fbo = useFBO();
+  const fbo = useFBO({
+    type: gl.extensions.has("EXT_color_buffer_float") ? THREE.HalfFloatType : THREE.UnsignedByteType,
+    minFilter: THREE.LinearFilter,
+    magFilter: THREE.LinearFilter,
+    generateMipmaps: false,
+    stencilBuffer: false,
+    samples: Math.min(4, gl.capabilities.maxSamples),
+  });
 
   // Created once; mutated only via the module-level writers (never as a tracked
   // property assignment on the memo result itself).
@@ -312,8 +340,12 @@ export function GlassPass({
   }, [universe, objects]);
 
   useFrame(() => {
-    writeFrame(objects.uniforms, fbo.texture, panelEls.current ?? [], size.width, size.height, dpr);
-
+    writeFrame(objects.uniforms, fbo.texture, panelEls.current ?? [], gl.domElement.getBoundingClientRect(), fbo.width, fbo.height, objects.panelBounds);
+    if (objects.uniforms.uPanelCount.value === 0 && universe.noise === 0 && universe.vignette === 0) {
+      gl.setRenderTarget(null);
+      gl.render(scene, camera);
+      return;
+    }
     gl.setRenderTarget(fbo);
     gl.render(scene, camera);
     gl.setRenderTarget(null);

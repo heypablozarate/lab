@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import galaxyFixture from "@/content/data/synapsis/galaxy.json";
 
 import {
   computeLayout,
@@ -42,7 +43,7 @@ function syntheticGalaxy(): GalaxyData {
       weight: 0.8,
     });
   }
-  return { version: 2, updatedAt: "2026-07-03", nodes, edges, clusters };
+  return { version: 2, updatedAt: "2026-07-03", metadata: galaxyFixture.metadata, nodes, edges, clusters };
 }
 
 function distance(positions: number[], index: number) {
@@ -147,4 +148,51 @@ describe("synapsis layout engine", () => {
     }
     expect(connected).toBeLessThan(random / randomCount);
   });
+  it("preserves each node's position when editorial arrays reorder or empty categories are added", () => {
+    const data = syntheticGalaxy();
+    const expected = computeLayout(data);
+    const reordered = computeLayout({ ...data, nodes: [...data.nodes].reverse(), edges: [...data.edges].reverse(), clusters: [...data.clusters].reverse() });
+    for (const node of data.nodes) {
+      const a = expected.indexById[node.id] * 3;
+      const b = reordered.indexById[node.id] * 3;
+      expect(reordered.positions.slice(b, b + 3)).toEqual(expected.positions.slice(a, a + 3));
+    }
+    expect(computeLayout({ ...data, clusters: [...data.clusters, { id: "empty", label: "Empty", rationale: "test" }] }).positions).toEqual(expected.positions);
+  });
+
+  it("keeps a populated benchmark spatial, bounded and visually separated in XY", () => {
+    const seed = syntheticGalaxy();
+    const data = { ...seed, edges: [], nodes: Array.from({ length: 500 }, (_, i) => ({ ...seed.nodes[i % seed.nodes.length], id: `benchmark-${i}` })) };
+    const layout = computeLayout(data);
+    const depths = layout.positions.filter((_, i) => i % 3 === 2);
+    expect(Math.max(...depths) - Math.min(...depths)).toBeGreaterThan(12);
+    const nearest: number[] = [];
+    for (let i = 0; i < data.nodes.length; i += 1) {
+      const [x, y, z] = layout.positions.slice(i * 3, i * 3 + 3);
+      expect(Math.abs(x)).toBeLessThanOrEqual(40);
+      expect(Math.abs(y)).toBeLessThanOrEqual(26);
+      expect(Math.abs(z)).toBeLessThanOrEqual(12);
+      expect(layout.radii[i]).toBeGreaterThanOrEqual(0.15);
+      expect(layout.radii[i]).toBeLessThanOrEqual(0.3);
+      let distance = Infinity;
+      for (let j = 0; j < data.nodes.length; j += 1) {
+        if (i === j) continue;
+        distance = Math.min(distance, Math.hypot(x - layout.positions[j * 3], y - layout.positions[j * 3 + 1]));
+      }
+      nearest.push(distance);
+    }
+    // Depth must not disguise screen-space collisions in dense territories.
+    nearest.sort((a, b) => a - b);
+    expect(nearest[Math.floor(nearest.length * 0.1)]).toBeGreaterThan(0.6);
+  });
+
+  it("handles empty and single-category graphs without non-finite coordinates", () => {
+    const data = syntheticGalaxy();
+    expect(computeLayout({ ...data, nodes: [], edges: [] }).positions).toEqual([]);
+    const one = computeLayout({ ...data, nodes: data.nodes.map((node) => ({ ...node, cluster: data.clusters[0].id })) });
+    expect(one.positions.every(Number.isFinite)).toBe(true);
+    expect(nodeVisualRadius(-1)).toBe(nodeVisualRadius(1));
+    expect(nodeVisualRadius(100)).toBe(nodeVisualRadius(10));
+  });
+
 });
