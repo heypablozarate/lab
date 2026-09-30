@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-09-30
+
+- Expose the exact public Synapsis content revision on the canonical server-rendered page so the parent publication flow can verify HTML regeneration instead of accepting a fresh API response alongside stale prerendered markup.
+
 ## Unreleased
 
 - Keep Synapsis graph rendering and sitemap dates current through the parent content reader, preserving the existing presentation and active-node filter.

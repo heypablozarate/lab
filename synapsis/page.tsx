@@ -4,6 +4,7 @@ import { buildRamsThemeCss } from "@/lib/rams/css";
 
 import { getSynapsisContent } from "@/lib/synapsis/content";
 import { projectPublicSynapsis } from "@/lib/synapsis/public-data";
+import { getSynapsisPublicRevision } from "@/lib/synapsis/public-revision";
 import { LAB_URL } from "@/lib/lab-content";
 import { getLabContent } from "@/lib/lab-content-server";
 import {
@@ -67,6 +68,7 @@ export default async function SynapsisPage() {
   ]);
   const { language: siteLanguage, brandName, homeUrl } = identity;
   const data = projectPublicSynapsis(synapsis);
+  const publicRevision = getSynapsisPublicRevision(synapsis);
   const layout = computeLayout(data);
   const tokens = await getTokens();
   const themeCss = buildRamsThemeCss(tokens);
@@ -82,7 +84,11 @@ export default async function SynapsisPage() {
   });
 
   return (
-    <main className={styles.page} lang={publicMetadata.inLanguage ?? siteLanguage}>
+    <main
+      className={styles.page}
+      lang={publicMetadata.inLanguage ?? siteLanguage}
+      data-synapsis-revision={publicRevision}
+    >
       <style>{themeCss}</style>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }} />
 
