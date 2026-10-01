@@ -3,9 +3,9 @@ import galaxyFixture from "@/content/data/synapsis/galaxy.json";
 
 import {
   BRAIN_BOTTOM,
+  BRAIN_STEM_JOIN,
   BRAIN_TOP,
-  brainCleftHalfWidth,
-  brainEnvelopeHalfWidth,
+  brainProfileBounds,
   computeLayout,
   nodeVisualRadius,
   type GalaxyData,
@@ -173,8 +173,9 @@ describe("synapsis layout engine", () => {
     const nearest: number[] = [];
     for (let i = 0; i < data.nodes.length; i += 1) {
       const [x, y, z] = layout.positions.slice(i * 3, i * 3 + 3);
-      expect(Math.abs(x)).toBeLessThanOrEqual(40);
-      expect(Math.abs(y)).toBeLessThanOrEqual(26);
+      expect(Math.abs(x)).toBeLessThanOrEqual(42);
+      expect(y).toBeGreaterThanOrEqual(BRAIN_BOTTOM);
+      expect(y).toBeLessThanOrEqual(BRAIN_TOP);
       expect(Math.abs(z)).toBeLessThanOrEqual(8);
       expect(layout.radii[i]).toBeGreaterThanOrEqual(0.15);
       expect(layout.radii[i]).toBeLessThanOrEqual(0.3);
@@ -190,7 +191,7 @@ describe("synapsis layout engine", () => {
     expect(nearest[Math.floor(nearest.length * 0.1)]).toBeGreaterThan(0.6);
   });
 
-  it("keeps every point inside the brain envelope and preserves a bilateral fissure", () => {
+  it("keeps every point inside one continuous asymmetric side profile", () => {
     const seed = syntheticGalaxy();
     const clusters = Array.from({ length: 8 }, (_, index) => ({ id: `territory-${index}`, label: `Territory ${index}`, rationale: "test" }));
     const nodes = Array.from({ length: 320 }, (_, index) => ({
@@ -199,48 +200,60 @@ describe("synapsis layout engine", () => {
       cluster: clusters[index % clusters.length].id,
     }));
     const layout = computeLayout({ ...seed, clusters, nodes, edges: [] });
-    let fissurePoints = 0;
-    let left = 0;
-    let right = 0;
+    let head = 0;
+    const stemXs: number[] = [];
+    const headXs: number[] = [];
     nodes.forEach((_, index) => {
       const x = layout.positions[index * 3];
       const y = layout.positions[index * 3 + 1];
       const radius = layout.radii[index];
-      const halfWidth = brainEnvelopeHalfWidth(y) - radius;
+      const [left, right] = brainProfileBounds(y);
       expect(y).toBeGreaterThanOrEqual(BRAIN_BOTTOM + radius - 1e-9);
       expect(y).toBeLessThanOrEqual(BRAIN_TOP - radius + 1e-9);
-      expect(Math.abs(x)).toBeLessThanOrEqual(halfWidth + 1e-9);
-      const cleft = brainCleftHalfWidth(y);
-      if (cleft > 0) {
-        fissurePoints += 1;
-        expect(Math.abs(x)).toBeGreaterThanOrEqual(Math.min(halfWidth, cleft + radius) - 1e-9);
+      expect(x).toBeGreaterThanOrEqual(left + radius - 1e-9);
+      expect(x).toBeLessThanOrEqual(right - radius + 1e-9);
+      if (y > BRAIN_STEM_JOIN) {
+        head += 1;
+        headXs.push(x);
+      } else {
+        stemXs.push(x);
       }
-      if (x < 0) left += 1;
-      if (x > 0) right += 1;
     });
-    expect(fissurePoints).toBeGreaterThan(nodes.length * 0.45);
-    expect(left).toBeGreaterThan(nodes.length * 0.35);
-    expect(right).toBeGreaterThan(nodes.length * 0.35);
+    const mean = (values: number[]) => values.reduce((sum, value) => sum + value, 0) / values.length;
+    expect(head).toBeGreaterThan(nodes.length * 0.75);
+    expect(stemXs.length).toBeGreaterThan(nodes.length * 0.05);
+    expect(stemXs.length).toBeLessThan(nodes.length * 0.28);
+    expect(mean(stemXs)).toBeGreaterThan(mean(headXs) + 4);
+    const headWidth = brainProfileBounds(2);
+    const lowerStemWidth = brainProfileBounds(-32);
+    expect(headWidth[1] - headWidth[0]).toBeGreaterThan((lowerStemWidth[1] - lowerStemWidth[0]) * 3);
   });
 
-  it("makes the real corpus describe both outer lobes instead of a central oval", () => {
+  it("makes the real corpus describe a filled side profile with crown, body and stem", () => {
     const data = galaxyFixture as GalaxyData;
     const layout = computeLayout(data);
-    let leftShell = 0;
-    let rightShell = 0;
-    let upperFissure = 0;
+    let contour = 0;
+    let crown = 0;
+    let centralBody = 0;
+    const stemXs: number[] = [];
     data.nodes.forEach((_, index) => {
       const x = layout.positions[index * 3];
       const y = layout.positions[index * 3 + 1];
       const radius = layout.radii[index];
-      const shellDistance = brainEnvelopeHalfWidth(y) - radius - Math.abs(x);
-      if (shellDistance < 4 && x < 0) leftShell += 1;
-      if (shellDistance < 4 && x > 0) rightShell += 1;
-      if (y > 2 && Math.abs(x) >= brainCleftHalfWidth(y) + radius) upperFissure += 1;
+      const [left, right] = brainProfileBounds(y);
+      const center = (left + right) * 0.5;
+      const shellDistance = Math.min(x - left - radius, right - radius - x);
+      if (shellDistance < 4) contour += 1;
+      if (y > 20) crown += 1;
+      if (y > BRAIN_STEM_JOIN && Math.abs(x - center) < 7) centralBody += 1;
+      if (y < -22) stemXs.push(x);
     });
-    expect(leftShell).toBeGreaterThan(15);
-    expect(rightShell).toBeGreaterThan(15);
-    expect(upperFissure).toBeGreaterThan(data.nodes.length * 0.25);
+    expect(contour).toBeGreaterThan(data.nodes.length * 0.14);
+    expect(contour).toBeLessThan(data.nodes.length * 0.5);
+    expect(crown).toBeGreaterThan(8);
+    expect(centralBody).toBeGreaterThan(data.nodes.length * 0.08);
+    expect(stemXs.length).toBeGreaterThan(5);
+    expect(stemXs.reduce((sum, x) => sum + x, 0) / stemXs.length).toBeGreaterThan(6);
   });
 
   it("handles empty and single-category graphs without non-finite coordinates", () => {
