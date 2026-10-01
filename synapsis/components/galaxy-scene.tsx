@@ -527,14 +527,15 @@ function writeTerritoryLabel(label: HTMLSpanElement, x: number, y: number, hidde
   label.style.top = `${snapLabelCoordinate(y, dpr)}px`;
 }
 
-function setLabelVisibility(
+function setLabelLayersVisible(
   pool: LabelPool,
   territoryEls: (HTMLSpanElement | null)[],
   visible: boolean,
 ) {
-  const visibility = visible ? "visible" : "hidden";
-  for (const label of pool.slots) if (label) label.style.visibility = visibility;
-  for (const label of territoryEls) if (label) label.style.visibility = visibility;
+  const display = visible ? "" : "none";
+  if (pool.container) pool.container.style.display = display;
+  const territoryLayer = territoryEls.find(Boolean)?.parentElement;
+  if (territoryLayer) territoryLayer.style.display = display;
 }
 
 function updateFpsMeter(el: HTMLSpanElement, window: { frames: number; last: number }, elapsed: number) {
@@ -907,10 +908,10 @@ function GalaxyContents(props: GalaxySceneProps) {
     const labelsHidden = !labelsVisible;
     if (labelMotion.hidden !== labelsHidden) {
       labelMotion.hidden = labelsHidden;
-      setLabelVisibility(labelPool.current, props.territoryEls?.current ?? [], labelsVisible);
+      setLabelLayersVisible(labelPool.current, props.territoryEls?.current ?? [], labelsVisible);
     }
 
-    if (labelPool.current) {
+    if (labelsVisible && labelPool.current) {
       updateLabels(labelPool.current, {
         positions,
         nodeTitles,
@@ -926,7 +927,7 @@ function GalaxyContents(props: GalaxySceneProps) {
       });
     }
 
-    for (let i = 0; i < (props.territories?.length ?? 0); i += 1) {
+    for (let i = 0; labelsVisible && i < (props.territories?.length ?? 0); i += 1) {
       const label = props.territoryEls?.current[i];
       if (!label) continue;
       projected.current.fromArray(props.territories![i].position).applyMatrix4(group.matrixWorld).project(camera);
