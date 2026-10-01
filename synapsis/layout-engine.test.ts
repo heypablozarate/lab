@@ -169,13 +169,13 @@ describe("synapsis layout engine", () => {
     const data = { ...seed, edges: [], nodes: Array.from({ length: 500 }, (_, i) => ({ ...seed.nodes[i % seed.nodes.length], id: `benchmark-${i}` })) };
     const layout = computeLayout(data);
     const depths = layout.positions.filter((_, i) => i % 3 === 2);
-    expect(Math.max(...depths) - Math.min(...depths)).toBeGreaterThan(12);
+    expect(Math.max(...depths) - Math.min(...depths)).toBeGreaterThan(9);
     const nearest: number[] = [];
     for (let i = 0; i < data.nodes.length; i += 1) {
       const [x, y, z] = layout.positions.slice(i * 3, i * 3 + 3);
       expect(Math.abs(x)).toBeLessThanOrEqual(40);
       expect(Math.abs(y)).toBeLessThanOrEqual(26);
-      expect(Math.abs(z)).toBeLessThanOrEqual(12);
+      expect(Math.abs(z)).toBeLessThanOrEqual(8);
       expect(layout.radii[i]).toBeGreaterThanOrEqual(0.15);
       expect(layout.radii[i]).toBeLessThanOrEqual(0.3);
       let distance = Infinity;
@@ -190,7 +190,7 @@ describe("synapsis layout engine", () => {
     expect(nearest[Math.floor(nearest.length * 0.1)]).toBeGreaterThan(0.6);
   });
 
-  it("keeps every point inside the brain envelope and preserves the crown cleft", () => {
+  it("keeps every point inside the brain envelope and preserves a bilateral fissure", () => {
     const seed = syntheticGalaxy();
     const clusters = Array.from({ length: 8 }, (_, index) => ({ id: `territory-${index}`, label: `Territory ${index}`, rationale: "test" }));
     const nodes = Array.from({ length: 320 }, (_, index) => ({
@@ -199,7 +199,9 @@ describe("synapsis layout engine", () => {
       cluster: clusters[index % clusters.length].id,
     }));
     const layout = computeLayout({ ...seed, clusters, nodes, edges: [] });
-    let crownPoints = 0;
+    let fissurePoints = 0;
+    let left = 0;
+    let right = 0;
     nodes.forEach((_, index) => {
       const x = layout.positions[index * 3];
       const y = layout.positions[index * 3 + 1];
@@ -210,11 +212,35 @@ describe("synapsis layout engine", () => {
       expect(Math.abs(x)).toBeLessThanOrEqual(halfWidth + 1e-9);
       const cleft = brainCleftHalfWidth(y);
       if (cleft > 0) {
-        crownPoints += 1;
+        fissurePoints += 1;
         expect(Math.abs(x)).toBeGreaterThanOrEqual(Math.min(halfWidth, cleft + radius) - 1e-9);
       }
+      if (x < 0) left += 1;
+      if (x > 0) right += 1;
     });
-    expect(crownPoints).toBeGreaterThan(0);
+    expect(fissurePoints).toBeGreaterThan(nodes.length * 0.45);
+    expect(left).toBeGreaterThan(nodes.length * 0.35);
+    expect(right).toBeGreaterThan(nodes.length * 0.35);
+  });
+
+  it("makes the real corpus describe both outer lobes instead of a central oval", () => {
+    const data = galaxyFixture as GalaxyData;
+    const layout = computeLayout(data);
+    let leftShell = 0;
+    let rightShell = 0;
+    let upperFissure = 0;
+    data.nodes.forEach((_, index) => {
+      const x = layout.positions[index * 3];
+      const y = layout.positions[index * 3 + 1];
+      const radius = layout.radii[index];
+      const shellDistance = brainEnvelopeHalfWidth(y) - radius - Math.abs(x);
+      if (shellDistance < 4 && x < 0) leftShell += 1;
+      if (shellDistance < 4 && x > 0) rightShell += 1;
+      if (y > 2 && Math.abs(x) >= brainCleftHalfWidth(y) + radius) upperFissure += 1;
+    });
+    expect(leftShell).toBeGreaterThan(15);
+    expect(rightShell).toBeGreaterThan(15);
+    expect(upperFissure).toBeGreaterThan(data.nodes.length * 0.25);
   });
 
   it("handles empty and single-category graphs without non-finite coordinates", () => {

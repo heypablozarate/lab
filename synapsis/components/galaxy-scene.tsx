@@ -77,6 +77,7 @@ const TRANSITION_MS = 260;
 // Retain the approved graph scale while redefining the former 140% view as 100%.
 const GRAPH_FRAMING_DISTANCE = 74;
 const DEFAULT_CAMERA = new THREE.Vector3(0, 0, GRAPH_FRAMING_DISTANCE / 1.4);
+const GRAPH_VISUAL_MARGIN = 7;
 const FOG_NEAR = 58;
 const FOG_FAR = 94;
 const PULSE_STRENGTH = 0;
@@ -630,14 +631,16 @@ function GalaxyContents(props: GalaxySceneProps) {
       left = Math.min(left, positions[i]); right = Math.max(right, positions[i]);
       bottom = Math.min(bottom, positions[i + 1]); top = Math.max(top, positions[i + 1]);
     }
-    const pixelsPerUnit = size.height / (2 * GRAPH_FRAMING_DISTANCE * Math.tan(Math.PI / 8));
+    const pixelsPerUnit = size.height / (2 * DEFAULT_CAMERA.length() * Math.tan(Math.PI / 8));
     const mobile = size.width <= 720;
     const availableWidth = mobile ? size.width - 24 : size.width - 380;
     const availableHeight = mobile ? size.height - 300 : size.height - 260;
+    const visualWidth = right - left + GRAPH_VISUAL_MARGIN * 2;
+    const visualHeight = top - bottom + GRAPH_VISUAL_MARGIN * 2;
     const scale = Math.min(
       1,
-      Math.max(0.18, availableWidth / Math.max(1, (right - left) * pixelsPerUnit)),
-      Math.max(0.18, availableHeight / Math.max(1, (top - bottom) * pixelsPerUnit)),
+      Math.max(0.18, availableWidth / Math.max(1, visualWidth * pixelsPerUnit)),
+      Math.max(0.18, availableHeight / Math.max(1, visualHeight * pixelsPerUnit)),
     );
     const opticalOffset = mobile ? 0 : 50 / pixelsPerUnit;
     return { scale, x: opticalOffset - (left + right) * 0.5 * scale };

@@ -83,13 +83,14 @@ export type GalaxyLayout = {
   indexById: Record<string, number>;
 };
 
-const DEPTH_HALF_RANGE = 12;
+const DEPTH_HALF_RANGE = 8;
 const EDGE_PASS_ITERATIONS = 4;
 const EDGE_PASS_STEP = 0.008;
 const SEPARATION_PASS_ITERATIONS = 10;
 const SEPARATION_STEP = 0.35;
-export const BRAIN_BOTTOM = -23;
-export const BRAIN_TOP = 24;
+const MAX_LAYOUT_DRIFT = 4;
+export const BRAIN_BOTTOM = -25;
+export const BRAIN_TOP = 25;
 
 export function nodeVisualRadius(relevance: number): number {
   const t = (Math.min(10, Math.max(1, relevance)) - 1) / 9;
@@ -109,18 +110,18 @@ function hash01(id: string, salt: number): number {
 
 type Vec3 = [number, number, number];
 
-// The eight slots reproduce the approved Pen composition when eight public
-// territories are present. They are positional, not anatomical: editorial
-// categories do not claim a relationship to regions of the brain.
+// Eight balanced territory slots distribute the real editorial clusters
+// across two visual hemispheres. They are positional, not anatomical:
+// editorial categories do not claim a relationship to regions of the brain.
 const BRAIN_TERRITORY_SLOTS: Vec3[] = [
-  [13.5, 12, 0],
-  [-14, -13, 0],
-  [-12.5, 11.5, 0],
-  [-26, 0, 0],
-  [-4, 17, 0],
-  [0, -1, 0],
-  [25, -1, 0],
-  [12, -12, 0],
+  [-20, 11, 0],
+  [18, 11, 0],
+  [-9, 13, 0],
+  [-13, -13, 0],
+  [10, 4, 0],
+  [-21, -2, 0],
+  [22, -1, 0],
+  [14, -13, 0],
 ];
 
 const BRAIN_SLOT_FILL_ORDER = [5, 0, 1, 2, 7, 3, 6, 4];
@@ -136,12 +137,13 @@ function smoothstep(min: number, max: number, value: number) {
 
 export function brainEnvelopeHalfWidth(y: number): number {
   const t = clamp((y - BRAIN_BOTTOM) / (BRAIN_TOP - BRAIN_BOTTOM), 0, 1);
-  const crown = 5 * t * t;
-  return 12 + 25 * Math.pow(Math.max(0, Math.sin(Math.PI * t)), 0.52) + crown;
+  const crown = 6 * t * t;
+  return 8 + 27 * Math.pow(Math.max(0, Math.sin(Math.PI * t)), 0.56) + crown;
 }
 
 export function brainCleftHalfWidth(y: number): number {
-  return 2.4 * smoothstep(17, BRAIN_TOP, y) ** 2;
+  const opening = smoothstep(-7, 8, y);
+  return opening * (2.2 + 2.6 * smoothstep(8, BRAIN_TOP, y));
 }
 
 function brainDepthHalfRange(x: number, y: number) {
@@ -183,11 +185,24 @@ function confineNodeToBrain(
   radius: number,
   centroid: Vec3,
   nodeId: string,
+  anchorPositions?: number[],
 ) {
   const offset = nodeIndex * 3;
-  const y = clamp(positions[offset + 1], BRAIN_BOTTOM + radius, BRAIN_TOP - radius);
+  let x = positions[offset];
+  let y = positions[offset + 1];
+  if (anchorPositions) {
+    const dx = x - anchorPositions[offset];
+    const dy = y - anchorPositions[offset + 1];
+    const drift = Math.hypot(dx, dy);
+    if (drift > MAX_LAYOUT_DRIFT) {
+      const scale = MAX_LAYOUT_DRIFT / drift;
+      x = anchorPositions[offset] + dx * scale;
+      y = anchorPositions[offset + 1] + dy * scale;
+    }
+  }
+  y = clamp(y, BRAIN_BOTTOM + radius, BRAIN_TOP - radius);
   const halfWidth = Math.max(radius, brainEnvelopeHalfWidth(y) - radius);
-  let x = clamp(positions[offset], -halfWidth, halfWidth);
+  x = clamp(x, -halfWidth, halfWidth);
   const cleft = brainCleftHalfWidth(y);
   if (cleft > 0) {
     const minFromCenter = Math.min(halfWidth, cleft + radius);
@@ -230,7 +245,19 @@ export function computeLayout(data: GalaxyData): GalaxyLayout {
     positions[i * 3 + 1] = centroid[1] * centrality + Math.sin(theta) * radial * cloudY;
     positions[i * 3 + 2] = ((hash01(node.id, 3) * 2 - 1) * 0.7 + (hash01(node.cluster, 11) * 2 - 1) * 0.3) * DEPTH_HALF_RANGE;
     confineNodeToBrain(positions, i, radii[i], centroid, node.id);
+
+    // A brain must read from its occupied contour, not only from an invisible
+    // clipping mask. Deterministically reserve part of each territory for its
+    // hemisphere's outer shell while keeping the cluster cloud intact.
+    if (counts.size > 1 && hash01(node.id, 23) < 0.4) {
+      const side = Math.sign(centroid[0]) || (hash01(node.id, 17) < 0.5 ? -1 : 1);
+      const inset = 0.8 + hash01(node.id, 29) * 2.4;
+      const shellX = side * Math.max(0, brainEnvelopeHalfWidth(positions[i * 3 + 1]) - radii[i] - inset);
+      positions[i * 3] = positions[i * 3] * 0.15 + shellX * 0.85;
+      confineNodeToBrain(positions, i, radii[i], centroid, node.id);
+    }
   });
+  const anchorPositions = positions.slice();
 
   const edgeIndices: number[] = [];
   for (const edge of edges) {
@@ -269,6 +296,7 @@ export function computeLayout(data: GalaxyData): GalaxyLayout {
       radii[index],
       centroids.get(node.cluster) ?? [0, 0, 0],
       node.id,
+      anchorPositions,
     ));
     if (e === 0) break;
   }
@@ -307,6 +335,7 @@ export function computeLayout(data: GalaxyData): GalaxyLayout {
       radii[index],
       centroids.get(node.cluster) ?? [0, 0, 0],
       node.id,
+      anchorPositions,
     ));
   }
   return { positions, radii, edgeIndices, indexById };
