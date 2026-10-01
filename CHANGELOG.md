@@ -6,6 +6,14 @@
 
 ## Unreleased
 
+- Aligned the Synapsis signature with RAMS logo tracking and added a 1 px gap
+  between cluster-filter rows so consecutive active states remain visually
+  distinct. Replaced continuously animated 3D text transforms with
+  device-pixel-snapped DOM positions; graph labels now pause while the camera
+  moves and return once inertia settles, preventing Safari from leaving split
+  glyph fragments after orbit or zoom. Production font loading and antialiasing
+  remain unchanged.
+
 - Reshaped Synapsis around an asymmetric side-profile brain: real cluster
   populations remain coherent inside one filled cranial mass, a connected
   lower transition and tapered stem now follow the supplied visual reference,

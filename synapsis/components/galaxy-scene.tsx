@@ -16,6 +16,7 @@ import * as THREE from "three";
 import { GlassPass } from "./glass-pass";
 import { createEdgeCurvePositions, EDGE_CURVE_SEGMENTS } from "./edge-curves";
 import { focusVerticalOffset, cameraProgress, zoomDistance, frameNodeBounds } from "./camera-motion";
+import { LABEL_REVEAL_DELAY_MS, shouldHideLabels, snapLabelCoordinate } from "./label-position";
 import type { LiquidGlassConfig } from "./liquid-glass";
 import {
   NODE_DEPTH_MAX_WASH,
@@ -356,6 +357,7 @@ type LabelFrameArgs = {
   worldPos: THREE.Vector3;
   projected: THREE.Vector3;
   scratch: LabelScratch;
+  dpr: number;
 };
 
 type LabelCandidate = {
@@ -398,7 +400,7 @@ function compareLabels(a: LabelCandidate, b: LabelCandidate) {
 
 function updateLabels(pool: LabelPool, args: LabelFrameArgs) {
   if (!pool.container) return;
-  const { positions, nodeTitles, matrixWorld, camera, snapshot, panelEls, worldPos, projected, scratch, viewDistance } = args;
+  const { positions, nodeTitles, matrixWorld, camera, snapshot, panelEls, worldPos, projected, scratch, viewDistance, dpr } = args;
   const { selected, hovered, neighbors, dimMask } = snapshot;
   const containerRect = pool.container.getBoundingClientRect();
   const { width, height } = containerRect;
@@ -514,13 +516,25 @@ function updateLabels(pool: LabelPool, args: LabelFrameArgs) {
       span.dataset.glass = underGlass ? "true" : "false";
     }
     span.style.opacity = String(candidate.opacity * (underGlass ? 0 : 1));
-    span.style.transform = `translate3d(${candidate.x.toFixed(1)}px, ${candidate.y.toFixed(1)}px, 0) ${isSelected ? "translate(12px, 12px)" : "translate(-50%, -140%)"}`;
+    span.style.left = `${snapLabelCoordinate(candidate.x, dpr)}px`;
+    span.style.top = `${snapLabelCoordinate(candidate.y, dpr)}px`;
   }
 }
 
-function writeTerritoryLabel(label: HTMLSpanElement, x: number, y: number, hidden: boolean) {
+function writeTerritoryLabel(label: HTMLSpanElement, x: number, y: number, hidden: boolean, dpr: number) {
   label.style.opacity = hidden ? "0" : "0.7";
-  label.style.transform = `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, 0) translateX(-50%)`;
+  label.style.left = `${snapLabelCoordinate(x, dpr)}px`;
+  label.style.top = `${snapLabelCoordinate(y, dpr)}px`;
+}
+
+function setLabelVisibility(
+  pool: LabelPool,
+  territoryEls: (HTMLSpanElement | null)[],
+  visible: boolean,
+) {
+  const visibility = visible ? "visible" : "hidden";
+  for (const label of pool.slots) if (label) label.style.visibility = visibility;
+  for (const label of territoryEls) if (label) label.style.visibility = visibility;
 }
 
 function updateFpsMeter(el: HTMLSpanElement, window: { frames: number; last: number }, elapsed: number) {
@@ -611,6 +625,7 @@ function GalaxyContents(props: GalaxySceneProps) {
     labelPool,
     fpsRef,
     reducedMotion,
+    dpr,
     cameraCommand,
     clusterFrame,
     mobileOcclusion = 0,
@@ -626,6 +641,7 @@ function GalaxyContents(props: GalaxySceneProps) {
   const groupRef = useRef<THREE.Group>(null);
   const controlsRef = useRef<InertialControlsHandle>(null);
   const draggingRef = useRef(false);
+  const labelMotionRef = useRef({ revealAfter: 0, hidden: false, stableFrames: 2 });
   const drift = useRef({ phase: 0, weight: 0, lastInput: 0 });
   const transitionRef = useRef<TransitionState | null>(null);
   const camera = useThree((s) => s.camera);
@@ -883,6 +899,17 @@ function GalaxyContents(props: GalaxySceneProps) {
       }
     }
 
+    const now = performance.now();
+    const labelMotion = labelMotionRef.current;
+    const hideLabels = shouldHideLabels(now, labelMotion.revealAfter, draggingRef.current, cameraMotion.current.active);
+    labelMotion.stableFrames = hideLabels ? 0 : Math.min(2, labelMotion.stableFrames + 1);
+    const labelsVisible = labelMotion.stableFrames >= 2;
+    const labelsHidden = !labelsVisible;
+    if (labelMotion.hidden !== labelsHidden) {
+      labelMotion.hidden = labelsHidden;
+      setLabelVisibility(labelPool.current, props.territoryEls?.current ?? [], labelsVisible);
+    }
+
     if (labelPool.current) {
       updateLabels(labelPool.current, {
         positions,
@@ -895,6 +922,7 @@ function GalaxyContents(props: GalaxySceneProps) {
         worldPos: worldPos.current,
         projected: projected.current,
         scratch: labelScratch,
+        dpr,
       });
     }
 
@@ -906,7 +934,7 @@ function GalaxyContents(props: GalaxySceneProps) {
       const y = (-projected.current.y * 0.5 + 0.5) * size.height;
       const rects = labelScratch.panelRects;
       const hidden = selected !== null || x < (size.width > 720 ? 380 : 70) || x > size.width - 100 || y < 145 || y > size.height - 120 || rects.some(rect => x > rect.left - 80 && x < rect.right + 80 && y > rect.top - 20 && y < rect.bottom + 20) || labelScratch.occupied.some(rect => x + 80 > rect.left && x - 80 < rect.right && y + 16 > rect.top && y < rect.bottom);
-      writeTerritoryLabel(label, x, y, hidden);
+      writeTerritoryLabel(label, x, y, hidden, dpr);
     }
 
     // Local FPS meter, mounted only by the non-production ?fps=1 switch.
@@ -940,13 +968,16 @@ function GalaxyContents(props: GalaxySceneProps) {
         maxDistance={90}
         onStart={() => {
           draggingRef.current = true;
+          labelMotionRef.current.revealAfter = Number.POSITIVE_INFINITY;
           drift.current.lastInput = performance.now();
           cameraMotion.current.active = false;
           cameraMotion.current.focusCancelled = true;
         }}
         onEnd={() => {
           draggingRef.current = false;
-          drift.current.lastInput = performance.now();
+          const now = performance.now();
+          labelMotionRef.current.revealAfter = now + LABEL_REVEAL_DELAY_MS;
+          drift.current.lastInput = now;
         }}
       />
       <group ref={groupRef}>
