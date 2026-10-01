@@ -6,6 +6,12 @@
 
 ## Unreleased
 
+- Rebased the Synapsis initial and reset camera so the former physical 208%
+  view is now the displayed 100%, without shrinking the approved constellation
+  composition. Strengthened the reduced-motion-aware ambient orbit and made it
+  pause only for direct gestures or camera navigation, then ease back in after
+  the canvas is idle instead of remaining blocked by hover or selection.
+
 - Aligned the Synapsis signature with RAMS logo tracking and added a 1 px gap
   between cluster-filter rows so consecutive active states remain visually
   distinct. Replaced continuously animated 3D text transforms with

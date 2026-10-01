@@ -15,7 +15,21 @@ import * as THREE from "three";
 
 import { GlassPass } from "./glass-pass";
 import { createEdgeCurvePositions, EDGE_CURVE_SEGMENTS } from "./edge-curves";
-import { focusVerticalOffset, cameraProgress, zoomDistance, frameNodeBounds } from "./camera-motion";
+import {
+  AMBIENT_ORBIT_DAMPING,
+  AMBIENT_ORBIT_RATE,
+  AMBIENT_ORBIT_X_AMPLITUDE,
+  AMBIENT_ORBIT_Y_AMPLITUDE,
+  DEFAULT_CAMERA_DISTANCE,
+  GRAPH_LAYOUT_REFERENCE_DISTANCE,
+  cameraProgress,
+  cameraZoomPercent,
+  followFocusedPoint,
+  focusVerticalOffset,
+  frameNodeBounds,
+  shouldRunAmbientOrbit,
+  zoomDistance,
+} from "./camera-motion";
 import { LABEL_REVEAL_DELAY_MS, shouldHideLabels, snapLabelCoordinate } from "./label-position";
 import type { LiquidGlassConfig } from "./liquid-glass";
 import {
@@ -80,9 +94,7 @@ export type GalaxySceneProps = {
 };
 
 const TRANSITION_MS = 260;
-// Retain the approved graph scale while redefining the former 140% view as 100%.
-const GRAPH_FRAMING_DISTANCE = 74;
-const DEFAULT_CAMERA = new THREE.Vector3(0, 0, GRAPH_FRAMING_DISTANCE / 1.4);
+const DEFAULT_CAMERA = new THREE.Vector3(0, 0, DEFAULT_CAMERA_DISTANCE);
 const GRAPH_VISUAL_MARGIN = 7;
 const FOG_NEAR = 58;
 const FOG_FAR = 94;
@@ -655,7 +667,9 @@ function GalaxyContents(props: GalaxySceneProps) {
       left = Math.min(left, positions[i]); right = Math.max(right, positions[i]);
       bottom = Math.min(bottom, positions[i + 1]); top = Math.max(top, positions[i + 1]);
     }
-    const pixelsPerUnit = size.height / (2 * DEFAULT_CAMERA.length() * Math.tan(Math.PI / 8));
+    // Keep the approved graph scale. Coupling this calculation to the closer
+    // default camera would shrink the graph and visually cancel the 208% rebase.
+    const pixelsPerUnit = size.height / (2 * GRAPH_LAYOUT_REFERENCE_DISTANCE * Math.tan(Math.PI / 8));
     const mobile = size.width <= 720;
     const availableWidth = mobile ? size.width - 24 : size.width - 380;
     const availableHeight = mobile ? size.height - 300 : size.height - 260;
@@ -748,6 +762,7 @@ function GalaxyContents(props: GalaxySceneProps) {
     rotationFrom: new THREE.Quaternion(), rotationTo: new THREE.Quaternion(),
     savedPosition: new THREE.Vector3(), savedTarget: new THREE.Vector3(),
     savedRotation: new THREE.Quaternion(), hasSaved: false,
+    focusOffset: new THREE.Vector3(), focusTracked: false,
     previousSelection: null as number | null,
     commandId: undefined as number | undefined,
     clusterKey: clusterFrame?.key ?? "",
@@ -782,6 +797,7 @@ function GalaxyContents(props: GalaxySceneProps) {
     if (clusterChanged) {
       motion.hasSaved = false;
       motion.focusCancelled = false;
+      motion.focusTracked = false;
       if (!clusterFrame?.indices.length) {
         motion.to.copy(DEFAULT_CAMERA);
         motion.targetTo.set(0, 0, 0);
@@ -806,6 +822,7 @@ function GalaxyContents(props: GalaxySceneProps) {
     } else if (isCommand) {
       motion.commandId = cameraCommand.id;
       motion.focusCancelled = true;
+      motion.focusTracked = false;
       if (cameraCommand.action === "reset") {
         motion.to.copy(DEFAULT_CAMERA);
         motion.targetTo.set(0, 0, 0);
@@ -821,7 +838,8 @@ function GalaxyContents(props: GalaxySceneProps) {
       group.position.x = framing.x;
       group.scale.setScalar(framing.scale);
       group.updateMatrixWorld();
-      motion.targetTo.fromArray(positions, selected * 3).applyMatrix4(group.matrixWorld);
+      const selectedWorld = new THREE.Vector3().fromArray(positions, selected * 3).applyMatrix4(group.matrixWorld);
+      motion.targetTo.copy(selectedWorld);
       const away = new THREE.Vector3().copy(camera.position).sub(controls.target);
       if (away.lengthSq() < 1e-6) away.copy(DEFAULT_CAMERA);
       const distance = camera.position.distanceTo(controls.target);
@@ -832,15 +850,22 @@ function GalaxyContents(props: GalaxySceneProps) {
       const offset = focusVerticalOffset(distance, (camera as THREE.PerspectiveCamera).fov, mobileOcclusion);
       motion.targetTo.addScaledVector(up, -offset);
       motion.to.copy(motion.targetTo).add(away);
+      motion.focusOffset.copy(motion.targetTo).sub(selectedWorld);
+      motion.focusTracked = true;
     } else if (motion.hasSaved) {
       motion.to.copy(motion.savedPosition);
       motion.targetTo.copy(motion.savedTarget);
       motion.rotationTo.copy(motion.savedRotation);
       motion.hasSaved = false;
+      motion.focusTracked = false;
+    } else {
+      motion.focusTracked = false;
     }
     motion.previousSelection = selected;
     motion.start = performance.now();
     motion.active = true;
+    drift.current.weight = 0;
+    drift.current.lastInput = motion.start;
     if (reducedMotion) {
       camera.position.copy(motion.to);
       controls.target.copy(motion.targetTo);
@@ -853,6 +878,8 @@ function GalaxyContents(props: GalaxySceneProps) {
 
   const worldPos = useRef(new THREE.Vector3());
   const projected = useRef(new THREE.Vector3());
+  const focusWorldPos = useRef(new THREE.Vector3());
+  const focusDelta = useRef(new THREE.Vector3());
   const fpsWindow = useRef({ frames: 0, last: 0 });
   const zoomReport = useRef({ percent: 100, last: -1 });
 
@@ -869,13 +896,20 @@ function GalaxyContents(props: GalaxySceneProps) {
     const fog = state.scene.fog as THREE.Fog | null;
     if (fog) { fog.near = Math.max(1, distance - 16); fog.far = distance + 20; }
     const orbit = drift.current;
-    const allowed = !reducedMotion && selected === null && hovered === null && !draggingRef.current && !cameraMotion.current.active && performance.now() - orbit.lastInput > 1800;
-    orbit.weight = THREE.MathUtils.damp(orbit.weight, allowed ? 1 : 0, 8, Math.min(delta, 0.05));
-    if (reducedMotion || selected !== null || cameraMotion.current.active) orbit.weight = 0;
+    const frameNow = performance.now();
+    const allowed = shouldRunAmbientOrbit({
+      now: frameNow,
+      lastInput: orbit.lastInput,
+      reducedMotion,
+      dragging: draggingRef.current,
+      cameraMoving: cameraMotion.current.active,
+    });
+    orbit.weight = THREE.MathUtils.damp(orbit.weight, allowed ? 1 : 0, AMBIENT_ORBIT_DAMPING, Math.min(delta, 0.05));
+    if (reducedMotion || draggingRef.current || cameraMotion.current.active) orbit.weight = 0;
     const previousPhase = orbit.phase;
-    orbit.phase += Math.min(delta, 0.05) * 0.085 * orbit.weight;
-    group.rotation.y += (Math.sin(orbit.phase) - Math.sin(previousPhase)) * 0.11;
-    group.rotation.x += (Math.cos(orbit.phase) - Math.cos(previousPhase)) * 0.035;
+    orbit.phase += Math.min(delta, 0.05) * AMBIENT_ORBIT_RATE * orbit.weight;
+    group.rotation.y += (Math.sin(orbit.phase) - Math.sin(previousPhase)) * AMBIENT_ORBIT_Y_AMPLITUDE;
+    group.rotation.x += (Math.cos(orbit.phase) - Math.cos(previousPhase)) * AMBIENT_ORBIT_X_AMPLITUDE;
 
     group.updateMatrixWorld();
 
@@ -887,13 +921,20 @@ function GalaxyContents(props: GalaxySceneProps) {
       controls.target.lerpVectors(motion.targetFrom, motion.targetTo, progress);
       group.quaternion.slerpQuaternions(motion.rotationFrom, motion.rotationTo, progress);
       group.updateMatrixWorld();
-      if (progress === 1) motion.active = false;
+      if (progress === 1) {
+        motion.active = false;
+        orbit.lastInput = performance.now();
+      }
+    }
+    if (!motion.active && selected !== null && motion.focusTracked && !motion.focusCancelled) {
+      focusWorldPos.current.fromArray(positions, selected * 3).applyMatrix4(group.matrixWorld);
+      followFocusedPoint(camera.position, controls.target, focusWorldPos.current, motion.focusOffset, focusDelta.current);
     }
     camera.lookAt(controls.target);
     camera.updateMatrixWorld();
     if (props.onZoomChange && state.clock.elapsedTime - zoomReport.current.last >= 0.1) {
       zoomReport.current.last = state.clock.elapsedTime;
-      const percent = Math.round(100 * DEFAULT_CAMERA.length() / Math.max(1e-6, camera.position.distanceTo(controls.target)));
+      const percent = cameraZoomPercent(camera.position.distanceTo(controls.target));
       if (percent !== zoomReport.current.percent) {
         zoomReport.current.percent = percent;
         props.onZoomChange(percent);
@@ -971,6 +1012,7 @@ function GalaxyContents(props: GalaxySceneProps) {
           draggingRef.current = true;
           labelMotionRef.current.revealAfter = Number.POSITIVE_INFINITY;
           drift.current.lastInput = performance.now();
+          drift.current.weight = 0;
           cameraMotion.current.active = false;
           cameraMotion.current.focusCancelled = true;
         }}
