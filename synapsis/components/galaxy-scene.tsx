@@ -17,6 +17,11 @@ import { GlassPass } from "./glass-pass";
 import { createEdgeCurvePositions, EDGE_CURVE_SEGMENTS } from "./edge-curves";
 import { focusVerticalOffset, cameraProgress, zoomDistance, frameNodeBounds } from "./camera-motion";
 import type { LiquidGlassConfig } from "./liquid-glass";
+import {
+  NODE_DEPTH_MAX_WASH,
+  NODE_DEPTH_MIN_WASH,
+  nodeFogRange,
+} from "./node-depth";
 import type {
   NodeStateAppearance,
   SynapsisAppearanceTokens,
@@ -201,8 +206,9 @@ function writeNodeFrame(
   reducedMotion: boolean,
   distance: number,
 ) {
-  material.uniforms.uFogNear.value = Math.max(1, distance - 16);
-  material.uniforms.uFogFar.value = distance + 20;
+  const fog = nodeFogRange(distance);
+  material.uniforms.uFogNear.value = fog.near;
+  material.uniforms.uFogFar.value = fog.far;
   material.uniforms.uTime.value = elapsed;
   material.uniforms.uPulseStrength.value = reducedMotion ? 0 : PULSE_STRENGTH;
   material.uniforms.uMotionEnabled.value = reducedMotion ? 0 : 1;
@@ -583,7 +589,8 @@ void main() {
   vec3 color = mix(uSurface, vGlow, halo);
   color = mix(color, vBackground, body);
   color = mix(color, vGlow, ring);
-  float depthFade = smoothstep(uFogNear, uFogFar, vDepth) * (1.0 - vSelected);
+  float depthSignal = smoothstep(uFogNear, uFogFar, vDepth);
+  float depthFade = mix(${NODE_DEPTH_MIN_WASH.toFixed(2)}, ${NODE_DEPTH_MAX_WASH.toFixed(2)}, depthSignal) * (1.0 - vSelected);
   gl_FragColor = vec4(mix(color, uSurface, depthFade), max(body, max(halo, ring)));
   #include <colorspace_fragment>
 }

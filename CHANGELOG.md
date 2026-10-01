@@ -6,11 +6,13 @@
 
 ## Unreleased
 
-- Shaped Synapsis as a clearly bilateral deterministic brain silhouette: real
-  cluster populations now occupy balanced hemispheres, an extended central
-  fissure and tapered base define the form, bounded edge motion cannot collapse
-  it into an oval, and corrected camera math preserves the full outline on
-  desktop and mobile without changing filtering or graph relationships.
+- Reshaped Synapsis around an asymmetric side-profile brain: real cluster
+  populations remain coherent inside one filled cranial mass, a connected
+  lower transition and tapered stem now follow the supplied visual reference,
+  bounded edge motion cannot collapse the outline, and a stronger view-depth
+  cue keeps near nodes crisp while washing distant nodes into the same paper
+  palette. Desktop/mobile framing, filtering and graph relationships remain
+  unchanged.
 
 - Keep Synapsis graph rendering and sitemap dates current through the parent content reader, preserving the existing presentation and active-node filter.
 
