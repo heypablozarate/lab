@@ -6,9 +6,11 @@
 
 ## Unreleased
 
-- Reshaped Synapsis into a subtle deterministic brain silhouette while
-  preserving its eight cluster territories, spatial depth, filtering, and
-  responsive desktop/mobile overview framing.
+- Shaped Synapsis as a clearly bilateral deterministic brain silhouette: real
+  cluster populations now occupy balanced hemispheres, an extended central
+  fissure and tapered base define the form, bounded edge motion cannot collapse
+  it into an oval, and corrected camera math preserves the full outline on
+  desktop and mobile without changing filtering or graph relationships.
 
 - Keep Synapsis graph rendering and sitemap dates current through the parent content reader, preserving the existing presentation and active-node filter.
 
