@@ -624,15 +624,23 @@ function GalaxyContents(props: GalaxySceneProps) {
   const size = useThree((s) => s.size);
 
   const framing = useMemo(() => {
-    if (size.width <= 720 || positions.length === 0) return { scale: 1, x: 0 };
+    if (positions.length === 0) return { scale: 1, x: 0 };
     let left = Infinity, right = -Infinity, bottom = Infinity, top = -Infinity;
     for (let i = 0; i < positions.length; i += 3) {
       left = Math.min(left, positions[i]); right = Math.max(right, positions[i]);
       bottom = Math.min(bottom, positions[i + 1]); top = Math.max(top, positions[i + 1]);
     }
     const pixelsPerUnit = size.height / (2 * GRAPH_FRAMING_DISTANCE * Math.tan(Math.PI / 8));
-    const scale = Math.min(1, Math.max(0.2, (size.width - 380) / Math.max(1, (right - left) * pixelsPerUnit)), Math.max(0.2, (size.height - 260) / Math.max(1, (top - bottom) * pixelsPerUnit)));
-    return { scale, x: 50 / pixelsPerUnit - (left + right) * 0.5 * scale };
+    const mobile = size.width <= 720;
+    const availableWidth = mobile ? size.width - 24 : size.width - 380;
+    const availableHeight = mobile ? size.height - 300 : size.height - 260;
+    const scale = Math.min(
+      1,
+      Math.max(0.18, availableWidth / Math.max(1, (right - left) * pixelsPerUnit)),
+      Math.max(0.18, availableHeight / Math.max(1, (top - bottom) * pixelsPerUnit)),
+    );
+    const opticalOffset = mobile ? 0 : 50 / pixelsPerUnit;
+    return { scale, x: opticalOffset - (left + right) * 0.5 * scale };
   }, [positions, size.width, size.height]);
 
   const palette = useMemo(() => buildPalette(tokens, appearance), [tokens, appearance]);

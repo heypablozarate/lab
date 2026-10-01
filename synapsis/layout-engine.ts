@@ -1,9 +1,10 @@
 // Deterministic constellation layout for Synapsis.
 //
-// Editorial territories distributed across XY, with continuous spatial depth.
-// Stable id hashes build airy local clouds; bounded edge attraction and XY
-// separation run only on the server. No runtime physics or corpus-specific
-// positions. Input ordering does not change the resulting spatial identity.
+// Editorial territories distributed across a restrained brain-shaped XY field,
+// with continuous spatial depth. Stable id hashes build airy local clouds;
+// bounded edge attraction and XY separation run only on the server. No runtime
+// physics or per-node positions. Input ordering does not change the resulting
+// spatial identity.
 
 export type GalaxyNode = {
   id: string;
@@ -82,13 +83,13 @@ export type GalaxyLayout = {
   indexById: Record<string, number>;
 };
 
-const FIELD_HALF_WIDTH = 40;
-const FIELD_HALF_HEIGHT = 26;
 const DEPTH_HALF_RANGE = 12;
 const EDGE_PASS_ITERATIONS = 4;
 const EDGE_PASS_STEP = 0.008;
 const SEPARATION_PASS_ITERATIONS = 10;
 const SEPARATION_STEP = 0.35;
+export const BRAIN_BOTTOM = -23;
+export const BRAIN_TOP = 24;
 
 export function nodeVisualRadius(relevance: number): number {
   const t = (Math.min(10, Math.max(1, relevance)) - 1) / 9;
@@ -108,16 +109,97 @@ function hash01(id: string, salt: number): number {
 
 type Vec3 = [number, number, number];
 
-function clusterCentroids(clusters: GalaxyCluster[], counts: Map<string, number>): Map<string, Vec3> {
+// The eight slots reproduce the approved Pen composition when eight public
+// territories are present. They are positional, not anatomical: editorial
+// categories do not claim a relationship to regions of the brain.
+const BRAIN_TERRITORY_SLOTS: Vec3[] = [
+  [13.5, 12, 0],
+  [-14, -13, 0],
+  [-12.5, 11.5, 0],
+  [-26, 0, 0],
+  [-4, 17, 0],
+  [0, -1, 0],
+  [25, -1, 0],
+  [12, -12, 0],
+];
+
+const BRAIN_SLOT_FILL_ORDER = [5, 0, 1, 2, 7, 3, 6, 4];
+
+function clamp(value: number, min: number, max: number) {
+  return Math.min(max, Math.max(min, value));
+}
+
+function smoothstep(min: number, max: number, value: number) {
+  const t = clamp((value - min) / Math.max(1e-6, max - min), 0, 1);
+  return t * t * (3 - 2 * t);
+}
+
+export function brainEnvelopeHalfWidth(y: number): number {
+  const t = clamp((y - BRAIN_BOTTOM) / (BRAIN_TOP - BRAIN_BOTTOM), 0, 1);
+  const crown = 5 * t * t;
+  return 12 + 25 * Math.pow(Math.max(0, Math.sin(Math.PI * t)), 0.52) + crown;
+}
+
+export function brainCleftHalfWidth(y: number): number {
+  return 2.4 * smoothstep(17, BRAIN_TOP, y) ** 2;
+}
+
+function brainDepthHalfRange(x: number, y: number) {
+  const halfWidth = Math.max(1, brainEnvelopeHalfWidth(y));
+  const lateralClearance = Math.sqrt(Math.max(0, 1 - Math.abs(x) / halfWidth));
+  const t = clamp((y - BRAIN_BOTTOM) / (BRAIN_TOP - BRAIN_BOTTOM), 0, 1);
+  const verticalFullness = 0.15 + 0.85 * Math.pow(Math.max(0, Math.sin(Math.PI * t)), 0.35);
+  return DEPTH_HALF_RANGE * (0.3 + 0.7 * lateralClearance * verticalFullness);
+}
+
+function territorySlots(count: number): Vec3[] {
+  if (count === BRAIN_TERRITORY_SLOTS.length) return BRAIN_TERRITORY_SLOTS;
+  if (count < BRAIN_TERRITORY_SLOTS.length) {
+    return BRAIN_SLOT_FILL_ORDER.slice(0, count).map((index) => BRAIN_TERRITORY_SLOTS[index]);
+  }
   const golden = Math.PI * (3 - Math.sqrt(5));
+  return Array.from({ length: count }, (_, index) => {
+    if (index < BRAIN_TERRITORY_SLOTS.length) return BRAIN_TERRITORY_SLOTS[index];
+    const radius = Math.sqrt((index + 0.5) / count);
+    const y = Math.sin(golden * index) * radius * 18;
+    return [Math.cos(golden * index) * radius * brainEnvelopeHalfWidth(y) * 0.72, y, 0];
+  });
+}
+
+function clusterCentroids(clusters: GalaxyCluster[], counts: Map<string, number>): Map<string, Vec3> {
   const occupied = clusters.filter((cluster) => counts.has(cluster.id))
     .sort((a, b) => a.id < b.id ? -1 : a.id > b.id ? 1 : 0);
   const centroids = new Map<string, Vec3>();
+  const slots = territorySlots(occupied.length);
   occupied.forEach((cluster, i) => {
-    const radius = occupied.length === 1 ? 0 : Math.sqrt((i + 0.5) / occupied.length);
-    centroids.set(cluster.id, [Math.cos(golden * i) * radius * 28, Math.sin(golden * i) * radius * 16, 0]);
+    centroids.set(cluster.id, occupied.length === 1 ? [0, 0, 0] : slots[i]);
   });
   return centroids;
+}
+
+function confineNodeToBrain(
+  positions: number[],
+  nodeIndex: number,
+  radius: number,
+  centroid: Vec3,
+  nodeId: string,
+) {
+  const offset = nodeIndex * 3;
+  const y = clamp(positions[offset + 1], BRAIN_BOTTOM + radius, BRAIN_TOP - radius);
+  const halfWidth = Math.max(radius, brainEnvelopeHalfWidth(y) - radius);
+  let x = clamp(positions[offset], -halfWidth, halfWidth);
+  const cleft = brainCleftHalfWidth(y);
+  if (cleft > 0) {
+    const minFromCenter = Math.min(halfWidth, cleft + radius);
+    if (Math.abs(x) < minFromCenter) {
+      const side = Math.abs(centroid[0]) > 0.01 ? Math.sign(centroid[0]) : hash01(nodeId, 17) < 0.5 ? -1 : 1;
+      x = side * minFromCenter;
+    }
+  }
+  positions[offset] = x;
+  positions[offset + 1] = y;
+  const depth = brainDepthHalfRange(x, y);
+  positions[offset + 2] = clamp(positions[offset + 2], -depth, depth);
 }
 
 export function computeLayout(data: GalaxyData): GalaxyLayout {
@@ -141,13 +223,13 @@ export function computeLayout(data: GalaxyData): GalaxyLayout {
     const radial = Math.sqrt(hash01(node.id, 2)) * (1 - t * 0.2);
     // Larger territories get room proportional to their population, without
     // reserving space for empty editorial categories.
-    const cloudX = counts.size === 1 ? 34 : 7 + Math.sqrt(share) * 9;
-    const cloudY = counts.size === 1 ? 22 : 5 + Math.sqrt(share) * 6;
+    const cloudX = counts.size === 1 ? 34 : 10 + Math.sqrt(share) * 8;
+    const cloudY = counts.size === 1 ? 22 : 8 + Math.sqrt(share) * 5;
     const centrality = 1 - t * 0.18;
     positions[i * 3] = centroid[0] * centrality + Math.cos(theta) * radial * cloudX;
     positions[i * 3 + 1] = centroid[1] * centrality + Math.sin(theta) * radial * cloudY;
     positions[i * 3 + 2] = ((hash01(node.id, 3) * 2 - 1) * 0.7 + (hash01(node.cluster, 11) * 2 - 1) * 0.3) * DEPTH_HALF_RANGE;
-
+    confineNodeToBrain(positions, i, radii[i], centroid, node.id);
   });
 
   const edgeIndices: number[] = [];
@@ -181,6 +263,13 @@ export function computeLayout(data: GalaxyData): GalaxyLayout {
       }
       e += 2;
     }
+    nodes.forEach((node, index) => confineNodeToBrain(
+      positions,
+      index,
+      radii[index],
+      centroids.get(node.cluster) ?? [0, 0, 0],
+      node.id,
+    ));
     if (e === 0) break;
   }
 
@@ -212,20 +301,13 @@ export function computeLayout(data: GalaxyData): GalaxyLayout {
         positions[b * 3 + 1] += dy * push;
       }
     }
-  }
-
-  // Fit extreme population distributions inside the camera's editorial field
-  // without clipping individual points against a hard boundary.
-  let extentX = FIELD_HALF_WIDTH;
-  let extentY = FIELD_HALF_HEIGHT;
-  for (let i = 0; i < nodes.length; i += 1) {
-    extentX = Math.max(extentX, Math.abs(positions[i * 3]));
-    extentY = Math.max(extentY, Math.abs(positions[i * 3 + 1]));
-  }
-  const fit = Math.min(FIELD_HALF_WIDTH / extentX, FIELD_HALF_HEIGHT / extentY);
-  for (let i = 0; i < nodes.length; i += 1) {
-    positions[i * 3] *= fit;
-    positions[i * 3 + 1] *= fit;
+    nodes.forEach((node, index) => confineNodeToBrain(
+      positions,
+      index,
+      radii[index],
+      centroids.get(node.cluster) ?? [0, 0, 0],
+      node.id,
+    ));
   }
   return { positions, radii, edgeIndices, indexById };
 }
