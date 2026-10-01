@@ -3,6 +3,49 @@ import { Box3, Quaternion, Vector3 } from "three";
 /** Camera policy shared by controls and the mobile sheet. */
 export const CAMERA_TRANSITION_MS = 400;
 
+/**
+ * Keep the approved constellation scale while making the former 208% camera
+ * distance the new initial/reset 100% view.
+ */
+export const GRAPH_LAYOUT_REFERENCE_DISTANCE = 74 / 1.4;
+export const DEFAULT_CAMERA_DISTANCE = GRAPH_LAYOUT_REFERENCE_DISTANCE / 2.08;
+
+export const AMBIENT_ORBIT_IDLE_MS = 1400;
+export const AMBIENT_ORBIT_DAMPING = 4.5;
+export const AMBIENT_ORBIT_RATE = 0.12;
+export const AMBIENT_ORBIT_Y_AMPLITUDE = 0.16;
+export const AMBIENT_ORBIT_X_AMPLITUDE = 0.052;
+
+export function cameraZoomPercent(distance: number): number {
+  return Math.round(100 * DEFAULT_CAMERA_DISTANCE / Math.max(1e-6, distance));
+}
+
+export function shouldRunAmbientOrbit(input: {
+  now: number;
+  lastInput: number;
+  reducedMotion: boolean;
+  dragging: boolean;
+  cameraMoving: boolean;
+}): boolean {
+  return !input.reducedMotion
+    && !input.dragging
+    && !input.cameraMoving
+    && input.now - input.lastInput >= AMBIENT_ORBIT_IDLE_MS;
+}
+
+/** Keep a focused world point at the same camera-relative target while it moves. */
+export function followFocusedPoint(
+  cameraPosition: Vector3,
+  cameraTarget: Vector3,
+  worldPoint: Vector3,
+  targetOffset: Vector3,
+  scratch: Vector3,
+): void {
+  scratch.copy(worldPoint).add(targetOffset).sub(cameraTarget);
+  cameraPosition.add(scratch);
+  cameraTarget.add(scratch);
+}
+
 export function cameraProgress(elapsedMs: number, reducedMotion: boolean): number {
   if (reducedMotion) return 1;
   const t = Math.max(0, Math.min(1, elapsedMs / CAMERA_TRANSITION_MS));

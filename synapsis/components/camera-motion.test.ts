@@ -1,6 +1,17 @@
 import { describe, expect, it } from "vitest";
 import { PerspectiveCamera, Quaternion, Vector3 } from "three";
-import { cameraProgress, focusVerticalOffset, zoomDistance, frameNodeBounds } from "./camera-motion";
+import {
+  AMBIENT_ORBIT_IDLE_MS,
+  DEFAULT_CAMERA_DISTANCE,
+  GRAPH_LAYOUT_REFERENCE_DISTANCE,
+  cameraProgress,
+  cameraZoomPercent,
+  followFocusedPoint,
+  focusVerticalOffset,
+  frameNodeBounds,
+  shouldRunAmbientOrbit,
+  zoomDistance,
+} from "./camera-motion";
 
 describe("Synapsis camera interaction", () => {
   it("finishes immediately for reduced motion and bounds elapsed time", () => {
@@ -14,6 +25,28 @@ describe("Synapsis camera interaction", () => {
     expect(zoomDistance(32, "zoom-out")).toBe(40);
     expect(zoomDistance(8, "zoom-in")).toBe(8);
     expect(zoomDistance(90, "zoom-out")).toBe(90);
+  });
+  it("rebases the former physical 208% view as the new 100% default", () => {
+    expect(DEFAULT_CAMERA_DISTANCE).toBeCloseTo(GRAPH_LAYOUT_REFERENCE_DISTANCE / 2.08);
+    expect(cameraZoomPercent(DEFAULT_CAMERA_DISTANCE)).toBe(100);
+    expect(cameraZoomPercent(GRAPH_LAYOUT_REFERENCE_DISTANCE)).toBe(48);
+  });
+  it("resumes ambient orbit only after interaction and camera motion settle", () => {
+    const idle = { now: AMBIENT_ORBIT_IDLE_MS, lastInput: 0, reducedMotion: false, dragging: false, cameraMoving: false };
+    expect(shouldRunAmbientOrbit(idle)).toBe(true);
+    expect(shouldRunAmbientOrbit({ ...idle, now: AMBIENT_ORBIT_IDLE_MS - 1 })).toBe(false);
+    expect(shouldRunAmbientOrbit({ ...idle, dragging: true })).toBe(false);
+    expect(shouldRunAmbientOrbit({ ...idle, cameraMoving: true })).toBe(false);
+    expect(shouldRunAmbientOrbit({ ...idle, reducedMotion: true })).toBe(false);
+  });
+  it("keeps a selected world point anchored while ambient orbit moves the graph", () => {
+    const camera = new Vector3(0, 0, DEFAULT_CAMERA_DISTANCE);
+    const target = new Vector3(0, 0, 0);
+    const distance = camera.distanceTo(target);
+    followFocusedPoint(camera, target, new Vector3(2, 1, 0), new Vector3(0, -1, 0), new Vector3());
+    expect(target.toArray()).toEqual([2, 0, 0]);
+    expect(camera.toArray()).toEqual([2, 0, DEFAULT_CAMERA_DISTANCE]);
+    expect(camera.distanceTo(target)).toBeCloseTo(distance);
   });
   it.each([0, 0.3, 0.6, 0.85])("centers the node when %s of the screen is covered", (covered) => {
     const camera = new PerspectiveCamera(45, 390 / 844, 0.1, 200);
