@@ -6,6 +6,10 @@
 
 ## Unreleased
 
+- Reshaped Synapsis into a subtle deterministic brain silhouette while
+  preserving its eight cluster territories, spatial depth, filtering, and
+  responsive desktop/mobile overview framing.
+
 - Keep Synapsis graph rendering and sitemap dates current through the parent content reader, preserving the existing presentation and active-node filter.
 
 ### Added

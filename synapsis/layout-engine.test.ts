@@ -2,6 +2,10 @@ import { describe, expect, it } from "vitest";
 import galaxyFixture from "@/content/data/synapsis/galaxy.json";
 
 import {
+  BRAIN_BOTTOM,
+  BRAIN_TOP,
+  brainCleftHalfWidth,
+  brainEnvelopeHalfWidth,
   computeLayout,
   nodeVisualRadius,
   type GalaxyData,
@@ -184,6 +188,33 @@ describe("synapsis layout engine", () => {
     // Depth must not disguise screen-space collisions in dense territories.
     nearest.sort((a, b) => a - b);
     expect(nearest[Math.floor(nearest.length * 0.1)]).toBeGreaterThan(0.6);
+  });
+
+  it("keeps every point inside the brain envelope and preserves the crown cleft", () => {
+    const seed = syntheticGalaxy();
+    const clusters = Array.from({ length: 8 }, (_, index) => ({ id: `territory-${index}`, label: `Territory ${index}`, rationale: "test" }));
+    const nodes = Array.from({ length: 320 }, (_, index) => ({
+      ...seed.nodes[index % seed.nodes.length],
+      id: `brain-${index}`,
+      cluster: clusters[index % clusters.length].id,
+    }));
+    const layout = computeLayout({ ...seed, clusters, nodes, edges: [] });
+    let crownPoints = 0;
+    nodes.forEach((_, index) => {
+      const x = layout.positions[index * 3];
+      const y = layout.positions[index * 3 + 1];
+      const radius = layout.radii[index];
+      const halfWidth = brainEnvelopeHalfWidth(y) - radius;
+      expect(y).toBeGreaterThanOrEqual(BRAIN_BOTTOM + radius - 1e-9);
+      expect(y).toBeLessThanOrEqual(BRAIN_TOP - radius + 1e-9);
+      expect(Math.abs(x)).toBeLessThanOrEqual(halfWidth + 1e-9);
+      const cleft = brainCleftHalfWidth(y);
+      if (cleft > 0) {
+        crownPoints += 1;
+        expect(Math.abs(x)).toBeGreaterThanOrEqual(Math.min(halfWidth, cleft + radius) - 1e-9);
+      }
+    });
+    expect(crownPoints).toBeGreaterThan(0);
   });
 
   it("handles empty and single-category graphs without non-finite coordinates", () => {
