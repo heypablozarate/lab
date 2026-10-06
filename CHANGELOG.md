@@ -6,6 +6,10 @@
 
 ## Unreleased
 
+- The Designer's Constitution now opens in the visitor's system language
+  (English or Spanish, first match in the browser's language list). A `?lang=`
+  parameter still wins, and only an explicit EN/ES choice is remembered.
+
 - Added The Designer's Constitution as a static essay under `constitution/`, published at
   constitution.design. The folder carries the page, scripts, images and crawler files; fonts
   stay out of this repository by licence and are served only by the parent site.

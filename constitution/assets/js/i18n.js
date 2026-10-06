@@ -146,11 +146,22 @@
   var listeners = [];
   var lang = 'en';
 
+  // Order: ?lang= in the URL, then a choice made with the EN/ES buttons,
+  // then the first English or Spanish entry in the system languages.
+  function system() {
+    var list = navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language];
+    for (var i = 0; i < list.length; i++) {
+      var code = String(list[i] || '').toLowerCase().split('-')[0];
+      if (code === 'en' || code === 'es') return code;
+    }
+    return 'en';
+  }
+
   function read() {
     var q = location.search.match(/[?&]lang=(en|es)\b/);
     if (q) return q[1];
     try { var s = localStorage.getItem('pz-lang'); if (s === 'en' || s === 'es') return s; } catch (e) {}
-    return 'en';
+    return system();
   }
 
   function capture() {
@@ -178,7 +189,6 @@
     });
     var changed = next !== lang;
     lang = next;
-    try { localStorage.setItem('pz-lang', next); } catch (e) {}
     if (changed) listeners.forEach(function (fn) { fn(next); });
   }
 
@@ -191,7 +201,12 @@
 
   // This script sits at the end of <body>, so the page is already parsed.
   document.querySelectorAll('.lang button').forEach(function (b) {
-    b.addEventListener('click', function () { apply(b.dataset.lang); });
+    b.addEventListener('click', function () {
+      // Only an explicit choice is remembered, so the system language keeps
+      // deciding for everyone who never touched the switch.
+      try { localStorage.setItem('pz-lang', b.dataset.lang); } catch (e) {}
+      apply(b.dataset.lang);
+    });
   });
   capture();
   apply(read());
