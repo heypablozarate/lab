@@ -1,9 +1,10 @@
 # The Designer’s Constitution
 
-> A model for rethinking what makes a designer in the age of AI, by Pablo Zárate (PabloZarate™). It rereads Walter Gropius’s 1922 Bauhaus curriculum diagram, a set of concentric rings with building (Bau) at the center, as five rings read from the outside in: The ground, Studies, Materials, Non-negotiably Human, Build. Available in English and Spanish ("La constitución del Diseñador") at the same URL.
+> A model for rethinking what makes a designer in the age of AI, by Pablo Zárate (PabloZarate™). It rereads Walter Gropius’s 1922 Bauhaus curriculum diagram, a set of concentric rings with building (Bau) at the center, as five rings read from the outside in: The ground, Studies, Materials, Non-negotiably Human, Build. Available in English at https://constitution.design/ and in Spanish ("La constitución del Diseñador") at https://constitution.design/es.
 
 - Author: Pablo Zárate, https://pablozarate.com
-- Canonical: https://constitution.design/
+- Canonical (English): https://constitution.design/
+- Spanish: https://constitution.design/es ("La constitución del Diseñador")
 - Languages: en, es
 
 A model for thinking about what makes someone a designer in the age of AI, laid on the foundations Walter Gropius set for the Bauhaus and adapted by PabloZarate™
