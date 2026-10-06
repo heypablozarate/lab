@@ -6,6 +6,10 @@
 
 ## Unreleased
 
+- Added The Designer's Constitution as a static essay under `constitution/`, published at
+  constitution.design. The folder carries the page, scripts, images and crawler files; fonts
+  stay out of this repository by licence and are served only by the parent site.
+
 - Rebased the Synapsis initial and reset camera so the former physical 208%
   view is now the displayed 100%, without shrinking the approved constellation
   composition. Strengthened the reduced-motion-aware ambient orbit and made it
