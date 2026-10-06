@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>The Designer’s Constitution, by PabloZarate™</title>
+<meta name="description" content="A model for rethinking what makes a designer in the age of AI, laid on the foundations Walter Gropius set for the Bauhaus in 1922.">
+<meta name="author" content="Pablo Zárate">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta name="theme-color" content="#e9e9e6">
+<link rel="canonical" href="https://constitution.design/">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+<link rel="alternate" type="text/plain" href="https://constitution.design/llms.txt" title="LLM-readable summary">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="The Designer’s Constitution">
+<meta property="og:title" content="The Designer’s Constitution">
+<meta property="og:description" content="A model for rethinking what makes a designer in the age of AI.">
+<meta property="og:url" content="https://constitution.design/">
+<meta property="og:image" content="https://constitution.design/assets/img/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The Designer’s Constitution, between two olive branches.">
+<meta property="og:locale" content="en_US">
+<meta property="og:locale:alternate" content="es_AR">
+<meta property="article:author" content="https://pablozarate.com">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="The Designer’s Constitution">
+<meta name="twitter:description" content="A model for rethinking what makes a designer in the age of AI.">
+<meta name="twitter:image" content="https://constitution.design/assets/img/og.jpg">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "@id": "https://constitution.design/#essay", "headline": "The Designer’s Constitution", "alternativeHeadline": "La constitución del Diseñador", "description": "A model for rethinking what makes a designer in the age of AI, laid on the foundations Walter Gropius set for the Bauhaus in 1922.", "url": "https://constitution.design/", "image": "https://constitution.design/assets/img/og.jpg", "inLanguage": ["en", "es"], "datePublished": "2026-10-06", "author": {"@type": "Person", "@id": "https://pablozarate.com/#person", "name": "Pablo Zárate", "alternateName": "PabloZarate™", "url": "https://pablozarate.com", "jobTitle": "Design Manager"}, "publisher": {"@id": "https://pablozarate.com/#person"}, "isBasedOn": {"@type": "CreativeWork", "name": "Bauhaus curriculum diagram", "creator": {"@type": "Person", "name": "Walter Gropius"}, "dateCreated": "1922", "locationCreated": "Weimar"}, "about": ["Design", "Bauhaus", "Design leadership", "Artificial intelligence"], "keywords": "design, designer, Bauhaus, Walter Gropius, AI, design leadership, craft, building", "mainEntityOfPage": "https://constitution.design/"}</script>
+
+<script>
+  // Preload the two variable fonts only when served over http(s). Opened as a local file,
+  // a crossorigin preload is blocked and some browsers then refuse the font itself.
+  if (/^https?:$/.test(location.protocol)) {
+    ['timeless-text/TimelessTextVF.woff2', 'timeless-grotesk/TimelessGroteskVF.woff2'].forEach(function (f) {
+      var l = document.createElement('link');
+      l.rel = 'preload'; l.as = 'font'; l.type = 'font/woff2'; l.crossOrigin = 'anonymous';
+      l.href = 'assets/fonts/' + f; document.head.appendChild(l);
+    });
+  }
+</script>
+<link rel="preconnect" href="https://pablozarate.com" crossorigin>
+<link rel="stylesheet" href="assets/css/site.css">
+</head>
+<body>
+
+<canvas id="stage" aria-hidden="true"></canvas>
+<img class="fallback" src="assets/img/poster.jpg" loading="lazy" decoding="async" width="1800" height="1125" alt="The model drawn as five concentric rings, from the ground on the outside to building at the center." data-i18n-alt="alt">
+<svg class="leaders" aria-hidden="true"></svg>
+<div class="curtain" aria-hidden="true"></div>
+<div class="grain" aria-hidden="true"></div>
+
+<header class="top">
+  <a class="top-title" href="#top" data-i18n="t01"><strong>The Designer’s Constitution</strong></a>
+  <div class="top-right">
+  <div class="lang" role="group" aria-label="Language"><button type="button" data-lang="en" aria-pressed="true" lang="en">EN</button><button type="button" data-lang="es" aria-pressed="false" lang="es">ES</button></div>
+  <a class="top-sign wordmark" href="https://pablozarate.com" rel="author" aria-label="PabloZarate™"><span class="wordmark__name">PabloZarate</span><span class="wordmark__mark" aria-hidden="true">™</span></a>
+  </div>
+</header>
+
+<nav class="rail" aria-label="Rings of the model">
+  <a href="#ground" data-rail="0" data-i18n="t02"><span>01</span>The ground</a>
+  <a href="#studies" data-rail="1" data-i18n="t03"><span>02</span>Studies</a>
+  <a href="#materials" data-rail="2" data-i18n="t04"><span>03</span>Materials</a>
+  <a href="#non-delegable" data-rail="3" data-i18n="t05"><span>04</span>Non-negotiably Human</a>
+  <a href="#build" data-rail="4" data-i18n="t06"><span>05</span>Build</a>
+</nav>
+
+<main id="top">
+
+  <section class="hero" data-state="hero">
+    <div class="hero-inner">
+      <h1 data-i18n="t07"><span class="ln" style="--n:0"><span>The Designer’s</span></span><span class="ln" style="--n:1"><span>Constitution</span></span></h1>
+      <p class="lede" data-i18n="t08">A model for thinking about what makes someone a designer in the age of AI, laid on the foundations Walter Gropius set for the Bauhaus and adapted by <span class="signature">PabloZarate<span class="signature__mark">™</span></span></p>
+    </div>
+  </section>
+
+  <section class="panel panel--left" data-state="thesis" id="deciding">
+    <div class="panel-inner">
+      <h2 data-i18n="t09">To decide, or not to decide…</h2>
+      <p data-i18n="t10">To design is to decide what should exist, what it will be made of, who it is for and what it will cause, and the word has meant that since long before anyone drew a screen. Whoever makes those calls is the designer, with or without the title or the training.</p>
+      <p data-i18n="t11">So when someone celebrates that AI will finally free designers to focus on strategy and leadership, I suspect they understand little about design and even less about strategy or leadership.<br><br>That seat has always been there. <strong>What’s new is what we’re getting back.</strong></p>
+    </div>
+  </section>
+
+  <section class="verdict verdict--dark" data-state="macro">
+    <p class="verdict-line" data-i18n="t12">Newsflash: designers regain command of technology.</p>
+  </section>
+
+  <section class="panel panel--left panel--scrim" data-state="macro" id="material">
+    <div class="panel-inner">
+      <h2 data-i18n="t13">This is not a revolution. It’s a Renaissance.</h2>
+      <p data-i18n="t14">What AI changes is how close a designer can get to the material. Code, data, models and distribution are now within reach of anyone who designs, and with them comes command over what actually gets built.</p>
+      <p data-i18n="t15">And we needed one… Treating everything as minimum and viable led to poor ways of working, and the industry filled up with mediocre (vanilla) and overcomplicated products.</p>
+      <p data-i18n="t16">This is a chance to fix that and make experience the differentiator again. But to do it, a designer has to master and understand where the material (technology) they choose to work with breaks.</p>
+    </div>
+  </section>
+
+  <section class="verdict verdict--dark" data-state="origin">
+    <p class="verdict-line" data-i18n="t17">There is no experience without conscious practice.</p>
+  </section>
+
+  <section class="panel panel--left" data-state="origin" id="origin">
+    <div class="panel-inner">
+      <p class="kicker" data-i18n="t18">Bauhaus</p>
+      <h2 data-i18n="t19">To understand what’s coming, first look back</h2>
+      <p data-i18n="t20">In 1922 Walter Gropius designed the Bauhaus curriculum as a set of concentric rings.</p>
+      <p data-i18n="t21">On the outside, the foundational concepts. In the middle, the workshops for understanding materials: stone, wood, metal, clay, glass, color and textile. And at the center, Bau: building, the synthesis of everything before it.</p>
+      <p data-i18n="t22">Every apprentice worked with two masters at the same time, one for the craft and one for form. The workshops became laboratories for the prototypes that industry then produced in series.</p>
+      <p data-i18n="t23">Defining the form of a lamp or a chair meant knowing the metal and the wood it would be made of.</p>
+    </div>
+  </section>
+
+  <section class="panel panel--left" data-state="land" id="reread">
+    <div class="panel-inner">
+      <p data-i18n="t24"><strong>The Designer’s Constitution</strong> reimagines that drawing for the work of today. It is a framework that orders the essentials every designer should have in this new Renaissance of the profession, brought on by AI.</p>
+    </div>
+  </section>
+
+  <section class="verdict verdict--light" data-state="assembled">
+    <p class="verdict-line" data-i18n="t25">Building at the core.</p>
+  </section>
+
+  <section class="panel panel--right chapter" data-state="ring0" data-chapter="0" id="ground">
+    <div class="panel-inner">
+      <p class="kicker" data-i18n="t26">Ring 01</p>
+      <h2 data-i18n="t27">The ground</h2>
+      <p data-i18n="t28">The outer ring has two halves: the grammar of form, which holds in any medium, and conscious praxis, which is what turns hours of work into experience.</p>
+      <div class="items">
+        <div class="item" tabindex="0" data-layer="0" data-seg="0"><span class="item-num">01</span><span class="item-term" data-i18n="t29">Foundations of form</span><span class="item-def" data-i18n="t30">Composition, color, typography and time, the rules that order whatever is seen, read or heard, from a page to an interface to a voice.</span></div>
+        <div class="item" tabindex="0" data-layer="0" data-seg="1"><span class="item-num">02</span><span class="item-term" data-i18n="t31">Conscious praxis</span><span class="item-def" data-i18n="t32">Design sense, judgment and craft. They come from making things and then paying attention to what happened: what worked, what didn't and why.</span></div>
+      </div>
+      <p class="coda" data-i18n="t33">Form follows function.</p>
+    </div>
+  </section>
+
+  <section class="panel panel--right chapter" data-state="ring1" data-chapter="1" id="studies">
+    <div class="panel-inner">
+      <p class="kicker" data-i18n="t34">Ring 02</p>
+      <h2 data-i18n="t35">Studies</h2>
+      <p data-i18n="t36">What a designer studies to understand a problem before solving it. Gropius started with observation, the study of nature and of materials, and a good part of the craft is still learned that way: Japanese joinery fits wood together without nails, and temple carpenters place each piece according to the direction in which the tree grew.</p>
+      <div class="items">
+        <div class="item" tabindex="0" data-layer="1" data-seg="0"><span class="item-num">01</span><span class="item-term" data-i18n="t37">Representation</span><span class="item-def" data-i18n="t38">Sketches, prototypes and specs, the ways of making an idea discussable before it exists.</span></div>
+        <div class="item" tabindex="0" data-layer="1" data-seg="1"><span class="item-num">02</span><span class="item-term" data-i18n="t39">People</span><span class="item-def" data-i18n="t40">Who will use what gets built, in what context and with what at stake.</span></div>
+        <div class="item" tabindex="0" data-layer="1" data-seg="2"><span class="item-num">03</span><span class="item-term" data-i18n="t41">Limits</span><span class="item-def" data-i18n="t42">Everything has limits, and finding them is part of the job. Whoever understands that decides everything from the utensil to the drawer it lives in.</span></div>
+        <div class="item" tabindex="0" data-layer="1" data-seg="3"><span class="item-num">04</span><span class="item-term" data-i18n="t43">Space, time and interaction</span><span class="item-def" data-i18n="t44">How something moves, responds and unfolds in front of a person.</span></div>
+        <div class="item" tabindex="0" data-layer="1" data-seg="4"><span class="item-num">05</span><span class="item-term" data-i18n="t45">Systems</span><span class="item-def" data-i18n="t46">Components, rules and relationships that let many people build without contradicting each other.</span></div>
+        <div class="item" tabindex="0" data-layer="1" data-seg="5"><span class="item-num">06</span><span class="item-term" data-i18n="t47">Agents</span><span class="item-def" data-i18n="t48">What they can do, where they fail and how much context they need to do it well.</span></div>
+      </div>
+      <p class="lead-in" data-i18n="t49">Massimo Vignelli put it in three words, design is one: a map, a dinner service and a house get designed with the same judgment.</p>
+      <p class="coda" data-i18n="t50">Anyone who can design one thing well can design anything.</p>
+    </div>
+  </section>
+
+  <section class="panel panel--right chapter" data-state="ring2" data-chapter="2" id="materials">
+    <div class="panel-inner">
+      <p class="kicker" data-i18n="t51">Ring 03</p>
+      <h2 data-i18n="t52">Materials</h2>
+      <p data-i18n="t53">Digital design works with seven materials. Gropius gave each of his a workshop because each one is worked differently and breaks in its own place, and the training in those workshops already included bookkeeping, pricing and contracts. Wood splits along the grain, code in the case nobody tested, a model in the question nobody saw coming.</p>
+      <div class="items">
+        <div class="item" tabindex="0" data-layer="2" data-seg="0"><span class="item-num">01</span><span class="item-term" data-i18n="t54">Distribution</span><span class="item-def" data-i18n="t55">How what gets built reaches people: channels, costs and access. Business belongs here, understood as building something with a real purpose.</span></div>
+        <div class="item" tabindex="0" data-layer="2" data-seg="1"><span class="item-num">02</span><span class="item-term" data-i18n="t56">Data</span><span class="item-def" data-i18n="t57">What a product knows, where it learned it and how far it can be trusted.</span></div>
+        <div class="item" tabindex="0" data-layer="2" data-seg="2"><span class="item-num">03</span><span class="item-term" data-i18n="t58">Code</span><span class="item-def" data-i18n="t59">What digital design handed off for years, back within reach.</span></div>
+        <div class="item" tabindex="0" data-layer="2" data-seg="3"><span class="item-num">04</span><span class="item-term" data-i18n="t60">Interface</span><span class="item-def" data-i18n="t61">The surfaces people touch, read and move through.</span></div>
+        <div class="item" tabindex="0" data-layer="2" data-seg="4"><span class="item-num">05</span><span class="item-term" data-i18n="t62">Motion</span><span class="item-def" data-i18n="t63">Transitions, feedback and rhythm. A delay is a decision too.</span></div>
+        <div class="item" tabindex="0" data-layer="2" data-seg="5"><span class="item-num">06</span><span class="item-term" data-i18n="t64">Models</span><span class="item-def" data-i18n="t65">The first probabilistic material. It answers differently every time, so its behavior needs as much design as its output.</span></div>
+        <div class="item" tabindex="0" data-layer="2" data-seg="6"><span class="item-num">07</span><span class="item-term" data-i18n="t66">Language</span><span class="item-def" data-i18n="t67">Copy, names and prompts. Often the first interface is a sentence.</span></div>
+      </div>
+      <p class="coda" data-i18n="t68">Knowing a material means knowing where it breaks.</p>
+    </div>
+  </section>
+
+  <section class="panel panel--right chapter" data-state="ring3" data-chapter="3" id="non-delegable">
+    <div class="panel-inner">
+      <p class="kicker" data-i18n="t69">Ring 04</p>
+      <h2 data-i18n="t70">Non-negotiably Human</h2>
+      <p data-i18n="t71">Three things must remain human. Everything else can be automated.</p>
+      <div class="items">
+        <div class="item" tabindex="0" data-layer="3" data-seg="0"><span class="item-num">01</span><span class="item-term" data-i18n="t72">Vision</span><span class="item-def" data-i18n="t73">A clear idea of what is worth building and why.</span></div>
+        <div class="item" tabindex="0" data-layer="3" data-seg="1"><span class="item-num">02</span><span class="item-term" data-i18n="t74">Trust</span><span class="item-def" data-i18n="t75">People hand over their time, their data or their money to someone, and that someone has a name.</span></div>
+        <div class="item" tabindex="0" data-layer="3" data-seg="2"><span class="item-num">03</span><span class="item-term" data-i18n="t76">Responsibility</span><span class="item-def" data-i18n="t77">For every task delegated, and for what the work does to people and to society once it is out. That includes making clear who answers for what.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="verdict verdict--dark" data-state="ring4">
+    <p class="verdict-line" data-i18n="t78">Every task can be delegated, except thinking… Thinking is not a task, it’s a privilege.</p>
+  </section>
+
+  <section class="panel panel--right chapter" data-state="ring4" data-chapter="4" id="build">
+    <div class="panel-inner">
+      <p class="kicker" data-i18n="t79">Ring 05</p>
+      <h2 data-i18n="t80">Build</h2>
+      <p data-i18n="t81">When building becomes cheap, designing <strong>intent</strong> is what sets the work apart.</p>
+      <div class="items">
+        <div class="item" tabindex="0" data-layer="4" data-seg="0"><span class="item-num">01</span><span class="item-term" data-i18n="t82">Defining the what and the why</span><span class="item-def" data-i18n="t83">What needs to be built, and the real problem it solves.</span></div>
+        <div class="item" tabindex="0" data-layer="4" data-seg="1"><span class="item-num">02</span><span class="item-term" data-i18n="t84">How it works</span><span class="item-def" data-i18n="t85">The behavior from end to end. Understanding it, at least at the level of structure, is the minimum for being a designer.</span></div>
+        <div class="item" tabindex="0" data-layer="4" data-seg="2"><span class="item-num">03</span><span class="item-term" data-i18n="t86">How it fails</span><span class="item-def" data-i18n="t87">How it should behave when it doesn't work. That's where judgment shows.</span></div>
+        <div class="item" tabindex="0" data-layer="4" data-seg="3"><span class="item-num">04</span><span class="item-term" data-i18n="t88">How it runs</span><span class="item-def" data-i18n="t89">What it needs to keep working once it's out in the world: maintenance, costs and support.</span></div>
+      </div>
+      <p class="coda" data-i18n="t90">This is the new baseline.</p>
+    </div>
+  </section>
+
+  <section class="panel panel--left" data-state="closing" id="looking-back">
+    <div class="panel-inner">
+      <h2 data-i18n="t91">There are no shortcuts… and that’s a good thing.</h2>
+      <p data-i18n="t92">Nothing is settled yet, but one thing is clear: design is not just a profession, it is a mental model that adapts to its time.</p>
+      <p data-i18n="t93">Building well takes judgment. This Constitution sets out the capabilities the person who designs must understand and master, whether or not they carry them out themselves.</p>
+      <p data-i18n="t94">But judgment can’t be <em>prompted</em>. There are no <em>skills</em> for it, no magic app… It takes sitting down and learning by doing, by building. There are no shortcuts.</p>
+    </div>
+  </section>
+
+  <section class="verdict verdict--dark" data-state="final">
+    <p class="verdict-line" data-i18n="t95">The future belongs to designers who build.</p>
+  </section>
+
+  <section class="panel panel--left" data-state="final" id="bet">
+    <div class="panel-inner">
+      <h2 data-i18n="t96">My bet on the future</h2>
+      <p data-i18n="t97">I see a new wave of founders with a design background, one-person companies and solopreneurs who take seriously how design improves people’s lives.</p>
+      <p data-i18n="t98">Every transition produces plenty of garbage before it settles, and this one will produce its own. That will be a chance for juniors to learn by fixing all that <em>vibe-coded slop</em>.</p>
+      <p data-i18n="t99">The future belongs to designers who build.</p>
+    </div>
+  </section>
+
+  <section class="finale" data-state="foot">
+    <p class="finale-line" data-i18n="t100">Always be shipping.</p>
+  </section>
+
+  <footer class="foot" data-state="foot">
+    <div class="foot-crest">
+      <svg class="olive olive--l" viewBox="0 0 120 260" aria-hidden="true"><g class="olive-sway"><path class="olive-stem" pathLength="1" d="M96 252 Q8 150 74 8" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><g transform="translate(86.0 239.6) rotate(-85.0)"><path class="olive-leaf" style="--i:0" fill="currentColor" d="M0 0 C8.4 -5.2 21.6 -5.2 30.0 0 C21.6 4.2 8.4 4.2 0 0Z"/></g><g transform="translate(76.5 226.1) rotate(-164.8)"><path class="olive-leaf" style="--i:1" fill="currentColor" d="M0 0 C8.1 -5.1 21.0 -5.1 29.1 0 C21.0 4.1 8.1 4.1 0 0Z"/></g><g transform="translate(68.4 212.2) rotate(-76.3)"><path class="olive-leaf" style="--i:2" fill="currentColor" d="M0 0 C7.9 -5.0 20.3 -5.0 28.2 0 C20.3 4.0 7.9 4.0 0 0Z"/></g><g transform="translate(61.4 198.1) rotate(-155.7)"><path class="olive-leaf" style="--i:3" fill="currentColor" d="M0 0 C7.6 -4.8 19.7 -4.8 27.3 0 C19.7 3.9 7.6 3.9 0 0Z"/></g><line class="olive-twig" style="--i:0" x1="61.4" y1="198.1" x2="66.6" y2="189.5" stroke="currentColor" stroke-width="1"/><g transform="translate(66.6 189.5) rotate(31)"><ellipse class="olive-fruit" style="--i:0" cx="0" cy="0" fill="#ff460c" rx="4" ry="5.4"/></g><g transform="translate(55.8 183.5) rotate(-66.9)"><path class="olive-leaf" style="--i:4" fill="currentColor" d="M0 0 C7.4 -4.7 19.0 -4.7 26.4 0 C19.0 3.8 7.4 3.8 0 0Z"/></g><g transform="translate(51.4 168.7) rotate(-146.1)"><path class="olive-leaf" style="--i:5" fill="currentColor" d="M0 0 C7.1 -4.6 18.4 -4.6 25.5 0 C18.4 3.7 7.1 3.7 0 0Z"/></g><g transform="translate(48.2 153.5) rotate(-57.3)"><path class="olive-leaf" style="--i:6" fill="currentColor" d="M0 0 C6.9 -4.5 17.7 -4.5 24.6 0 C17.7 3.6 6.9 3.6 0 0Z"/></g><line class="olive-twig" style="--i:1" x1="48.2" y1="153.5" x2="39.2" y2="149.2" stroke="currentColor" stroke-width="1"/><g transform="translate(39.2 149.2) rotate(-64)"><ellipse class="olive-fruit" style="--i:1" cx="0" cy="0" fill="#ff460c" rx="4" ry="5.4"/></g><g transform="translate(46.3 138.0) rotate(-136.6)"><path class="olive-leaf" style="--i:7" fill="currentColor" d="M0 0 C6.6 -4.4 17.1 -4.4 23.7 0 C17.1 3.5 6.6 3.5 0 0Z"/></g><g transform="translate(45.7 122.2) rotate(-48.0)"><path class="olive-leaf" style="--i:8" fill="currentColor" d="M0 0 C6.4 -4.2 16.4 -4.2 22.8 0 C16.4 3.4 6.4 3.4 0 0Z"/></g><g transform="translate(46.4 106.1) rotate(-127.5)"><path class="olive-leaf" style="--i:9" fill="currentColor" d="M0 0 C6.1 -4.1 15.8 -4.1 21.9 0 C15.8 3.3 6.1 3.3 0 0Z"/></g><line class="olive-twig" style="--i:2" x1="46.4" y1="106.1" x2="55.0" y2="101.0" stroke="currentColor" stroke-width="1"/><g transform="translate(55.0 101.0) rotate(59)"><ellipse class="olive-fruit" style="--i:2" cx="0" cy="0" fill="#ff460c" rx="4" ry="5.4"/></g><g transform="translate(48.3 89.6) rotate(-39.3)"><path class="olive-leaf" style="--i:10" fill="currentColor" d="M0 0 C5.9 -4.0 15.1 -4.0 21.0 0 C15.1 3.2 5.9 3.2 0 0Z"/></g><g transform="translate(51.4 72.8) rotate(-119.4)"><path class="olive-leaf" style="--i:11" fill="currentColor" d="M0 0 C5.6 -3.9 14.5 -3.9 20.1 0 C14.5 3.1 5.6 3.1 0 0Z"/></g><g transform="translate(55.9 55.7) rotate(-31.7)"><path class="olive-leaf" style="--i:12" fill="currentColor" d="M0 0 C5.4 -3.8 13.8 -3.8 19.2 0 C13.8 3.0 5.4 3.0 0 0Z"/></g><g transform="translate(61.5 38.2) rotate(-112.3)"><path class="olive-leaf" style="--i:13" fill="currentColor" d="M0 0 C5.1 -3.6 13.2 -3.6 18.3 0 C13.2 2.9 5.1 2.9 0 0Z"/></g><g transform="translate(74.0 8.0) rotate(-65.1)"><path class="olive-leaf" style="--i:14" fill="currentColor" d="M0 0 C6 -4.5 15 -4.5 22 0 C15 3.6 6 3.6 0 0Z"/></g></g></svg>
+      <p class="foot-title-big"><a href="#top" data-i18n="t101">The Designer’s<br>Constitution</a></p>
+      <svg class="olive olive--r" viewBox="0 0 120 260" aria-hidden="true"><g class="olive-sway"><path class="olive-stem" pathLength="1" d="M96 252 Q8 150 74 8" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><g transform="translate(86.0 239.6) rotate(-85.0)"><path class="olive-leaf" style="--i:0" fill="currentColor" d="M0 0 C8.4 -5.2 21.6 -5.2 30.0 0 C21.6 4.2 8.4 4.2 0 0Z"/></g><g transform="translate(76.5 226.1) rotate(-164.8)"><path class="olive-leaf" style="--i:1" fill="currentColor" d="M0 0 C8.1 -5.1 21.0 -5.1 29.1 0 C21.0 4.1 8.1 4.1 0 0Z"/></g><g transform="translate(68.4 212.2) rotate(-76.3)"><path class="olive-leaf" style="--i:2" fill="currentColor" d="M0 0 C7.9 -5.0 20.3 -5.0 28.2 0 C20.3 4.0 7.9 4.0 0 0Z"/></g><g transform="translate(61.4 198.1) rotate(-155.7)"><path class="olive-leaf" style="--i:3" fill="currentColor" d="M0 0 C7.6 -4.8 19.7 -4.8 27.3 0 C19.7 3.9 7.6 3.9 0 0Z"/></g><line class="olive-twig" style="--i:0" x1="61.4" y1="198.1" x2="66.6" y2="189.5" stroke="currentColor" stroke-width="1"/><g transform="translate(66.6 189.5) rotate(31)"><ellipse class="olive-fruit" style="--i:0" cx="0" cy="0" fill="#ff460c" rx="4" ry="5.4"/></g><g transform="translate(55.8 183.5) rotate(-66.9)"><path class="olive-leaf" style="--i:4" fill="currentColor" d="M0 0 C7.4 -4.7 19.0 -4.7 26.4 0 C19.0 3.8 7.4 3.8 0 0Z"/></g><g transform="translate(51.4 168.7) rotate(-146.1)"><path class="olive-leaf" style="--i:5" fill="currentColor" d="M0 0 C7.1 -4.6 18.4 -4.6 25.5 0 C18.4 3.7 7.1 3.7 0 0Z"/></g><g transform="translate(48.2 153.5) rotate(-57.3)"><path class="olive-leaf" style="--i:6" fill="currentColor" d="M0 0 C6.9 -4.5 17.7 -4.5 24.6 0 C17.7 3.6 6.9 3.6 0 0Z"/></g><line class="olive-twig" style="--i:1" x1="48.2" y1="153.5" x2="39.2" y2="149.2" stroke="currentColor" stroke-width="1"/><g transform="translate(39.2 149.2) rotate(-64)"><ellipse class="olive-fruit" style="--i:1" cx="0" cy="0" fill="#ff460c" rx="4" ry="5.4"/></g><g transform="translate(46.3 138.0) rotate(-136.6)"><path class="olive-leaf" style="--i:7" fill="currentColor" d="M0 0 C6.6 -4.4 17.1 -4.4 23.7 0 C17.1 3.5 6.6 3.5 0 0Z"/></g><g transform="translate(45.7 122.2) rotate(-48.0)"><path class="olive-leaf" style="--i:8" fill="currentColor" d="M0 0 C6.4 -4.2 16.4 -4.2 22.8 0 C16.4 3.4 6.4 3.4 0 0Z"/></g><g transform="translate(46.4 106.1) rotate(-127.5)"><path class="olive-leaf" style="--i:9" fill="currentColor" d="M0 0 C6.1 -4.1 15.8 -4.1 21.9 0 C15.8 3.3 6.1 3.3 0 0Z"/></g><line class="olive-twig" style="--i:2" x1="46.4" y1="106.1" x2="55.0" y2="101.0" stroke="currentColor" stroke-width="1"/><g transform="translate(55.0 101.0) rotate(59)"><ellipse class="olive-fruit" style="--i:2" cx="0" cy="0" fill="#ff460c" rx="4" ry="5.4"/></g><g transform="translate(48.3 89.6) rotate(-39.3)"><path class="olive-leaf" style="--i:10" fill="currentColor" d="M0 0 C5.9 -4.0 15.1 -4.0 21.0 0 C15.1 3.2 5.9 3.2 0 0Z"/></g><g transform="translate(51.4 72.8) rotate(-119.4)"><path class="olive-leaf" style="--i:11" fill="currentColor" d="M0 0 C5.6 -3.9 14.5 -3.9 20.1 0 C14.5 3.1 5.6 3.1 0 0Z"/></g><g transform="translate(55.9 55.7) rotate(-31.7)"><path class="olive-leaf" style="--i:12" fill="currentColor" d="M0 0 C5.4 -3.8 13.8 -3.8 19.2 0 C13.8 3.0 5.4 3.0 0 0Z"/></g><g transform="translate(61.5 38.2) rotate(-112.3)"><path class="olive-leaf" style="--i:13" fill="currentColor" d="M0 0 C5.1 -3.6 13.2 -3.6 18.3 0 C13.2 2.9 5.1 2.9 0 0Z"/></g><g transform="translate(74.0 8.0) rotate(-65.1)"><path class="olive-leaf" style="--i:14" fill="currentColor" d="M0 0 C6 -4.5 15 -4.5 22 0 C15 3.6 6 3.6 0 0Z"/></g></g></svg>
+    </div>
+    <p class="foot-sub" data-i18n="t102">A model for rethinking what makes a designer in the age of AI.</p>
+    <ul class="foot-links">
+      <li><a href="https://pablozarate.com">PabloZarate.com</a></li>
+      <li><a href="https://pablozarate.com/manifesto" data-i18n="t103">Design Manifesto</a></li>
+      <li class="share"><button type="button" class="share-btn" aria-haspopup="true" aria-expanded="false" data-i18n="t105">Share</button>
+        <div class="share-menu" role="menu" hidden>
+          <a role="menuitem" data-share="linkedin" href="#" target="_blank" rel="noopener">LinkedIn</a>
+          <a role="menuitem" data-share="x" href="#" target="_blank" rel="noopener">X</a>
+          <a role="menuitem" data-share="whatsapp" href="#" target="_blank" rel="noopener">WhatsApp</a>
+          <button type="button" role="menuitem" data-share="copy" data-i18n="t106">Copy link</button>
+        </div>
+      </li>
+    </ul>
+    <p class="foot-small" data-i18n="t104">Written in Buenos Aires, 2026 · With love, <a class="signature" href="https://pablozarate.com" rel="author">PabloZarate<span class="signature__mark">™</span></a></p>
+  </footer>
+
+</main>
+
+<script src="assets/js/i18n.js"></script>
+<script src="assets/js/analytics.js" defer></script>
+<script src="assets/vendor/three.min.js" defer></script>
+<script src="assets/vendor/RoomEnvironment.js" defer></script>
+<script src="assets/js/main.js" defer></script>
+<script src="assets/js/share.js" defer></script>
+</body>
+</html>
