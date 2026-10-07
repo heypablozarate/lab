@@ -44,7 +44,11 @@ type ExperienceHandle = {
 
 type MountExperience = (
   root: HTMLElement,
-  options?: { enterOnMount?: boolean; audioContext?: AudioContext },
+  options?: {
+    enterOnMount?: boolean
+    audioContext?: AudioContext
+    propagateInitialStoryLoadError?: boolean
+  },
 ) => Promise<ExperienceHandle>
 
 function centerPanViewport(viewport: HTMLElement) {
@@ -94,12 +98,18 @@ export function ExperienceShell({
   copy,
   credits,
   socialLinks,
+  onRuntimeReady,
+  onRuntimeError,
+  preserveStaticStory = false,
 }: {
   brandName: string
   brandUrl: string
   copy: TeCuentoInterfaceCopy
   credits: TeCuentoCreditsContent
   socialLinks: SocialLink[]
+  onRuntimeReady?: () => void
+  onRuntimeError?: () => void
+  preserveStaticStory?: boolean
 }) {
   const rootRef = useRef<HTMLElement | null>(null)
   const viewportRef = useRef<HTMLDivElement | null>(null)
@@ -183,15 +193,25 @@ export function ExperienceShell({
             throw new TypeError("The experience runtime has no mount function")
           }
           const mount = mountExperience as MountExperience
-          return mount(root, { enterOnMount, audioContext })
+          return mount(root, {
+            enterOnMount,
+            audioContext,
+            propagateInitialStoryLoadError: preserveStaticStory,
+          })
         })
         .then((mounted) => {
           if (cancelled) mounted.destroy()
-          else handle = mounted
+          else {
+            handle = mounted
+            onRuntimeReady?.()
+          }
         })
         .catch(async () => {
           if (audioContext?.state !== "closed") await audioContext?.close().catch(() => {})
-          if (!cancelled) setLoadError(true)
+          if (!cancelled) {
+            setLoadError(true)
+            onRuntimeError?.()
+          }
         })
     }
 
@@ -203,7 +223,7 @@ export function ExperienceShell({
       startExperienceRef.current = () => {}
       handle?.destroy()
     }
-  }, [requiresImmediateRuntime])
+  }, [onRuntimeError, onRuntimeReady, preserveStaticStory, requiresImmediateRuntime])
 
   function handlePanKeys(event: KeyboardEvent<HTMLDivElement>) {
     const viewport = viewportRef.current

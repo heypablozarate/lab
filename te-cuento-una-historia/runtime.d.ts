@@ -5,6 +5,7 @@ export type ExperienceHandle = {
 export type ExperienceOptions = {
   enterOnMount?: boolean
   audioContext?: AudioContext
+  propagateInitialStoryLoadError?: boolean
 }
 
 export function mountExperience(

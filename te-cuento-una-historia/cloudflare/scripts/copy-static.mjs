@@ -229,7 +229,7 @@ for (const story of corpus.entries) {
   storyHtml = replaceTag(
     storyHtml,
     /<div id="root">[\s\S]*<\/div>\s*<\/body>/u,
-    `<div id="root">${serverArticle}</div>\n  </body>`,
+    `<div id="root" data-story-fallback>${serverArticle}</div>\n  </body>`,
   )
 
   const storyDirectory = path.join(

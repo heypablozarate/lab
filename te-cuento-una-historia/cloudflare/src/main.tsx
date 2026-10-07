@@ -9,7 +9,7 @@ import type { TeCuentoDeployment } from "./content-types"
 import "./global.css"
 
 class AppErrorBoundary extends Component<
-  { children: ReactNode },
+  { children: ReactNode; onError?: () => void },
   { error: Error | null }
 > {
   state: { error: Error | null } = { error: null }
@@ -20,6 +20,7 @@ class AppErrorBoundary extends Component<
 
   componentDidCatch(error: Error, info: ErrorInfo) {
     console.error("Te cuento una historia failed to render", error, info)
+    this.props.onError?.()
   }
 
   render() {
@@ -40,7 +41,15 @@ class AppErrorBoundary extends Component<
   }
 }
 
-function App() {
+function App({
+  onRuntimeReady,
+  onRuntimeError,
+  preserveStaticStory,
+}: {
+  onRuntimeReady?: () => void
+  onRuntimeError?: () => void
+  preserveStaticStory?: boolean
+}) {
   const { content, identity, socialLinks } = deployment as TeCuentoDeployment
 
   return (
@@ -59,6 +68,9 @@ function App() {
         copy={content.interfaceCopy}
         credits={content.credits}
         socialLinks={socialLinks}
+        onRuntimeReady={onRuntimeReady}
+        onRuntimeError={onRuntimeError}
+        preserveStaticStory={preserveStaticStory}
       />
     </main>
   )
@@ -67,8 +79,47 @@ function App() {
 const root = document.getElementById("root")
 if (!root) throw new Error("Missing application root")
 
-createRoot(root).render(
-  <AppErrorBoundary>
-    <App />
+const storyFallback = root.hasAttribute("data-story-fallback") ? root : null
+const interactiveRoot = storyFallback ? document.createElement("div") : root
+let interactiveReactRoot: ReturnType<typeof createRoot> | null = null
+
+if (storyFallback) {
+  interactiveRoot.id = "interactive-root"
+  interactiveRoot.dataset.storyPending = "true"
+  interactiveRoot.setAttribute("aria-hidden", "true")
+  interactiveRoot.inert = true
+  storyFallback.after(interactiveRoot)
+}
+
+const revealInteractiveStory = () => {
+  if (!storyFallback || !storyFallback.isConnected) return
+  storyFallback.remove()
+  interactiveRoot.removeAttribute("data-story-pending")
+  interactiveRoot.removeAttribute("aria-hidden")
+  interactiveRoot.inert = false
+  interactiveRoot.querySelector<HTMLElement>("#reader-close")?.focus({
+    preventScroll: true,
+  })
+}
+
+const preserveStaticStory = () => {
+  if (!storyFallback?.isConnected || storyFallback.dataset.runtimeFailed) return
+  storyFallback.dataset.runtimeFailed = "true"
+  queueMicrotask(() => {
+    if (!storyFallback.isConnected) return
+    interactiveReactRoot?.unmount()
+    interactiveReactRoot = null
+    interactiveRoot.remove()
+  })
+}
+
+interactiveReactRoot = createRoot(interactiveRoot)
+interactiveReactRoot.render(
+  <AppErrorBoundary onError={preserveStaticStory}>
+    <App
+      onRuntimeReady={revealInteractiveStory}
+      onRuntimeError={preserveStaticStory}
+      preserveStaticStory={storyFallback !== null}
+    />
   </AppErrorBoundary>,
 )
