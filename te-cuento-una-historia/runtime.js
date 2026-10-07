@@ -612,7 +612,11 @@ function queueSceneUpdate() {
   sceneFrame = requestAnimationFrame(updateStoryScene);
 }
 
-async function openStory(story, trigger = null, { historyMode = "push" } = {}) {
+async function openStory(
+  story,
+  trigger = null,
+  { historyMode = "push", propagateLoadError = false } = {},
+) {
   // The reader is a stable editorial plane. Any parallax follow-through ends
   // before it opens so decorative motion never continues behind the text.
   rig?.resetPopupMotion();
@@ -650,6 +654,7 @@ async function openStory(story, trigger = null, { historyMode = "push" } = {}) {
     readerBody.innerHTML = html;
   } catch (error) {
     if (mediaToken !== mediaSessionToken || activeStory !== story) return;
+    if (propagateLoadError) throw error;
     readerBody.innerHTML = `<p>${escapeHtml(error.message)}</p>`;
     reader.scrollTop = 0;
     readerPage.scrollTop = 0;
@@ -988,7 +993,12 @@ try {
   }
   if (initialStorySlug) {
     const initialStory = findStoryBySlug(initialStorySlug);
-    if (initialStory) await openStory(initialStory, stage, { historyMode: "none" });
+    if (initialStory) {
+      await openStory(initialStory, stage, {
+        historyMode: "none",
+        propagateLoadError: options.propagateInitialStoryLoadError === true,
+      });
+    }
   }
 } catch (error) {
   lifecycle.abort();

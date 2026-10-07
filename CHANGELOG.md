@@ -87,6 +87,11 @@
 
 ### Fixed
 
+- 2026-10-07 / Codex: Keep each generated Cuentos story article visible and
+  scrollable until its interactive reader is fully ready. Failed WebGL setup,
+  runtime imports, or initial story payloads now leave the existing static
+  article intact instead of replacing it with an empty reader.
+
 - 2026-09-02 / Codex: Restored vertical scrolling on the static `/relatos`
   archive despite the immersive experience's global overflow lock. The archive
   is now `noindex, follow` and omitted from the public sitemap so it remains a
