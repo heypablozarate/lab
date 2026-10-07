@@ -2,6 +2,12 @@
 
 ## 2026-10-07
 
+- The Designer's Constitution: the right-hand ring chapters now reserve the
+  rail's real width (`--rail-w`, sized for the longest label in either
+  language) plus a gutter, so the fixed ring index no longer sits on top of
+  the chapter text while scrolling (it overlapped by up to 34 px in Spanish).
+  The EN/ES switch is now a quiet button group: one hairline outline with
+  shared seams and the active language filled, in light and dark sections.
 - Make the real-corpus Synapsis layout guard exercise the same public-only
   projection as the rendered page. Draft and archived editorial records can
   now be imported without distorting public geometry checks or blocking the
