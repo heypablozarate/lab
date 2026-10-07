@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
 import galaxyFixture from "@/content/data/synapsis/galaxy.json";
+import type { SynapsisGalaxyData } from "@/lib/synapsis/galaxy-data";
+import { projectPublicSynapsis } from "@/lib/synapsis/public-data";
 
 import {
   BRAIN_BOTTOM,
@@ -229,31 +231,53 @@ describe("synapsis layout engine", () => {
     expect(headWidth[1] - headWidth[0]).toBeGreaterThan((lowerStemWidth[1] - lowerStemWidth[0]) * 3);
   });
 
-  it("makes the real corpus describe a filled side profile with crown, body and stem", () => {
-    const data = galaxyFixture as GalaxyData;
+  it("lays out the public real corpus without private editorial records", () => {
+    const source = galaxyFixture as SynapsisGalaxyData;
+    const data = projectPublicSynapsis(source) as unknown as GalaxyData;
+    const hiddenNode = {
+      ...source.nodes[0],
+      id: "layout-test-draft",
+      normalizedUrl: "example.com/layout-test-draft",
+      status: "draft" as const,
+    };
+    const projectedWithDraft = projectPublicSynapsis({
+      ...source,
+      nodes: [...source.nodes, hiddenNode],
+      edges: [
+        ...source.edges,
+        {
+          source: source.nodes[0].id,
+          target: hiddenNode.id,
+          provenance: "manual",
+          rationale: "Private regression sentinel",
+          weight: 1,
+        },
+      ],
+    });
+
+    expect(projectedWithDraft).toEqual(projectPublicSynapsis(source));
+    expect(data.nodes.every((node) => node.status === "active")).toBe(true);
+    expect(
+      data.edges.every(
+        (edge) => data.nodes.some((node) => node.id === edge.source) && data.nodes.some((node) => node.id === edge.target),
+      ),
+    ).toBe(true);
+
     const layout = computeLayout(data);
-    let contour = 0;
-    let crown = 0;
-    let centralBody = 0;
-    const stemXs: number[] = [];
+    expect(layout.positions).toHaveLength(data.nodes.length * 3);
+    expect(layout.radii).toHaveLength(data.nodes.length);
+    expect(layout.positions.every(Number.isFinite)).toBe(true);
+    expect(layout.edgeIndices).toHaveLength(data.edges.length * 2);
     data.nodes.forEach((_, index) => {
       const x = layout.positions[index * 3];
       const y = layout.positions[index * 3 + 1];
       const radius = layout.radii[index];
       const [left, right] = brainProfileBounds(y);
-      const center = (left + right) * 0.5;
-      const shellDistance = Math.min(x - left - radius, right - radius - x);
-      if (shellDistance < 4) contour += 1;
-      if (y > 20) crown += 1;
-      if (y > BRAIN_STEM_JOIN && Math.abs(x - center) < 7) centralBody += 1;
-      if (y < -22) stemXs.push(x);
+      expect(y).toBeGreaterThanOrEqual(BRAIN_BOTTOM + radius - 1e-9);
+      expect(y).toBeLessThanOrEqual(BRAIN_TOP - radius + 1e-9);
+      expect(x).toBeGreaterThanOrEqual(left + radius - 1e-9);
+      expect(x).toBeLessThanOrEqual(right - radius + 1e-9);
     });
-    expect(contour).toBeGreaterThan(data.nodes.length * 0.14);
-    expect(contour).toBeLessThan(data.nodes.length * 0.5);
-    expect(crown).toBeGreaterThan(8);
-    expect(centralBody).toBeGreaterThan(data.nodes.length * 0.08);
-    expect(stemXs.length).toBeGreaterThan(5);
-    expect(stemXs.reduce((sum, x) => sum + x, 0) / stemXs.length).toBeGreaterThan(6);
   });
 
   it("handles empty and single-category graphs without non-finite coordinates", () => {

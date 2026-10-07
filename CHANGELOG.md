@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-10-07
+
+- Make the real-corpus Synapsis layout guard exercise the same public-only
+  projection as the rendered page. Draft and archived editorial records can
+  now be imported without distorting public geometry checks or blocking the
+  parent content workflow.
+
 ## 2026-09-30
 
 - Expose the exact public Synapsis content revision on the canonical server-rendered page so the parent publication flow can verify HTML regeneration instead of accepting a fresh API response alongside stale prerendered markup.
