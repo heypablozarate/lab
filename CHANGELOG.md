@@ -1,5 +1,16 @@
 # Changelog
 
+## 2026-10-08
+
+- The Designer's Constitution, Spanish page: copy corrections (accents,
+  agreement and punctuation in t15, t17, t24, t38, t40, t49, t57, t65, t71,
+  t82, t93, t94, t95 and the footer), `Idioma` and `Anillos del modelo`
+  accessible labels, `lang="en"` on deliberate anglicisms, a descriptive
+  image alt, `og:site_name` and `twitter:image:alt` in Spanish, JSON-LD
+  `inLanguage: es-AR` with a Spanish `isBasedOn` name, and the diagram title
+  and credit unified ("dibujado en 1922 y publicado en 1923"). English is
+  unchanged.
+
 ## 2026-10-07
 
 - The Designer's Constitution: the right-hand ring chapters now reserve the

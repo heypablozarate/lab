@@ -20,8 +20,8 @@
       answers: ['What and why', 'How it works', 'How it fails', 'How it runs']
     },
     es: {
-      title: 'La constitución del diseñador',
-      credit: 'Redibujado a partir de Walter Gropius, plan de estudios de la Bauhaus, Weimar 1922',
+      title: 'La constitución del Diseñador',
+      credit: 'Redibujado a partir del plan de estudios de la Bauhaus de Walter Gropius, dibujado en 1922 y publicado en 1923',
       ground: ['Fundamentos de forma', 'Composición, color, tipografía, tiempo', 'Praxis consciente', 'Design sense, criterio, oficio'],
       studies: ['Representación', 'Personas', 'Limitantes', 'Espacio, tiempo e interacción', 'Sistemas', 'Agentes'],
       materials: ['Distribución', 'Datos', 'Código', 'Interfaz', 'Movimiento', 'Modelos', 'Lenguaje'],
