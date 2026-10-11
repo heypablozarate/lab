@@ -1,10 +1,10 @@
-// Google Analytics 4 for constitution.design, same property as pablozarate.com (G-WCMD6T3259).
+// Google Analytics 4 for constitution.design, dedicated property (G-85ZQQS5909).
 // Mirrors the webpz contract: fail closed outside the production origin, respect the
 // ga-disable flag, no automatic page_view (one manual page_view, no query string),
-// gtag loaded on first intent or after 10 s, cross-domain linker with pablozarate.com.
+// and load gtag on first intent or after 10 s.
 (function () {
   'use strict';
-  var ID = 'G-WCMD6T3259';
+  var ID = 'G-85ZQQS5909';
   var ORIGIN = 'https://constitution.design';
   if (location.origin !== ORIGIN) return;           // localhost, previews, file://
   if (window['ga-disable-' + ID] === true) return;
@@ -14,10 +14,7 @@
   window.gtag = window.gtag || gtag;
 
   gtag('js', new Date());
-  gtag('config', ID, {
-    send_page_view: false,
-    linker: { domains: ['pablozarate.com', 'constitution.design', 'hit-try.vercel.app'] }
-  });
+  gtag('config', ID, { send_page_view: false });
   gtag('event', 'page_view', {
     page_title: document.title,
     page_location: ORIGIN + location.pathname,

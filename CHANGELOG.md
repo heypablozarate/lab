@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-10-11
+
+- The Designer's Constitution now sends production pageviews, shares and
+  outbound-link events to its dedicated GA4 stream `G-85ZQQS5909`, without the
+  portfolio property's cross-domain linker. Existing origin, opt-out and
+  query-sanitization safeguards remain unchanged.
+
 ## 2026-10-08
 
 - The Designer's Constitution, Spanish page: copy corrections (accents,
