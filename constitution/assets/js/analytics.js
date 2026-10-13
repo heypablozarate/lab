@@ -28,21 +28,22 @@
   }
 
   function safeReferrer() {
-    if (!document.referrer) return undefined;
+    if (!document.referrer) return '';
     try {
       var referrer = new URL(document.referrer);
-      return /^https?:$/.test(referrer.protocol) ? referrer.origin + referrer.pathname : undefined;
+      return /^https?:$/.test(referrer.protocol) ? referrer.origin + referrer.pathname : '';
     } catch (err) {
-      return undefined;
+      return '';
     }
   }
 
   function withContext(params) {
-    var result = {
-      source_path: location.pathname,
-      content_language: language()
-    };
+    var result = {};
     Object.keys(params || {}).forEach(function (key) { result[key] = params[key]; });
+    result.source_path = location.pathname;
+    result.content_language = language();
+    result.page_location = campaignLocation();
+    result.page_referrer = safeReferrer();
     return result;
   }
 
@@ -50,7 +51,9 @@
   gtag('config', ID, {
     send_page_view: false,
     allow_google_signals: false,
-    allow_ad_personalization_signals: false
+    allow_ad_personalization_signals: false,
+    page_location: campaignLocation(),
+    page_referrer: safeReferrer()
   });
   gtag('event', 'page_view', {
     page_title: document.title,
@@ -59,6 +62,13 @@
     content_language: language()
   });
 
+  function shouldDelayNavigation(event, anchor, url) {
+    return !event.defaultPrevented && event.button === 0 &&
+      !event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey &&
+      (!anchor.target || anchor.target.toLowerCase() === '_self') &&
+      !anchor.hasAttribute('download') && /^https?:$/.test(url.protocol);
+  }
+
   // Classify intentional CTAs separately; other outbound links receive one event.
   document.addEventListener('click', function (e) {
     var a = e.target.closest && e.target.closest('a[href]');
@@ -66,10 +76,16 @@
     var url;
     try { url = new URL(a.href, location.href); } catch (err) { return; }
     if (a.dataset.analyticsCta) {
-      gtag('event', 'cta_click', withContext({
+      var params = {
         cta_id: a.dataset.analyticsCta,
         destination_host: url.hostname
-      }));
+      };
+      if (shouldDelayNavigation(e, a, url)) {
+        e.preventDefault();
+        window.PZTrack('cta_click', params, function () { location.href = url.href; });
+      } else {
+        window.PZTrack('cta_click', params);
+      }
       return;
     }
     if (a.dataset.share || url.host === location.host || !/^https?:$/.test(url.protocol)) return;

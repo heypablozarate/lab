@@ -33,6 +33,7 @@
 
   var lang = document.documentElement.lang === 'es' ? 'es' : 'en';
   var listeners = [];
+  var selectionVersion = 0;
 
   // Production uses the clean URLs; previews and file:// follow the files.
   function urlFor(next) {
@@ -44,10 +45,14 @@
 
   function choose(next) {
     if (next !== 'en' && next !== 'es') return;
+    var version = ++selectionVersion;
     var secure = location.protocol === 'https:' ? '; Secure' : '';
     try { document.cookie = 'pz-lang=' + next + '; Path=/; Max-Age=31536000; SameSite=Lax' + secure; } catch (e) {}
     if (next === lang) return;
-    var navigate = function () { location.href = urlFor(next); };
+    var navigate = function () {
+      if (version !== selectionVersion) return;
+      location.href = urlFor(next);
+    };
     if (window.PZTrack) {
       window.PZTrack('language_change', {
         language_from: lang,
