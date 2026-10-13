@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-10-13
+
+- The Designer's Constitution now sends sanitized location and referrer
+  context with every action, waits briefly for same-tab CTA delivery, and
+  cancels stale language callbacks when the user changes the selection again.
+
 ## 2026-10-11
 
 - The Designer's Constitution now sends production pageviews, shares and
