@@ -12,7 +12,7 @@ const ORIGIN = 'https://constitution.design';
 
 // Spanish copy, keyed like the data-i18n markers in index.html.
 var SIG = '<span class="signature">PabloZarate<span class="signature__mark">™</span></span>';
-var SIGA = '<a class="signature" href="https://pablozarate.com" rel="author">PabloZarate<span class="signature__mark">™</span></a>';
+var SIGA = '<a class="signature" href="https://pablozarate.com" rel="author" data-analytics-cta="author_footer">PabloZarate<span class="signature__mark">™</span></a>';
 
 var ES = {
   doc: 'La constitución del Diseñador, por PabloZarate™',

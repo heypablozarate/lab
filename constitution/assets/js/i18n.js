@@ -46,7 +46,16 @@
     if (next !== 'en' && next !== 'es') return;
     var secure = location.protocol === 'https:' ? '; Secure' : '';
     try { document.cookie = 'pz-lang=' + next + '; Path=/; Max-Age=31536000; SameSite=Lax' + secure; } catch (e) {}
-    if (next !== lang) location.href = urlFor(next);
+    if (next === lang) return;
+    var navigate = function () { location.href = urlFor(next); };
+    if (window.PZTrack) {
+      window.PZTrack('language_change', {
+        language_from: lang,
+        language_to: next
+      }, navigate);
+    } else {
+      navigate();
+    }
   }
 
   window.PZLang = {

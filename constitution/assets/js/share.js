@@ -6,13 +6,19 @@
   var menu = document.querySelector('.share-menu');
   if (!btn || !menu) return;
 
-  // Opened as a local file, shares point to the public address.
+  // Shares always use the canonical public URL, never campaign or arbitrary query data.
   var FALLBACK_URL = 'https://constitution.design';
-  function url() { return /^https?:/.test(location.protocol) ? location.href.split('#')[0] : FALLBACK_URL; }
+  function url() { return FALLBACK_URL + (es() ? '/es' : '/'); }
   function es() { return window.PZLang && window.PZLang.get() === 'es'; }
   function title() { return es() ? 'La constitución del Diseñador, por PabloZarate™' : 'The Designer’s Constitution, by PabloZarate™'; }
 
-  function track(method) { if (window.PZTrack) window.PZTrack('share', { method: method, content_type: 'essay' }); }
+  function track(method) {
+    if (window.PZTrack) window.PZTrack('share', {
+      method: method,
+      content_type: 'essay',
+      item_id: 'designers_constitution'
+    });
+  }
 
   function links() {
     var u = encodeURIComponent(url()), t = encodeURIComponent(title());
@@ -37,10 +43,14 @@
 
   menu.querySelector('[data-share="copy"]').addEventListener('click', function (e) {
     var b = e.currentTarget, label = b.textContent;
-    track('copy_link');
-    var done = function () { b.textContent = es() ? 'Link copiado' : 'Link copied'; setTimeout(function () { b.textContent = label; }, 1500); };
-    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(url()).then(done, done);
-    else done();
+    var done = function () {
+      track('copy_link');
+      b.textContent = es() ? 'Link copiado' : 'Link copied';
+      setTimeout(function () { b.textContent = label; }, 1500);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(url()).then(done).catch(function () {});
+    }
   });
   menu.addEventListener('click', function (e) {
     var a = e.target.closest('a');

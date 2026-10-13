@@ -1,11 +1,11 @@
 // Google Analytics 4 for constitution.design, dedicated property (G-85ZQQS5909).
-// Mirrors the webpz contract: fail closed outside the production origin, respect the
-// ga-disable flag, no automatic page_view (one manual page_view, no query string),
-// and load gtag on first intent or after 10 s.
+// Fail closed outside the production origin, respect the ga-disable flag, send one
+// manual page_view, and retain only allowlisted campaign parameters.
 (function () {
   'use strict';
   var ID = 'G-85ZQQS5909';
   var ORIGIN = 'https://constitution.design';
+  var CAMPAIGN_KEYS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'];
   if (location.origin !== ORIGIN) return;           // localhost, previews, file://
   if (window['ga-disable-' + ID] === true) return;
 
@@ -13,38 +13,92 @@
   function gtag() { window.dataLayer.push(arguments); }
   window.gtag = window.gtag || gtag;
 
+  function language() {
+    return document.documentElement.lang === 'es' ? 'es' : 'en';
+  }
+
+  function campaignLocation() {
+    var clean = new URL(ORIGIN + location.pathname);
+    var current = new URL(location.href);
+    CAMPAIGN_KEYS.forEach(function (key) {
+      var value = current.searchParams.get(key);
+      if (value && /^[a-z0-9][a-z0-9._~-]{0,79}$/i.test(value)) clean.searchParams.set(key, value);
+    });
+    return clean.href;
+  }
+
+  function safeReferrer() {
+    if (!document.referrer) return undefined;
+    try {
+      var referrer = new URL(document.referrer);
+      return /^https?:$/.test(referrer.protocol) ? referrer.origin + referrer.pathname : undefined;
+    } catch (err) {
+      return undefined;
+    }
+  }
+
+  function withContext(params) {
+    var result = {
+      source_path: location.pathname,
+      content_language: language()
+    };
+    Object.keys(params || {}).forEach(function (key) { result[key] = params[key]; });
+    return result;
+  }
+
   gtag('js', new Date());
-  gtag('config', ID, { send_page_view: false });
+  gtag('config', ID, {
+    send_page_view: false,
+    allow_google_signals: false,
+    allow_ad_personalization_signals: false
+  });
   gtag('event', 'page_view', {
     page_title: document.title,
-    page_location: ORIGIN + location.pathname,
-    page_referrer: document.referrer || undefined
+    page_location: campaignLocation(),
+    page_referrer: safeReferrer(),
+    content_language: language()
   });
 
-  // Outbound clicks to the main site: destination host and source path only.
+  // Classify intentional CTAs separately; other outbound links receive one event.
   document.addEventListener('click', function (e) {
     var a = e.target.closest && e.target.closest('a[href]');
     if (!a) return;
     var url;
     try { url = new URL(a.href, location.href); } catch (err) { return; }
-    if (url.host === location.host || !/^https?:$/.test(url.protocol)) return;
-    if (!/(^|\.)pablozarate\.com$/.test(url.hostname)) return;
-    gtag('event', 'outbound_link_click', { destination_host: url.hostname, source_path: location.pathname });
+    if (a.dataset.analyticsCta) {
+      gtag('event', 'cta_click', withContext({
+        cta_id: a.dataset.analyticsCta,
+        destination_host: url.hostname
+      }));
+      return;
+    }
+    if (a.dataset.share || url.host === location.host || !/^https?:$/.test(url.protocol)) return;
+    gtag('event', 'outbound_link_click', withContext({
+      link_id: a.dataset.analyticsLink || 'unclassified',
+      destination_host: url.hostname
+    }));
   }, true);
 
-  // Successful shares, from share.js.
-  window.PZTrack = function (name, params) { gtag('event', name, params || {}); };
+  // Action events may delay a navigation briefly so the browser can dispatch them.
+  window.PZTrack = function (name, params, callback) {
+    var payload = withContext(params);
+    if (callback) {
+      var called = false;
+      var done = function () {
+        if (called) return;
+        called = true;
+        callback();
+      };
+      payload.event_callback = done;
+      payload.event_timeout = 800;
+      setTimeout(done, 900);
+    }
+    gtag('event', name, payload);
+  };
 
-  var loaded = false;
-  function load() {
-    if (loaded) return;
-    loaded = true;
-    var s = document.createElement('script');
-    s.async = true;
-    s.src = 'https://www.googletagmanager.com/gtag/js?id=' + ID;
-    document.head.appendChild(s);
-    ['pointerdown', 'keydown', 'scroll', 'touchstart'].forEach(function (t) { window.removeEventListener(t, load, true); });
-  }
-  ['pointerdown', 'keydown', 'scroll', 'touchstart'].forEach(function (t) { window.addEventListener(t, load, { capture: true, passive: true, once: true }); });
-  setTimeout(load, 10000);
+  // Load immediately: deferred loading can lose short visits and navigation clicks.
+  var s = document.createElement('script');
+  s.async = true;
+  s.src = 'https://www.googletagmanager.com/gtag/js?id=' + ID;
+  document.head.appendChild(s);
 })();
