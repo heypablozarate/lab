@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-10-15
+
+- Constitution: approved Blender ring geometry and baked studio glass, clearer translucency and softer contact shadows. Simplified hover to a small lift and subtle coral tint on the selected fragment with a matching title; preserved keyboard focus and reduced-motion behavior. Added EN/ES fallback renders while retaining current analytics and language handling.
+
 ## 2026-10-13
 
 - The Designer's Constitution now sends sanitized location and referrer
