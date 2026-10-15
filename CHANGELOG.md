@@ -2,6 +2,11 @@
 
 ## 2026-10-15
 
+- The Designer's Constitution: moved the Build camera toward the circular face
+  while preserving zoom and ring choreography; reduced repeated scroll layout
+  work, tightened text entrances, aligned chapter navigation, retained language
+  anchors and added live reduced-motion handling.
+
 - Constitution: approved Blender ring geometry and baked studio glass, clearer translucency and softer contact shadows. Simplified hover to a small lift and subtle coral tint on the selected fragment with a matching title; preserved keyboard focus and reduced-motion behavior. Added EN/ES fallback renders while retaining current analytics and language handling.
 
 ## 2026-10-13

@@ -271,6 +271,7 @@ main {
 .chapter { min-height: 175vh; }
 
 .panel-inner {
+  scroll-margin-top: 6rem;
   max-width: 34rem;
   pointer-events: auto;
 }
@@ -299,14 +300,14 @@ h2 {
 
 /* Reveal: text rises in as its section arrives */
 .js .panel-inner > *, .js .verdict-line, .js .finale-line {
-  transition: opacity 1.1s cubic-bezier(.2,.7,.1,1), transform 1.1s cubic-bezier(.2,.7,.1,1), filter 1.1s ease;
+  transition: opacity .6s cubic-bezier(.2,.7,.1,1), transform .6s cubic-bezier(.2,.7,.1,1), filter .6s ease;
 }
-.js .panel:not(.is-in) .panel-inner > * { opacity: 0; transform: translateY(26px); }
-.js .panel.is-in .panel-inner > *:nth-child(2) { transition-delay: .08s; }
-.js .panel.is-in .panel-inner > *:nth-child(3) { transition-delay: .16s; }
-.js .panel.is-in .panel-inner > *:nth-child(4) { transition-delay: .24s; }
-.js .panel.is-in .panel-inner > *:nth-child(5) { transition-delay: .32s; }
-.js .panel.is-in .panel-inner > *:nth-child(6) { transition-delay: .4s; }
+.js .panel:not(.is-in) .panel-inner > * { opacity: 0; transform: translateY(16px); }
+.js .panel.is-in .panel-inner > *:nth-child(2) { transition-delay: .04s; }
+.js .panel.is-in .panel-inner > *:nth-child(3) { transition-delay: .08s; }
+.js .panel.is-in .panel-inner > *:nth-child(4) { transition-delay: .12s; }
+.js .panel.is-in .panel-inner > *:nth-child(5) { transition-delay: .16s; }
+.js .panel.is-in .panel-inner > *:nth-child(6) { transition-delay: .20s; }
 
 /* A soft paper glow behind text that sits over the model */
 .panel--scrim .panel-inner {
@@ -469,7 +470,7 @@ h2 {
   line-height: .9;
   letter-spacing: var(--ls-finale);
 }
-.js .finale:not(.is-in) .finale-line { opacity: 0; transform: translateY(26px); filter: blur(6px); }
+.js .finale:not(.is-in) .finale-line { opacity: 0; transform: translateY(16px); filter: blur(6px); }
 
 /* Footer, after america.gov: the project title set large between two olive
    branches, and everything else small underneath. */
@@ -574,6 +575,7 @@ h2 {
   .ready .hero h1 .ln > span, .ready .lede { animation: none; opacity: 1; transform: none; }
   .ready .top .lang { animation: none; opacity: 1; }
   .js .panel:not(.is-in) .panel-inner > *, .js .finale:not(.is-in) .finale-line { opacity: 1; transform: none; filter: none; }
+  .js .panel-inner > *, .js .finale-line { transition: none; transition-delay: 0s; }
   .verdict-line { transform: none; filter: none; }
 }
 
