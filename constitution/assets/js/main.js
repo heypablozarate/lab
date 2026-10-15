@@ -195,7 +195,7 @@
     });
   }
 
-  motionPreference.addEventListener('change', function (event) {
+  function handleMotionPreferenceChange(event) {
     reduceMotion = event.matches;
     if (reduceMotion) {
       revealables.forEach(function (el) { el.classList.add('is-in'); });
@@ -203,7 +203,12 @@
       root.classList.add('intro-done');
       INTRO = 0;
     }
-  });
+  }
+  if (motionPreference.addEventListener) {
+    motionPreference.addEventListener('change', handleMotionPreferenceChange);
+  } else if (motionPreference.addListener) {
+    motionPreference.addListener(handleMotionPreferenceChange);
+  }
 
   // Hover state shared by the list, the schematic and the wheel.
   var items = Array.prototype.slice.call(document.querySelectorAll('.item'));
