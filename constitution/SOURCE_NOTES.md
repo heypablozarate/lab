@@ -18,3 +18,5 @@ Static source of the essay published at https://constitution.design/.
   `assets/fonts/`. The PabloZarate™ wordmark font is loaded from
   pablozarate.com.
 - `assets/js/analytics.js` only runs on the production origin.
+
+- Ring geometry lives in `assets/models/blender-rings.js`; `assets/optics/` contains five baked studio views per layer. The runtime keeps scroll geometry and camera motion, composes translucent glass, and applies a subtle coral hover to individual fragments. Reflections are precalculated, not live ray tracing. Approved EN/ES renders are the fallback.

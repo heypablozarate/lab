@@ -94,26 +94,18 @@ a:focus-visible, .item:focus-visible {
   z-index: 0;
   opacity: .9;
 }
-.no-webgl .fallback { display: block; }
-.no-webgl #stage, .no-webgl .leaders { display: none; }
-
-/* Leader lines: drawn over the wheel, under the text */
-
-.leaders {
-  position: fixed;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1;
-  pointer-events: none;
-  overflow: visible;
+.no-webgl .fallback {
+  display: block;
+  top: 52vh;
+  height: 60vh;
+  width: min(100vw, 68.57vh);
+  left: 50%;
+  transform: translateX(-50%);
+  object-position: 50% 0;
+  mask-image: radial-gradient(ellipse at center, #000 52%, transparent 74%);
 }
-.leaders .ld-line { fill: none; stroke: var(--ink); stroke-width: 1; opacity: .3; transition: stroke .25s ease, opacity .25s ease; }
-.leaders .ld-dot { fill: var(--paper); stroke: var(--ink); stroke-width: 1; }
-.leaders .ld-num { font: 700 11px/1 var(--display); fill: var(--ink); letter-spacing: .04em; text-anchor: middle; }
-.leaders .is-hot .ld-line { stroke: var(--accent); opacity: 1; stroke-width: 1.4; }
-.leaders .is-hot .ld-dot { fill: var(--accent); stroke: var(--accent); }
-.leaders .is-hot .ld-num { fill: var(--accent); }
+.no-webgl.scrolled .fallback { top: 0; height: 100%; width: min(100vw, 114.28vh); opacity: .14; }
+.no-webgl #stage { display: none; }
 
 /* Curtain: the dark cuts between acts */
 
@@ -420,7 +412,7 @@ h2 {
   line-height: 1.5;
   color: var(--muted);
 }
-.item.is-active .item-term, .item.is-active .item-num { color: var(--accent); }
+.item.is-active .item-term { color: var(--accent); }
 
 /* Mini schematic for small screens */
 .mini { display: none; }
@@ -558,7 +550,7 @@ h2 {
   .chapter .panel-inner { padding-top: 1.2rem; }
   .item { grid-template-columns: 1.7rem 1fr; gap: .1rem .6rem; }
   .item-def { grid-column: 2; }
-  .rail, .leaders { display: none; }
+  .rail { display: none; }
   .top-title { display: none; }
   .wordmark { font-size: 1.125rem; }
   .top { padding-top: 1.1rem; }

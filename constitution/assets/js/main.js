@@ -7,7 +7,6 @@
   var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var still = /[?&](still|poster)\b/.test(location.search); // snapshot mode: no easing, no intro
   var posterMode = /[?&]poster\b/.test(location.search);
-  var lite = /[?&]lite\b/.test(location.search); // test mode: plain materials instead of transmission
 
   function markReady() {
     root.classList.add('ready');
@@ -106,7 +105,7 @@
     revealables.forEach(function (el) { io.observe(el); });
   }
 
-  // Hover state shared by the list, the schematic, the leader lines and the wheel.
+  // Hover state shared by the list, the schematic and the wheel.
   var items = Array.prototype.slice.call(document.querySelectorAll('.item'));
   var hovered = null; // { layer, seg, fromCanvas }
   var hoverListeners = [];
@@ -215,26 +214,16 @@
   var scene = new THREE.Scene();
   scene.background = new THREE.Color(PAPER); // clear color is written as-is, so it matches the page
 
-  var pmrem = new THREE.PMREMGenerator(renderer);
-  scene.environment = pmrem.fromScene(new THREE.RoomEnvironment(), 0.04).texture;
-
-  var key = new THREE.DirectionalLight(0xffffff, 1.4);
-  key.position.set(5, 9, 4);
-  scene.add(key);
-  var rim = new THREE.DirectionalLight(0xffffff, 0.6);
-  rim.position.set(-6, 3, -5);
-  scene.add(rim);
-
   var camera = new THREE.PerspectiveCamera(30, 1, 0.1, 100);
 
   // ---------- Model definition ----------
   // Angles: theta in degrees, clockwise from the far side of the wheel ("north").
 
   var LAYERS = [
-    { key: 'ground', tint: '#d7ebe6', dist: 2.4, depth: 0.12 },
-    { key: 'studies', tint: '#d7ebe6', dist: 2.4, depth: 0.12,
+    { key: 'ground', tint: '#f5f8f7', dist: 4.55, depth: 0.12 },
+    { key: 'studies', tint: '#f5f8f7', dist: 4.55, depth: 0.12,
       segs: ['Representation', 'People', 'Limits', 'Space, time and interaction', 'Systems', 'Agents'] },
-    { key: 'materials', tint: '#d2e8e3', dist: 2.0, depth: 0.14,
+    { key: 'materials', tint: '#f5f8f7', dist: 4.55, depth: 0.14,
       segs: ['Distribution', 'Data', 'Code', 'Interface', 'Motion', 'Models', 'Language'] },
     { key: 'core', tint: '#ff9a6e', dist: 1.1, base: '#ffe3d6', depth: 0.14 },
     { key: 'build', tint: '#ff5a1f', dist: 0.55, base: '#ff7a45', depth: 0.24 }
@@ -270,24 +259,132 @@
     return geo;
   }
 
-  function acrylic(tint, dist, base) {
-    if (lite) {
-      return new THREE.MeshStandardMaterial({ color: base ? lin(base) : lin('#f2f5f4'), roughness: 0.2, metalness: 0, transparent: true, opacity: 0.72 });
-    }
-    return new THREE.MeshPhysicalMaterial({
-      color: base ? lin(base) : 0xffffff,
-      metalness: 0,
-      roughness: 0.06,
-      transmission: 1,
-      thickness: 0.6,
-      ior: 1.49,
-      specularIntensity: 1,
-      clearcoat: 0.5,
-      clearcoatRoughness: 0.04,
-      attenuationColor: lin(tint),
-      attenuationDistance: dist,
-      envMapIntensity: 0.85
+  // Optional geometry authored in Blender. The local preview loads a classic
+  // script before this file and exposes evaluated, axis-converted meshes as
+  // window.PZBlenderRings. Everything around the geometry (groups, materials,
+  // labels, picking and scroll choreography) remains owned by this runtime.
+  var blenderRingMeshes = Object.create(null);
+  if (window.PZBlenderRings && window.PZBlenderRings.version === 1 && Array.isArray(window.PZBlenderRings.meshes)) {
+    window.PZBlenderRings.meshes.forEach(function (mesh) {
+      if (!mesh || !Array.isArray(mesh.positions) || mesh.positions.length < 9) return;
+      blenderRingMeshes[mesh.layer + ':' + mesh.seg] = mesh;
     });
+  }
+
+  function blenderGeometry(li, seg) {
+    var source = blenderRingMeshes[li + ':' + seg];
+    if (!source) return null;
+    var geo = new THREE.BufferGeometry();
+    geo.setAttribute('position', new THREE.Float32BufferAttribute(source.positions, 3));
+    if (Array.isArray(source.indices) && source.indices.length >= 3) geo.setIndex(source.indices);
+    if (Array.isArray(source.normals) && source.normals.length === source.positions.length) {
+      geo.setAttribute('normal', new THREE.Float32BufferAttribute(source.normals, 3));
+    } else {
+      geo.computeVertexNormals();
+    }
+    geo.computeBoundingBox();
+    geo.computeBoundingSphere();
+    geo.userData.sourceName = source.name || ('ring-' + li + '-segment-' + seg);
+    return geo;
+  }
+
+  function ringGeometry(li, seg, ri, ro, a0, a1, depth) {
+    return blenderGeometry(li, seg) || sectorGeometry(ri, ro, a0, a1, depth);
+  }
+
+  // Cycles appearance, projected onto the original 3D pieces from five views.
+  // The original Blender camera has shift_y = -0.055 (UV centre y = 0.555).
+  // Geometry, camera motion, picking and layer separation remain live WebGL.
+  var opticViews = [[0, 8, 8], [8, 8, 0], [0, 8, -8], [-8, 8, 0], [0, 11.3, 0.001]];
+  var opticNames = ['front', 'right', 'back', 'left', 'top'];
+  var opticMatrices = [], opticDirections = [], opticTextures = [];
+  var assetBase = new URL('../optics/', document.querySelector('script[src*="assets/js/main.js"]').src);
+  var opticsReady = [];
+  var opticSpans = [6.5, 5.34, 4.34, 3.04, 2.24];
+  opticViews.forEach(function (position) {
+    opticDirections.push(new THREE.Vector3().fromArray(position).sub(new THREE.Vector3(0, 0.1, 0)).normalize());
+  });
+  LAYERS.forEach(function (layer, li) {
+    opticMatrices[li] = opticViews.map(function (position) {
+      var half = opticSpans[li] / 2;
+      var probeCamera = new THREE.OrthographicCamera(-half, half, half, -half, 0.01, 100);
+      probeCamera.position.fromArray(position); probeCamera.lookAt(0, 0.1, 0);
+      probeCamera.updateMatrixWorld(true);
+      return new THREE.Matrix4().multiplyMatrices(probeCamera.projectionMatrix, probeCamera.matrixWorldInverse);
+    });
+    opticTextures[li] = opticNames.map(function (name) {
+      var texture;
+      opticsReady.push(new Promise(function (resolve, reject) {
+        texture = new THREE.TextureLoader().load(new URL(li + '-' + name + '.jpg', assetBase).href, resolve, undefined, reject);
+      }));
+      texture.encoding = THREE.sRGBEncoding;
+      texture.anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
+      return texture;
+    });
+  });
+  function acrylic() {
+    var material = new THREE.MeshBasicMaterial({ color: 0xffffff, toneMapped: false, transparent: true, depthWrite: false, side: THREE.FrontSide });
+    material.roughness = 0.1;
+    return material;
+  }
+
+  function bindOptics(mesh, li) {
+    var material = mesh.material;
+    // Compose each layer before its labels and the next layer above it.
+    mesh.renderOrder = 10 + li * 3;
+    material.onBeforeCompile = function (shader) {
+      shader.uniforms.opticFocus = { value: 1 };
+      shader.uniforms.opticHover = { value: 0 };
+      shader.uniforms.opticCoral = { value: lin(ACCENT) };
+      shader.uniforms.opticEye = { value: mesh.worldToLocal(camera.position.clone()) };
+      for (var i = 0; i < 5; i++) {
+        shader.uniforms['opticMap' + i] = { value: opticTextures[li][i] };
+        shader.uniforms['opticMatrix' + i] = { value: opticMatrices[li][i] };
+        shader.uniforms['opticDirection' + i] = { value: opticDirections[i] };
+      }
+      material.userData.shader = shader;
+      var varyings = 'varying vec3 opticPosition; varying vec3 opticNormal; varying vec4 opticUV01; varying vec4 opticUV23; varying vec2 opticUV4;\n';
+      var vertexDeclarations = varyings;
+      var projection = '#include <begin_vertex>\nopticPosition = position; opticNormal = normal;\n';
+      var declarations = varyings + 'uniform vec3 opticEye; uniform float opticFocus; uniform float opticHover; uniform vec3 opticCoral;\n';
+      var blend = 'vec3 opticView = normalize(opticEye - opticPosition); vec3 opticN = normalize(opticNormal); vec3 baked = vec3(0.0); float total = 0.0;\n';
+      var uvNames = ['opticUV01.xy', 'opticUV01.zw', 'opticUV23.xy', 'opticUV23.zw', 'opticUV4'];
+      for (var j = 0; j < 5; j++) {
+        vertexDeclarations += 'uniform mat4 opticMatrix' + j + ';\n';
+        projection += uvNames[j] + ' = (opticMatrix' + j + ' * vec4(position, 1.0)).xy * 0.5 + vec2(0.5, 0.555);\n';
+        declarations += 'uniform sampler2D opticMap' + j + '; uniform vec3 opticDirection' + j + ';\n';
+        blend += 'float w' + j + ' = pow(max(dot(opticView, opticDirection' + j + '), 0.01), 12.0) * smoothstep(0.0, 0.2, dot(opticN, opticDirection' + j + '));\n' +
+          'vec3 c' + j + ' = texture2D(opticMap' + j + ', ' + uvNames[j] + ').rgb;\n' +
+          'baked += c' + j + ' * w' + j + '; total += w' + j + ';\n';
+      }
+      // Views above the model cannot illuminate an underside; retain that
+      // layer's baked colour, darkened, instead of a generic grey substitute.
+      blend += 'baked = total > 0.00001 ? baked / total : c4 * 0.86;\n' +
+        'baked = min(vec3(1.0), baked * 1.16 + vec3(0.025));\n' +
+        'float fresnel = pow(1.0 - clamp(dot(opticN, opticView), 0.0, 1.0), 2.0);\n' +
+        'outgoingLight = mix(vec3(0.76), baked, opticFocus);\n' +
+        'outgoingLight *= mix(vec3(1.0), opticCoral, 0.28 * opticHover);\n' +
+        'diffuseColor.a *= mix(0.62, 0.88, fresnel);\n#include <output_fragment>';
+      shader.vertexShader = vertexDeclarations + shader.vertexShader;
+      shader.vertexShader = shader.vertexShader.replace('#include <begin_vertex>', projection);
+      shader.fragmentShader = declarations + shader.fragmentShader;
+      shader.fragmentShader = shader.fragmentShader.replace('#include <output_fragment>', blend);
+    };
+    var eye = new THREE.Vector3();
+    var hoverTint = 0, lastTintTime = performance.now();
+    mesh.onBeforeRender = function () {
+      var now = performance.now();
+      var tintTarget = hovered && hovered.layer === li && hovered.seg === mesh.userData.seg && LAYERS[li].segs ? 1 : 0;
+      hoverTint += (tintTarget - hoverTint) * (reduceMotion ? 1 : 1 - Math.exp(-Math.min(now - lastTintTime, 100) / 90));
+      lastTintTime = now;
+      var shader = material.userData.shader;
+      if (shader) {
+        shader.uniforms.opticHover.value = hoverTint;
+        eye.copy(camera.position); mesh.worldToLocal(eye);
+        shader.uniforms.opticEye.value.copy(eye);
+        shader.uniforms.opticFocus.value = 0.5 + 0.5 * clamp01((0.6 - material.roughness) / 0.5);
+      }
+    };
   }
 
   // ---------- Generated textures ----------
@@ -352,7 +449,8 @@
     var cx = size / 2, cy = size / 2;
     var mid = (layer.ri + layer.ro) / 2 * px;
 
-    function sans(sizeU, weight) { return (weight || 500) + ' ' + Math.round(sizeU * px) + 'px ' + SANS; }
+    var labelScale = 1.12;
+    function sans(sizeU, weight) { return (weight || 500) + ' ' + Math.round(sizeU * labelScale * px) + 'px ' + SANS; }
 
     if (layer.key === 'ground') {
       var gw = W ? W.ground : ['Foundations of form', 'Composition, color, typography, time', 'Conscious praxis', 'Design sense, judgment, craft'];
@@ -376,7 +474,7 @@
       ctx.textBaseline = 'alphabetic';
       ctx.fillStyle = '#2a0f05';
       var bw = W ? W.build : 'Build';
-      ctx.font = '400 ' + Math.round((bw.length > 6 ? 0.25 : 0.36) * px) + 'px ' + SERIF;
+      ctx.font = '400 ' + Math.round((bw.length > 6 ? 0.25 : 0.36) * 1.05 * px) + 'px ' + SERIF;
       ctx.fillText(bw, cx, cy - 0.12 * px);
       ctx.font = sans(0.064, 500);
       ctx.fillStyle = '#3a1a0e';
@@ -396,59 +494,15 @@
     ctx.fillStyle = PAPER;
     ctx.fillRect(0, 0, size, size);
 
-    // Fine drafting grid: gives the acrylic something to bend.
-    ctx.strokeStyle = 'rgba(38,38,38,0.075)';
-    ctx.lineWidth = 1;
-    var step = 0.2 * px;
-    ctx.beginPath();
-    for (var gx = cx % step; gx < size; gx += step) { ctx.moveTo(gx, 0); ctx.lineTo(gx, size); }
-    for (var gy = cy % step; gy < size; gy += step) { ctx.moveTo(0, gy); ctx.lineTo(size, gy); }
-    ctx.stroke();
-    ctx.fillStyle = 'rgba(38,38,38,0.22)';
-    for (var dx = cx % (step * 5); dx < size; dx += step * 5) {
-      for (var dy = cy % (step * 5); dy < size; dy += step * 5) { ctx.fillRect(dx - 3, dy - 3, 6, 6); }
-    }
-
-    ctx.strokeStyle = 'rgba(38,38,38,0.22)';
-    ctx.lineWidth = 1.6;
-    [3.0, 2.5, 2.42, 2.0, 1.92, 1.36, 1.28, 0.96, 0.88].forEach(function (r) {
-      ctx.beginPath(); ctx.arc(cx, cy, r * px, 0, Math.PI * 2); ctx.stroke();
+    // Soft contact shadows remain visible through the translucent layers.
+    RINGS.forEach(function (ring, li) {
+      var rr = (ring.ri + ring.ro) * 0.5 * px;
+      ctx.strokeStyle = li === 4 ? 'rgba(106,37,16,0.08)' : 'rgba(34,34,32,0.07)';
+      ctx.lineWidth = (ring.ro - ring.ri + 0.06) * px;
+      ctx.filter = 'blur(' + (0.055 * px) + 'px)';
+      ctx.beginPath(); ctx.arc(cx, cy, rr, 0, Math.PI * 2); ctx.stroke();
     });
-
-    ctx.setLineDash([6, 10]);
-    ctx.beginPath(); ctx.arc(cx, cy, 3.32 * px, 0, Math.PI * 2); ctx.stroke();
-    ctx.setLineDash([]);
-
-    for (var d = 0; d < 360; d += 3) {
-      var a = deg(d);
-      var long = d % 30 === 0;
-      var r0 = 3.08 * px, r1 = (long ? 3.24 : 3.14) * px;
-      ctx.beginPath();
-      ctx.moveTo(cx + r0 * Math.sin(a), cy - r0 * Math.cos(a));
-      ctx.lineTo(cx + r1 * Math.sin(a), cy - r1 * Math.cos(a));
-      ctx.lineWidth = long ? 2 : 1.2;
-      ctx.stroke();
-    }
-
-    ctx.strokeStyle = 'rgba(38,38,38,0.12)';
-    ctx.lineWidth = 1.2;
-    ctx.beginPath();
-    ctx.moveTo(cx - 4.2 * px, cy); ctx.lineTo(cx + 4.2 * px, cy);
-    ctx.moveTo(cx, cy - 4.2 * px); ctx.lineTo(cx, cy + 4.2 * px);
-    ctx.stroke();
-
-    var W = words();
-    arcText(ctx, W ? W.credit : 'Redrawn after Walter Gropius, Bauhaus curriculum, Weimar 1922', cx, cy, 3.5 * px, 180, 0,
-      '400 ' + Math.round(0.07 * px) + 'px ' + SANS, 'rgba(38,38,38,0.55)', 0.01 * px);
-    arcText(ctx, W ? W.title : 'The Designer’s Constitution', cx, cy, 3.5 * px, 0, 0,
-      '400 ' + Math.round(0.09 * px) + 'px ' + SERIF, 'rgba(38,38,38,0.6)', 0.006 * px);
-
-    // Fade the plate into the page so it has no visible edge.
-    var g = ctx.createRadialGradient(cx, cy, 3.7 * px, cx, cy, span / 2 * px);
-    g.addColorStop(0, 'rgba(233,233,230,0)');
-    g.addColorStop(1, 'rgba(233,233,230,1)');
-    ctx.fillStyle = g;
-    ctx.fillRect(0, 0, size, size);
+    ctx.filter = 'none';
     return canvasTexture(c);
   }
 
@@ -515,8 +569,8 @@
     var c = makeCanvas(size);
     var ctx = c.getContext('2d');
     var g = ctx.createRadialGradient(size / 2, size / 2, size * 0.18, size / 2, size / 2, size / 2);
-    g.addColorStop(0, 'rgba(30,30,28,0.26)');
-    g.addColorStop(0.55, 'rgba(30,30,28,0.12)');
+    g.addColorStop(0, 'rgba(30,30,28,0.14)');
+    g.addColorStop(0.55, 'rgba(30,30,28,0.07)');
     g.addColorStop(1, 'rgba(30,30,28,0)');
     ctx.fillStyle = g;
     ctx.fillRect(0, 0, size, size);
@@ -574,10 +628,6 @@
     wheel.add(shadow);
     wheel.userData.shadow = shadow;
 
-    var edgeMat = function () {
-      return new THREE.MeshBasicMaterial({ color: lin(ACCENT), transparent: true, opacity: 0, depthWrite: false, toneMapped: false, side: THREE.DoubleSide });
-    };
-
     LAYERS.forEach(function (layer, li) {
       var g = new THREE.Group();
       layer.group = g;
@@ -593,7 +643,7 @@
           var th = deg(i * 360 / n);
           var a0 = Math.PI / 2 - (th + half);
           var a1 = Math.PI / 2 - (th - half);
-          var m = new THREE.Mesh(sectorGeometry(layer.ri, layer.ro, a0, a1, layer.depth), acrylic(layer.tint, layer.dist, layer.base));
+          var m = new THREE.Mesh(ringGeometry(li, i, layer.ri, layer.ro, a0, a1, layer.depth), acrylic());
           m.userData = { layer: li, seg: i };
           g.add(m);
           layer.meshes.push(m);
@@ -601,7 +651,7 @@
           pickables.push(m);
         }
       } else {
-        var mesh = new THREE.Mesh(sectorGeometry(layer.ri, layer.ro, 0, Math.PI * 2, layer.depth), acrylic(layer.tint, layer.dist, layer.base));
+        var mesh = new THREE.Mesh(ringGeometry(li, -1, layer.ri, layer.ro, 0, Math.PI * 2, layer.depth), acrylic());
         mesh.userData = { layer: li, seg: -1 };
         g.add(mesh);
         layer.meshes.push(mesh);
@@ -609,6 +659,7 @@
         pickables.push(mesh);
       }
 
+      layer.meshes.forEach(function (mesh) { bindOptics(mesh, li); });
       var lt = labelTexture(layer);
       var label = new THREE.Mesh(
         new THREE.PlaneGeometry(lt.span, lt.span),
@@ -616,22 +667,9 @@
       );
       label.rotation.x = -Math.PI / 2;
       label.position.y = layer.depth + BEVEL_T + 0.004;
-      label.renderOrder = 2;
+      label.renderOrder = 11 + li * 3;
       g.add(label);
       layer.label = label;
-
-      // Accent outline that marks the ring in focus.
-      var em = edgeMat();
-      var top = layer.depth + BEVEL_T + 0.007;
-      [layer.ro + 0.004, layer.ri > 0 ? layer.ri - 0.004 : -1].forEach(function (r) {
-        if (r <= 0) return;
-        var e = new THREE.Mesh(new THREE.RingGeometry(r - 0.011, r + 0.011, 192), em);
-        e.rotation.x = -Math.PI / 2;
-        e.position.y = top;
-        e.renderOrder = 3;
-        g.add(e);
-      });
-      layer.edge = em;
 
       wheel.add(g);
     });
@@ -775,65 +813,6 @@
     if (el) el.focus({ preventScroll: true });
   });
 
-  // ---------- Leader lines: each list item drawn to its part of the wheel ----------
-
-  var svg = document.querySelector('.leaders');
-  var SVGNS = 'http://www.w3.org/2000/svg';
-  var leaders = items.map(function (el) {
-    var g = document.createElementNS(SVGNS, 'g');
-    var line = document.createElementNS(SVGNS, 'path'); line.setAttribute('class', 'ld-line');
-    var dot = document.createElementNS(SVGNS, 'circle'); dot.setAttribute('class', 'ld-dot'); dot.setAttribute('r', '3.5');
-    var num = document.createElementNS(SVGNS, 'text'); num.setAttribute('class', 'ld-num');
-    num.textContent = el.querySelector('.item-num').textContent;
-    g.appendChild(line); g.appendChild(dot); g.appendChild(num);
-    g.style.opacity = 0;
-    svg.appendChild(g);
-    return { el: el, g: g, line: line, dot: dot, num: num, layer: +el.dataset.layer, seg: +el.dataset.seg };
-  });
-
-  var tmpV = new THREE.Vector3();
-  // Each item points at the outer rim of its part; the number sits just outside it, like a callout on a drawing.
-  function rimPoint(li, seg, extra) {
-    var layer = LAYERS[li];
-    var top = layer.depth + BEVEL_T + layer.lift[layer.segs ? seg : 0];
-    var t;
-    if (li === 0) t = seg === 0 ? 0 : 180;
-    else if (layer.segs) t = seg * 360 / layer.segs.length;
-    else if (li === 3) t = seg * 120;
-    else t = 35 + seg * 30;
-    var r = layer.ro + 0.03 + (extra || 0);
-    tmpV.set(r * Math.sin(deg(t)), top, -r * Math.cos(deg(t)));
-    return layer.group.localToWorld(tmpV).project(camera);
-  }
-
-  function updateLeaders() {
-    var show = !mobile && activeChapter >= 0;
-    svg.style.display = show ? '' : 'none';
-    if (!show) return;
-    var vw = window.innerWidth, vh = window.innerHeight;
-    var single = clamp01(2 - current.focus.reduce(function (a, b) { return a + b; }, 0));
-    leaders.forEach(function (L) {
-      var vis = single * smoothstep(0.75, 0.98, current.focus[L.layer]) * smoothstep(0.85, 1, current.explode);
-      var r = L.el.getBoundingClientRect();
-      var y0 = r.top + 13;
-      if (y0 < 70 || y0 > vh - 30) vis = 0;
-      L.g.style.opacity = vis.toFixed(3);
-      if (vis <= 0.001) return;
-      var p = rimPoint(L.layer, L.seg, 0);
-      var px = (p.x * 0.5 + 0.5) * vw, py = (-p.y * 0.5 + 0.5) * vh;
-      var q = rimPoint(L.layer, L.seg, 0.24);
-      var nx = (q.x * 0.5 + 0.5) * vw, ny = (-q.y * 0.5 + 0.5) * vh;
-      var x0 = r.left - 14, ex = x0 - 34;
-      L.line.setAttribute('d', 'M' + x0.toFixed(1) + ' ' + y0.toFixed(1) + ' H' + ex.toFixed(1) + ' L' + px.toFixed(1) + ' ' + py.toFixed(1));
-      L.dot.setAttribute('cx', px.toFixed(1));
-      L.dot.setAttribute('cy', py.toFixed(1));
-      L.num.setAttribute('x', nx.toFixed(1));
-      L.num.setAttribute('y', (ny + 3.5).toFixed(1));
-      var hot = hovered && hovered.layer === L.layer && hovered.seg === L.seg;
-      L.g.setAttribute('class', hot ? 'is-hot' : '');
-    });
-  }
-
   // ---------- Rail ----------
 
   var rail = document.querySelector('.rail');
@@ -946,7 +925,6 @@
     // Rings inside the focused one move further up, so the focused ring is never hidden.
     var fsum = current.focus.reduce(function (a, b) { return a + b; }, 0);
     var fpos = current.focus.reduce(function (a, b, i) { return a + b * i; }, 0) / Math.max(0.001, fsum);
-    var single = clamp01(2 - fsum);
 
     LAYERS.forEach(function (layer, li) {
       var drop = 0;
@@ -964,25 +942,18 @@
       layer.group.visible = la < 0.97;
 
       var f = current.focus[li];
-      var rough = 0.6 + (0.05 - 0.6) * f;
+      var rough = 0.6 + (0.10 - 0.6) * f;
       var labelOpacity = 0.06 + 0.94 * f;
       if (intro < 1) labelOpacity *= clamp01((intro - 0.35) / 0.5);
       layer.label.material.opacity = labelOpacity;
 
       layer.meshes.forEach(function (m, si) {
         var isHot = hovered && hovered.layer === li && hovered.seg === si && layer.segs;
-        layer.liftTarget[si] = isHot ? 0.16 : 0;
+        layer.liftTarget[si] = isHot && !reduceMotion ? 0.07 : 0;
         layer.lift[si] += (layer.liftTarget[si] - layer.lift[si]) * Math.min(1, dt * 8);
         m.position.y = layer.lift[si];
-        var dim = hovered && hovered.layer === li && layer.segs && !isHot ? 0.18 : 0;
-        m.material.roughness = Math.min(0.62, rough + dim);
+        m.material.roughness = rough;
       });
-      if (layer.segs) {
-        var maxLift = Math.max.apply(null, layer.lift);
-        layer.label.position.y = layer.depth + BEVEL_T + 0.004 + (hovered && hovered.layer === li ? maxLift : 0);
-      }
-      var edge = Math.max(f * single * current.explode, li === 3 ? current.mark : 0);
-      layer.edge.opacity = edge * 0.95;
     });
 
     drawing.material.opacity = current.gropius;
@@ -1002,7 +973,6 @@
     camera.updateMatrixWorld(true);
 
     pickFromCanvas();
-    updateLeaders();
     renderer.render(scene, camera);
     requestAnimationFrame(frame);
   }
@@ -1038,5 +1008,8 @@
     : Promise.resolve();
 
   var timeout = new Promise(function (res) { setTimeout(res, 2500); });
-  Promise.race([fontsReady, timeout]).then(start);
+  Promise.all([Promise.race([fontsReady, timeout]), Promise.all(opticsReady)]).then(start).catch(function (err) {
+    console.error('Unable to load the Blender appearance', err);
+    root.classList.add('no-webgl'); markReady();
+  });
 })();

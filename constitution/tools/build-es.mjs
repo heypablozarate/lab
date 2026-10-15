@@ -177,6 +177,7 @@ function buildSpanish(english) {
   html = html.replace(/(<meta name="twitter:description" content=")[^"]*(">)/, `$1${attr(OG_DESC)}$2`);
   html = once(html, `<meta property="og:url" content="${ORIGIN}/">`, `<meta property="og:url" content="${ORIGIN}/es">`);
   html = html.replace(/assets\/img\/og\.jpg/g, 'assets/img/og-es.jpg');
+  html = once(html, 'src="assets/img/approved-en.png"', 'src="assets/img/approved-es.png"');
   html = html.replace(/(<meta property="og:image:alt" content=")[^"]*(">)/, `$1${attr(OG_ALT)}$2`);
   html = html.replace(/(<meta property="og:site_name" content=")[^"]*(">)/, `$1${TITLE}$2`);
   html = once(html, `<meta name="twitter:image" content="${ORIGIN}/assets/img/og-es.jpg">`, `<meta name="twitter:image" content="${ORIGIN}/assets/img/og-es.jpg">\n<meta name="twitter:image:alt" content="${attr(OG_ALT)}">`);
