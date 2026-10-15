@@ -51,7 +51,7 @@
     if (next === lang) return;
     var navigate = function () {
       if (version !== selectionVersion) return;
-      location.href = urlFor(next);
+      location.href = urlFor(next) + location.hash;
     };
     if (window.PZTrack) {
       window.PZTrack('language_change', {
