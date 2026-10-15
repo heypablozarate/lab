@@ -2,6 +2,9 @@
 
 ## 2026-10-15
 
+- The Designer's Constitution: kept live reduced-motion updates working on
+  older Safari versions by falling back to the legacy media-query listener.
+
 - The Designer's Constitution: moved the Build camera toward the circular face
   while preserving zoom and ring choreography; reduced repeated scroll layout
   work, tightened text entrances, aligned chapter navigation, retained language
