@@ -787,6 +787,7 @@
       cam: o.cam, tgt: o.tgt, tilt: o.tilt || 0, gx: o.gx || 0, /* gx: offset as a fraction of the visible width */ explode: o.explode || 0,
       spin: o.spin === undefined ? 0 : o.spin,
       focus: o.focus || [1, 1, 1, 1, 1],
+      stackFocus: o.stackFocus,
       gropius: o.gropius || 0, lift: o.lift || 0, mark: o.mark || 0
     };
   }
@@ -815,7 +816,7 @@
       s.origin = S({ cam: [0, 16.5, 1.0], tgt: [0, 0, -2.7], gropius: 1, lift: 1 });
       s.land = S({ cam: [0, 15.5, 2.2], tgt: [0, 0, -2.6], gropius: 0.45 });
       s.assembled = S({ cam: [0, 11.5, 13.0], tgt: [0, 3.2, 0], spin: 0.25, mark: 1, gropius: 0.12 });
-      s.closing = S({ cam: [0, 13.5, 6.5], tgt: [0, 0, -2.2], spin: 1 });
+      s.closing = S({ cam: [0, 13.5, 6.5], tgt: [0, 0, -2.2], spin: 1, stackFocus: 4 });
       s.final = S({ cam: [0, 9.5, 9.5], tgt: [0, 0, -2.4], spin: 1 });
       s.foot = S({ cam: [0, 12.5, 14.5], tgt: [0, 3.9, 0], spin: 1 });
     } else {
@@ -825,7 +826,7 @@
       s.origin = S({ cam: [0, 11.8, 0.9], tgt: [0, 0, 0], gx: 0.32, gropius: 1, lift: 1 });
       s.land = S({ cam: [0, 10.2, 3.9], tgt: [0, 0, 0], gx: 0.32, gropius: 0.45 });
       s.assembled = S({ cam: [0, 8.4, 7.4], tgt: [0, 2.3, 0], spin: 0.25, mark: 1, gropius: 0.12 });
-      s.closing = S({ cam: [0, 8.2, 7.2], tgt: [0, 0, 0], gx: 0.29, spin: 1 });
+      s.closing = S({ cam: [0, 8.2, 7.2], tgt: [0, 0, 0], gx: 0.29, spin: 1, stackFocus: 4 });
       s.final = S({ cam: [0, 4.4, 8.8], tgt: [0, 0.35, 0], gx: 0.26, spin: 1 });
       s.foot = S({ cam: [0, 6.9, 9.6], tgt: [0, 3.25, 0], spin: 1 });
     }
@@ -843,12 +844,23 @@
   }
 
   function mixArr(a, b, t) { return a.map(function (v, i) { return v + (b[i] - v) * t; }); }
+  function stackFocusPosition(state) {
+    if (state.stackFocus !== undefined) return state.stackFocus;
+    var sum = state.focus.reduce(function (a, b) { return a + b; }, 0);
+    return state.focus.reduce(function (a, b, i) { return a + b * i; }, 0) / Math.max(0.001, sum);
+  }
+  function stackLayerY(state, layerIndex) {
+    var focusPosition = stackFocusPosition(state);
+    return state.explode * (layerIndex * STACK_GAP + Math.max(0, layerIndex - focusPosition) * 4.6);
+  }
   function mixState(a, b, t) {
     return {
       cam: mixArr(a.cam, b.cam, t), tgt: mixArr(a.tgt, b.tgt, t),
       tilt: a.tilt + (b.tilt - a.tilt) * t,
       gx: a.gx + (b.gx - a.gx) * t, explode: a.explode + (b.explode - a.explode) * t,
       spin: a.spin + (b.spin - a.spin) * t, focus: mixArr(a.focus, b.focus, t),
+      stackFocus: a.stackFocus === undefined && b.stackFocus === undefined ? undefined :
+        stackFocusPosition(a) + (stackFocusPosition(b) - stackFocusPosition(a)) * t,
       gropius: a.gropius + (b.gropius - a.gropius) * t,
       lift: a.lift + (b.lift - a.lift) * t,
       mark: a.mark + (b.mark - a.mark) * t
@@ -859,6 +871,15 @@
   var mobile = false;
   var STATES = statesFor(false);
 
+  function transitionProgress(from, to, raw) {
+    if (reduceMotion) return raw < 0.5 ? 0 : 1;
+    // The assembled Build view changes many properties at once on its way to
+    // the closing essay. Spread that transition across the full interval so
+    // the wheel never waits and then rushes into “There are no shortcuts”.
+    if (from === 'ring4' && to === 'closing') return smoothstep(0, 1, raw);
+    return smoothstep(0.22, 0.78, raw);
+  }
+
   function targetFromScroll() {
     if (posterMode) return { state: STATES.poster, index: 0, t: 0 };
     measureScrollLayout();
@@ -868,7 +889,7 @@
       var a = sectionMetrics[i], b = sectionMetrics[i + 1];
       if (center < b.center) {
         var raw = (center - a.center) / (b.center - a.center);
-        var t = reduceMotion ? (raw < 0.5 ? 0 : 1) : smoothstep(0.22, 0.78, raw);
+        var t = transitionProgress(a.name, b.name, raw);
         return { state: mixState(STATES[a.name], STATES[b.name], t), index: raw < 0.5 ? i : i + 1, t: t };
       }
     }
@@ -1033,9 +1054,6 @@
     var intro = INTRO ? Math.min(1, (now - introStart) / INTRO) : 1;
 
     // Rings inside the focused one move further up, so the focused ring is never hidden.
-    var fsum = current.focus.reduce(function (a, b) { return a + b; }, 0);
-    var fpos = current.focus.reduce(function (a, b, i) { return a + b * i; }, 0) / Math.max(0.001, fsum);
-
     LAYERS.forEach(function (layer, li) {
       var drop = 0;
       if (intro < 1) {
@@ -1048,7 +1066,7 @@
       // Lifted off the drawing: the ground leaves last and lands first.
       var la = clamp01((current.lift - (1 - li / 4) * 0.4) / 0.6);
       var away = la * la * 13;
-      layer.group.position.y = current.explode * (li * STACK_GAP + Math.max(0, li - fpos) * 4.6) + drop + away;
+      layer.group.position.y = stackLayerY(current, li) + drop + away;
       layer.group.visible = la < 0.97;
 
       var f = current.focus[li];
