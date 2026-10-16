@@ -25,6 +25,11 @@
     if (anchor) scrollToReadingAnchor(anchor, 'instant');
   }
   function scrollToReadingAnchor(anchor, behavior) {
+    // #top is the main container, which also contains every chapter's text.
+    if (anchor.id === 'top') {
+      window.scrollTo({ top: 0, left: 0, behavior: behavior });
+      return;
+    }
     // Chapter sections include generous breathing room; land on the actual text.
     var content = anchor.querySelector('.panel-inner') || anchor;
     content.scrollIntoView({ block: 'start', behavior: behavior });

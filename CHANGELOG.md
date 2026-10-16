@@ -2,6 +2,9 @@
 
 ## 2026-10-16
 
+- The Designer's Constitution: fixed header and footer title links so they
+  return to the page top instead of the first chapter reading block.
+
 - The Designer's Constitution: made the Build disc descend monotonically into
   the closing stack and spread that transition across its full scroll interval
   on desktop and mobile, removing the jump before “There are no shortcuts”
