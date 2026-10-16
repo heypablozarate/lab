@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-10-16
+
+- The Designer's Constitution: on responsive layouts, scrolling now replaces
+  the EN/ES control with the project title. Narrow phone headers give the title
+  priority by hiding the PabloZarate™ wordmark when both do not fit.
+
 ## 2026-10-15
 
 - The Designer's Constitution: kept live reduced-motion updates working on
