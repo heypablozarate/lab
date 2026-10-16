@@ -2,6 +2,11 @@
 
 ## 2026-10-16
 
+- The Designer's Constitution: made the Build disc descend monotonically into
+  the closing stack and spread that transition across its full scroll interval
+  on desktop and mobile, removing the jump before “There are no shortcuts”
+  without changing camera, zoom, materials, visual focus, or either endpoint.
+
 - The Designer's Constitution: on responsive layouts, scrolling now replaces
   the EN/ES control with the project title. Narrow phone headers give the title
   priority by hiding the PabloZarate™ wordmark when both do not fit.
