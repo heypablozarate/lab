@@ -8,9 +8,9 @@
 
   // Shares always use the canonical public URL, never campaign or arbitrary query data.
   var FALLBACK_URL = 'https://constitution.design';
-  function url() { return FALLBACK_URL + (es() ? '/es' : '/'); }
-  function es() { return window.PZLang && window.PZLang.get() === 'es'; }
-  function title() { return es() ? 'La constitución del Diseñador, por PabloZarate™' : 'The Designer’s Constitution, by PabloZarate™'; }
+  function language() { return window.PZLang ? window.PZLang.get() : 'en'; }
+  function url() { var lang = language(); return FALLBACK_URL + (lang === 'en' ? '/' : '/' + lang); }
+  function title() { return document.title; }
 
   function track(method) {
     if (window.PZTrack) window.PZTrack('share', {
@@ -45,7 +45,7 @@
     var b = e.currentTarget, label = b.textContent;
     var done = function () {
       track('copy_link');
-      b.textContent = es() ? 'Link copiado' : 'Link copied';
+      b.textContent = language() === 'en' ? 'Link copied' : 'Link copiado';
       setTimeout(function () { b.textContent = label; }, 1500);
     };
     if (navigator.clipboard && navigator.clipboard.writeText) {

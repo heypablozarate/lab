@@ -14,7 +14,8 @@
   window.gtag = window.gtag || gtag;
 
   function language() {
-    return document.documentElement.lang === 'es' ? 'es' : 'en';
+    var lang = document.documentElement.lang.split('-')[0];
+    return lang === 'es' || lang === 'pt' ? lang : 'en';
   }
 
   function campaignLocation() {
