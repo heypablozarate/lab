@@ -706,7 +706,7 @@ function GalaxyContents(props: GalaxySceneProps) {
 
   useEffect(() => () => edgeGeometry.dispose(), [edgeGeometry]);
 
-  // Static instance matrices (position + relevance scale) and initial colors.
+  // Static instance matrices (position + connection scale) and initial colors.
   useEffect(() => {
     const inst = instRef.current;
     if (!inst) return;

@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-11-06
+
+- Synapsis sizes nodes by the number of connections in the active public graph.
+  A capped radius makes connected nodes visibly larger while preserving space
+  for neighboring nodes.
+
 ## 2026-10-16
 
 - The Designer's Constitution: fixed header and footer title links so they

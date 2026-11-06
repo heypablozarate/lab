@@ -91,10 +91,18 @@ describe("synapsis layout engine", () => {
     expect(mean(central)).toBeLessThan(mean(peripheral));
   });
 
-  it("sizes node radius with relevance (base + k * relevance)", () => {
-    expect(nodeVisualRadius(10)).toBeGreaterThan(nodeVisualRadius(5));
-    expect(nodeVisualRadius(5)).toBeGreaterThan(nodeVisualRadius(1));
-    expect(nodeVisualRadius(1)).toBeGreaterThan(0);
+  it("sizes nodes by public connections with a capped radius", () => {
+    const data = syntheticGalaxy();
+    data.edges = [
+      { source: data.nodes[0].id, target: data.nodes[1].id, provenance: "manual", rationale: "test", weight: 1 },
+      { source: data.nodes[0].id, target: data.nodes[2].id, provenance: "manual", rationale: "test", weight: 1 },
+      { source: data.nodes[0].id, target: "archived", provenance: "manual", rationale: "test", weight: 1 },
+    ];
+    const layout = computeLayout(data);
+    expect(layout.radii[0]).toBe(nodeVisualRadius(2));
+    expect(layout.radii[0]).toBeGreaterThan(layout.radii[1]);
+    expect(layout.radii[1]).toBeGreaterThan(layout.radii[3]);
+    expect(nodeVisualRadius(100)).toBe(nodeVisualRadius(8));
   });
 
   it("keeps clusters spatially coherent (closer to own centroid than to others)", () => {
@@ -179,8 +187,8 @@ describe("synapsis layout engine", () => {
       expect(y).toBeGreaterThanOrEqual(BRAIN_BOTTOM);
       expect(y).toBeLessThanOrEqual(BRAIN_TOP);
       expect(Math.abs(z)).toBeLessThanOrEqual(8);
-      expect(layout.radii[i]).toBeGreaterThanOrEqual(0.15);
-      expect(layout.radii[i]).toBeLessThanOrEqual(0.3);
+      expect(layout.radii[i]).toBeGreaterThanOrEqual(0.14);
+      expect(layout.radii[i]).toBeLessThanOrEqual(0.42);
       let distance = Infinity;
       for (let j = 0; j < data.nodes.length; j += 1) {
         if (i === j) continue;
@@ -285,7 +293,7 @@ describe("synapsis layout engine", () => {
     expect(computeLayout({ ...data, nodes: [], edges: [] }).positions).toEqual([]);
     const one = computeLayout({ ...data, nodes: data.nodes.map((node) => ({ ...node, cluster: data.clusters[0].id })) });
     expect(one.positions.every(Number.isFinite)).toBe(true);
-    expect(nodeVisualRadius(-1)).toBe(nodeVisualRadius(1));
+    expect(nodeVisualRadius(-1)).toBe(nodeVisualRadius(0));
     expect(nodeVisualRadius(100)).toBe(nodeVisualRadius(10));
   });
 

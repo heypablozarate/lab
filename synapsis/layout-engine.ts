@@ -76,7 +76,7 @@ export type GalaxyData = {
 export type GalaxyLayout = {
   /** xyz per node, flat — feeds the InstancedMesh directly. */
   positions: number[];
-  /** Visual radius per node (base + k * relevance). */
+  /** Visual radius per node, derived from its public connections. */
   radii: number[];
   /** Node index pairs per edge — feeds the LineSegments position buffer. */
   edgeIndices: number[];
@@ -93,9 +93,8 @@ export const BRAIN_BOTTOM = -38;
 export const BRAIN_TOP = 27;
 export const BRAIN_STEM_JOIN = -17;
 
-export function nodeVisualRadius(relevance: number): number {
-  const t = (Math.min(10, Math.max(1, relevance)) - 1) / 9;
-  return 0.15 + t * 0.15;
+export function nodeVisualRadius(connections: number): number {
+  return 0.14 + Math.min(8, Math.max(0, connections)) * 0.035;
 }
 
 // dsaints hash: frac(sin(seed) * 10000), seeded from a djb2 of the id plus a
@@ -237,10 +236,16 @@ export function computeLayout(data: GalaxyData): GalaxyLayout {
   const positions = new Array<number>(nodes.length * 3);
   const radii = new Array<number>(nodes.length);
   const indexById: Record<string, number> = {};
+  const connections = new Map(nodes.map((node) => [node.id, 0]));
+  for (const edge of edges) {
+    if (!connections.has(edge.source) || !connections.has(edge.target)) continue;
+    connections.set(edge.source, connections.get(edge.source)! + 1);
+    connections.set(edge.target, connections.get(edge.target)! + 1);
+  }
 
   nodes.forEach((node, i) => {
     indexById[node.id] = i;
-    radii[i] = nodeVisualRadius(node.relevance);
+    radii[i] = nodeVisualRadius(connections.get(node.id) ?? 0);
 
     const centroid = centroids.get(node.cluster) ?? [0, 0, 0];
     const share = (counts.get(node.cluster) ?? 1) / Math.max(1, nodes.length);
