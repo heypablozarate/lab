@@ -4,6 +4,7 @@ import path from "node:path"
 import {
   decodeStorySlug,
   distRoot,
+  encodeAssetPath,
   encodeStorySlug,
   fontsRoot,
   payloadRoot,
@@ -167,7 +168,7 @@ for (const story of corpus.entries) {
   if (!illustrationPath) {
     throw new Error(`Missing illustration for ${story.slug}/${illustrationVariant}`)
   }
-  const illustration = `/lab/te-cuento-una-historia/${illustrationPath.replace(/^\.\//u, "")}`
+  const illustration = `/lab/te-cuento-una-historia/${encodeAssetPath(illustrationPath)}`
   const illustrationSources = optimizedImageSources(illustration)
   const articleBody = renderTeCuentoMarkdown(
     markdown,

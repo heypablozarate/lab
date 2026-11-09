@@ -38,3 +38,13 @@ export function decodeStorySlug(slug) {
 export function encodeStorySlug(slug) {
   return encodeURIComponent(decodeStorySlug(slug))
 }
+
+// Asset paths name literal payload files, unlike already-encoded story slugs.
+// Match the interactive runtime's resourcePath contract without decoding `%`.
+export function encodeAssetPath(value) {
+  return value
+    .replace(/^\.\//u, "")
+    .split("/")
+    .map((segment) => encodeURIComponent(segment))
+    .join("/")
+}
