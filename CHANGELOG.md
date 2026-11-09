@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+- Te cuento una historia: encode literal asset filename characters in static
+  story illustrations and Article image URLs, matching the interactive reader.
+  This fixes the Buenas noches illustration path without changing story URLs,
+  source images, or the interactive runtime.
+
 ## 2026-11-06
 
 - Synapsis sizes nodes by the number of connections in the active public graph.

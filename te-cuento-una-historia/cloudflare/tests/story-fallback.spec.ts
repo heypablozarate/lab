@@ -37,6 +37,19 @@ test("keeps the complete story readable when JavaScript is disabled", async ({ b
   await page.goto(GOOD_NIGHT_PATH)
   await expectReadableStaticStory(page, GOOD_NIGHT_TITLE)
 
+  const illustration = page.locator("#root[data-story-fallback] article picture img")
+  await expect(illustration).toHaveAttribute(
+    "src",
+    "/lab/te-cuento-una-historia/assets/stories/buenas-noches-%25c2%25bfcomo-le-va/ink.webp",
+  )
+  await expect(page.locator("#root[data-story-fallback] article picture source")).toHaveAttribute(
+    "srcset",
+    "/lab/te-cuento-una-historia/assets/stories/buenas-noches-%25c2%25bfcomo-le-va/ink.avif",
+  )
+  await expect.poll(() => illustration.evaluate((image: HTMLImageElement) => (
+    image.complete && image.naturalWidth > 0
+  ))).toBe(true)
+
   await context.close()
 })
 
@@ -58,6 +71,7 @@ test("preserves the indexable story metadata contract", async ({ page }) => {
     "@type": "Article",
     headline: GOOD_NIGHT_TITLE,
     url: "https://cuentos.ar/relatos/buenas-noches-%C2%BFcomo-le-va",
+    image: "https://cuentos.ar/lab/te-cuento-una-historia/assets/stories/buenas-noches-%25c2%25bfcomo-le-va/ink.avif",
   })
 })
 
