@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Amélie: point Open Graph and Twitter images to the existing public
+  `/lab/amelie/assets/og.jpg` asset while keeping the canonical page URL.
+
 - Te cuento una historia: encode literal asset filename characters in static
   story illustrations and Article image URLs, matching the interactive reader.
   This fixes the Buenas noches illustration path without changing story URLs,

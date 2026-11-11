@@ -12,7 +12,7 @@ import {
 import styles from "./amelie.module.css"
 
 const PAGE_URL = `${LAB_URL}/amelie`
-const SOCIAL_IMAGE_URL = `${PAGE_URL}/assets/og.jpg`
+const SOCIAL_IMAGE_URL = `${LAB_URL}/lab/amelie/assets/og.jpg`
 
 function serializeJsonLd(data: Record<string, unknown>) {
   return JSON.stringify(data).replace(/</g, "\\u003c")
